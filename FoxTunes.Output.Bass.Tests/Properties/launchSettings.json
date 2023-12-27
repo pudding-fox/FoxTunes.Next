@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "FoxTunes.Output.Bass.Tests": {
+      "commandName": "Project",
+      "nativeDebugging": true
+    }
+  }
+}

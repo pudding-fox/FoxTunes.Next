@@ -1,0 +1,19 @@
+﻿<#@ template language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="FoxDb" #>
+<#@ import namespace="FoxTunes.Interfaces" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+
+SELECT "MetaDataItems"."Value"
+FROM "LibraryHierarchyItems"
+	JOIN "LibraryHierarchyItem_LibraryItem" ON "LibraryHierarchyItems"."Id" = "LibraryHierarchyItem_LibraryItem"."LibraryHierarchyItem_Id"
+	JOIN "LibraryItem_MetaDataItem" ON "LibraryHierarchyItem_LibraryItem"."LibraryItem_Id" = "LibraryItem_MetaDataItem"."LibraryItem_Id"
+	JOIN "MetaDataItems" ON "MetaDataItems"."Id" = "LibraryItem_MetaDataItem"."MetaDataItem_Id"
+WHERE "LibraryHierarchyItems"."Id" = @libraryHierarchyItemId 
+	AND (@type IS NULL OR (@type & "MetaDataItems"."Type") = "MetaDataItems"."Type")
+	AND (@name IS NULL OR "MetaDataItems"."Name" = @name)
+<#= new LibraryHierarchyFilterBuilder(this.Database, this.Filter, LibraryHierarchyFilterSource.LibraryItem).TransformText() #>
+GROUP BY "MetaDataItems"."Value"
+LIMIT <#= this.Limit #>

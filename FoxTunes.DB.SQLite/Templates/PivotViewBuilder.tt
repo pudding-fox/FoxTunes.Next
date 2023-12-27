@@ -1,0 +1,58 @@
+﻿<#@ template language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="FoxDb" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+
+SELECT
+<# 
+{
+	var index = 0;
+	foreach (var keyColumn in this.KeyColumns) 
+	{ 
+		if (index > 0) { #>,<# }#>
+		<#= this.Database.QueryFactory.Dialect.Identifier(this.Table, keyColumn) #>
+		<# 
+		index++;
+	}
+}
+#>
+<# 
+{
+    var index = 0;
+    foreach (var value in this.Values) 
+    {
+#>,<#= this.Database.QueryFactory.Dialect.String(value) #> AS "Key_<#= index #>"
+<# 
+        foreach (var nameColumn in this.NameColumns) 
+        {
+            foreach (var valueColumn in this.ValueColumns) 
+            { 
+#>, GROUP_CONCAT
+(
+    CASE WHEN <#= this.Database.QueryFactory.Dialect.Identifier(this.Table, nameColumn) #> = <#= this.Database.QueryFactory.Dialect.String(value) #> 
+        THEN <#= this.Database.QueryFactory.Dialect.Identifier(this.Table, valueColumn) #> 
+    END
+) AS "Value_<#= index #>_<#= valueColumn #>"
+<#
+            }
+        }
+        index++;
+    }
+}
+{
+    var index = 0;
+#> 
+FROM <#= this.Database.QueryFactory.Dialect.Identifier(this.Table) #> 
+GROUP BY
+<#
+    foreach (var keyColumn in this.KeyColumns)
+    {
+        if (index > 0) { #>,<# }#>
+<#= this.Database.QueryFactory.Dialect.Identifier(this.Table, keyColumn) #>
+<#
+        index++;
+    }
+}
+#>

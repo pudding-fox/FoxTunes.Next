@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "FoxTunes.Launcher": {
+      "commandName": "Project",
+      "nativeDebugging": false
+    }
+  }
+}

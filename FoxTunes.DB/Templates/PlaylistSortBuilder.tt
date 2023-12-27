@@ -1,0 +1,52 @@
+﻿<#@ template language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="FoxDb" #>
+<#@ import namespace="FoxTunes.Interfaces" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+
+<#
+foreach (var expression in this.Sort.Expressions)
+{
+	switch (expression.Operator)
+	{
+		default:
+#><#= this.Database.QueryFactory.Dialect.Identifier("HorizontalMetaData", this.GetColumn(expression.Name)) #><#			
+			break;
+		case SortParserResultOperator.Numeric:
+#>CAST(<#= this.Database.QueryFactory.Dialect.Identifier("HorizontalMetaData", this.GetColumn(expression.Name)) #> AS int)<#
+			break;
+		case SortParserResultOperator.NullCoalesce:
+			var queue = new Queue<ISortParserResultExpression>();
+			var child = expression;
+			while (child != null)
+			{
+				queue.Enqueue(child);
+				child = child.Child;
+			}
+			if (queue.Count < 2)
+			{
+				//Not enough expressions.
+				continue;
+			}
+#>CASE<#
+			while (queue.Count > 1)
+			{
+				child = queue.Dequeue();
+#>
+
+	WHEN <#= this.Database.QueryFactory.Dialect.Identifier("HorizontalMetaData", this.GetColumn(child.Name)) #> IS NOT NULL 
+		THEN <#= this.Database.QueryFactory.Dialect.Identifier("HorizontalMetaData", this.GetColumn(child.Name)) #><#
+			}
+			child = queue.Dequeue();
+#>
+
+	ELSE <#= this.Database.QueryFactory.Dialect.Identifier("HorizontalMetaData", this.GetColumn(child.Name)) #>
+END<#
+			break;
+	}
+#>, <#
+}
+#>
+"HorizontalMetaData"."FileName"

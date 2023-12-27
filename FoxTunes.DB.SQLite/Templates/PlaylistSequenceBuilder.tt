@@ -1,0 +1,83 @@
+﻿<#@ template language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="FoxDb" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+
+DROP TABLE IF EXISTS "PlaylistItemsRowNumber";
+
+CREATE TEMPORARY TABLE "PlaylistItemsRowNumber"
+(
+	"Id" INTEGER,
+	"RowNumber" INTEGER
+);
+
+WITH "VerticalMetaData"
+AS
+(
+	SELECT "PlaylistItems"."Id", "PlaylistItems"."FileName", "MetaDataItems"."Name", "MetaDataItems"."Value"
+	FROM "PlaylistItems"
+		LEFT OUTER JOIN "PlaylistItem_MetaDataItem" 
+			ON "PlaylistItems"."Id" = "PlaylistItem_MetaDataItem"."PlaylistItem_Id"
+		LEFT OUTER JOIN "LibraryItem_MetaDataItem"
+                ON "LibraryItem_MetaDataItem"."LibraryItem_Id" = "PlaylistItems"."LibraryItem_Id"
+		LEFT OUTER JOIN "MetaDataItems" 
+			ON
+			(
+				"MetaDataItems"."Id" = "PlaylistItem_MetaDataItem"."MetaDataItem_Id"
+                    OR "MetaDataItems"."Id" = "LibraryItem_MetaDataItem"."MetaDataItem_Id"
+			) AND
+			(
+<#
+var first = true;
+foreach (var name in this.Names)
+{
+	if (first)
+	{
+		first = false;
+	}
+	else
+	{
+#> OR <#
+	}
+#>"MetaDataItems"."Name" = <#= this.Database.QueryFactory.Dialect.String(name) #><#
+}
+#>
+			)
+	WHERE "PlaylistItems"."Playlist_Id" = @playlistId 
+		AND "PlaylistItems"."Status" = @status
+)
+,
+"HorizontalMetaData"
+AS
+(
+<#= 
+	new PivotViewBuilder(
+		this.Database,
+		"VerticalMetaData", 
+		new[] { "Id", "FileName" }, 
+		new[] { "Name" }, 
+		new[] { "Value" }, 
+		this.Names
+	).TransformText() 
+#>
+)
+
+INSERT INTO "PlaylistItemsRowNumber" ("Id", "RowNumber")
+SELECT "HorizontalMetaData"."Id", ROW_NUMBER() OVER 
+(
+	ORDER BY 
+<#= new PlaylistSortBuilder(this.Database, this.Sort).TransformText() #>
+) AS "RowNumber"
+FROM "HorizontalMetaData";
+
+UPDATE "PlaylistItems"
+SET "Sequence" = "Sequence" + 
+(
+	SELECT "PlaylistItemsRowNumber"."RowNumber" - 1
+	FROM "PlaylistItemsRowNumber"
+	WHERE "PlaylistItemsRowNumber"."Id" = "PlaylistItems"."Id"
+)
+WHERE "PlaylistItems"."Playlist_Id" = @playlistId 
+	AND "PlaylistItems"."Status" = @status;

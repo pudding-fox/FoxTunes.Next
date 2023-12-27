@@ -1,0 +1,15 @@
+﻿<#@ template language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="FoxDb" #>
+<#@ import namespace="FoxTunes.Interfaces" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+
+SELECT "LibraryHierarchyItems"."Id", "LibraryHierarchy_Id", "Value", "IsLeaf"
+FROM "LibraryHierarchyItems"
+WHERE "LibraryHierarchy_Id" = @libraryHierarchyId
+	AND ((@libraryHierarchyItemId IS NULL AND "LibraryHierarchyItems"."Parent_Id" IS NULL) 
+		OR "LibraryHierarchyItems"."Parent_Id" = @libraryHierarchyItemId)
+<#= new LibraryHierarchyFilterBuilder(this.Database, this.Filter, LibraryHierarchyFilterSource.LibraryHierarchyItem).TransformText()  #>
+ORDER BY "Value"

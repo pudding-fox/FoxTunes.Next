@@ -1,0 +1,36 @@
+﻿<#@ template language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="FoxDb" #>
+<#@ import namespace="FoxTunes.Interfaces" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+
+SELECT "MetaDataItems"."Value"
+FROM "PlaylistItems"
+	LEFT JOIN "PlaylistItem_MetaDataItem" 
+		ON "PlaylistItems"."Id" = "PlaylistItem_MetaDataItem"."PlaylistItem_Id"
+	LEFT JOIN "LibraryItem_MetaDataItem" 
+		ON "PlaylistItems"."LibraryItem_Id" =  "LibraryItem_MetaDataItem"."LibraryItem_Id"
+	JOIN "MetaDataItems" 
+		ON "MetaDataItems"."Id" = "PlaylistItem_MetaDataItem"."MetaDataItem_Id"
+			OR "MetaDataItems"."Id" = "LibraryItem_MetaDataItem"."MetaDataItem_Id"
+WHERE "PlaylistItems"."Id" IN
+	(
+<#
+
+for (var position = 0; position < this.Count; position++)
+{
+	if (position > 0)
+	{
+		#>, <#
+	}
+	#><#= "@playlistItemId" + position #><#	
+}
+
+#>		
+	)
+	AND (@type IS NULL OR (@type & "MetaDataItems"."Type") = "MetaDataItems"."Type")
+	AND (@name IS NULL OR "MetaDataItems"."Name" = @name)
+GROUP BY "MetaDataItems"."Value"
+LIMIT <#= this.Limit #>
