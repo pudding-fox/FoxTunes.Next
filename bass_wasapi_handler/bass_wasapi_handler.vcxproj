@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ImportGroup Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\Common.props" />
+  </ImportGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>15.0</VCProjectVersion>
+    <ProjectGuid>{C1A0B5D4-9245-47EE-95A9-8654A9F5CF00}</ProjectGuid>
+  </PropertyGroup>
+    <PropertyGroup Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <PreprocessorDefinitions>_USRDLL;BASS_WASAPI_HANDLER_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <ModuleDefinitionFile>bass_wasapi_handler.def</ModuleDefinitionFile>
+      <IgnoreAllDefaultLibraries>true</IgnoreAllDefaultLibraries>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="bass_wasapi_handler.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="bass\bass.h" />
+    <ClInclude Include="bass\basswasapi.h" />
+    <ClInclude Include="bass_wasapi_handler.h" />
+  </ItemGroup>
+    <ItemGroup Condition="'$(Platform)'=='Win32'">
+    <Library Include="..\lib\x86\bass.lib" />
+    <Library Include="..\lib\x86\basswasapi.lib" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(Platform)'=='x64'">
+    <Library Include="..\lib\x64\bass.lib" />
+    <Library Include="..\lib\x64\basswasapi.lib" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bass_wasapi_handler.def" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+</Project>

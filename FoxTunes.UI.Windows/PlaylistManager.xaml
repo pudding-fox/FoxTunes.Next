@@ -1,0 +1,121 @@
+﻿<UserControl x:Class="FoxTunes.PlaylistManager"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:System="clr-namespace:System;assembly=mscorlib"
+             xmlns:Core="clr-namespace:FoxTunes;assembly=FoxTunes.Core" 
+             xmlns:Windows="clr-namespace:FoxTunes" 
+             xmlns:ViewModel="clr-namespace:FoxTunes.ViewModel"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="600">
+    <UserControl.Resources>
+        <ViewModel:PlaylistManager x:Key="ViewModel"></ViewModel:PlaylistManager>
+        <ObjectDataProvider x:Key="PlaylistTypes" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="Core:PlaylistType"/>
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="200"></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition></RowDefinition>
+                <RowDefinition Height="Auto"></RowDefinition>
+            </Grid.RowDefinitions>
+            <ListBox 
+                    Grid.Column="0" 
+                    Grid.Row="0" 
+                    ItemsSource="{Binding Items, Source={StaticResource ViewModel}, IsAsync=True}" 
+                    SelectedValue="{Binding SelectedItem, Source={StaticResource ViewModel}}">
+                <ListBox.ItemContainerStyle>
+                    <Style TargetType="ListBoxItem" BasedOn="{StaticResource {x:Type ListBoxItem}}">
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch"></Setter>
+                    </Style>
+                </ListBox.ItemContainerStyle>
+                <ListBox.ItemTemplate>
+                    <DataTemplate DataType="{x:Type Core:Playlist}">
+                        <Grid IsHitTestVisible="True" Background="Transparent">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition></ColumnDefinition>
+                                <ColumnDefinition Width="Auto"></ColumnDefinition>
+                                <ColumnDefinition Width="Auto"></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="{Binding Name}" Foreground="{DynamicResource TextBrush}"></TextBlock>
+                            <Button Grid.Column="1" Name="UpButton" Visibility="Hidden" Width="{Binding ActualHeight, RelativeSource={RelativeSource Self}}" Command="{Binding MoveUpCommand, Source={StaticResource ViewModel}}" CommandParameter="{Binding}">↑</Button>
+                            <Button Grid.Column="2" Name="DownButton" Visibility="Hidden" Width="{Binding ActualHeight, RelativeSource={RelativeSource Self}}" Command="{Binding MoveDownCommand, Source={StaticResource ViewModel}}" CommandParameter="{Binding}">↓</Button>
+                        </Grid>
+                        <DataTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="UpButton" Property="Visibility" Value="Visible"></Setter>
+                                <Setter TargetName="DownButton" Property="Visibility" Value="Visible"></Setter>
+                            </Trigger>
+                        </DataTemplate.Triggers>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+            <StackPanel Grid.Column="0" Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button Width="70" Height="30" Margin="7,7,0,0" Command="{Binding AddPlaylistCommand, Mode=OneWay, Source={StaticResource ViewModel}}">New</Button>
+                <Button Width="70" Height="30" Margin="7,7,0,0" Command="{Binding RemovePlaylistCommand, Mode=OneWay, Source={StaticResource ViewModel}}">Delete</Button>
+            </StackPanel>
+            <Grid Grid.Column="1" Grid.Row="0" Grid.RowSpan="2" DataContext="{Binding SelectedItem, Source={StaticResource ViewModel}}" Grid.IsSharedSizeScope="True">
+                <Grid.Style>
+                    <Style TargetType="{x:Type Grid}">
+                        <Setter Property="IsEnabled" Value="True"></Setter>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding}" Value="{x:Null}">
+                                <Setter Property="IsEnabled" Value="False"></Setter>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Grid.Style>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                </Grid.RowDefinitions>
+                <Grid Grid.Row="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" SharedSizeGroup="Label"></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <Label Grid.Column="0" Grid.Row="0">Name</Label>
+                    <TextBox Grid.Column="1" Grid.Row="0" Text="{Binding Name}" Margin="0,0,0,5"></TextBox>
+                    <Label Grid.Column="0" Grid.Row="1">Type</Label>
+                    <ComboBox Grid.Column="1" Grid.Row="1" SelectedValue="{Binding Type}" ItemsSource="{Binding Mode=OneWay, Source={StaticResource PlaylistTypes}}" Margin="0,0,0,5"></ComboBox>
+                    <Label Grid.Column="0" Grid.Row="2">Enabled</Label>
+                    <CheckBox Grid.Column="1" Grid.Row="2" VerticalAlignment="Center" IsChecked="{Binding Enabled}"></CheckBox>
+                </Grid>
+                <Windows:PlaylistConfigDialog Grid.Row="1" Playlist="{Binding}"></Windows:PlaylistConfigDialog>
+            </Grid>
+        </Grid>
+        <Grid Grid.Row="1" >
+            <Grid.Style>
+                <Style TargetType="{x:Type Grid}">
+                    <Setter Property="IsEnabled" Value="True"></Setter>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding IsSaving, Source={StaticResource ViewModel}}" Value="True">
+                            <Setter Property="IsEnabled" Value="False"></Setter>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Grid.Style>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button Width="70" Height="30" Margin="7,7,0,0" Windows:ButtonExtensions.Command="{Binding SaveCommand, Mode=OneWay, Source={StaticResource ViewModel}}" Windows:ButtonExtensions.CommandBehaviour="{x:Static Windows:ButtonExtensions.COMMAND_BEHAVIOUR_DISMISS}" Content="{x:Static ViewModel:StringResources.PlaylistManager_Save}"/>
+                <Button Width="70" Height="30" Margin="7,7,0,0" Windows:ButtonExtensions.Command="{Binding CancelCommand, Mode=OneWay, Source={StaticResource ViewModel}}" Windows:ButtonExtensions.CommandBehaviour="{x:Static Windows:ButtonExtensions.COMMAND_BEHAVIOUR_DISMISS}" Content="{x:Static ViewModel:StringResources.PlaylistManager_Cancel}"/>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</UserControl>

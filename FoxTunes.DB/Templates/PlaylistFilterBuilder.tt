@@ -1,0 +1,82 @@
+﻿<#@ template language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="FoxDb" #>
+<#@ import namespace="FoxTunes.Interfaces" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+
+<#
+if (this.Filter != null)
+{
+	var firstGroup = true;
+	foreach (var group in this.Filter.Groups)
+	{
+		if (firstGroup)
+		{
+			firstGroup = false;
+		}
+		else
+		{
+#> AND <#
+		}
+		var firstEntry = true;
+		foreach (var entry in group.Entries)
+		{
+			if (firstEntry)
+			{
+				firstEntry = false;
+			}
+			else
+			{
+#> OR <#
+			}
+			var numeric = default(int);
+			var isNumeric = NumericOperators.Contains(entry.Operator) && int.TryParse(entry.Value, out numeric);
+#>("MetaDataItems"."Name" = <#= this.Database.QueryFactory.Dialect.String(entry.Name) #> AND <#
+			if (isNumeric)
+			{
+#>CAST("MetaDataItems"."Value" AS int)<#
+			}
+			else
+			{
+#>"MetaDataItems"."Value"<#
+			}
+			switch (entry.Operator)
+			{
+				default:
+				case FilterParserEntryOperator.Equal:
+#> = <#
+					break;
+				case FilterParserEntryOperator.Greater:
+#> > <#					
+					break;
+				case FilterParserEntryOperator.GreaterEqual:
+#> >= <#					
+					break;
+				case FilterParserEntryOperator.Less:
+#> < <#					
+					break;
+				case FilterParserEntryOperator.LessEqual:
+#> <= <#					
+					break;
+				case FilterParserEntryOperator.Match:
+#> LIKE <#					
+					break;
+			}
+#>
+<# 
+			if (isNumeric)
+			{
+#><#= numeric #><#
+			}
+			else
+			{
+#><#= this.Database.QueryFactory.Dialect.String(entry.Value.Replace(FilterParserResultEntry.BOUNDED_WILDCARD, "_").Replace(FilterParserResultEntry.UNBOUNDED_WILDCARD, "%"))  #><#
+			}
+#>
+)<#
+		}
+	}
+}
+#>

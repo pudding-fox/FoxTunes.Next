@@ -1,0 +1,672 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Artwork.Name" xml:space="preserve">
+    <value>Artwork</value>
+  </data>
+  <data name="ArtworkConfiguration.Blur" xml:space="preserve">
+    <value>Blur</value>
+  </data>
+  <data name="ArtworkConfiguration.Section" xml:space="preserve">
+    <value>Artwork</value>
+  </data>
+  <data name="BackgroundTasks.Name" xml:space="preserve">
+    <value>Background Tasks</value>
+  </data>
+  <data name="DefaultLayoutProvider.Description" xml:space="preserve">
+    <value />
+  </data>
+  <data name="DefaultLayoutProvider.Name" xml:space="preserve">
+    <value>Default</value>
+  </data>
+  <data name="DefaultPlaylist.Name" xml:space="preserve">
+    <value>Playlist</value>
+  </data>
+  <data name="Equalizer.Name" xml:space="preserve">
+    <value>Equalizer Launcher</value>
+  </data>
+  <data name="EqualizerDialog.Name" xml:space="preserve">
+    <value>Equalizer</value>
+  </data>
+  <data name="EqualizerWindow.Title" xml:space="preserve">
+    <value>Equalizer</value>
+  </data>
+  <data name="General.Advanced" xml:space="preserve">
+    <value>Advanced</value>
+  </data>
+  <data name="General.Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="General.OK" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="General.Search" xml:space="preserve">
+    <value>Search</value>
+  </data>
+  <data name="General.Settings" xml:space="preserve">
+    <value>Settings</value>
+  </data>
+  <data name="ImageBehaviour.Path" xml:space="preserve">
+    <value>Library</value>
+  </data>
+  <data name="ImageBehaviour.Refresh" xml:space="preserve">
+    <value>Refresh Images</value>
+  </data>
+  <data name="Info.Name" xml:space="preserve">
+    <value>Now Playing</value>
+  </data>
+  <data name="Info.NoAlbum" xml:space="preserve">
+    <value>No Album</value>
+  </data>
+  <data name="Info.NoArtist" xml:space="preserve">
+    <value>No Artist</value>
+  </data>
+  <data name="Info.NoGenre" xml:space="preserve">
+    <value>No Genre</value>
+  </data>
+  <data name="Info.NoPerformer" xml:space="preserve">
+    <value>No Performer</value>
+  </data>
+  <data name="Info.NoYear" xml:space="preserve">
+    <value>No Year</value>
+  </data>
+  <data name="KeyBindingsBehaviourConfiguration.Equalizer" xml:space="preserve">
+    <value>Equalizer</value>
+  </data>
+  <data name="KeyBindingsBehaviourConfiguration.FullScreen" xml:space="preserve">
+    <value>Full Screen</value>
+  </data>
+  <data name="KeyBindingsBehaviourConfiguration.Next" xml:space="preserve">
+    <value>Next</value>
+  </data>
+  <data name="KeyBindingsBehaviourConfiguration.Play" xml:space="preserve">
+    <value>Play</value>
+  </data>
+  <data name="KeyBindingsBehaviourConfiguration.PlaylistManager" xml:space="preserve">
+    <value>Playlist Manager</value>
+  </data>
+  <data name="KeyBindingsBehaviourConfiguration.Previous" xml:space="preserve">
+    <value>Previous</value>
+  </data>
+  <data name="KeyBindingsBehaviourConfiguration.Search" xml:space="preserve">
+    <value>Search</value>
+  </data>
+  <data name="KeyBindingsBehaviourConfiguration.Section" xml:space="preserve">
+    <value>Keyboard Shortcuts</value>
+  </data>
+  <data name="KeyBindingsBehaviourConfiguration.Settings" xml:space="preserve">
+    <value>Settings</value>
+  </data>
+  <data name="KeyBindingsBehaviourConfiguration.Stop" xml:space="preserve">
+    <value>Stop</value>
+  </data>
+  <data name="LibraryActionsBehaviour.AppendPlaylist" xml:space="preserve">
+    <value>Add To Playlist</value>
+  </data>
+  <data name="LibraryActionsBehaviour.Folders" xml:space="preserve">
+    <value>Folders</value>
+  </data>
+  <data name="LibraryActionsBehaviour.Library" xml:space="preserve">
+    <value>Library</value>
+  </data>
+  <data name="LibraryActionsBehaviour.Rebuild" xml:space="preserve">
+    <value>Rebuild View</value>
+  </data>
+  <data name="LibraryActionsBehaviour.ReplacePlaylist" xml:space="preserve">
+    <value>Replace Playlist</value>
+  </data>
+  <data name="LibraryActionsBehaviour.Rescan" xml:space="preserve">
+    <value>Rescan Files</value>
+  </data>
+  <data name="LibraryActionsBehaviour.Settings" xml:space="preserve">
+    <value>Settings</value>
+  </data>
+  <data name="LibraryBase.Empty" xml:space="preserve">
+    <value>Add to collection by dropping files here.</value>
+  </data>
+  <data name="LibraryBase.Loading" xml:space="preserve">
+    <value>Loading...</value>
+  </data>
+  <data name="LibraryBase.Updating" xml:space="preserve">
+    <value>Updating...</value>
+  </data>
+  <data name="LibraryRootsDialog.Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="LibraryRootsDialog.Delete" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="LibraryRootsDialog.GroupHeader" xml:space="preserve">
+    <value>Library Folders</value>
+  </data>
+  <data name="LibraryRootsDialog.New" xml:space="preserve">
+    <value>New</value>
+  </data>
+  <data name="LibraryRootsDialog.Path" xml:space="preserve">
+    <value>Path</value>
+  </data>
+  <data name="LibraryRootsDialog.Save" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="LibraryRootsSettings.Browse" xml:space="preserve">
+    <value>Add folder to library.</value>
+  </data>
+  <data name="LibrarySearch.Name" xml:space="preserve">
+    <value>Library Search</value>
+  </data>
+  <data name="LibrarySelector.Name" xml:space="preserve">
+    <value>Library Selector</value>
+  </data>
+  <data name="LibrarySettingsDialog.Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="LibrarySettingsDialog.Clear" xml:space="preserve">
+    <value>Clear</value>
+  </data>
+  <data name="LibrarySettingsDialog.Clone" xml:space="preserve">
+    <value>Clone</value>
+  </data>
+  <data name="LibrarySettingsDialog.Delete" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="LibrarySettingsDialog.Enabled" xml:space="preserve">
+    <value>Enabled</value>
+  </data>
+  <data name="LibrarySettingsDialog.GroupHeader" xml:space="preserve">
+    <value>Views</value>
+  </data>
+  <data name="LibrarySettingsDialog.Help" xml:space="preserve">
+    <value>Help</value>
+  </data>
+  <data name="LibrarySettingsDialog.Levels" xml:space="preserve">
+    <value>Levels</value>
+  </data>
+  <data name="LibrarySettingsDialog.Name" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="LibrarySettingsDialog.New" xml:space="preserve">
+    <value>New</value>
+  </data>
+  <data name="LibrarySettingsDialog.Rescan" xml:space="preserve">
+    <value>Rescan</value>
+  </data>
+  <data name="LibrarySettingsDialog.Reset" xml:space="preserve">
+    <value>Reset</value>
+  </data>
+  <data name="LibrarySettingsDialog.Save" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="LibrarySettingsDialog.Script" xml:space="preserve">
+    <value>Script</value>
+  </data>
+  <data name="LibrarySettingsDialog.Type" xml:space="preserve">
+    <value>Type</value>
+  </data>
+  <data name="LibraryTree.Name" xml:space="preserve">
+    <value>Library Tree</value>
+  </data>
+  <data name="MetaDataItemType.CustomTag" xml:space="preserve">
+    <value>Tag (Custom)</value>
+  </data>
+  <data name="MetaDataItemType.Document" xml:space="preserve">
+    <value>Document</value>
+  </data>
+  <data name="MetaDataItemType.Image" xml:space="preserve">
+    <value>Image</value>
+  </data>
+  <data name="MetaDataItemType.Property" xml:space="preserve">
+    <value>Property</value>
+  </data>
+  <data name="MetaDataItemType.Statistic" xml:space="preserve">
+    <value>Statistic</value>
+  </data>
+  <data name="MetaDataItemType.Tag" xml:space="preserve">
+    <value>Tag</value>
+  </data>
+  <data name="MetaDataName.Description" xml:space="preserve">
+    <value>Codec</value>
+  </data>
+  <data name="MetaDataName.DirectoryName" xml:space="preserve">
+    <value>Folder</value>
+  </data>
+  <data name="MetaDataName.FileCreationTime" xml:space="preserve">
+    <value>Created</value>
+  </data>
+  <data name="MetaDataName.FileModificationTime" xml:space="preserve">
+    <value>Modified</value>
+  </data>
+  <data name="MetaDataName.FileName" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="MetaDataName.FileSize" xml:space="preserve">
+    <value>Size</value>
+  </data>
+  <data name="MetaDataName.IsCompilation" xml:space="preserve">
+    <value>Compilation</value>
+  </data>
+  <data name="MetaDataName.ReplayGainAlbumGain" xml:space="preserve">
+    <value>Album Gain</value>
+  </data>
+  <data name="MetaDataName.ReplayGainAlbumPeak" xml:space="preserve">
+    <value>Album Peak</value>
+  </data>
+  <data name="MetaDataName.ReplayGainTrackGain" xml:space="preserve">
+    <value>Track Gain</value>
+  </data>
+  <data name="MetaDataName.ReplayGainTrackPeak" xml:space="preserve">
+    <value>Track Peak</value>
+  </data>
+  <data name="MetaDataName.SelectionCount" xml:space="preserve">
+    <value>Items Selected</value>
+  </data>
+  <data name="MetaDataProvidersSettingsDialog.Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="MetaDataProvidersSettingsDialog.Delete" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="MetaDataProvidersSettingsDialog.Enabled" xml:space="preserve">
+    <value>Enabled</value>
+  </data>
+  <data name="MetaDataProvidersSettingsDialog.GroupHeader" xml:space="preserve">
+    <value>Meta Data</value>
+  </data>
+  <data name="MetaDataProvidersSettingsDialog.Name" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="MetaDataProvidersSettingsDialog.New" xml:space="preserve">
+    <value>New</value>
+  </data>
+  <data name="MetaDataProvidersSettingsDialog.Reset" xml:space="preserve">
+    <value>Reset</value>
+  </data>
+  <data name="MetaDataProvidersSettingsDialog.Save" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="MetaDataProvidersSettingsDialog.Script" xml:space="preserve">
+    <value>Script</value>
+  </data>
+  <data name="MetaDataProvidersSettingsDialog.Type" xml:space="preserve">
+    <value>Type</value>
+  </data>
+  <data name="MinimalLayoutProvider.Description" xml:space="preserve">
+    <value />
+  </data>
+  <data name="MinimalLayoutProvider.Name" xml:space="preserve">
+    <value>Minimal</value>
+  </data>
+  <data name="MiniPlayer.Name" xml:space="preserve">
+    <value>Mini Player Launcher</value>
+  </data>
+  <data name="MiniPlaylist.Name" xml:space="preserve">
+    <value>Simple Playlist</value>
+  </data>
+  <data name="OutputSelector.Name" xml:space="preserve">
+    <value>Output Selector</value>
+  </data>
+  <data name="Playback.Name" xml:space="preserve">
+    <value>Playback Controls</value>
+  </data>
+  <data name="PlaybackDetails.NoOutput" xml:space="preserve">
+    <value>Output Inactive</value>
+  </data>
+  <data name="PlaylistBase.Empty" xml:space="preserve">
+    <value>Add to playlist by dropping files here.</value>
+  </data>
+  <data name="PlaylistBase.Loading" xml:space="preserve">
+    <value>Loading...</value>
+  </data>
+  <data name="PlaylistBase.Updating" xml:space="preserve">
+    <value>Updating...</value>
+  </data>
+  <data name="PlaylistConfigDialog.Count" xml:space="preserve">
+    <value>Tracks</value>
+  </data>
+  <data name="PlaylistConfigDialog.Expression" xml:space="preserve">
+    <value>Expression</value>
+  </data>
+  <data name="PlaylistConfigDialog.Genres" xml:space="preserve">
+    <value>Genres</value>
+  </data>
+  <data name="PlaylistConfigDialog.Like" xml:space="preserve">
+    <value>Like</value>
+  </data>
+  <data name="PlaylistConfigDialog.MinAge" xml:space="preserve">
+    <value>Min Age (Days)</value>
+  </data>
+  <data name="PlaylistConfigDialog.MinRating" xml:space="preserve">
+    <value>Min Rating</value>
+  </data>
+  <data name="PlaylistManager.Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="PlaylistManager.Save" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="Playlists.Name" xml:space="preserve">
+    <value>Playlist Tabs</value>
+  </data>
+  <data name="PlaylistsActionsBehaviour.Add" xml:space="preserve">
+    <value>Add Playlist</value>
+  </data>
+  <data name="PlaylistsActionsBehaviour.Create" xml:space="preserve">
+    <value>Create Playlist</value>
+  </data>
+  <data name="PlaylistsActionsBehaviour.Manage" xml:space="preserve">
+    <value>Playlist Manager</value>
+  </data>
+  <data name="PlaylistsActionsBehaviour.Remove" xml:space="preserve">
+    <value>Remove Playlist</value>
+  </data>
+  <data name="PlaylistSearch.Name" xml:space="preserve">
+    <value>Playlist Search</value>
+  </data>
+  <data name="PlaylistSelector.Name" xml:space="preserve">
+    <value>Playlist Selector</value>
+  </data>
+  <data name="PlaylistSelectorList.Add" xml:space="preserve">
+    <value>Add</value>
+  </data>
+  <data name="PlaylistSelectorList.Name" xml:space="preserve">
+    <value>Playlist Selector (List)</value>
+  </data>
+  <data name="PlaylistSelectorList.Remove" xml:space="preserve">
+    <value>Remove</value>
+  </data>
+  <data name="PlaylistSettingsDialog.Help" xml:space="preserve">
+    <value>Help</value>
+  </data>
+  <data name="PlaylistSortingBehaviourConfiguration.Enabled" xml:space="preserve">
+    <value>Sorting</value>
+  </data>
+  <data name="PlaylistTabs.Name" xml:space="preserve">
+    <value>Playlist Tabs</value>
+  </data>
+  <data name="Plugins.NoDescription" xml:space="preserve">
+    <value>The plugin does not have a description.</value>
+  </data>
+  <data name="Plugins.RestartWarning" xml:space="preserve">
+    <value>Plugin selection was updated, restart the application to apply. If something goes wrong, delete the config file: {0}.</value>
+  </data>
+  <data name="PluginsDialog.Header" xml:space="preserve">
+    <value>Plugins</value>
+  </data>
+  <data name="PluginsDialog.NotAvailable" xml:space="preserve">
+    <value>This feature requires is designed for the portable package.</value>
+  </data>
+  <data name="ProfilesBehaviour.Delete" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="ProfilesBehaviour.New" xml:space="preserve">
+    <value>New</value>
+  </data>
+  <data name="ProfilesBehaviour.New.Prompt" xml:space="preserve">
+    <value>Profile Name</value>
+  </data>
+  <data name="ProfilesBehaviour.Path" xml:space="preserve">
+    <value>Profiles</value>
+  </data>
+  <data name="ProfilesBehaviourConfiguration.Enabled" xml:space="preserve">
+    <value>Enabled</value>
+  </data>
+  <data name="ProfilesBehaviourConfiguration.Section" xml:space="preserve">
+    <value>Profiles</value>
+  </data>
+  <data name="ProfileSelector.Name" xml:space="preserve">
+    <value>Profile Selector</value>
+  </data>
+  <data name="Report.Close" xml:space="preserve">
+    <value>Close</value>
+  </data>
+  <data name="Settings.Name" xml:space="preserve">
+    <value>Settings Launcher</value>
+  </data>
+  <data name="SettingsDialog.EmptyPage" xml:space="preserve">
+    <value>Please select a sub page.</value>
+  </data>
+  <data name="SettingsDialog.GroupHeader" xml:space="preserve">
+    <value>Components</value>
+  </data>
+  <data name="SettingsDialog.ResetAll" xml:space="preserve">
+    <value>Reset All</value>
+  </data>
+  <data name="SettingsDialog.ResetPage" xml:space="preserve">
+    <value>Reset Page</value>
+  </data>
+  <data name="SettingsDialog.Save" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="SettingsWindow.Title" xml:space="preserve">
+    <value>Settings</value>
+  </data>
+  <data name="Shuffle.Name" xml:space="preserve">
+    <value>Shuffle</value>
+  </data>
+  <data name="StaticImage.Name" xml:space="preserve">
+    <value>Image</value>
+  </data>
+  <data name="StaticImageConfiguration.Interval" xml:space="preserve">
+    <value>Interval (seconds)</value>
+  </data>
+  <data name="StaticImageConfiguration.Opacity" xml:space="preserve">
+    <value>Opacity</value>
+  </data>
+  <data name="StaticImageConfiguration.Path" xml:space="preserve">
+    <value>Path</value>
+  </data>
+  <data name="StaticImageConfiguration.Section" xml:space="preserve">
+    <value>Image</value>
+  </data>
+  <data name="StreamPosition.Name" xml:space="preserve">
+    <value>Seekbar</value>
+  </data>
+  <data name="Tempo.Name" xml:space="preserve">
+    <value>Tempo Launcher</value>
+  </data>
+  <data name="TempoDialog.Name" xml:space="preserve">
+    <value>Tempo</value>
+  </data>
+  <data name="ThemeLoader.ColorPaletteAuto" xml:space="preserve">
+    <value>Auto</value>
+  </data>
+  <data name="UIComponentRole.Container" xml:space="preserve">
+    <value>Container</value>
+  </data>
+  <data name="UIComponentRole.DSP" xml:space="preserve">
+    <value>DSP</value>
+  </data>
+  <data name="UIComponentRole.Info" xml:space="preserve">
+    <value>Info</value>
+  </data>
+  <data name="UIComponentRole.Launcher" xml:space="preserve">
+    <value>Launcher</value>
+  </data>
+  <data name="UIComponentRole.Library" xml:space="preserve">
+    <value>Library</value>
+  </data>
+  <data name="UIComponentRole.None" xml:space="preserve">
+    <value>Other</value>
+  </data>
+  <data name="UIComponentRole.Playback" xml:space="preserve">
+    <value>Playback</value>
+  </data>
+  <data name="UIComponentRole.Playlist" xml:space="preserve">
+    <value>Playlist</value>
+  </data>
+  <data name="UIComponentRole.System" xml:space="preserve">
+    <value>System</value>
+  </data>
+  <data name="UIComponentRole.Visualization" xml:space="preserve">
+    <value>Visualization</value>
+  </data>
+  <data name="Visualization.Unavailable" xml:space="preserve">
+    <value>Visualization unavailable.</value>
+  </data>
+  <data name="Visualization.UnavailableDetail" xml:space="preserve">
+    <value>Mixer is required for rendering, check your output settings.</value>
+  </data>
+  <data name="Volume.Name" xml:space="preserve">
+    <value>Volume</value>
+  </data>
+  <data name="WindowAcrylicBlurBehaviour.Name" xml:space="preserve">
+    <value>Acrylic</value>
+  </data>
+  <data name="WindowBlurBehaviour.Name" xml:space="preserve">
+    <value>Aero</value>
+  </data>
+  <data name="WindowCoverArtAccentBehaviour.Name" xml:space="preserve">
+    <value>Cover Art</value>
+  </data>
+  <data name="WindowExtensions.TransparencyWarning" xml:space="preserve">
+    <value>Restart required to enable/disable transparency.</value>
+  </data>
+  <data name="WindowsUserInterfaceConfiguration.AccentColor" xml:space="preserve">
+    <value>Accent Color</value>
+  </data>
+  <data name="WindowsUserInterfaceConfiguration.Counters" xml:space="preserve">
+    <value>Show Counters</value>
+  </data>
+  <data name="WindowsUserInterfaceConfiguration.Cursors" xml:space="preserve">
+    <value>Show Cursor Adorners</value>
+  </data>
+  <data name="WindowsUserInterfaceConfiguration.FirstRun" xml:space="preserve">
+    <value>Initial Setup</value>
+  </data>
+  <data name="WindowsUserInterfaceConfiguration.FontFamily" xml:space="preserve">
+    <value>Font Family</value>
+  </data>
+  <data name="WindowsUserInterfaceConfiguration.Layout" xml:space="preserve">
+    <value>Layout</value>
+  </data>
+  <data name="WindowsUserInterfaceConfiguration.Section" xml:space="preserve">
+    <value>Appearance</value>
+  </data>
+  <data name="WindowsUserInterfaceConfiguration.Theme" xml:space="preserve">
+    <value>Theme</value>
+  </data>
+  <data name="WindowsUserInterfaceConfiguration.TimerFrequency" xml:space="preserve">
+    <value>Global Timer Interval</value>
+  </data>
+  <data name="WindowsUserInterfaceConfiguration.Transparency" xml:space="preserve">
+    <value>Transparency</value>
+  </data>
+  <data name="WindowsUserInterfaceConfiguration.TransparencyProvider" xml:space="preserve">
+    <value>Transparency Provider</value>
+  </data>
+</root>

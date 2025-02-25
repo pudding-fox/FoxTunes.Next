@@ -1,0 +1,32 @@
+﻿<Windows:UIComponentBase x:Class="FoxTunes.Equalizer"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:Core="clr-namespace:FoxTunes;assembly=FoxTunes.Core" 
+             xmlns:Windows="clr-namespace:FoxTunes" 
+             xmlns:ViewModel="clr-namespace:FoxTunes.ViewModel"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300" d:DataContext="{d:DesignInstance Core:Core, IsDesignTimeCreatable=False}">
+    <UserControl.Resources>
+        <ViewModel:Equalizer x:Key="ViewModel"></ViewModel:Equalizer>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"></BooleanToVisibilityConverter>
+    </UserControl.Resources>
+    <UserControl.Visibility>
+        <Binding Converter="{StaticResource BooleanToVisibilityConverter}" Mode="OneWay" Path="Available" Source="{StaticResource ViewModel}"/>
+    </UserControl.Visibility>
+    <ToggleButton Width="30" Height="30" FontSize="20" IsChecked="{Binding WindowState.Visible, Source={StaticResource ViewModel}}">
+        <ToggleButton.ContextMenu>
+            <Windows:Menu Category="{Binding Source={x:Static Core:InvocationComponent.CATEGORY_EQUALIZER}}"></Windows:Menu>
+        </ToggleButton.ContextMenu>
+        <Viewbox xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" Width="20" Height="20">
+            <Canvas Width="512" Height="512">
+                <Path Fill="{DynamicResource TextBrush}">
+                    <Path.Data>
+                        <PathGeometry Figures="M96 146V16H64v130a64 64 0 000 124v226h32V270a64 64 0 000-124zm-16 94a32 32 0 1132-32 32 32 0 01-32 32zm192 50V16h-32v274a64 64 0 000 124v82h32v-82a64 64 0 000-124zm-16 94a32 32 0 1132-32 32 32 0 01-32 32zM448 82V16h-32v66a64 64 0 000 124v290h32V206a64 64 0 000-124zm-16 94a32 32 0 1132-32 32 32 0 01-32 32z" FillRule="Nonzero"/>
+                    </Path.Data>
+                </Path>
+            </Canvas>
+        </Viewbox>
+    </ToggleButton>
+</Windows:UIComponentBase>

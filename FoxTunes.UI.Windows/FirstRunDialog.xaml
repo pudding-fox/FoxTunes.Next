@@ -1,0 +1,48 @@
+﻿<UserControl x:Class="FoxTunes.FirstRunDialog"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:Core="clr-namespace:FoxTunes;assembly=FoxTunes.Core" 
+             xmlns:Windows="clr-namespace:FoxTunes"
+             xmlns:ViewModel="clr-namespace:FoxTunes.ViewModel"
+             mc:Ignorable="d" 
+             d:DesignHeight="500" d:DesignWidth="700">
+    <UserControl.Resources>
+        <ViewModel:FirstRun x:Key="ViewModel"></ViewModel:FirstRun>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition></RowDefinition>
+        </Grid.RowDefinitions>
+        <TextBlock Grid.Column="0" Grid.Row="0" Foreground="{DynamicResource TextBrush}" Text="{Binding Theme.Name, Source={StaticResource ViewModel}}" VerticalAlignment="Center" Margin="0,0,4,0"></TextBlock>
+        <ComboBox Grid.Column="1" Grid.Row="0" Margin="0,0,0,4" ItemsSource="{Binding Theme.Options, Source={StaticResource ViewModel}}" SelectedValue="{Binding Theme.Value, Source={StaticResource ViewModel}}" DisplayMemberPath="Name"></ComboBox>
+        <TextBlock Grid.Column="0" Grid.Row="1" Foreground="{DynamicResource TextBrush}" Text="{Binding Layout.Name, Source={StaticResource ViewModel}}" VerticalAlignment="Center" Margin="0,0,4,0"></TextBlock>
+        <ComboBox Grid.Column="1" Grid.Row="1" Margin="0,0,0,4" ItemsSource="{Binding Layout.Options, Source={StaticResource ViewModel}}" SelectedValue="{Binding Layout.Value, Source={StaticResource ViewModel}}" DisplayMemberPath="Name"></ComboBox>
+        <TextBlock Grid.Column="0" Grid.Row="2" Foreground="{DynamicResource TextBrush}" Text="Preset" VerticalAlignment="Center" Margin="0,0,4,0"></TextBlock>
+        <ContentControl Grid.Column="1" Grid.Row="2">
+            <ContentControl.Style>
+                <Style TargetType="{x:Type ContentControl}">
+                    <Setter Property="Content" Value="{Binding LayoutProvider.PresetSelector, Mode=OneWay, Source={StaticResource ViewModel}}"></Setter>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding LayoutProvider.PresetSelector, Mode=OneWay, Source={StaticResource ViewModel}}" Value="{x:Null}">
+                            <Setter Property="Content">
+                                <Setter.Value>
+                                    <TextBlock Foreground="{DynamicResource TextBrush}">Not applicable.</TextBlock>
+                                </Setter.Value>
+                            </Setter>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </ContentControl.Style>
+        </ContentControl>
+        <Button Grid.Column="1" Grid.Row="3" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="70" Height="30" Click="OnClose">Save</Button>
+    </Grid>
+</UserControl>

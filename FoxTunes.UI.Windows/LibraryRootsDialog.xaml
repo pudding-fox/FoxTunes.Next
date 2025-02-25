@@ -1,0 +1,80 @@
+﻿<UserControl x:Class="FoxTunes.LibraryRootsDialog"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:Core="clr-namespace:FoxTunes;assembly=FoxTunes.Core" 
+             xmlns:Windows="clr-namespace:FoxTunes"
+             xmlns:ViewModel="clr-namespace:FoxTunes.ViewModel"
+             mc:Ignorable="d" 
+             d:DesignHeight="500" d:DesignWidth="700">
+    <UserControl.Resources>
+        <ViewModel:LibraryRootsSettings x:Key="ViewModel"></ViewModel:LibraryRootsSettings>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+        </Grid.RowDefinitions>
+        <GroupBox Grid.Row="0" Header="{x:Static ViewModel:StringResources.LibraryRootsDialog_GroupHeader}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="200"></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                </Grid.RowDefinitions>
+                <ListBox 
+                    Grid.Column="0" 
+                    Grid.Row="0" 
+                    ItemsSource="{Binding LibraryRoots.OrderedItemsSource, Source={StaticResource ViewModel}}" 
+                    SelectedValue="{Binding LibraryRoots.SelectedValue, Source={StaticResource ViewModel}}" 
+                    DisplayMemberPath="DirectoryName">
+                </ListBox>
+                <StackPanel Grid.Column="0" Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button Width="70" Height="30" Margin="7,7,0,0" Command="{Binding LibraryRoots.AddCommand, Mode=OneWay, Source={StaticResource ViewModel}}" Content="{x:Static ViewModel:StringResources.LibraryRootsDialog_New}"></Button>
+                    <Button Width="70" Height="30" Margin="7,7,0,0" Command="{Binding LibraryRoots.RemoveCommand, Mode=OneWay, Source={StaticResource ViewModel}}" Content="{x:Static ViewModel:StringResources.LibraryRootsDialog_Delete}"></Button>
+                </StackPanel>
+                <Grid Grid.Column="1" Grid.Row="0" Grid.RowSpan="2" DataContext="{Binding LibraryRoots.SelectedValue, Source={StaticResource ViewModel}}">
+                    <Grid.Style>
+                        <Style TargetType="{x:Type Grid}">
+                            <Setter Property="IsEnabled" Value="True"></Setter>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding}" Value="{x:Null}">
+                                    <Setter Property="IsEnabled" Value="False"></Setter>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Grid.Style>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <Label Grid.Column="0" Grid.Row="0" Content="{x:Static ViewModel:StringResources.LibraryRootsDialog_Path}"></Label>
+                    <TextBox Grid.Column="1" Grid.Row="0" Text="{Binding DirectoryName}" IsReadOnly="True"></TextBox>
+                </Grid>
+            </Grid>
+        </GroupBox>
+        <Grid Grid.Row="1" >
+            <Grid.Style>
+                <Style TargetType="{x:Type Grid}">
+                    <Setter Property="IsEnabled" Value="True"></Setter>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding IsSaving, Source={StaticResource ViewModel}}" Value="True">
+                            <Setter Property="IsEnabled" Value="False"></Setter>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Grid.Style>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button Width="70" Height="30" Margin="7,7,0,0" Windows:ButtonExtensions.Command="{Binding SaveCommand, Mode=OneWay, Source={StaticResource ViewModel}}" Windows:ButtonExtensions.CommandBehaviour="{x:Static Windows:ButtonExtensions.COMMAND_BEHAVIOUR_DISMISS}" Content="{x:Static ViewModel:StringResources.LibraryRootsDialog_Save}"></Button>
+                <Button Width="70" Height="30" Margin="7,7,0,0" Windows:ButtonExtensions.Command="{Binding CancelCommand, Mode=OneWay, Source={StaticResource ViewModel}}" Windows:ButtonExtensions.CommandBehaviour="{x:Static Windows:ButtonExtensions.COMMAND_BEHAVIOUR_DISMISS}" Content="{x:Static ViewModel:StringResources.LibraryRootsDialog_Cancel}"></Button>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</UserControl>

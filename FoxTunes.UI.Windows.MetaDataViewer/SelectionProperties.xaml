@@ -1,0 +1,159 @@
+﻿<Windows:ConfigurableUIComponentBase x:Class="FoxTunes.SelectionProperties"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:Windows="clr-namespace:FoxTunes;assembly=FoxTunes.UI.Windows" 
+             xmlns:LocalWindows="clr-namespace:FoxTunes" 
+             xmlns:ViewModel="clr-namespace:FoxTunes.ViewModel;assembly=FoxTunes.UI.Windows"
+             xmlns:LocalViewModel="clr-namespace:FoxTunes.ViewModel"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <LocalViewModel:SelectionProperties x:Key="ViewModel"></LocalViewModel:SelectionProperties>
+        <ViewModel:MetaDataNameConverter x:Key="MetaDataNameConverter"></ViewModel:MetaDataNameConverter>
+        <ViewModel:ArtworkImageConverter x:Key="ArtworkImageConverter" Width="100" Height="100"></ViewModel:ArtworkImageConverter>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"></BooleanToVisibilityConverter>
+        <SolidColorBrush x:Key="Transparent" Color="Transparent"></SolidColorBrush>
+    </UserControl.Resources>
+    <Border Background="{DynamicResource ControlBrush}" BorderBrush="{DynamicResource ControlBorderBrush}" BorderThickness="1">
+        <Grid>
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <StackPanel Grid.IsSharedSizeScope="True">
+                    <StackPanel Visibility="{Binding ShowTags, Converter={StaticResource BooleanToVisibilityConverter}, Source={StaticResource ViewModel}}">
+                        <Grid Margin="4,0,0,0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"></ColumnDefinition>
+                                <ColumnDefinition></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="{x:Static LocalViewModel:StringResources.SelectionProperties_Tags}" Foreground="{DynamicResource TextBrush}" FontSize="20"></TextBlock>
+                            <Rectangle Grid.Column="1" Margin="8,0,0,0" VerticalAlignment="Center" Height="1" Stroke="{DynamicResource TextBrush}"></Rectangle>
+                        </Grid>
+                        <ItemsControl ItemsSource="{Binding Tags, Source={StaticResource ViewModel}}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid Margin="0,0,5,5">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition SharedSizeGroup="Name" Width="Auto"></ColumnDefinition>
+                                            <ColumnDefinition></ColumnDefinition>
+                                        </Grid.ColumnDefinitions>
+                                        <Label Content="{Binding Name, Converter={StaticResource MetaDataNameConverter}, Mode=OneWay}" ContentStringFormat="{}{0}:"></Label>
+                                        <TextBox Grid.Column="1" Text="{Binding Value, Mode=OneWay}" IsReadOnly="True" MinWidth="300"></TextBox>
+                                    </Grid>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </StackPanel>
+                    <StackPanel Visibility="{Binding ShowProperties, Converter={StaticResource BooleanToVisibilityConverter}, Source={StaticResource ViewModel}}">
+                        <Grid Margin="4,0,0,0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"></ColumnDefinition>
+                                <ColumnDefinition></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="{x:Static LocalViewModel:StringResources.SelectionProperties_Properties}" Foreground="{DynamicResource TextBrush}" FontSize="20"></TextBlock>
+                            <Rectangle Grid.Column="1" Margin="8,0,0,0" VerticalAlignment="Center" Height="1" Stroke="{DynamicResource TextBrush}"></Rectangle>
+                        </Grid>
+                        <ItemsControl ItemsSource="{Binding Properties, Source={StaticResource ViewModel}}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid Margin="0,0,5,5">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition SharedSizeGroup="Name" Width="Auto"></ColumnDefinition>
+                                            <ColumnDefinition></ColumnDefinition>
+                                        </Grid.ColumnDefinitions>
+                                        <Label Content="{Binding Name, Converter={StaticResource MetaDataNameConverter}, Mode=OneWay}" ContentStringFormat="{}{0}:"></Label>
+                                        <TextBox Grid.Column="1" Text="{Binding Value, Mode=OneWay}" IsReadOnly="True" MinWidth="300"></TextBox>
+                                    </Grid>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </StackPanel>
+                    <StackPanel Visibility="{Binding ShowReplayGain, Converter={StaticResource BooleanToVisibilityConverter}, Source={StaticResource ViewModel}}">
+                        <Grid Margin="4,0,0,0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"></ColumnDefinition>
+                                <ColumnDefinition></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="{x:Static LocalViewModel:StringResources.SelectionProperties_ReplayGain}" Foreground="{DynamicResource TextBrush}" FontSize="20"></TextBlock>
+                            <Rectangle Grid.Column="1" Margin="8,0,0,0" VerticalAlignment="Center" Height="1" Stroke="{DynamicResource TextBrush}"></Rectangle>
+                        </Grid>
+                        <ItemsControl ItemsSource="{Binding ReplayGain, Source={StaticResource ViewModel}}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid Margin="0,0,5,5">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition SharedSizeGroup="Name" Width="Auto"></ColumnDefinition>
+                                            <ColumnDefinition></ColumnDefinition>
+                                        </Grid.ColumnDefinitions>
+                                        <Label Content="{Binding Name, Converter={StaticResource MetaDataNameConverter}, Mode=OneWay}" ContentStringFormat="{}{0}:"></Label>
+                                        <TextBox Grid.Column="1" Text="{Binding Value, Mode=OneWay}" IsReadOnly="True" MinWidth="300"></TextBox>
+                                    </Grid>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </StackPanel>
+                    <StackPanel Visibility="{Binding ShowLocation, Converter={StaticResource BooleanToVisibilityConverter}, Source={StaticResource ViewModel}}">
+                        <Grid Margin="4,0,0,0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"></ColumnDefinition>
+                                <ColumnDefinition></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="{x:Static LocalViewModel:StringResources.SelectionProperties_Location}" Foreground="{DynamicResource TextBrush}" FontSize="20"></TextBlock>
+                            <Rectangle Grid.Column="1" Margin="8,0,0,0" VerticalAlignment="Center" Height="1" Stroke="{DynamicResource TextBrush}"></Rectangle>
+                        </Grid>
+                        <ItemsControl ItemsSource="{Binding FileSystem, Source={StaticResource ViewModel}}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid Margin="0,0,5,5">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition SharedSizeGroup="Name" Width="Auto"></ColumnDefinition>
+                                            <ColumnDefinition></ColumnDefinition>
+                                        </Grid.ColumnDefinitions>
+                                        <Label Content="{Binding Name, Converter={StaticResource MetaDataNameConverter}, Mode=OneWay}" ContentStringFormat="{}{0}:"></Label>
+                                        <TextBox Grid.Column="1" Text="{Binding Value, Mode=OneWay}" IsReadOnly="True" MinWidth="300"></TextBox>
+                                    </Grid>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </StackPanel>
+                    <StackPanel Visibility="{Binding ShowImages, Converter={StaticResource BooleanToVisibilityConverter}, Source={StaticResource ViewModel}}">
+                        <Grid Margin="4,0,0,0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"></ColumnDefinition>
+                                <ColumnDefinition></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="{x:Static LocalViewModel:StringResources.SelectionProperties_Images}" Foreground="{DynamicResource TextBrush}" FontSize="20"></TextBlock>
+                            <Rectangle Grid.Column="1" Margin="8,0,0,0" VerticalAlignment="Center" Height="1" Stroke="{DynamicResource TextBrush}"></Rectangle>
+                        </Grid>
+                        <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Hidden" Margin="4" PreviewMouseWheel="OnPreviewMouseWheel">
+                            <ItemsControl ItemsSource="{Binding Images, Source={StaticResource ViewModel}}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <StackPanel Orientation="Horizontal"></StackPanel>
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Windows:AsyncImage DataContext="{Binding Value, Converter={StaticResource ArtworkImageConverter}}" Width="100" Height="100" Source="{Binding Value, FallbackValue={StaticResource Transparent}}" Margin="0,0,5,0"></Windows:AsyncImage>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </ScrollViewer>
+                    </StackPanel>
+                </StackPanel>
+            </ScrollViewer>
+            <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" IsHitTestVisible="False" Foreground="{DynamicResource TextBrush}" Text="{Binding StatusMessage, Source={StaticResource ViewModel}}">
+                <TextBlock.Style>
+                    <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource {x:Type TextBlock}}">
+                        <Setter Property="Visibility" Value="Collapsed"></Setter>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding HasStatusMessage, Mode=OneWay, Source={StaticResource ViewModel}}" Value="True">
+                                <Setter Property="Visibility" Value="Visible"></Setter>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </TextBlock.Style>
+            </TextBlock>
+        </Grid>
+    </Border>
+</Windows:ConfigurableUIComponentBase>

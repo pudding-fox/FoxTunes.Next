@@ -1,0 +1,8 @@
+﻿<DataTemplate 
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:Core="clr-namespace:FoxTunes;assembly=FoxTunes.Core" 
+    xmlns:LocalWindows="clr-namespace:FoxTunes;assembly=FoxTunes.UI.Windows.Ratings"
+    DataType="{x:Type Core:PlaylistItem}">
+    <LocalWindows:LikeBase Height="15" FileData="{Binding}"  LocalWindows:LikeExtensions.UpdatePlaylistItems="True"></LocalWindows:LikeBase>
+</DataTemplate>

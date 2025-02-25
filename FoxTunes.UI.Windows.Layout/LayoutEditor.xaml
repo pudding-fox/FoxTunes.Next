@@ -1,0 +1,26 @@
+<UserControl x:Class="FoxTunes.LayoutEditor"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:Windows="clr-namespace:FoxTunes;assembly=FoxTunes.UI.Windows" 
+             xmlns:LocalWindows="clr-namespace:FoxTunes"
+             xmlns:LocalViewModel="clr-namespace:FoxTunes.ViewModel"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="600">
+    <UserControl.Resources>
+        <LocalViewModel:LayoutEditor x:Key="ViewModel"></LocalViewModel:LayoutEditor>
+        <LocalViewModel:UIComponentConfigurationConverter x:Key="UIComponentConfigurationConverter"></LocalViewModel:UIComponentConfigurationConverter>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+        </Grid.RowDefinitions>
+        <TextBox Grid.Row="0" Text="{Binding Component, Converter={StaticResource UIComponentConfigurationConverter}, Source={StaticResource ViewModel}}" AcceptsReturn="True" AcceptsTab="True" SpellCheck.IsEnabled="False" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto"></TextBox>
+        <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button Width="70" Height="30" Margin="7,7,0,0" Windows:ButtonExtensions.Command="{Binding SaveCommand, Mode=OneWay, Source={StaticResource ViewModel}}" Windows:ButtonExtensions.CommandBehaviour="{x:Static Windows:ButtonExtensions.COMMAND_BEHAVIOUR_ACCEPT}" Content="{x:Static LocalWindows:StringResources.LayoutEditor_Save}"/>
+            <Button Width="70" Height="30" Margin="7,7,0,0" Windows:ButtonExtensions.Command="{Binding CancelCommand, Mode=OneWay, Source={StaticResource ViewModel}}" Windows:ButtonExtensions.CommandBehaviour="{x:Static Windows:ButtonExtensions.COMMAND_BEHAVIOUR_DISMISS}" Content="{x:Static LocalWindows:StringResources.LayoutEditor_Cancel}"/>
+        </StackPanel>
+    </Grid>
+</UserControl>

@@ -1,0 +1,57 @@
+﻿<Windows:UIComponentBase
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:Windows="clr-namespace:FoxTunes;assembly=FoxTunes.UI.Windows"
+             xmlns:LocalWindows="clr-namespace:FoxTunes" 
+             xmlns:LocalViewModel="clr-namespace:FoxTunes.ViewModel"
+             x:Class="FoxTunes.RatingBase"
+             mc:Ignorable="d">
+    <UserControl.Resources>
+        <LocalViewModel:Rating x:Key="ViewModel" FileData="{Binding FileData, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type LocalWindows:RatingBase}}}" ValueChanged="OnValueChanged"/>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.Resources>
+            <Style TargetType="{x:Type ToggleButton}">
+                <Setter Property="Cursor" Value="Pen"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type ToggleButton}">
+                            <Grid IsHitTestVisible="True">
+                                <Viewbox xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+                                    <Canvas Width="100" Height="100">
+                                        <Path x:Name="Star" Fill="{DynamicResource TextBrush}" Opacity="0.35">
+                                            <Path.Data>
+                                                <PathGeometry Figures="M49 0L37 38H0l30 24-11 38 30-23 32 23-12-38 31-24H62L49 0" FillRule="EvenOdd"/>
+                                            </Path.Data>
+                                        </Path>
+                                    </Canvas>
+                                </Viewbox>
+                                <Rectangle IsHitTestVisible="True" Fill="Transparent"/>
+                            </Grid>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsChecked" Value="True">
+                                    <Setter TargetName="Star" Property="Fill" Value="Orange" />
+                                    <Setter TargetName="Star" Property="Opacity" Value="1" />
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+        </Grid.Resources>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition />
+            <ColumnDefinition />
+            <ColumnDefinition />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <ToggleButton x:Name="Star1" Grid.Column="0" IsChecked="{Binding Star1, Source={StaticResource ViewModel}}" />
+        <ToggleButton x:Name="Star2" Grid.Column="1" IsChecked="{Binding Star2, Source={StaticResource ViewModel}}" />
+        <ToggleButton x:Name="Star3" Grid.Column="2" IsChecked="{Binding Star3, Source={StaticResource ViewModel}}"/>
+        <ToggleButton x:Name="Star4" Grid.Column="3" IsChecked="{Binding Star4, Source={StaticResource ViewModel}}" />
+        <ToggleButton x:Name="Star5" Grid.Column="4" IsChecked="{Binding Star5, Source={StaticResource ViewModel}}" />
+    </Grid>
+</Windows:UIComponentBase>

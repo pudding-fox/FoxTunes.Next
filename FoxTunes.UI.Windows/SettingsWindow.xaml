@@ -1,0 +1,39 @@
+﻿<Windows:WindowBase
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+        xmlns:Core="clr-namespace:FoxTunes;assembly=FoxTunes.Core" 
+        xmlns:Windows="clr-namespace:FoxTunes" 
+        xmlns:ViewModel="clr-namespace:FoxTunes.ViewModel"
+        x:Class="FoxTunes.SettingsWindow"
+        mc:Ignorable="d" d:DesignHeight="300" d:DesignWidth="300" d:DataContext="{d:DesignInstance Core:Core, IsDesignTimeCreatable=False}" 
+        Title="{x:Static ViewModel:StringResources.SettingsWindow_Title}"
+        Windows:ButtonExtensions.CommandExecuted="OnCommandExecuted">
+    <Windows:WindowBase.Resources>
+        <ViewModel:Settings x:Key="ViewModel"></ViewModel:Settings>
+    </Windows:WindowBase.Resources>
+    <TabControl>
+        <TabItem Header="General">
+            <Windows:ComponentSettingsDialog></Windows:ComponentSettingsDialog>
+        </TabItem>
+        <TabItem Header="Library">
+            <Windows:LibrarySettingsDialog></Windows:LibrarySettingsDialog>
+        </TabItem>
+        <TabItem Header="Playlist">
+            <Windows:PlaylistSettingsDialog></Windows:PlaylistSettingsDialog>
+        </TabItem>
+        <TabItem Header="Folders">
+            <Windows:LibraryRootsDialog></Windows:LibraryRootsDialog>
+        </TabItem>
+        <TabItem Header="File Types">
+            <Windows:AssociationsDialog></Windows:AssociationsDialog>
+        </TabItem>
+        <TabItem Header="Meta Data">
+            <Windows:MetaDataProvidersSettingsDialog></Windows:MetaDataProvidersSettingsDialog>
+        </TabItem>
+        <TabItem Header="Plugins">
+            <Windows:PluginsDialog></Windows:PluginsDialog>
+        </TabItem>
+    </TabControl>
+</Windows:WindowBase>

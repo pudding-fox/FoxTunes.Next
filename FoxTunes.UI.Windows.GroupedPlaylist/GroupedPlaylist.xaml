@@ -1,0 +1,154 @@
+﻿<Windows:UIComponentBase
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:Core="clr-namespace:FoxTunes;assembly=FoxTunes.Core" 
+             xmlns:Windows="clr-namespace:FoxTunes;assembly=FoxTunes.UI.Windows" 
+             xmlns:LocalWindows="clr-namespace:FoxTunes"
+             xmlns:ViewModel="clr-namespace:FoxTunes.ViewModel;assembly=FoxTunes.UI.Windows"
+             xmlns:LocalViewModel="clr-namespace:FoxTunes.ViewModel"
+             xmlns:Interactivity="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+             x:Class="FoxTunes.GroupedPlaylist" 
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300" AllowDrop="True">
+    <UserControl.Resources>
+        <LocalViewModel:GroupedPlaylist x:Key="ViewModel"></LocalViewModel:GroupedPlaylist>
+        <LocalViewModel:GroupItemConverter x:Key="GroupItemConverter"></LocalViewModel:GroupItemConverter>
+        <ViewModel:HasFlagConverter x:Key="HasFlagConverter"></ViewModel:HasFlagConverter>
+    </UserControl.Resources>
+    <Interactivity:Interaction.Triggers>
+        <Interactivity:EventTrigger EventName="DragEnter">
+            <ViewModel:InvokeParameterizedCommandAction Command="{Binding DragEnterCommand, Source={StaticResource ViewModel}}" />
+        </Interactivity:EventTrigger>
+        <Interactivity:EventTrigger EventName="DragOver">
+            <ViewModel:InvokeParameterizedCommandAction Command="{Binding DragOverCommand, Source={StaticResource ViewModel}}" />
+        </Interactivity:EventTrigger>
+        <Interactivity:EventTrigger EventName="Drop">
+            <ViewModel:InvokeParameterizedCommandAction Command="{Binding DropCommand, Source={StaticResource ViewModel}}" />
+        </Interactivity:EventTrigger>
+    </Interactivity:Interaction.Triggers>
+    <Grid>
+        <ListView 
+                  Name="ListView"
+                  Grid.IsSharedSizeScope="True"
+                  ItemsSource="{Binding Items, Source={StaticResource ViewModel}, IsAsync=True}"
+                  Windows:ListViewExtensions.SelectedItems="{Binding SelectedItems, Source={StaticResource ViewModel}}"
+                  Windows:ListViewExtensions.DropInsert="True"
+                  Windows:ListViewExtensions.DropInsertActive="{Binding InsertActive, Source={StaticResource ViewModel}}"
+                  Windows:ListViewExtensions.DropInsertValue="{Binding InsertItem, Source={StaticResource ViewModel}}"
+                  Windows:ListViewExtensions.DragSource="True"
+                  Windows:ListViewExtensions.DragSourceInitialized="DragSourceInitialized"
+                  Windows:ListViewExtensions.GroupStyle="True"
+                  Windows:ListViewExtensions.GroupScript="{Binding GroupingScript, Source={StaticResource ViewModel}}"
+                  Windows:ListViewExtensions.AutoSizeColumns="True"
+                  Windows:ListViewExtensions.EnsureSelectedItemVisible="True"
+                  ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                  ScrollViewer.CanContentScroll="False"
+                  GridViewColumnHeader.Click="OnHeaderClick"
+                  SelectionChanged="OnSelectionChanged"
+                  Background="{DynamicResource ControlBackgroundBrush}">
+            <ListView.Resources>
+                <Windows:Menu x:Key="ColumnHeaderMenu" Category="{Binding Source={x:Static Core:InvocationComponent.CATEGORY_PLAYLIST_HEADER}}"></Windows:Menu>
+                <Style x:Key="{x:Static GridView.GridViewScrollViewerStyleKey}" TargetType="{x:Type ScrollViewer}">
+                    <Setter Property="Focusable" Value="false" />
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="{x:Type ScrollViewer}">
+                                <Grid SnapsToDevicePixels="true" Background="{TemplateBinding Background}">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <DockPanel Margin="{TemplateBinding Padding}">
+                                        <ScrollViewer Focusable="false" DockPanel.Dock="Top" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition SharedSizeGroup="Artwork"></ColumnDefinition>
+                                                    <ColumnDefinition></ColumnDefinition>
+                                                </Grid.ColumnDefinitions>
+                                                <GridViewHeaderRowPresenter Grid.Column="1" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" Margin="2,0,2,0" AllowsColumnReorder="{Binding Path=TemplatedParent.View.AllowsColumnReorder, RelativeSource={RelativeSource TemplatedParent}}" ColumnHeaderContainerStyle="{Binding Path=TemplatedParent.View.ColumnHeaderContainerStyle, RelativeSource={RelativeSource TemplatedParent}}" ColumnHeaderContextMenu="{Binding Path=TemplatedParent.View.ColumnHeaderContextMenu, RelativeSource={RelativeSource TemplatedParent}}" ColumnHeaderTemplate="{Binding Path=TemplatedParent.View.ColumnHeaderTemplate, RelativeSource={RelativeSource TemplatedParent}}" ColumnHeaderTemplateSelector="{Binding Path=TemplatedParent.View.ColumnHeaderTemplateSelector, RelativeSource={RelativeSource TemplatedParent}}" ColumnHeaderToolTip="{Binding Path=TemplatedParent.View.ColumnHeaderToolTip, RelativeSource={RelativeSource TemplatedParent}}" Columns="{Binding Path=TemplatedParent.View.Columns, RelativeSource={RelativeSource TemplatedParent}}" />
+                                            </Grid>
+                                        </ScrollViewer>
+                                        <ScrollContentPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" x:Name="PART_ScrollContentPresenter" Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}" CanContentScroll="{TemplateBinding CanContentScroll}" KeyboardNavigation.DirectionalNavigation="Local" />
+                                    </DockPanel>
+                                    <ScrollBar Visibility="{TemplateBinding ComputedVerticalScrollBarVisibility}" Cursor="Arrow" x:Name="PART_VerticalScrollBar" Grid.Column="1" Orientation="Vertical" ViewportSize="{TemplateBinding ViewportHeight}" Maximum="{TemplateBinding ScrollableHeight}" Minimum="0.0" Value="{Binding Path=VerticalOffset, Mode=OneWay, RelativeSource={RelativeSource TemplatedParent}}" />
+                                </Grid>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </ListView.Resources>
+            <ListView.InputBindings>
+                <KeyBinding Key="Delete" Command="{Binding RemovePlaylistItemsCommand, Source={StaticResource ViewModel}}"></KeyBinding>
+            </ListView.InputBindings>
+            <Windows:ListViewExtensions.DropInsertPen>
+                <Pen Brush="{DynamicResource TextBrush}" Thickness="3"/>
+            </Windows:ListViewExtensions.DropInsertPen>
+            <Interactivity:Interaction.Triggers>
+                <Windows:FilteredEventTrigger EventName="MouseDoubleClick" SourceType="{x:Type ListViewItem}">
+                    <Interactivity:InvokeCommandAction Command="{Binding PlaySelectedItemCommand, Source={StaticResource ViewModel}}"/>
+                </Windows:FilteredEventTrigger>
+            </Interactivity:Interaction.Triggers>
+            <ListView.ContextMenu>
+                <Windows:Menu Category="{Binding Source={x:Static Core:InvocationComponent.CATEGORY_PLAYLIST}}"></Windows:Menu>
+            </ListView.ContextMenu>
+            <ListView.View>
+                <GridView Windows:GridViewExtensions.ColumnsSource="{Binding GridColumns, Source={StaticResource ViewModel}}">
+                    <Windows:GridViewExtensions.ColumnHeaderContainerStyle>
+                        <Style TargetType="{x:Type GridViewColumnHeader}">
+                            <Setter Property="ContextMenu" Value="{DynamicResource ColumnHeaderMenu}"></Setter>
+                        </Style>
+                    </Windows:GridViewExtensions.ColumnHeaderContainerStyle>
+                </GridView>
+            </ListView.View>
+            <Windows:ListViewExtensions.GroupHeaderTemplate>
+                <DataTemplate DataType="{x:Type CollectionViewGroup}">
+                    <Grid HorizontalAlignment="Stretch" Margin="4" IsHitTestVisible="True" Background="Transparent" MouseDown="OnGroupHeaderMouseDown">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"></ColumnDefinition>
+                            <ColumnDefinition></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="{Binding Name}" Foreground="{DynamicResource TextBrush}" FontSize="16" Margin="0,-2,10,0"></TextBlock>
+                        <Separator Grid.Column="1"></Separator>
+                    </Grid>
+                </DataTemplate>
+            </Windows:ListViewExtensions.GroupHeaderTemplate>
+            <Windows:ListViewExtensions.GroupContainerStyle>
+                <Style TargetType="{x:Type GroupItem}">
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="{x:Type GroupItem}">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition SharedSizeGroup="Artwork" Width="Auto" />
+                                        <ColumnDefinition />
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"></RowDefinition>
+                                        <RowDefinition></RowDefinition>
+                                    </Grid.RowDefinitions>
+                                    <ContentPresenter Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0"></ContentPresenter>
+                                    <Windows:ArtworkStack Grid.Column="0" Grid.Row="1" FileData="{Binding Converter={StaticResource GroupItemConverter}}" MouseDown="OnGroupHeaderMouseDown"></Windows:ArtworkStack>
+                                    <ItemsPresenter Grid.Column="1" Grid.Row="1" />
+                                </Grid>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </Windows:ListViewExtensions.GroupContainerStyle>
+        </ListView>
+        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding StatusMessage, Mode=OneWay, Source={StaticResource ViewModel}}" IsHitTestVisible="False" Foreground="{DynamicResource TextBrush}">
+            <TextBlock.Style>
+                <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource {x:Type TextBlock}}">
+                    <Setter Property="Visibility" Value="Collapsed"/>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding HasStatusMessage, Mode=OneWay, Source={StaticResource ViewModel}}" Value="True">
+                            <Setter Property="Visibility" Value="Visible"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </TextBlock.Style>
+        </TextBlock>
+    </Grid>
+</Windows:UIComponentBase>

@@ -1,0 +1,141 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net40;net48</TargetFrameworks>
+    <AssemblyName>FoxTunes.DB.SQLite</AssemblyName>
+    <OutputPath>..\distribution\</OutputPath>
+    <SkipEnsureBindingRedirects>true</SkipEnsureBindingRedirects>
+    <SkipValidatePackageReferences>true</SkipValidatePackageReferences>
+    <AssemblyVersion>3.6.0.0</AssemblyVersion>
+    <Platforms>AnyCPU</Platforms>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Data.SQLite.Core" Version="1.0.118" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Properties\Strings.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <CustomToolNamespace>FoxTunes</CustomToolNamespace>
+      <LastGenOutput>Strings.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <Compile Update="Properties\Strings.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Strings.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <CustomToolNamespace>FoxTunes</CustomToolNamespace>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <Compile Update="Resources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Templates\GetLibraryHierarchyMetaData.tt">
+      <CustomToolNamespace>FoxTunes.Templates</CustomToolNamespace>
+      <LastGenOutput>GetLibraryHierarchyMetaData.cs</LastGenOutput>
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+    </None>
+    <Compile Update="Templates\GetLibraryHierarchyMetaData.cs">
+      <DependentUpon>GetLibraryHierarchyMetaData.tt</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Templates\AddLibraryHierarchyNodeToPlaylist.tt">
+      <CustomToolNamespace>FoxTunes.Templates</CustomToolNamespace>
+      <LastGenOutput>AddLibraryHierarchyNodeToPlaylist.cs</LastGenOutput>
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+    </None>
+    <Compile Update="Templates\AddLibraryHierarchyNodeToPlaylist.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>AddLibraryHierarchyNodeToPlaylist.tt</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Templates\GetPlaylistMetaData.tt">
+      <CustomToolNamespace>FoxTunes.Templates</CustomToolNamespace>
+      <LastGenOutput>GetPlaylistMetaData.cs</LastGenOutput>
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+    </None>
+    <Compile Update="Templates\GetPlaylistMetaData.cs">
+      <DependentUpon>GetPlaylistMetaData.tt</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Templates\PivotViewBuilder.tt">
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+      <CustomToolNamespace>FoxTunes.Templates</CustomToolNamespace>
+      <LastGenOutput>PivotViewBuilder.cs</LastGenOutput>
+    </None>
+    <Compile Update="Templates\PivotViewBuilder.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>PivotViewBuilder.tt</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Templates\PlaylistSequenceBuilder.tt">
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+      <CustomToolNamespace>FoxTunes.Templates</CustomToolNamespace>
+      <LastGenOutput>PlaylistSequenceBuilder.cs</LastGenOutput>
+    </None>
+    <Compile Update="Templates\PlaylistSequenceBuilder.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>PlaylistSequenceBuilder.tt</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+	<ItemGroup>
+		<None Update="Templates\AddSearchToPlaylist.tt">
+			<Generator>TextTemplatingFilePreprocessor</Generator>
+			<CustomToolNamespace>FoxTunes.Templates</CustomToolNamespace>
+			<LastGenOutput>AddSearchToPlaylist.cs</LastGenOutput>
+		</None>
+		<Compile Update="Templates\AddSearchToPlaylist.cs">
+			<DesignTime>True</DesignTime>
+			<AutoGen>True</AutoGen>
+			<DependentUpon>AddSearchToPlaylist.tt</DependentUpon>
+		</Compile>
+	</ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\FoxTunes.Core\FoxTunes.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\FoxTunes.DB\FoxTunes.DB.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FoxDb.SQLite" Version="0.6.1"></PackageReference>
+    <PackageReference Include="Microsoft.Bcl.Async" Version="1.0.168" Condition="'$(TargetFramework)' == 'net40'" />
+    <PackageReference Include="Microsoft.Bcl.Build" Version="1.0.21" Condition="'$(TargetFramework)' == 'net40'" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
+  </ItemGroup>
+
+  <Import Project="$(UserProfile)\.nuget\packages\Microsoft.Bcl.Build\1.0.21\build\Microsoft.Bcl.Build.targets" Condition="'$(TargetFramework)' == 'net40'" />
+
+</Project>

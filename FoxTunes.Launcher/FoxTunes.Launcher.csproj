@@ -1,0 +1,54 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net40;net48</TargetFrameworks>
+    <RuntimeIdentifiers>win7-x86;win7-x64</RuntimeIdentifiers>
+    <AssemblyName>FoxTunes.Launcher</AssemblyName>
+    <OutputPath>..\distribution\</OutputPath>
+    <ApplicationIcon>Fox.ico</ApplicationIcon>
+    <OutputType>WinExe</OutputType>
+    <StartupObject />
+    <Platforms>AnyCPU</Platforms>
+    <SkipEnsureBindingRedirects>true</SkipEnsureBindingRedirects>
+    <SkipValidatePackageReferences>true</SkipValidatePackageReferences>
+    <AssemblyVersion>3.6.0.0</AssemblyVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="Properties\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\FoxTunes.Core\FoxTunes.Core.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\FoxTunes.Logging\FoxTunes.Logging.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Bcl.Async" Version="1.0.168" Condition="'$(TargetFramework)' == 'net40'" />
+    <PackageReference Include="Microsoft.Bcl.Build" Version="1.0.21" Condition="'$(TargetFramework)' == 'net40'" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Resources\Strings.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Strings.resx</DependentUpon>
+    </Compile>
+    <EmbeddedResource Update="Resources\Strings.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Strings.Designer.cs</LastGenOutput>
+      <CustomToolNamespace>FoxTunes</CustomToolNamespace>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <Import Project="$(UserProfile)\.nuget\packages\Microsoft.Bcl.Build\1.0.21\build\Microsoft.Bcl.Build.targets" Condition="'$(TargetFramework)' == 'net40'" />
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="copy /Y &quot;$(TargetPath)&quot; &quot;$(TargetDir)$(TargetName).x86$(TargetExt)&quot;" />
+    <Exec Command="copy /Y &quot;$(TargetPath).config&quot; &quot;$(TargetDir)$(TargetName).x86$(TargetExt).config&quot;" />
+    <Exec Command="..\.tools\x86\corflags.exe &quot;$(TargetDir)$(TargetName).x86$(TargetExt)&quot; /32BIT+" />
+  </Target>
+
+</Project>

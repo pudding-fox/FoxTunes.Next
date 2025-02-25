@@ -1,0 +1,123 @@
+﻿<UserControl
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:Core="clr-namespace:FoxTunes;assembly=FoxTunes.Core" 
+             xmlns:Windows="clr-namespace:FoxTunes;assembly=FoxTunes.UI.Windows" 
+             xmlns:LocalWindows="clr-namespace:FoxTunes" 
+             xmlns:ViewModel="clr-namespace:FoxTunes.ViewModel;assembly=FoxTunes.UI.Windows"
+             xmlns:LocalViewModel="clr-namespace:FoxTunes.ViewModel"
+             xmlns:Interactivity="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+             x:Class="FoxTunes.MetaDataEditor"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <UserControl.Resources>
+        <LocalViewModel:MetaDataEditor x:Key="ViewModel"></LocalViewModel:MetaDataEditor>
+        <ViewModel:NegatingBooleanToVisibilityConverter x:Key="NegatingBooleanToVisibilityConverter"></ViewModel:NegatingBooleanToVisibilityConverter>
+        <ViewModel:ArtworkImageConverter x:Key="ArtworkImageConverter" Width="100" Height="100" ShowPlaceholder="False"></ViewModel:ArtworkImageConverter>
+        <ViewModel:StringToBooleanConverter x:Key="StringToBooleanConverter"></ViewModel:StringToBooleanConverter>
+        <ViewModel:MetaDataNameConverter x:Key="MetaDataNameConverter"></ViewModel:MetaDataNameConverter>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"></BooleanToVisibilityConverter>
+        <SolidColorBrush x:Key="Transparent" Color="Transparent"></SolidColorBrush>
+    </UserControl.Resources>
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <Grid Grid.IsSharedSizeScope="True">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="Auto"></RowDefinition>
+            </Grid.RowDefinitions>
+            <GroupBox Grid.Row="0" Header="Tags">
+                <ItemsControl ItemsSource="{Binding Tags, Source={StaticResource ViewModel}}" Margin="0,2,0,0">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Grid Margin="0,0,0,5">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition SharedSizeGroup="Name" Width="Auto"></ColumnDefinition>
+                                    <ColumnDefinition></ColumnDefinition>
+                                </Grid.ColumnDefinitions>
+                                <Label Content="{Binding Name, Converter={StaticResource MetaDataNameConverter}}" ContentStringFormat="{}{0}:"></Label>
+                                <ContentControl Grid.Column="1" MinWidth="300" Content="{Binding}">
+                                    <ContentControl.Style>
+                                        <Style TargetType="{x:Type ContentControl}">
+                                            <Setter Property="ContentTemplate">
+                                                <Setter.Value>
+                                                    <DataTemplate DataType="{x:Type LocalViewModel:MetaDataEntry}">
+                                                        <TextBox Text="{Binding Value}"></TextBox>
+                                                    </DataTemplate>
+                                                </Setter.Value>
+                                            </Setter>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding IsNumeric}" Value="True">
+                                                    <Setter Property="ContentTemplate">
+                                                        <Setter.Value>
+                                                            <DataTemplate DataType="{x:Type LocalViewModel:MetaDataEntry}">
+                                                                <TextBox Text="{Binding Value}" Windows:TextBoxExtensions.IsNumeric="True"></TextBox>
+                                                            </DataTemplate>
+                                                        </Setter.Value>
+                                                    </Setter>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding IsBoolean}" Value="True">
+                                                    <Setter Property="ContentTemplate">
+                                                        <Setter.Value>
+                                                            <DataTemplate DataType="{x:Type LocalViewModel:MetaDataEntry}">
+                                                                <CheckBox IsChecked="{Binding Value, Converter={StaticResource StringToBooleanConverter}}" VerticalAlignment="Center"></CheckBox>
+                                                            </DataTemplate>
+                                                        </Setter.Value>
+                                                    </Setter>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </ContentControl.Style>
+                                </ContentControl>
+                            </Grid>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </GroupBox>
+            <GroupBox Grid.Row="1" Header="Images">
+                <ItemsControl ItemsSource="{Binding Images, Source={StaticResource ViewModel}}" Margin="0,2,0,0" MouseDoubleClick="OnMouseDoubleClick">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Horizontal"></StackPanel>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel AllowDrop="True">
+                                <Interactivity:Interaction.Triggers>
+                                    <Interactivity:EventTrigger EventName="DragEnter">
+                                        <ViewModel:InvokeParameterizedCommandAction Command="{Binding DragEnterCommand}" />
+                                    </Interactivity:EventTrigger>
+                                    <Interactivity:EventTrigger EventName="DragOver">
+                                        <ViewModel:InvokeParameterizedCommandAction Command="{Binding DragOverCommand}" />
+                                    </Interactivity:EventTrigger>
+                                    <Interactivity:EventTrigger EventName="Drop">
+                                        <ViewModel:InvokeParameterizedCommandAction Command="{Binding DropCommand}" />
+                                    </Interactivity:EventTrigger>
+                                </Interactivity:Interaction.Triggers>
+                                <StackPanel.ContextMenu>
+                                    <ContextMenu>
+                                        <MenuItem Header="Replace" Command="{Binding BrowseCommand, Mode=OneWay}"></MenuItem>
+                                        <MenuItem Header="Remove" Command="{Binding ClearCommand, Mode=OneWay}"></MenuItem>
+                                    </ContextMenu>
+                                </StackPanel.ContextMenu>
+                                <Grid Width="100" Height="100">
+                                    <Rectangle DataContext="{Binding Value, Converter={StaticResource ArtworkImageConverter}}" Fill="{Binding Value, FallbackValue={StaticResource Transparent}}"></Rectangle>
+                                    <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{Binding HasMultipleValues, Converter={StaticResource BooleanToVisibilityConverter}}" Text="{x:Static LocalWindows:StringResources.MetaDataEntry_MultipleValues}" Foreground="{DynamicResource TextBrush}"></TextBlock>
+                                    <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{Binding HasValue, Converter={StaticResource NegatingBooleanToVisibilityConverter}}" Text="{x:Static LocalWindows:StringResources.MetaDataEntry_NoValue}" Foreground="{DynamicResource TextBrush}"></TextBlock>
+                                </Grid>
+                                <TextBlock HorizontalAlignment="Center" Text="{Binding Name, Converter={StaticResource MetaDataNameConverter}}" Foreground="{DynamicResource TextBrush}"></TextBlock>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </GroupBox>
+            <TextBlock Grid.Row="2" Text="{Binding StatusMessage, Mode=OneWay, Source={StaticResource ViewModel}}" HorizontalAlignment="Left" VerticalAlignment="Center" Foreground="{DynamicResource TextBrush}"></TextBlock>
+            <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="7">
+                <Button Width="70" Height="30" Margin="7,0,0,0" Command="{Binding SaveCommand, Mode=OneWay, Source={StaticResource ViewModel}}">Save</Button>
+            </StackPanel>
+        </Grid>
+    </ScrollViewer>
+</UserControl>
