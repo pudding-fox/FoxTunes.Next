@@ -1,0 +1,27 @@
+<LocalWindows:UIComponentSplitPanel x:Class="FoxTunes.UIComponentHorizontalSplitContainer"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:Core="clr-namespace:FoxTunes;assembly=FoxTunes.Core" 
+             xmlns:Windows="clr-namespace:FoxTunes;assembly=FoxTunes.UI.Windows" 
+             xmlns:LocalWindows="clr-namespace:FoxTunes"
+             xmlns:ViewModel="clr-namespace:FoxTunes.ViewModel;assembly=FoxTunes.UI.Windows"
+             xmlns:LocalViewModel="clr-namespace:FoxTunes.ViewModel"
+             xmlns:Interactivity="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="600">
+    <LocalWindows:UIComponentPanel.Resources>
+        <ViewModel:GridLengthConverter x:Key="GridLengthConverter"></ViewModel:GridLengthConverter>
+    </LocalWindows:UIComponentPanel.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition x:Name="TopRow"></RowDefinition>
+            <RowDefinition x:Name="SplitterRow" Height="Auto"></RowDefinition>
+            <RowDefinition x:Name="BottomRow" ></RowDefinition>
+        </Grid.RowDefinitions>
+        <LocalWindows:UIComponentContainer x:Name="TopContainer" Grid.Row="0" Configuration="{Binding TopComponent, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type LocalWindows:UIComponentHorizontalSplitContainer}}}"></LocalWindows:UIComponentContainer>
+        <GridSplitter x:Name="Splitter" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Center"></GridSplitter>
+        <LocalWindows:UIComponentContainer x:Name="BottomContainer" Grid.Row="2" Configuration="{Binding BottomComponent, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type LocalWindows:UIComponentHorizontalSplitContainer}}}"></LocalWindows:UIComponentContainer>
+    </Grid>
+</LocalWindows:UIComponentSplitPanel>

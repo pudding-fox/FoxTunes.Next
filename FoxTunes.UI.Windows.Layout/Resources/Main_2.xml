@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="Windows-1252"?>
+<FoxTunes>
+  <UIComponentConfiguration Component="3E899F79-380C-4EF7-8570-4B4E3B3467CB">
+    <UIComponentConfiguration Component="3451DAA4-C643-4CB2-8105-B441F0277559">
+      <UIComponentConfiguration Component="18E98420-F039-4504-A116-3D0F26BEAAD5">
+        <UIComponentConfiguration Component="3E899F79-380C-4EF7-8570-4B4E3B3467CB">
+          <UIComponentConfiguration Component="3E899F79-380C-4EF7-8570-4B4E3B3467CB">
+            <UIComponentConfiguration Component="3E899F79-380C-4EF7-8570-4B4E3B3467CB">
+              <UIComponentConfiguration Component="86276AD4-3962-4659-A00F-95065CD92117" />
+              <UIComponentConfiguration Component="F5B28CA5-163F-491B-83B6-9D08DAB11B3F" />
+              <MetaDataEntry Name="DockLocation" Value="Bottom" />
+            </UIComponentConfiguration>
+            <UIComponentConfiguration Component="3ACC518E-9A7C-4ACD-8299-318C8BBB2D47" />
+            <MetaDataEntry Name="DockLocation" Value="Top" />
+            <MetaDataEntry Name="Collapse" Value="True" />
+          </UIComponentConfiguration>
+          <UIComponentConfiguration Component="D5407817-6EBB-4D79-870D-664CBEB2D069">
+            <UIComponentConfiguration Component="5D6C1128-B84F-4748-941D-C5DE341B6C49" />
+            <MetaDataEntry Name="Header" Value="Now Playing" />
+          </UIComponentConfiguration>
+          <MetaDataEntry Name="DockLocation" Value="Bottom" />
+          <MetaDataEntry Name="Collapse" Value="True" />
+        </UIComponentConfiguration>
+        <UIComponentConfiguration Component="18E98420-F039-4504-A116-3D0F26BEAAD5">
+          <UIComponentConfiguration Component="A6820FDA-E415-40C6-AEFB-A73B6FBE4C93">
+            <UIComponentConfiguration Component="FB75ECEC-A89A-4DAD-BA8D-9DB43F3DE5E3" />
+            <UIComponentConfiguration Component="A6820FDA-E415-40C6-AEFB-A73B6FBE4C93">
+              <UIComponentConfiguration Component="9DFCD490-3DEF-42C7-809F-88346708D0E3" />
+              <UIComponentConfiguration Component="1CABFBE6-C5BD-4818-A092-2D79509D3A52" />
+              <MetaDataEntry Name="SplitterDistance" Value="4*" />
+              <MetaDataEntry Name="SplitterDirection" Value="Top" />
+            </UIComponentConfiguration>
+            <MetaDataEntry Name="SplitterDistance" Value="1*" />
+            <MetaDataEntry Name="SplitterDirection" Value="Bottom" />
+          </UIComponentConfiguration>
+          <UIComponentConfiguration Component="D5407817-6EBB-4D79-870D-664CBEB2D069">
+            <UIComponentConfiguration Component="F7774E81-26FC-4F0C-8E0A-67214D155547" />
+            <MetaDataEntry Name="Header" Value="Lyrics" />
+          </UIComponentConfiguration>
+          <MetaDataEntry Name="SplitterDistance" Value="0.35*" />
+          <MetaDataEntry Name="CollapseRight" Value="True" />
+          <MetaDataEntry Name="SplitterDirection" Value="Right" />
+        </UIComponentConfiguration>
+        <MetaDataEntry Name="SplitterDistance" Value="0.35*" />
+        <MetaDataEntry Name="SplitterDirection" Value="Left" />
+      </UIComponentConfiguration>
+      <UIComponentConfiguration Component="EDC787A6-7B1E-4161-B2E1-843C58806D81">
+        <MetaDataEntry Name="VerticalAlignment" Value="Bottom" />
+        <MetaDataEntry Name="HorizontalAlignment" Value="Right" />
+      </UIComponentConfiguration>
+    </UIComponentConfiguration>
+    <UIComponentConfiguration Component="79EB216A-2BB0-40D9-8CF3-64645BCA50A2"/>
+    <MetaDataEntry Name="DockLocation" Value="Bottom" />
+  </UIComponentConfiguration>
+</FoxTunes>

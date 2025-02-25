@@ -1,0 +1,48 @@
+<Windows:UIComponentBase
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:Windows="clr-namespace:FoxTunes;assembly=FoxTunes.UI.Windows" 
+             xmlns:LocalViewModel="clr-namespace:FoxTunes.ViewModel"
+             xmlns:Interactivity="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+             xmlns:local="clr-namespace:FoxTunes" x:Class="FoxTunes.LayoutSelector"
+             mc:Ignorable="d">
+    <Windows:UIComponentBase.Resources>
+        <LocalViewModel:LayoutSelector x:Key="ViewModel"/>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+    </Windows:UIComponentBase.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <ComboBox Grid.Row="0" Grid.Column="0" ItemsSource="{Binding Presets, Mode=OneWay, Source={StaticResource ViewModel}}" SelectedValue="{Binding SelectedPreset, Source={StaticResource ViewModel}}" MinWidth="200" DisplayMemberPath="Name"/>
+        <Button Grid.Row="0" Grid.Column="1" Width="30" Height="30" Margin="2,0,0,0" Command="{Binding AddPresetCommand, Mode=OneWay, Source={StaticResource ViewModel}}" Visibility="{Binding IsEditable, Converter={StaticResource BooleanToVisibilityConverter}, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:LayoutSelector}}}">
+            <Viewbox Width="20" Height="20">
+                <Canvas Width="1024" Height="1024">
+                    <Path Fill="{DynamicResource TextBrush}">
+                        <Path.Data>
+                            <PathGeometry Figures="M512 936.915619c-234.672764 0-424.915619-190.243879-424.915619-424.915619S277.327236 87.083357 512 87.083357c234.676857 0 424.916643 190.243879 424.916643 424.915619S746.676857 936.915619 512 936.915619zM724.45781 469.50414 554.491767 469.50414 554.491767 299.546284l-84.983533 0 0 169.957857L299.54219 469.50414l0 84.99172 169.966043 0 0 169.966043 84.983533 0L554.491767 554.49586l169.966043 0L724.45781 469.50414z"/>
+                        </Path.Data>
+                    </Path>
+                </Canvas>
+            </Viewbox>
+        </Button>
+        <ToggleButton Grid.Row="0" Grid.Column="2" Width="30" Height="30" Margin="2,0,0,0" IsChecked="{Binding IsEditing, Source={StaticResource ViewModel}}" Visibility="{Binding IsEditable, Converter={StaticResource BooleanToVisibilityConverter}, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:LayoutSelector}}}">
+            <Viewbox Width="20" Height="20">
+                <Canvas Width="1000" Height="1000">
+                    <Path Fill="{DynamicResource TextBrush}">
+                        <Path.Data>
+                            <PathGeometry Figures="M420,694.8c17.5,1.2,35.3-4.1,49.6-16l4.8-1.6L322.7,524.1l-1.5,4.9c-11.8,14.4-17.1,32.4-15.9,50.1l-53.8,170.1L420,694.8L420,694.8z M969.4,74.6l-49.6-50.1c-27.4-27.7-71.9-27.7-99.3,0l-48.1,48.5l148.9,150.3l48.1-48.5C996.9,147.2,996.9,102.3,969.4,74.6L969.4,74.6z M870.2,275L721.2,124.7L375.3,473.9l148.9,150.3L870.2,275L870.2,275z M78,925.4V143.8h493.6V75.1H80.2C41.4,75.1,10,106.8,10,146v779.4c0,39.1,31.4,70.9,70.2,70.9h772.2c38.8,0,70.2-31.7,70.2-70.9v-496h-70.2v496H78z" />
+                        </Path.Data>
+                    </Path>
+                </Canvas>
+            </Viewbox>
+        </ToggleButton>
+    </Grid>
+</Windows:UIComponentBase>

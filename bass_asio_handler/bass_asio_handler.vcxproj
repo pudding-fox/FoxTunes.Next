@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ImportGroup Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\Common.props" />
+  </ImportGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>15.0</VCProjectVersion>
+    <ProjectGuid>{1DFDA520-5749-4ED7-AEE2-432C38AA9406}</ProjectGuid>
+  </PropertyGroup>
+    <PropertyGroup Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <PreprocessorDefinitions>_USRDLL;BASS_ASIO_HANDLER_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <ModuleDefinitionFile>bass_asio_handler.def</ModuleDefinitionFile>
+      <IgnoreAllDefaultLibraries>true</IgnoreAllDefaultLibraries>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="bass_asio_handler.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="bass\bass.h" />
+    <ClInclude Include="bass\bassasio.h" />
+    <ClInclude Include="bass_asio_handler.h" />
+  </ItemGroup>
+    <ItemGroup Condition="'$(Platform)'=='Win32'">
+    <Library Include="..\lib\x86\bass.lib" />
+    <Library Include="..\lib\x86\bassasio.lib" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(Platform)'=='x64'">
+    <Library Include="..\lib\x64\bass.lib" />
+    <Library Include="..\lib\x64\bassasio.lib" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="bass_asio_handler.def" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+</Project>

@@ -1,0 +1,84 @@
+﻿<UserControl
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:Core="clr-namespace:FoxTunes;assembly=FoxTunes.Core" 
+             xmlns:Windows="clr-namespace:FoxTunes"
+             xmlns:ViewModel="clr-namespace:FoxTunes.ViewModel"
+             xmlns:Interactivity="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+             x:Class="FoxTunes.TabPlaylist" 
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300" AllowDrop="True">
+    <UserControl.Resources>
+        <ViewModel:TabPlaylist x:Key="ViewModel" Playlist="{Binding Playlist, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Windows:TabPlaylist}}}"></ViewModel:TabPlaylist>
+        <ViewModel:HasFlagConverter x:Key="HasFlagConverter"></ViewModel:HasFlagConverter>
+    </UserControl.Resources>
+    <Interactivity:Interaction.Triggers>
+        <Interactivity:EventTrigger EventName="DragEnter">
+            <ViewModel:InvokeParameterizedCommandAction Command="{Binding DragEnterCommand, Source={StaticResource ViewModel}}" />
+        </Interactivity:EventTrigger>
+        <Interactivity:EventTrigger EventName="DragOver">
+            <ViewModel:InvokeParameterizedCommandAction Command="{Binding DragOverCommand, Source={StaticResource ViewModel}}" />
+        </Interactivity:EventTrigger>
+        <Interactivity:EventTrigger EventName="Drop">
+            <ViewModel:InvokeParameterizedCommandAction Command="{Binding DropCommand, Source={StaticResource ViewModel}}" />
+        </Interactivity:EventTrigger>
+    </Interactivity:Interaction.Triggers>
+    <Grid>
+        <ListView 
+                  Name="ListView"
+                  ItemsSource="{Binding Items, Source={StaticResource ViewModel}, IsAsync=True}"
+                  Windows:ListViewExtensions.SelectedItems="{Binding SelectedItems, Source={StaticResource ViewModel}}"
+                  Windows:ListViewExtensions.DropInsert="True"
+                  Windows:ListViewExtensions.DropInsertActive="{Binding InsertActive, Source={StaticResource ViewModel}}"
+                  Windows:ListViewExtensions.DropInsertValue="{Binding InsertItem, Source={StaticResource ViewModel}}"
+                  Windows:ListViewExtensions.DragSource="True"
+                  Windows:ListViewExtensions.DragSourceInitialized="DragSourceInitialized"
+                  Windows:ListViewExtensions.AutoSizeColumns="True"
+                  Windows:ListViewExtensions.EnsureSelectedItemVisible="True"
+                  VirtualizingStackPanel.IsVirtualizing="True"
+                  VirtualizingStackPanel.VirtualizationMode="Recycling"
+                  GridViewColumnHeader.Click="OnHeaderClick"
+                  SelectionChanged="OnSelectionChanged">
+            <ListView.Resources>
+                <Windows:Menu x:Key="ColumnHeaderMenu" Category="{Binding Source={x:Static Core:InvocationComponent.CATEGORY_PLAYLIST_HEADER}}"></Windows:Menu>
+            </ListView.Resources>
+            <ListView.InputBindings>
+                <KeyBinding Key="Delete" Command="{Binding RemovePlaylistItemsCommand, Source={StaticResource ViewModel}}"></KeyBinding>
+            </ListView.InputBindings>
+            <Windows:ListViewExtensions.DropInsertPen>
+                <Pen Brush="{DynamicResource TextBrush}" Thickness="3"/>
+            </Windows:ListViewExtensions.DropInsertPen>
+            <Interactivity:Interaction.Triggers>
+                <Windows:FilteredEventTrigger EventName="MouseDoubleClick" SourceType="{x:Type ListViewItem}">
+                    <Interactivity:InvokeCommandAction Command="{Binding PlaySelectedItemCommand, Source={StaticResource ViewModel}}"/>
+                </Windows:FilteredEventTrigger>
+            </Interactivity:Interaction.Triggers>
+            <ListView.ContextMenu>
+                <Windows:Menu Category="{Binding Source={x:Static Core:InvocationComponent.CATEGORY_PLAYLIST}}"></Windows:Menu>
+            </ListView.ContextMenu>
+            <ListView.View>
+                <GridView Windows:GridViewExtensions.ColumnsSource="{Binding GridColumns, Source={StaticResource ViewModel}}">
+                    <Windows:GridViewExtensions.ColumnHeaderContainerStyle>
+                        <Style TargetType="{x:Type GridViewColumnHeader}">
+                            <Setter Property="ContextMenu" Value="{DynamicResource ColumnHeaderMenu}"></Setter>
+                        </Style>
+                    </Windows:GridViewExtensions.ColumnHeaderContainerStyle>
+                </GridView>
+            </ListView.View>
+        </ListView>
+        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding StatusMessage, Mode=OneWay, Source={StaticResource ViewModel}}" IsHitTestVisible="False" Foreground="{DynamicResource TextBrush}">
+            <TextBlock.Style>
+                <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource {x:Type TextBlock}}">
+                    <Setter Property="Visibility" Value="Collapsed"/>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding HasStatusMessage, Mode=OneWay, Source={StaticResource ViewModel}}" Value="True">
+                            <Setter Property="Visibility" Value="Visible"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </TextBlock.Style>
+        </TextBlock>
+    </Grid>
+</UserControl>

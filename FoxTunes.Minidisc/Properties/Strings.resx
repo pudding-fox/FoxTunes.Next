@@ -1,0 +1,246 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="EraseMinidiscTask.Name" xml:space="preserve">
+    <value>Erasing disc</value>
+  </data>
+  <data name="MinidiscBehaviour.ConfirmEraseDisc" xml:space="preserve">
+    <value>The disc will be erased, are you sure?</value>
+  </data>
+  <data name="MinidiscBehaviour.ConfirmWriteDisc" xml:space="preserve">
+    <value>The disc will be written, are you sure?</value>
+  </data>
+  <data name="MinidiscBehaviour.EraseDisc" xml:space="preserve">
+    <value>Erase Disc</value>
+  </data>
+  <data name="MinidiscBehaviour.Path" xml:space="preserve">
+    <value>Minidisc</value>
+  </data>
+  <data name="MinidiscBehaviour.SendToDisc" xml:space="preserve">
+    <value>Send To Disc ({0})</value>
+  </data>
+  <data name="MinidiscBehaviour.ViewDisc" xml:space="preserve">
+    <value>View Disc</value>
+  </data>
+  <data name="MinidiscBehaviourConfiguration.Enabled" xml:space="preserve">
+    <value>Enabled</value>
+  </data>
+  <data name="MinidiscBehaviourConfiguration.Section" xml:space="preserve">
+    <value>Minidisc</value>
+  </data>
+  <data name="MinidiscReport.Action" xml:space="preserve">
+    <value>Action</value>
+  </data>
+  <data name="TrackAction.Add" xml:space="preserve">
+    <value>Add</value>
+  </data>
+  <data name="MinidiscReport.Close" xml:space="preserve">
+    <value>Close</value>
+  </data>
+  <data name="MinidiscReport.Format" xml:space="preserve">
+    <value>Format</value>
+  </data>
+  <data name="MinidiscReport.Name" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="TrackAction.None" xml:space="preserve">
+    <value>None</value>
+  </data>
+  <data name="MinidiscReport.Time" xml:space="preserve">
+    <value>Time</value>
+  </data>
+  <data name="MinidiscReport.Write" xml:space="preserve">
+    <value>Write</value>
+  </data>
+  <data name="OpenMinidiscTask.Name" xml:space="preserve">
+    <value>Reading disc</value>
+  </data>
+  <data name="WriteMinidiscTask.Name" xml:space="preserve">
+    <value>Writing disc</value>
+  </data>
+  <data name="MinidiscBehaviourConfiguration.DiscTitleScript" xml:space="preserve">
+    <value>Disc Title Script</value>
+  </data>
+  <data name="MinidiscBehaviourConfiguration.TrackNameScript" xml:space="preserve">
+    <value>Track Name Script</value>
+  </data>
+  <data name="MinidiscBehaviourConfiguration.Advanced" xml:space="preserve">
+    <value>Advanced</value>
+  </data>
+  <data name="MinidiscBehaviour.SetDiscTitle" xml:space="preserve">
+    <value>Set Title</value>
+  </data>
+  <data name="MinidiscBehaviourConfiguration.Cleanup" xml:space="preserve">
+    <value>Cleanup Temp Files</value>
+  </data>
+  <data name="MinidiscBehaviour.ConfirmWriteDiscWithoutCapacity" xml:space="preserve">
+    <value>The disc capacity is exceeded ({0}%), are you sure?</value>
+  </data>
+  <data name="MinidiscActionTask.Encoding" xml:space="preserve">
+    <value>Encoding: {0}%</value>
+  </data>
+  <data name="MinidiscActionTask.Transferring" xml:space="preserve">
+    <value>Transferring: {0}%</value>
+  </data>
+  <data name="MinidiscBehaviour.NoDisc" xml:space="preserve">
+    <value>No device was found or the disc could not be read.</value>
+  </data>
+  <data name="MinidiscTask.NoDisc" xml:space="preserve">
+    <value>No device was found or the disc could not be read.</value>
+  </data>
+  <data name="TrackAction.Remove" xml:space="preserve">
+    <value>Remove</value>
+  </data>
+  <data name="MinidiscReportRow.Keep" xml:space="preserve">
+    <value>Keep</value>
+  </data>
+  <data name="MinidiscReportRow.Remove" xml:space="preserve">
+    <value>Remove</value>
+  </data>
+  <data name="Compression.LP2" xml:space="preserve">
+    <value>LP2</value>
+  </data>
+  <data name="Compression.LP4" xml:space="preserve">
+    <value>LP4</value>
+  </data>
+  <data name="Compression.None" xml:space="preserve">
+    <value>SP</value>
+  </data>
+  <data name="MinidiscBehaviour.EncoderMissing" xml:space="preserve">
+    <value>The encoder component was not found, only WAV 16/44.1 is supported.</value>
+  </data>
+  <data name="MinidiscBehaviour.UnsupportedCompression" xml:space="preserve">
+    <value>Compression is not supported on this platform, atracdenc.exe requires at least 6.0.</value>
+  </data>
+  <data name="MinidiscReportRow.Rename" xml:space="preserve">
+    <value>Rename</value>
+  </data>
+  <data name="MinidiscReport.Rename" xml:space="preserve">
+    <value>Rename</value>
+  </data>
+  <data name="TrackAction.Update" xml:space="preserve">
+    <value>Update</value>
+  </data>
+  <data name="MinidiscBehaviour.ConfirmWriteDiscWithoutUTOC" xml:space="preserve">
+    <value>The disc UTOC (Text) capacity is exceeded ({0}%), are you sure?</value>
+  </data>
+  <data name="ValidateInputFormatsTask.Name" xml:space="preserve">
+    <value>Checking files...</value>
+  </data>
+</root>

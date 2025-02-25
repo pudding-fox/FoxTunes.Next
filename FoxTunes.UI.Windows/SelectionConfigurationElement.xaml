@@ -1,0 +1,15 @@
+﻿<UserControl x:Class="FoxTunes.Config.SelectionConfigurationElement"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:Core="clr-namespace:FoxTunes;assembly=FoxTunes.Core" 
+             xmlns:ViewModel="clr-namespace:FoxTunes.ViewModel"
+             xmlns:Config="clr-namespace:FoxTunes.ViewModel.Config"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800" d:DataContext="{d:DesignInstance Core:SelectionConfigurationElement}">
+    <UserControl.Resources>
+        <Config:SelectionConfigurationElement x:Key="ViewModel" Element="{Binding}"></Config:SelectionConfigurationElement>
+    </UserControl.Resources>
+    <ComboBox ItemsSource="{Binding Options, Mode=OneWay, Source={StaticResource ViewModel}}" SelectedValue="{Binding Value}" DisplayMemberPath="Name"></ComboBox>
+</UserControl>

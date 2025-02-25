@@ -1,0 +1,58 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFrameworks>net40;net48</TargetFrameworks>
+		<AssemblyName>FoxTunes.Core.Windows</AssemblyName>
+		<OutputPath>..\distribution\</OutputPath>
+		<SkipEnsureBindingRedirects>true</SkipEnsureBindingRedirects>
+		<SkipValidatePackageReferences>true</SkipValidatePackageReferences>
+		<AssemblyVersion>3.6.0.0</AssemblyVersion>
+		<Platforms>AnyCPU</Platforms>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<None Remove="Images\fox.ico" />
+		<None Remove="Images\next.png" />
+		<None Remove="Images\pause.png" />
+		<None Remove="Images\play.png" />
+		<None Remove="Images\prev.png" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<EmbeddedResource Include="Images\fox.ico" />
+		<EmbeddedResource Include="Images\next.png" />
+		<EmbeddedResource Include="Images\pause.png" />
+		<EmbeddedResource Include="Images\play.png" />
+		<EmbeddedResource Include="Images\prev.png" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\FoxTunes.Core\FoxTunes.Core.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.Bcl.Async" Version="1.0.168" Condition="'$(TargetFramework)' == 'net40'" />
+		<PackageReference Include="Microsoft.Bcl.Build" Version="1.0.21" Condition="'$(TargetFramework)' == 'net40'" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Reference Include="PresentationCore" />
+		<Reference Include="WindowsBase" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<EmbeddedResource Update="Properties\Strings.resx">
+			<Generator>ResXFileCodeGenerator</Generator>
+			<LastGenOutput>Strings.Designer.cs</LastGenOutput>
+			<CustomToolNamespace>FoxTunes</CustomToolNamespace>
+		</EmbeddedResource>
+		<Compile Update="Properties\Strings.Designer.cs">
+			<DesignTime>True</DesignTime>
+			<AutoGen>True</AutoGen>
+			<DependentUpon>Strings.resx</DependentUpon>
+		</Compile>
+	</ItemGroup>
+
+	<Import Project="$(UserProfile)\.nuget\packages\Microsoft.Bcl.Build\1.0.21\build\Microsoft.Bcl.Build.targets" Condition="'$(TargetFramework)' == 'net40'" />
+
+</Project>

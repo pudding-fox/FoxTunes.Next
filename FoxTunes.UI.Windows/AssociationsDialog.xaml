@@ -1,0 +1,66 @@
+﻿<UserControl x:Class="FoxTunes.AssociationsDialog"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:Core="clr-namespace:FoxTunes;assembly=FoxTunes.Core" 
+             xmlns:Windows="clr-namespace:FoxTunes"
+             xmlns:ViewModel="clr-namespace:FoxTunes.ViewModel"
+             mc:Ignorable="d" 
+             d:DesignHeight="500" d:DesignWidth="700">
+    <UserControl.Resources>
+        <ViewModel:Associations x:Key="ViewModel"></ViewModel:Associations>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+        </Grid.RowDefinitions>
+        <GroupBox Grid.Row="0" Header="Associations">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                </Grid.RowDefinitions>
+                <ScrollViewer Grid.Row="0" >
+                    <ItemsControl Grid.IsSharedSizeScope="True" ItemsSource="{Binding FileAssociations, Source={StaticResource ViewModel}}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Margin="0,0,0,5">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition SharedSizeGroup="Extension" Width="Auto"></ColumnDefinition>
+                                        <ColumnDefinition></ColumnDefinition>
+                                    </Grid.ColumnDefinitions>
+                                    <Label Grid.Column="0" VerticalAlignment="Center" Padding="0,0,7,0" ContentStringFormat="{}{0}:"></Label>
+                                    <CheckBox Grid.Column="1" IsChecked="{Binding IsSelected}" Content="{Binding FileAssociation.Extension, Mode=OneWay}" VerticalAlignment="Center"></CheckBox>
+                                </Grid>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+                <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Text="This feature requires the FoxTunes.Core.Windows plugin and is designed for the portable package." IsHitTestVisible="False" Foreground="{DynamicResource TextBrush}">
+                    <TextBlock.Style>
+                        <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource {x:Type TextBlock}}">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding FileAssociations.Count, Mode=OneWay, Source={StaticResource ViewModel}}" Value="0">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
+            </Grid>
+        </GroupBox>
+        <Grid Grid.Row="1">
+            <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Left">
+                <Button Width="70" Height="30" Margin="0,7,7,0" Command="{Binding SelectAllCommand, Mode=OneWay, Source={StaticResource ViewModel}}">All</Button>
+                <Button Width="70" Height="30" Margin="0,7,0,0" Command="{Binding SelectNoneCommand, Mode=OneWay, Source={StaticResource ViewModel}}">None</Button>
+            </StackPanel>
+            <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button Width="70" Height="30" Margin="0,7,7,0" Windows:ButtonExtensions.Command="{Binding SaveCommand, Mode=OneWay, Source={StaticResource ViewModel}}" Windows:ButtonExtensions.CommandBehaviour="{x:Static Windows:ButtonExtensions.COMMAND_BEHAVIOUR_DISMISS}">Save</Button>
+                <Button Width="70" Height="30" Margin="0,7,0,0" Windows:ButtonExtensions.Command="{Binding CancelCommand, Mode=OneWay, Source={StaticResource ViewModel}}" Windows:ButtonExtensions.CommandBehaviour="{x:Static Windows:ButtonExtensions.COMMAND_BEHAVIOUR_DISMISS}">Cancel</Button>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</UserControl>

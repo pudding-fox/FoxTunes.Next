@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="Windows-1252"?>
+<FoxTunes>
+  <UIComponentConfiguration Component="3451DAA4-C643-4CB2-8105-B441F0277559">
+    <UIComponentConfiguration Component="3E899F79-380C-4EF7-8570-4B4E3B3467CB">
+      <UIComponentConfiguration Component="3E899F79-380C-4EF7-8570-4B4E3B3467CB">
+        <UIComponentConfiguration Component="18E98420-F039-4504-A116-3D0F26BEAAD5">
+          <UIComponentConfiguration Component="A6820FDA-E415-40C6-AEFB-A73B6FBE4C93">
+            <UIComponentConfiguration Component="881ADB02-ABD0-4B36-8487-6F64544DB684" />
+            <UIComponentConfiguration Component="67A0F63C-DC86-4B4E-91E1-290B71822853">
+              <UIComponentConfiguration Component="1155473E-FA29-4D31-8A28-4E4F5582261A">
+                <MetaDataEntry Name="Header" Value="Selection Properties" />
+              </UIComponentConfiguration>
+              <UIComponentConfiguration Component="A6820FDA-E415-40C6-AEFB-A73B6FBE4C93">
+                <UIComponentConfiguration Component="9A696BBC-F6AB-4180-8661-353A79253AA9" />
+                <UIComponentConfiguration Component="9AB8D410-B94D-492E-BF00-022A3E77762D" />
+                <MetaDataEntry Name="SplitterDistance" Value="1*" />
+                <MetaDataEntry Name="Header" Value="Visualizations" />
+                <MetaDataEntry Name="SplitterDirection" Value="Top" />
+              </UIComponentConfiguration>
+            </UIComponentConfiguration>
+            <MetaDataEntry Name="SplitterDistance" Value="1*" />
+            <MetaDataEntry Name="SplitterDirection" Value="Top" />
+          </UIComponentConfiguration>
+          <UIComponentConfiguration Component="3E899F79-380C-4EF7-8570-4B4E3B3467CB">
+            <UIComponentConfiguration Component="9A220ABE-761A-4596-8DFB-0C84DB8DBABB" />
+            <UIComponentConfiguration Component="868C483E-C23A-4960-A60F-B3AD9A4460C2" />
+            <MetaDataEntry Name="DockLocation" Value="Top" />
+          </UIComponentConfiguration>
+          <MetaDataEntry Name="SplitterDistance" Value="328.5" />
+          <MetaDataEntry Name="SplitterDirection" Value="Left" />
+        </UIComponentConfiguration>
+        <UIComponentConfiguration Component="CFF16494-CB86-4483-99C7-07E496FE894A" />
+        <MetaDataEntry Name="DockLocation" Value="Bottom" />
+      </UIComponentConfiguration>
+      <UIComponentConfiguration Component="3E899F79-380C-4EF7-8570-4B4E3B3467CB">
+        <UIComponentConfiguration Component="1CABFBE6-C5BD-4818-A092-2D79509D3A52">
+          <MetaDataEntry Name="DockLocation" Value="Right" />
+          <MetaDataEntry Name="Configuration_402DE29B-50AB-4345-89FB-174D87824F98" Value="CCCC3286-5097-4977-A4CC-5CEDA5E2E099" />
+        </UIComponentConfiguration>
+        <UIComponentConfiguration Component="3E899F79-380C-4EF7-8570-4B4E3B3467CB">
+          <UIComponentConfiguration Component="5D6C1128-B84F-4748-941D-C5DE341B6C49" />
+          <UIComponentConfiguration Component="79EB216A-2BB0-40D9-8CF3-64645BCA50A2">
+            <UIComponentConfiguration Component="26A6EFC8-E2A5-4157-AAF7-6E7A52516FCA">
+              <MetaDataEntry Name="Alignment" Value="Left" />
+            </UIComponentConfiguration>
+            <UIComponentConfiguration Component="DA832CBE-3C11-4F1F-80D4-B72A801DD972">
+              <MetaDataEntry Name="Alignment" Value="Left" />
+            </UIComponentConfiguration>
+            <UIComponentConfiguration Component="381328C3-C2CE-4FDA-AC92-71A15C3FC387">
+              <MetaDataEntry Name="Alignment" Value="Left" />
+            </UIComponentConfiguration>
+            <UIComponentConfiguration Component="82279C77-7959-4FCA-A699-270612C20F62">
+              <MetaDataEntry Name="Alignment" Value="Right" />
+            </UIComponentConfiguration>
+            <UIComponentConfiguration Component="F0398311-BF56-4307-B6A8-E30F283F7C89">
+              <MetaDataEntry Name="Alignment" Value="Right" />
+            </UIComponentConfiguration>
+            <UIComponentConfiguration Component="3EAA32EE-9CB2-491B-928E-EA1E9E547E30">
+              <MetaDataEntry Name="Alignment" Value="Right" />
+            </UIComponentConfiguration>
+            <UIComponentConfiguration Component="7709A1DD-5334-4164-ACBD-56E52491BF69">
+              <MetaDataEntry Name="Alignment" Value="Right" />
+            </UIComponentConfiguration>
+          </UIComponentConfiguration>
+          <MetaDataEntry Name="DockLocation" Value="Bottom" />
+        </UIComponentConfiguration>
+        <MetaDataEntry Name="DockLocation" Value="Left" />
+      </UIComponentConfiguration>
+      <MetaDataEntry Name="DockLocation" Value="Top" />
+    </UIComponentConfiguration>
+    <UIComponentConfiguration Component="EDC787A6-7B1E-4161-B2E1-843C58806D81">
+      <MetaDataEntry Name="HorizontalAlignment" Value="Right" />
+      <MetaDataEntry Name="VerticalAlignment" Value="Bottom" />
+    </UIComponentConfiguration>
+    <MetaDataEntry Name="DockLocation" Value="Top" />
+  </UIComponentConfiguration>
+</FoxTunes>

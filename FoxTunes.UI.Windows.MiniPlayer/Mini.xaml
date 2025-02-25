@@ -1,0 +1,84 @@
+﻿<UserControl x:Class="FoxTunes.Mini"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:Core="clr-namespace:FoxTunes;assembly=FoxTunes.Core" 
+             xmlns:Windows="clr-namespace:FoxTunes;assembly=FoxTunes.UI.Windows"
+             xmlns:LocalWindows="clr-namespace:FoxTunes" 
+             xmlns:ViewModel="clr-namespace:FoxTunes.ViewModel;assembly=FoxTunes.UI.Windows"
+             xmlns:LocalViewModel="clr-namespace:FoxTunes.ViewModel"
+             xmlns:Interactivity="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+             mc:Ignorable="d" 
+             AllowDrop="True">
+    <UserControl.Resources>
+        <LocalViewModel:Mini x:Key="ViewModel"></LocalViewModel:Mini>
+        <Style x:Key="ArtworkStyle" TargetType="{x:Type Windows:Artwork}">
+            <Setter Property="Visibility" Value="Visible"></Setter>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding ShowArtwork.Value, Source={StaticResource ViewModel}}" Value="False">
+                    <Setter Property="Visibility" Value="Collapsed"></Setter>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+        <Style x:Key="PlaylistStyle" TargetType="{x:Type LocalWindows:MiniPlaylist}">
+            <Setter Property="Visibility" Value="Visible"></Setter>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding ShowPlaylist.Value, Source={StaticResource ViewModel}}" Value="False">
+                    <Setter Property="Visibility" Value="Collapsed"></Setter>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding ShowArtwork.Value, Source={StaticResource ViewModel}}" Value="True">
+                    <Setter Property="Grid.Column" Value="1"></Setter>
+                    <Setter Property="Grid.RowSpan" Value="4"></Setter>
+                    <Setter Property="Width" Value="{Binding ActualWidth, ElementName=StreamPosition}"></Setter>
+                    <Setter Property="Margin" Value="2,0,0,0"></Setter>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding ShowArtwork.Value, Source={StaticResource ViewModel}}" Value="False">
+                    <Setter Property="Height" Value="100"></Setter>
+                    <Setter Property="Margin" Value="0,0,0,2"></Setter>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+    </UserControl.Resources>
+    <UserControl.ContextMenu>
+        <Windows:Menu Category="{Binding Source={x:Static Core:InvocationComponent.CATEGORY_MINI_PLAYER}}"></Windows:Menu>
+    </UserControl.ContextMenu>
+    <Interactivity:Interaction.Triggers>
+        <Interactivity:EventTrigger EventName="DragEnter">
+            <ViewModel:InvokeParameterizedCommandAction Command="{Binding DragEnterCommand, Source={StaticResource ViewModel}}" />
+        </Interactivity:EventTrigger>
+        <Interactivity:EventTrigger EventName="DragOver">
+            <ViewModel:InvokeParameterizedCommandAction Command="{Binding DragOverCommand, Source={StaticResource ViewModel}}" />
+        </Interactivity:EventTrigger>
+        <Interactivity:EventTrigger EventName="Drop">
+            <ViewModel:InvokeParameterizedCommandAction Command="{Binding DropCommand, Source={StaticResource ViewModel}}" />
+        </Interactivity:EventTrigger>
+    </Interactivity:Interaction.Triggers>
+    <StackPanel>
+        <LocalWindows:NowPlaying x:Name="NowPlaying" Margin="0,0,0,4" ToolTipService.ShowDuration="60000">
+            <LocalWindows:NowPlaying.ToolTip>
+                <Windows:PlaybackDetails></Windows:PlaybackDetails>
+            </LocalWindows:NowPlaying.ToolTip>
+        </LocalWindows:NowPlaying>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition></RowDefinition>
+                <RowDefinition></RowDefinition>
+                <RowDefinition></RowDefinition>
+                <RowDefinition></RowDefinition>
+            </Grid.RowDefinitions>
+            <LocalWindows:MiniPlaylist x:Name="MiniPlaylist" Style="{StaticResource PlaylistStyle}"></LocalWindows:MiniPlaylist>
+            <Windows:Artwork x:Name="Artwork" Grid.Row="1" Style="{StaticResource ArtworkStyle}" Margin="0,0,0,2" SizeMode="ToWidth"></Windows:Artwork>
+            <Windows:StreamPosition x:Name="StreamPosition" Grid.Row="2" Margin="0,0,0,2"></Windows:StreamPosition>
+            <StackPanel x:Name="StackPanel" Grid.Row="3" Orientation="Horizontal">
+                <Windows:Playback Margin="0,0,2,0"></Windows:Playback>
+                <Windows:Equalizer Margin="0,0,2,0"></Windows:Equalizer>
+                <LocalWindows:MiniPlayer></LocalWindows:MiniPlayer>
+            </StackPanel>
+        </Grid>
+    </StackPanel>
+</UserControl>

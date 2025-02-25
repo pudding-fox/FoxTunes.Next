@@ -1,0 +1,70 @@
+﻿<Windows:UIComponentBase x:Class="FoxTunes.MiniPlaylist"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:Core="clr-namespace:FoxTunes;assembly=FoxTunes.Core" 
+             xmlns:Windows="clr-namespace:FoxTunes;assembly=FoxTunes.UI.Windows" 
+             xmlns:LocalWindows="clr-namespace:FoxTunes" 
+             xmlns:ViewModel="clr-namespace:FoxTunes.ViewModel;assembly=FoxTunes.UI.Windows"
+             xmlns:LocalViewModel="clr-namespace:FoxTunes.ViewModel"
+             xmlns:Interactivity="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300" AllowDrop="True">
+    <UserControl.Resources>
+        <LocalViewModel:MiniPlaylist x:Key="ViewModel"/>
+    </UserControl.Resources>
+    <Interactivity:Interaction.Triggers>
+        <Interactivity:EventTrigger EventName="PreviewDragEnter">
+            <ViewModel:InvokeParameterizedCommandAction Command="{Binding DragEnterCommand, Source={StaticResource ViewModel}}" />
+        </Interactivity:EventTrigger>
+        <Interactivity:EventTrigger EventName="PreviewDragOver">
+            <ViewModel:InvokeParameterizedCommandAction Command="{Binding DragOverCommand, Source={StaticResource ViewModel}}" />
+        </Interactivity:EventTrigger>
+        <Interactivity:EventTrigger EventName="PreviewDrop">
+            <ViewModel:InvokeParameterizedCommandAction Command="{Binding DropCommand, Source={StaticResource ViewModel}}" />
+        </Interactivity:EventTrigger>
+    </Interactivity:Interaction.Triggers>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Border>
+            <ListBox 
+                Name="ListBox"
+                ItemsSource="{Binding Items, Source={StaticResource ViewModel}, IsAsync=True}" 
+                SelectedValue="{Binding SelectedItem, Source={StaticResource ViewModel}}" 
+                ScrollViewer.HorizontalScrollBarVisibility="Disabled" 
+                Width="{Binding ActualWidth, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Border}}}"
+                Height="{Binding ActualHeight, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Border}}}"
+                Background="Transparent"
+                Windows:ListBoxExtensions.EnsureSelectedItemVisible="True">
+                <Interactivity:Interaction.Triggers>
+                    <Interactivity:EventTrigger EventName="MouseDoubleClick">
+                        <Interactivity:InvokeCommandAction Command="{Binding PlaySelectedItemCommand, Source={StaticResource ViewModel}}"/>
+                    </Interactivity:EventTrigger>
+                </Interactivity:Interaction.Triggers>
+                <ListBox.ContextMenu>
+                    <Windows:Menu Category="{Binding Source={x:Static Core:InvocationComponent.CATEGORY_PLAYLIST}}"></Windows:Menu>
+                </ListBox.ContextMenu>
+                <ListBox.ItemTemplate>
+                    <DataTemplate DataType="{x:Type Core:PlaylistItem}">
+                        <TextBlock Foreground="{DynamicResource TextBrush}" Text="{Binding Converter={StaticResource ViewModel}}" TextTrimming="CharacterEllipsis"></TextBlock>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </Border>
+        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding StatusMessage, Mode=OneWay, Source={StaticResource ViewModel}}" IsHitTestVisible="False" Foreground="{DynamicResource TextBrush}">
+            <TextBlock.Style>
+                <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource {x:Type TextBlock}}">
+                    <Setter Property="Visibility" Value="Collapsed"/>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding HasStatusMessage, Mode=OneWay, Source={StaticResource ViewModel}}" Value="True">
+                            <Setter Property="Visibility" Value="Visible"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </TextBlock.Style>
+        </TextBlock>
+    </Grid>
+</Windows:UIComponentBase>

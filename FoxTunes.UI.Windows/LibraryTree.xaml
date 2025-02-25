@@ -1,0 +1,86 @@
+﻿<Windows:UIComponentBase
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:System="clr-namespace:System;assembly=mscorlib"
+             xmlns:Core="clr-namespace:FoxTunes;assembly=FoxTunes.Core" 
+             xmlns:Interfaces="clr-namespace:FoxTunes.Interfaces;assembly=FoxTunes.Core" 
+             xmlns:Windows="clr-namespace:FoxTunes" 
+             xmlns:ViewModel="clr-namespace:FoxTunes.ViewModel"
+             xmlns:Interactivity="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+             x:Class="FoxTunes.LibraryTree"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300" AllowDrop="True">
+    <UserControl.Resources>
+        <ViewModel:LibraryTree x:Key="ViewModel"></ViewModel:LibraryTree>
+        <ViewModel:LibraryHierarchyNodeConverter x:Key="LibraryHierarchyNodeConverter"></ViewModel:LibraryHierarchyNodeConverter>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"></BooleanToVisibilityConverter>
+        <System:Boolean x:Key="True">True</System:Boolean>
+        <System:Boolean x:Key="False">False</System:Boolean>
+    </UserControl.Resources>
+    <Interactivity:Interaction.Triggers>
+        <Interactivity:EventTrigger EventName="DragEnter">
+            <ViewModel:InvokeParameterizedCommandAction Command="{Binding DragEnterCommand, Source={StaticResource ViewModel}}" />
+        </Interactivity:EventTrigger>
+        <Interactivity:EventTrigger EventName="DragOver">
+            <ViewModel:InvokeParameterizedCommandAction Command="{Binding DragOverCommand, Source={StaticResource ViewModel}}" />
+        </Interactivity:EventTrigger>
+        <Interactivity:EventTrigger EventName="Drop">
+            <ViewModel:InvokeParameterizedCommandAction Command="{Binding DropCommand, Source={StaticResource ViewModel}}" />
+        </Interactivity:EventTrigger>
+    </Interactivity:Interaction.Triggers>
+    <Grid>
+        <TreeView x:Name="TreeView" Margin="0,2,0,2"
+                  ItemsSource="{Binding Items, Source={StaticResource ViewModel}, IsAsync=True}"
+                  Windows:TreeViewExtensions.SelectedItem="{Binding SelectedItem, Source={StaticResource ViewModel}}"
+                  Windows:TreeViewExtensions.RightButtonSelect="True"
+                  Windows:TreeViewExtensions.DragSource="True"
+                  Windows:TreeViewExtensions.DragSourceInitialized="DragSourceInitialized"
+                  Windows:TreeViewExtensions.AutoExpand="True"
+                  IsTextSearchEnabled="True"
+                  TextSearch.TextPath="Value"
+                  Background="{DynamicResource ControlBackgroundBrush}">
+            <Interactivity:Interaction.Triggers>
+                <Windows:FilteredEventTrigger EventName="MouseDoubleClick" SourceType="{x:Type TreeViewItem}">
+                    <Interactivity:InvokeCommandAction Command="{Binding AddToPlaylistCommand, Source={StaticResource ViewModel}}" CommandParameter="{StaticResource False}"/>
+                </Windows:FilteredEventTrigger>
+            </Interactivity:Interaction.Triggers>
+            <TreeView.InputBindings>
+                <KeyBinding Key="Return" Command="{Binding AddToPlaylistCommand, Source={StaticResource ViewModel}}" CommandParameter="{StaticResource True}"></KeyBinding>
+            </TreeView.InputBindings>
+            <TreeView.ContextMenu>
+                <Windows:Menu Category="{Binding Source={x:Static Core:InvocationComponent.CATEGORY_LIBRARY}}"></Windows:Menu>
+            </TreeView.ContextMenu>
+            <Windows:TreeViewExtensions.ItemContainerStyle>
+                <Style TargetType="{x:Type TreeViewItem}" BasedOn="{StaticResource {x:Type TreeViewItem}}">
+                    <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}"></Setter>
+                </Style>
+            </Windows:TreeViewExtensions.ItemContainerStyle>
+            <TreeView.ItemTemplate>
+                <HierarchicalDataTemplate ItemsSource="{Binding Children}">
+                    <TextBlock Text="{Binding Value, Mode=OneWay}" Foreground="{DynamicResource TextBrush}"/>
+                </HierarchicalDataTemplate>
+            </TreeView.ItemTemplate>
+        </TreeView>
+        <TextBlock Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding StatusMessage, Mode=OneWay, Source={StaticResource ViewModel}}" IsHitTestVisible="False" Foreground="{DynamicResource TextBrush}">
+            <TextBlock.Style>
+                <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource {x:Type TextBlock}}">
+                    <Setter Property="Visibility" Value="Collapsed"></Setter>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding HasStatusMessage, Mode=OneWay, Source={StaticResource ViewModel}}" Value="True">
+                            <Setter Property="Visibility" Value="Visible"></Setter>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </TextBlock.Style>
+        </TextBlock>
+        <Windows:MouseCursorAdorner x:Name="MouseCursorAdorner" Visibility="{Binding ShowCursorAdorners, Converter={StaticResource BooleanToVisibilityConverter}, Source={StaticResource ViewModel}}">
+            <Windows:MouseCursorAdorner.Template>
+                <DataTemplate>
+                    <Windows:ArtworkStack DataContext="{Binding SelectedItem, Converter={StaticResource LibraryHierarchyNodeConverter}, Source={StaticResource ViewModel}}" FileData="{Binding Value}"></Windows:ArtworkStack>
+                </DataTemplate>
+            </Windows:MouseCursorAdorner.Template>
+        </Windows:MouseCursorAdorner>
+    </Grid>
+</Windows:UIComponentBase>

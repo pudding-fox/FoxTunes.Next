@@ -1,0 +1,27 @@
+﻿<Windows:UIComponentBase x:Class="FoxTunes.LibrarySelector"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:Windows="clr-namespace:FoxTunes"
+             xmlns:ViewModel="clr-namespace:FoxTunes.ViewModel"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <ViewModel:LibrarySelector x:Key="ViewModel"></ViewModel:LibrarySelector>
+        <ViewModel:IntegerToBooleanConverter x:Key="IntegerToBooleanConverter"></ViewModel:IntegerToBooleanConverter>
+    </UserControl.Resources>
+    <Windows:UIComponentBase.IsComponentEnabled>
+        <Binding Path="Hierarchies.Count" Source="{StaticResource ViewModel}" Converter="{StaticResource IntegerToBooleanConverter}" ConverterParameter="2" FallbackValue="False" />
+    </Windows:UIComponentBase.IsComponentEnabled>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"></RowDefinition>
+        </Grid.RowDefinitions>
+        <ComboBox 
+               ItemsSource="{Binding Hierarchies, Mode=OneWay, Source={StaticResource ViewModel}, IsAsync=True}" 
+               SelectedValue="{Binding SelectedHierarchy, Source={StaticResource ViewModel}}"
+               DisplayMemberPath="Name">
+        </ComboBox>
+    </Grid>
+</Windows:UIComponentBase>
