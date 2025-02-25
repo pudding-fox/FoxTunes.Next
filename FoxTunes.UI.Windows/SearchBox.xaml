@@ -1,0 +1,45 @@
+﻿<UserControl x:Class="FoxTunes.SearchBox"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:System="clr-namespace:System;assembly=mscorlib"
+             xmlns:Windows="clr-namespace:FoxTunes"
+             xmlns:ViewModel="clr-namespace:FoxTunes.ViewModel"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300" Loaded="OnLoaded" Unloaded="OnUnloaded">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition Width="Auto"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <TextBox x:Name="TextBox" Text="{Binding Text, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Windows:SearchBox}}, UpdateSourceTrigger=PropertyChanged}" TextAlignment="Center" KeyUp="OnKeyUp"></TextBox>
+        <TextBlock Text="{x:Static ViewModel:StringResources.General_Search}" Opacity="0.5" FontStyle="Italic" IsHitTestVisible="False" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{DynamicResource TextBrush}">
+            <TextBlock.Style>
+                <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource {x:Type TextBlock}}">
+                    <Setter Property="Visibility" Value="Collapsed"></Setter>
+                    <Style.Triggers>
+                        <MultiDataTrigger>
+                            <MultiDataTrigger.Conditions>
+                                <Condition Binding="{Binding IsFocused, ElementName=TextBox, Mode=OneWay}" Value="False"></Condition>
+                                <Condition Binding="{Binding Text, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Windows:SearchBox}}}" Value="{x:Static System:String.Empty}"></Condition>
+                            </MultiDataTrigger.Conditions>
+                            <Setter Property="Visibility" Value="Visible"></Setter>
+                        </MultiDataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </TextBlock.Style>
+        </TextBlock>
+        <Button Grid.Column="1" Margin="2,0,0,0" Command="{Binding ClearCommand, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Windows:SearchBox}}}" Width="{Binding ActualHeight, RelativeSource={RelativeSource Self}}">
+            <Viewbox xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" Width="10" Height="10">
+                <Canvas Width="16" Height="16">
+                    <Path Fill="{DynamicResource TextBrush}">
+                        <Path.Data>
+                            <PathGeometry Figures="M0 14.545L1.455 16 8 9.455 14.545 16 16 14.545 9.455 8 16 1.455 14.545 0 8 6.545 1.455 0 0 1.455 6.545 8z" />
+                        </Path.Data>
+                    </Path>
+                </Canvas>
+            </Viewbox>
+        </Button>
+    </Grid>
+</UserControl>

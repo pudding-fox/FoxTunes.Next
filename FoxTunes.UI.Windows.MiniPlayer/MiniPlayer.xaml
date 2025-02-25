@@ -1,0 +1,57 @@
+﻿<Windows:UIComponentBase x:Class="FoxTunes.MiniPlayer"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:Core="clr-namespace:FoxTunes;assembly=FoxTunes.Core" 
+             xmlns:Windows="clr-namespace:FoxTunes;assembly=FoxTunes.UI.Windows" 
+             xmlns:LocalWindows="clr-namespace:FoxTunes" 
+             xmlns:LocalViewModel="clr-namespace:FoxTunes.ViewModel"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300" d:DataContext="{d:DesignInstance Core:Core, IsDesignTimeCreatable=False}">
+    <UserControl.Resources>
+        <LocalViewModel:MiniPlayer x:Key="ViewModel"></LocalViewModel:MiniPlayer>
+    </UserControl.Resources>
+    <Grid>
+        <ToggleButton Width="30" Height="30" FontSize="20" IsChecked="{Binding Enabled, Source={StaticResource ViewModel}}">
+            <ContentControl Width="20" Height="20">
+                <ContentControl.Style>
+                    <Style TargetType="{x:Type ContentControl}">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Enabled, Source={StaticResource ViewModel}}" Value="False">
+                                <Setter Property="Content">
+                                    <Setter.Value>
+                                        <Viewbox xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+                                            <Canvas Width="18" Height="18">
+                                                <Path Fill="{DynamicResource TextBrush}">
+                                                    <Path.Data>
+                                                        <PathGeometry Figures="M10 13c0 1-1 2-2 2H5c-1 0-2-1-2-2v-3c0-1 1-2 2-2h3c1 0 2 1 2 2zm1.5-8l-1-2c-.3 0-.5.2-.5.5v4c0 .3.2.5.5.5h4c.3 0 .5-.2.5-.5l-2-1 3.5-4c.5-.5 1-1 .5-1.5-.3-.3-1.2.2-1.5.5zM16 8v6.5c0 .8-.7 1.5-1.5 1.5h-11c-.8 0-1.5-.7-1.5-1.5v-11C2 2.7 2.7 2 3.5 2H10V1H3a2 2 0 00-2 2v12c0 1.1.9 2 2 2h12a2 2 0 002-2V8z" FillRule="NonZero"/>
+                                                    </Path.Data>
+                                                </Path>
+                                            </Canvas>
+                                        </Viewbox>
+                                    </Setter.Value>
+                                </Setter>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding Enabled, Source={StaticResource ViewModel}}" Value="True">
+                                <Setter Property="Content">
+                                    <Setter.Value>
+                                        <Viewbox xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+                                            <Canvas Width="18" Height="18">
+                                                <Path Fill="{DynamicResource TextBrush}">
+                                                    <Path.Data>
+                                                        <PathGeometry Figures="M10 13c0 1-1 2-2 2H5c-1 0-2-1-2-2v-3c0-1 1-2 2-2h3c1 0 2 1 2 2zm5.5-9l1 2c.3 0 .5-.2.5-.5v-4c0-.3-.2-.5-.5-.5h-4c-.3 0-.5.2-.5.5l2 1-3.5 4c-.6.6-.6.9-.5 1.5.2.4 1.2-.2 1.5-.5zm.5 4v6.5c0 .8-.7 1.5-1.5 1.5h-11c-.8 0-1.5-.7-1.5-1.5v-11C2 2.7 2.7 2 3.5 2H10V1H3a2 2 0 00-2 2v12c0 1.1.9 2 2 2h12a2 2 0 002-2V8z" FillRule="NonZero"/>
+                                                    </Path.Data>
+                                                </Path>
+                                            </Canvas>
+                                        </Viewbox>
+                                    </Setter.Value>
+                                </Setter>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </ContentControl.Style>
+            </ContentControl>
+        </ToggleButton>
+    </Grid>
+</Windows:UIComponentBase>

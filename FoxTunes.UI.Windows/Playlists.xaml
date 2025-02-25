@@ -1,0 +1,49 @@
+﻿<Windows:UIComponentBase
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:Core="clr-namespace:FoxTunes;assembly=FoxTunes.Core" 
+             xmlns:Windows="clr-namespace:FoxTunes"
+             xmlns:ViewModel="clr-namespace:FoxTunes.ViewModel"
+             xmlns:Interactivity="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+             x:Class="FoxTunes.Playlists" 
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300" AllowDrop="True">
+    <Windows:UIComponentBase.Resources>
+        <ViewModel:Playlists x:Key="ViewModel"></ViewModel:Playlists>
+    </Windows:UIComponentBase.Resources>
+    <Windows:UIComponentBase.ContextMenu>
+        <Windows:Menu Category="{Binding Source={x:Static Core:InvocationComponent.CATEGORY_PLAYLISTS}}"></Windows:Menu>
+    </Windows:UIComponentBase.ContextMenu>
+    <Windows:TabControl 
+            ItemsSource="{Binding Items, Source={StaticResource ViewModel}, IsAsync=True}" 
+            SelectedItem="{Binding SelectedItem, Source={StaticResource ViewModel}}" 
+            DisplayMemberPath="Name">
+        <Interactivity:Interaction.Triggers>
+            <Windows:FilteredEventTrigger EventName="DragEnter" SourceType="{x:Type TabPanel}">
+                <ViewModel:InvokeParameterizedCommandAction Command="{Binding DragEnterCommand, Source={StaticResource ViewModel}}" />
+            </Windows:FilteredEventTrigger>
+            <Windows:FilteredEventTrigger EventName="DragOver" SourceType="{x:Type TabPanel}">
+                <ViewModel:InvokeParameterizedCommandAction Command="{Binding DragOverCommand, Source={StaticResource ViewModel}}" />
+            </Windows:FilteredEventTrigger>
+            <Windows:FilteredEventTrigger EventName="Drop" SourceType="{x:Type TabPanel}" ExactMatch="True">
+                <ViewModel:InvokeParameterizedCommandAction Command="{Binding AddPlaylistCommand, Source={StaticResource ViewModel}}" />
+            </Windows:FilteredEventTrigger>
+            <Windows:FilteredEventTrigger EventName="Drop" SourceType="{x:Type TabItem}">
+                <ViewModel:InvokeParameterizedCommandAction Command="{Binding AddToPlaylistCommand, Source={StaticResource ViewModel}}" />
+            </Windows:FilteredEventTrigger>
+            <Windows:FilteredEventTrigger EventName="MouseDoubleClick" SourceType="{x:Type TabPanel}" ExactMatch="True">
+                <ViewModel:InvokeParameterizedCommandAction Command="{Binding AddPlaylistCommand, Source={StaticResource ViewModel}}" />
+            </Windows:FilteredEventTrigger>
+            <Interactivity:EventTrigger EventName="TabSelected">
+                <Interactivity:InvokeCommandAction Command="{Binding PlaylistSelectedCommand, Source={StaticResource ViewModel}}"/>
+            </Interactivity:EventTrigger>
+        </Interactivity:Interaction.Triggers>
+        <Windows:TabControl.ContentTemplate>
+            <DataTemplate DataType="{x:Type Core:Playlist}">
+                <Windows:TabPlaylist Playlist="{Binding}"></Windows:TabPlaylist>
+            </DataTemplate>
+        </Windows:TabControl.ContentTemplate>
+    </Windows:TabControl>
+</Windows:UIComponentBase>

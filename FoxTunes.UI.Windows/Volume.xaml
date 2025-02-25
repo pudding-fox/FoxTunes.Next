@@ -1,0 +1,84 @@
+﻿<Windows:UIComponentBase x:Class="FoxTunes.Volume"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:Core="clr-namespace:FoxTunes;assembly=FoxTunes.Core"
+             xmlns:Windows="clr-namespace:FoxTunes" 
+             xmlns:ViewModel="clr-namespace:FoxTunes.ViewModel"
+             mc:Ignorable="d" d:DesignHeight="300" d:DesignWidth="300" d:DataContext="{d:DesignInstance Core:Core, IsDesignTimeCreatable=False}"
+             Width="80">
+    <UserControl.Resources>
+        <ViewModel:Volume x:Key="ViewModel"></ViewModel:Volume>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"></BooleanToVisibilityConverter>
+    </UserControl.Resources>
+    <UserControl.Visibility>
+        <Binding Converter="{StaticResource BooleanToVisibilityConverter}" Mode="OneWay" Path="Enabled" Source="{StaticResource ViewModel}"/>
+    </UserControl.Visibility>
+    <Grid>
+        <Windows:DraggableSlider x:Name="Slider" VerticalAlignment="Center" Value="{Binding Value, Source={StaticResource ViewModel}}" Minimum="0" Maximum="1" SmallChange="0.01" LargeChange="0.1">
+            <Slider.Style>
+                <Style TargetType="{x:Type Slider}">
+                    <Setter Property="Background" Value="{DynamicResource TextBrush}"/>
+                    <Setter Property="Height" Value="20"/>
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="{x:Type Slider}">
+                                <ControlTemplate.Resources>
+                                    <Style TargetType="{x:Type RepeatButton}">
+                                        <Setter Property="OverridesDefaultStyle" Value="true"/>
+                                        <Setter Property="IsTabStop" Value="false"/>
+                                        <Setter Property="Focusable" Value="false"/>
+                                        <Setter Property="Template">
+                                            <Setter.Value>
+                                                <ControlTemplate TargetType="{x:Type RepeatButton}">
+                                                    <Border Background="{TemplateBinding Background}"/>
+                                                </ControlTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </Style>
+                                    <PathGeometry x:Key="Triangle">
+                                        <PathFigure StartPoint="0,1">
+                                            <LineSegment Point="1,1"/>
+                                            <LineSegment Point="1,0"/>
+                                            <LineSegment Point="0,1"/>
+                                        </PathFigure>
+                                    </PathGeometry>
+                                </ControlTemplate.Resources>
+                                <Grid>
+                                    <Grid>
+                                        <Grid.OpacityMask>
+                                            <DrawingBrush>
+                                                <DrawingBrush.Drawing>
+                                                    <GeometryDrawing Brush="Black" Geometry="{StaticResource Triangle}"/>
+                                                </DrawingBrush.Drawing>
+                                            </DrawingBrush>
+                                        </Grid.OpacityMask>
+                                        <Track Name="PART_Track" Value="{TemplateBinding Value}">
+                                            <Track.Thumb>
+                                                <Thumb Width="0">
+                                                    <Thumb.Template>
+                                                        <ControlTemplate TargetType="{x:Type Thumb}">
+                                                            <Border/>
+                                                        </ControlTemplate>
+                                                    </Thumb.Template>
+                                                </Thumb>
+                                            </Track.Thumb>
+                                            <Track.DecreaseRepeatButton>
+                                                <RepeatButton Background="{TemplateBinding Background}" Command="Slider.DecreaseLarge"/>
+                                            </Track.DecreaseRepeatButton>
+                                            <Track.IncreaseRepeatButton>
+                                                <RepeatButton Background="Transparent" Command="Slider.IncreaseLarge"/>
+                                            </Track.IncreaseRepeatButton>
+                                        </Track>
+                                    </Grid>
+                                    <Path Data="{StaticResource Triangle}" Stretch="Fill" Stroke="{TemplateBinding Background}" StrokeThickness="1"/>
+                                </Grid>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </Slider.Style>
+        </Windows:DraggableSlider>
+    </Grid>
+</Windows:UIComponentBase>

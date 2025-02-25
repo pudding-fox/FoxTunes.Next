@@ -1,0 +1,28 @@
+﻿<UserControl x:Class="FoxTunes.Config.ScriptEditor"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:Core="clr-namespace:FoxTunes;assembly=FoxTunes.Core" 
+             xmlns:ViewModel="clr-namespace:FoxTunes.ViewModel.Config"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800" d:DataContext="{d:DesignInstance Core:DoubleConfigurationElement}"
+             VerticalContentAlignment="Center">
+    <TextBox>
+        <TextBox.Style>
+            <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource {x:Type TextBox}}">
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding IsMultiline, Mode=OneWay, Source={StaticResource ViewModel}}" Value="True">
+                        <Setter Property="AcceptsReturn" Value="True"></Setter>
+                        <Setter Property="AcceptsTab" Value="True"></Setter>
+                        <Setter Property="SpellCheck.IsEnabled" Value="False"></Setter>
+                        <Setter Property="MinLines" Value="10"></Setter>
+                        <Setter Property="MaxLines" Value="10"></Setter>
+                        <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto"></Setter>
+                        <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"></Setter>
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+        </TextBox.Style>
+    </TextBox>
+</UserControl>

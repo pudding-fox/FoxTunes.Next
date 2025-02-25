@@ -1,0 +1,68 @@
+﻿<Windows:UIComponentBase x:Class="FoxTunes.Info"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:Core="clr-namespace:FoxTunes;assembly=FoxTunes.Core"
+             xmlns:Windows="clr-namespace:FoxTunes" 
+             xmlns:ViewModel="clr-namespace:FoxTunes.ViewModel"
+             xmlns:Interactivity="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+             mc:Ignorable="d" d:DesignHeight="300" d:DesignWidth="300" d:DataContext="{d:DesignInstance Core:Core, IsDesignTimeCreatable=False}">
+    <UserControl.Resources>
+        <ViewModel:Info x:Key="ViewModel"></ViewModel:Info>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"></BooleanToVisibilityConverter>
+    </UserControl.Resources>
+    <Windows:UIComponentBase.IsComponentEnabled>
+        <Binding Path="HasData" Source="{StaticResource ViewModel}"/>
+    </Windows:UIComponentBase.IsComponentEnabled>
+    <Grid>
+        <Grid.Resources>
+            <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource {x:Type TextBlock}}">
+                <Setter Property="Foreground" Value="{DynamicResource TextBrush}"></Setter>
+                <Setter Property="FontSize" Value="20"></Setter>
+                <Setter Property="TextTrimming" Value="CharacterEllipsis"></Setter>
+            </Style>
+            <Style x:Key="Link" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource {x:Type TextBlock}}">
+                <Style.Triggers>
+                    <Trigger Property="IsMouseOver" Value="True">
+                        <Setter Property="Foreground" Value="{DynamicResource GlyphBrush}"></Setter>
+                        <Setter Property="Cursor" Value="Hand"></Setter>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+        </Grid.Resources>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Windows:Artwork Grid.Column="0" Grid.Row="0"></Windows:Artwork>
+        <!-- Use the rating plugin if it's available. -->
+        <Windows:UIComponentShim Grid.Column="0" Grid.Row="1" Component="CAF4D8AD-80C3-4421-90C1-3E063FA9D5CB" HorizontalAlignment="Center" Height="20" Margin="0,4,0,0"></Windows:UIComponentShim>
+        <Grid Grid.Column="1" Grid.RowSpan="2" Margin="4,0,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition Width="Auto"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="Auto"></RowDefinition>
+            </Grid.RowDefinitions>
+            <TextBlock Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" HorizontalAlignment="Center" Text="{Binding Title, Source={StaticResource ViewModel}}"></TextBlock>
+            <TextBlock x:Name="Album" Grid.Column="0" Grid.Row="1" Text="{Binding Album, Source={StaticResource ViewModel}}" Style="{StaticResource Link}" MouseLeftButtonUp="OnSearch"></TextBlock>
+            <TextBlock x:Name="Artist" Grid.Column="0" Grid.Row="2" Text="{Binding Artist, Source={StaticResource ViewModel}}" Style="{StaticResource Link}" MouseLeftButtonUp="OnSearch"></TextBlock>
+            <TextBlock x:Name="Year" Grid.Column="0" Grid.Row="3" Text="{Binding Year, Source={StaticResource ViewModel}}" Style="{StaticResource Link}" MouseLeftButtonUp="OnSearch"></TextBlock>
+            <TextBlock x:Name="Genre" Grid.Column="0" Grid.Row="4" Text="{Binding Genre, Source={StaticResource ViewModel}}" Style="{StaticResource Link}" MouseLeftButtonUp="OnSearch"></TextBlock>
+            <TextBlock Grid.Column="1" Grid.Row="1" HorizontalAlignment="Right" Text="{Binding Channels, Source={StaticResource ViewModel}}"></TextBlock>
+            <TextBlock Grid.Column="1" Grid.Row="2" HorizontalAlignment="Right" Text="{Binding SampleRate, Source={StaticResource ViewModel}}"></TextBlock>
+            <TextBlock Grid.Column="1" Grid.Row="3" HorizontalAlignment="Right" Text="{Binding BitsPerSample, Source={StaticResource ViewModel}}"></TextBlock>
+            <TextBlock Grid.Column="1" Grid.Row="4" HorizontalAlignment="Right" Text="{Binding Bitrate, Source={StaticResource ViewModel}}"></TextBlock>
+        </Grid>
+    </Grid>
+</Windows:UIComponentBase>

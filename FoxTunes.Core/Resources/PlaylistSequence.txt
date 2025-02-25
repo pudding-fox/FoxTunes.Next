@@ -1,0 +1,5 @@
+﻿CommonMetaData.IsCompilation ? CustomMetaData.VariousArtists ? CommonMetaData.Artist
+CommonMetaData.Year
+CommonMetaData.Album
+CommonMetaData.Disc num
+CommonMetaData.Track num

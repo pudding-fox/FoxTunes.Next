@@ -1,0 +1,29 @@
+﻿<UserControl x:Class="FoxTunes.ArtworkStack"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:Core="clr-namespace:FoxTunes;assembly=FoxTunes.Core" 
+             xmlns:ViewModel="clr-namespace:FoxTunes.ViewModel"
+             xmlns:Windows="clr-namespace:FoxTunes" 
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <UserControl.Resources>
+        <ViewModel:ArtworkImageConverter x:Key="ArtworkImageConverter" Width="100" Height="100"></ViewModel:ArtworkImageConverter>
+        <SolidColorBrush x:Key="Transparent" Color="Transparent"></SolidColorBrush>
+    </UserControl.Resources>
+    <ItemsControl ItemsSource="{Binding FileData.MetaDatas, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Windows:ArtworkStack}}}">
+        <ItemsControl.ItemsPanel>
+            <ItemsPanelTemplate>
+                <Windows:DiagonalStackPanel XStep="25" YStep="15" Reverse="True"></Windows:DiagonalStackPanel>
+            </ItemsPanelTemplate>
+        </ItemsControl.ItemsPanel>
+        <ItemsControl.ItemTemplate>
+            <DataTemplate DataType="{x:Type Core:MetaDataItem}">
+                <Border Background="{DynamicResource ControlBrush}" BorderBrush="{DynamicResource ControlBorderBrush}" BorderThickness="1" Padding="5">
+                    <Rectangle DataContext="{Binding Value, Converter={StaticResource ArtworkImageConverter}}" Width="100" Height="100" Fill="{Binding Value, FallbackValue={StaticResource Transparent}}"></Rectangle>
+                </Border>
+            </DataTemplate>
+        </ItemsControl.ItemTemplate>
+    </ItemsControl>
+</UserControl>

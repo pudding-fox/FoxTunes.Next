@@ -1,0 +1,52 @@
+﻿<UserControl x:Class="FoxTunes.Report"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:Core="clr-namespace:FoxTunes;assembly=FoxTunes.Core" 
+             xmlns:Windows="clr-namespace:FoxTunes" 
+             xmlns:ViewModel="clr-namespace:FoxTunes.ViewModel"
+             xmlns:Interactivity="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="600">
+    <UserControl.Resources>
+        <ViewModel:Report x:Key="ViewModel"></ViewModel:Report>
+        <ViewModel:WrapperConverter x:Key="WrapperConverter"></ViewModel:WrapperConverter>
+        <x:Array x:Key="Components" Type="ViewModel:Wrapper">
+            <ViewModel:Wrapper Value="{Binding Source, Source={StaticResource ViewModel}}"></ViewModel:Wrapper>
+            <ViewModel:Wrapper Value="{Binding SelectedRow, Source={StaticResource ViewModel}}"></ViewModel:Wrapper>
+        </x:Array>
+    </UserControl.Resources>
+    <UserControl.ContextMenu>
+        <Windows:Menu Category="{Binding Source={x:Static Core:InvocationComponent.CATEGORY_REPORT}}" Components="{Binding Source={StaticResource Components},Converter={StaticResource WrapperConverter}}" ></Windows:Menu>
+    </UserControl.ContextMenu>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition></RowDefinition>
+        </Grid.RowDefinitions>
+        <TabControl>
+            <TabItem Header="Results">
+                <ListView
+                        Name="ListView"
+                        ItemsSource="{Binding Source.Rows, Source={StaticResource ViewModel}}"
+                        SelectedValue="{Binding SelectedRow, Source={StaticResource ViewModel}}"
+                        SelectionMode="Single"
+                        Windows:ListViewExtensions.AutoSizeColumns="True">
+                    <Interactivity:Interaction.Triggers>
+                        <Windows:FilteredEventTrigger EventName="MouseDoubleClick" SourceType="{x:Type ListViewItem}">
+                            <Interactivity:InvokeCommandAction Command="{Binding RowActivateCommand, Source={StaticResource ViewModel}}" />
+                        </Windows:FilteredEventTrigger>
+                    </Interactivity:Interaction.Triggers>
+                    <ListView.View>
+                        <GridView Windows:GridViewExtensions.ColumnsSource="{Binding GridColumns, Source={StaticResource ViewModel}}"></GridView>
+                    </ListView.View>
+                </ListView>
+            </TabItem>
+            <TabItem Header="Details">
+                <ScrollViewer  HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Padding="5">
+                    <TextBlock Foreground="{DynamicResource TextBrush}" Text="{Binding Source.Description, Mode=OneWay, Source={StaticResource ViewModel}}"></TextBlock>
+                </ScrollViewer>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</UserControl>

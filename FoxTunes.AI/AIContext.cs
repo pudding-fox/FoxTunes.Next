@@ -1,0 +1,63 @@
+﻿using FoxTunes.Interfaces;
+using System;
+
+namespace FoxTunes
+{
+    public abstract class AIContext : BaseComponent, IAIContext
+    {
+        protected AIContext(string model, float temperature, ReasoningLevel reasoningLevel)
+        {
+            this.Model = model;
+            this.Temperature = temperature;
+            this.ReasoningLevel = reasoningLevel;
+        }
+
+        public string Model { get; private set; }
+
+        public float Temperature { get; private set; }
+
+        public ReasoningLevel ReasoningLevel { get; private set; }
+
+        public abstract IAIFileStore CreateFileStore();
+
+        public abstract IAIVectorStore CreateVectorStore();
+
+        public abstract IAIResponseStore CreateResponseStore();
+
+        public bool IsDisposed { get; private set; }
+
+        public void Dispose()
+        {
+            this.Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (this.IsDisposed || !disposing)
+            {
+                return;
+            }
+            this.OnDisposing();
+            this.IsDisposed = true;
+        }
+
+        protected virtual void OnDisposing()
+        {
+            //Nothing to do.
+        }
+
+        ~AIContext()
+        {
+            Logger.Write(this, LogLevel.Error, "Component was not disposed: {0}", this.GetType().Name);
+            try
+            {
+                this.Dispose(true);
+            }
+            catch
+            {
+                //Nothing can be done, never throw on GC thread.
+            }
+        }
+    }
+}

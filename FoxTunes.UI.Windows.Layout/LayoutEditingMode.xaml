@@ -1,0 +1,16 @@
+<Windows:UIComponentBase x:Class="FoxTunes.LayoutEditingMode"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:Windows="clr-namespace:FoxTunes;assembly=FoxTunes.UI.Windows" 
+             xmlns:LocalWindows="clr-namespace:FoxTunes"
+             xmlns:LocalViewModel="clr-namespace:FoxTunes.ViewModel"
+             mc:Ignorable="d"
+             MinWidth="130"
+             MinHeight="30">
+    <UserControl.Resources>
+        <LocalViewModel:LayoutEditingMode x:Key="LayoutEditingMode"/>
+    </UserControl.Resources>
+    <ToggleButton Content="{x:Static LocalWindows:StringResources.LayoutEditingMode_LayoutEditingMode}" IsChecked="{Binding IsEditing, Source={StaticResource LayoutEditingMode}}"></ToggleButton>
+</Windows:UIComponentBase>

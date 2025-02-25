@@ -1,0 +1,36 @@
+﻿<Windows:ConfigurableUIComponentBase x:Class="FoxTunes.AITrack"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:System="clr-namespace:System;assembly=mscorlib"
+             xmlns:WebView2="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"
+             xmlns:Core="clr-namespace:FoxTunes;assembly=FoxTunes.Core"
+             xmlns:Windows="clr-namespace:FoxTunes;assembly=FoxTunes.UI.Windows" 
+             xmlns:LocalWindows="clr-namespace:FoxTunes" 
+             xmlns:ViewModel="clr-namespace:FoxTunes.ViewModel"
+             xmlns:LocalViewModel="clr-namespace:FoxTunes.ViewModel"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300"
+             Background="White"
+             BorderBrush="{DynamicResource ControlBorderBrush}"
+             BorderThickness="1">
+    <Windows:ConfigurableUIComponentBase.Resources>
+        <LocalViewModel:AITrack x:Key="ViewModel" ContentChanged="OnContentChanged"></LocalViewModel:AITrack>
+    </Windows:ConfigurableUIComponentBase.Resources>
+    <Grid>
+        <WebView2:WebView2CompositionControl x:Name="WebView2" CoreWebView2InitializationCompleted="OnCoreWebView2InitializationCompleted"></WebView2:WebView2CompositionControl>
+        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding StatusMessage, Mode=OneWay, Source={StaticResource ViewModel}}" IsHitTestVisible="False" Foreground="Black">
+            <TextBlock.Style>
+                <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource {x:Type TextBlock}}">
+                    <Setter Property="Visibility" Value="Collapsed"/>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding HasStatusMessage, Mode=OneWay, Source={StaticResource ViewModel}}" Value="True">
+                            <Setter Property="Visibility" Value="Visible"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </TextBlock.Style>
+        </TextBlock>
+    </Grid>
+</Windows:ConfigurableUIComponentBase>

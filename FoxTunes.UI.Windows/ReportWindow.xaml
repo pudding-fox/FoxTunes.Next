@@ -1,0 +1,24 @@
+﻿<Windows:WindowBase
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+        xmlns:Core="clr-namespace:FoxTunes;assembly=FoxTunes.Core" 
+        xmlns:Windows="clr-namespace:FoxTunes" 
+        xmlns:ViewModel="clr-namespace:FoxTunes.ViewModel"
+        x:Class="FoxTunes.ReportWindow"
+        mc:Ignorable="d" d:DesignHeight="300" d:DesignWidth="300" d:DataContext="{d:DesignInstance Core:Core, IsDesignTimeCreatable=False}"
+        Windows:ButtonExtensions.CommandExecuted="OnCommandExecuted">
+    <Window.Resources>
+        <ViewModel:Report x:Key="ViewModel"></ViewModel:Report>
+    </Window.Resources>
+    <Window.Title>
+        <Binding Mode="OneWay" Path="Source.Title" Source="{StaticResource ViewModel}"/>
+    </Window.Title>
+    <DockPanel>
+        <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button Width="70" Height="30" Margin="0,7,0,0" Windows:ButtonExtensions.Command="{Binding AcceptCommand, Mode=OneWay, Source={StaticResource ViewModel}}" Windows:ButtonExtensions.CommandBehaviour="{x:Static Windows:ButtonExtensions.COMMAND_BEHAVIOUR_DISMISS}" Content="{Binding AcceptText, Mode=OneWay, Source={StaticResource ViewModel}}"/>
+        </StackPanel>
+        <Windows:Report x:Name="Report"></Windows:Report>
+    </DockPanel>
+</Windows:WindowBase>

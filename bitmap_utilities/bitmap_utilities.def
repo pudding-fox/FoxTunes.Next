@@ -1,0 +1,13 @@
+LIBRARY bitmap_utilities
+VERSION 2.4
+EXPORTS
+create_palette
+destroy_palette
+draw_rectangles
+draw_rectangle
+draw_lines
+draw_line
+draw_pixels
+draw_pixel
+shift_left
+clear

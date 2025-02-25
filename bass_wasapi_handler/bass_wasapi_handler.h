@@ -1,0 +1,15 @@
+#include "bass/bass.h"
+
+#ifndef BASSWASAPIHANDLERDEF
+#define BASSWASAPIHANDLERDEF(f) WINAPI f
+#endif
+
+BOOL BASSWASAPIHANDLERDEF(BASS_WASAPI_HANDLER_Init)(int device, DWORD freq, DWORD chans, DWORD flags, float buffer, float period, void *user);
+
+BOOL BASSWASAPIHANDLERDEF(BASS_WASAPI_HANDLER_Free)();
+
+BOOL BASSWASAPIHANDLERDEF(BASS_WASAPI_HANDLER_StreamGet)(DWORD* handle);
+
+BOOL BASSWASAPIHANDLERDEF(BASS_WASAPI_HANDLER_StreamSet)(DWORD handle);
+
+DWORD CALLBACK BASS_WASAPI_HANDLER_StreamProc(void *buffer, DWORD length, void *user);

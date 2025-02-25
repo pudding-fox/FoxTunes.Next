@@ -1,0 +1,67 @@
+FoxTunes - Scripting
+
+Scripts are written in JavaScript. They are a single expression and must return a value:
+
+tag.title
+
+If multiple statements are required, wrap them in a function an execute it:
+
+(function () {
+    var title = [tag.title || strings.general_notitle];
+    return title;
+})()
+
+Values are grouped by cartegory:
+1) tag
+2) property
+3) document
+4) file
+5) folder
+
+Depending on your settings, more or less values are available:
+
+tag:
+    album
+    artist
+    beatsperminute
+    composer
+    conductor
+    disc
+    disccount
+    genre
+    initialkey
+    iscompilation
+    lastplayed
+    lyrics
+    performer
+    playcount
+    rating
+    replaygainalbumgain
+    replaygainalbumpeak
+    replaygaintrackgain
+    replaygaintrackpeak
+    title
+    track
+    trackcount
+    year
+
+ property:
+    audiobitrate
+    audiochannels
+    audiosamplerate
+    bitspersample
+    description
+    duration
+
+file
+folder
+
+Documents are structured data written by some applications:
+
+(function () {
+    var energy = content(document.energy);
+    if (energy && energy.energyLevel) {
+        return energy.energyLevel;
+    }
+    return strings.general_unknown;
+})()

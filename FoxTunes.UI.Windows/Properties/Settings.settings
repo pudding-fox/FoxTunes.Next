@@ -1,0 +1,33 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="FoxTunes.UI.Windows.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="MainWindowBounds" Type="System.Windows.Rect" Scope="User">
+      <Value Profile="(Default)">0,0,0,0</Value>
+    </Setting>
+    <Setting Name="ColumnWidth_FC87DEC38708" Type="System.String" Scope="User">
+      <Value Profile="(Default)">0.35*</Value>
+    </Setting>
+    <Setting Name="SettingsWindowBounds" Type="System.Windows.Rect" Scope="User">
+      <Value Profile="(Default)">0,0,0,0</Value>
+    </Setting>
+    <Setting Name="ColumnWidth_427FFD701CC2" Type="System.String" Scope="User">
+      <Value Profile="(Default)">0.35*</Value>
+    </Setting>
+    <Setting Name="ColumnHeight_6F3FDC8521DA" Type="System.String" Scope="User">
+      <Value Profile="(Default)">1*</Value>
+    </Setting>
+    <Setting Name="EqualizerWindowBounds" Type="System.Windows.Rect" Scope="User">
+      <Value Profile="(Default)">0,0,0,0</Value>
+    </Setting>
+    <Setting Name="PlaylistManagerWindowBounds" Type="System.Windows.Rect" Scope="User">
+      <Value Profile="(Default)">0,0,0,0</Value>
+    </Setting>
+    <Setting Name="ReportWindowBounds" Type="System.Windows.Rect" Scope="User">
+      <Value Profile="(Default)">0,0,0,0</Value>
+    </Setting>
+    <Setting Name="TempoWindowBounds" Type="System.Windows.Rect" Scope="User">
+      <Value Profile="(Default)">0,0,0,0</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

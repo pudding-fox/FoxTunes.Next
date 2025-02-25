@@ -1,0 +1,39 @@
+﻿<Windows:ConfigurableUIComponentBase x:Class="FoxTunes.EnhancedSpectrum"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:Core="clr-namespace:FoxTunes;assembly=FoxTunes.Core" 
+             xmlns:Windows="clr-namespace:FoxTunes;assembly=FoxTunes.UI.Windows" 
+             xmlns:LocalWindows="clr-namespace:FoxTunes"
+             xmlns:ViewModel="clr-namespace:FoxTunes.ViewModel;assembly=FoxTunes.UI.Windows"
+             xmlns:LocalViewModel="clr-namespace:FoxTunes.ViewModel"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300" 
+             Foreground="{DynamicResource TextBrush}"
+             MinWidth="160"
+             MinHeight="30">
+    <UserControl.Resources>
+        <LocalViewModel:EnhancedSpectrum x:Key="ViewModel"></LocalViewModel:EnhancedSpectrum>
+        <LocalWindows:TextAxisLabelProvider x:Key="Levels" Values="{Binding Levels, Source={StaticResource ViewModel}}"></LocalWindows:TextAxisLabelProvider>
+        <LocalWindows:TextAxisLabelProvider x:Key="Bands" Values="{Binding Bands, Source={StaticResource ViewModel}}"></LocalWindows:TextAxisLabelProvider>
+    </UserControl.Resources>
+    <Windows:Visualization>
+        <LocalWindows:Chart>
+            <LocalWindows:Chart.XAxisContent>
+                <LocalWindows:Axis Height="32" Orientation="Horizontal" Foreground="{DynamicResource TextBrush}" LabelProvider="{StaticResource Bands}" Padding="4,0,4,0"></LocalWindows:Axis>
+            </LocalWindows:Chart.XAxisContent>
+            <LocalWindows:Chart.YAxisContent>
+                <LocalWindows:Axis Width="32" Orientation="Vertical" Foreground="{DynamicResource TextBrush}" LabelProvider="{StaticResource Levels}" Padding="1,0,1,0"></LocalWindows:Axis>
+            </LocalWindows:Chart.YAxisContent>
+            <LocalWindows:Chart.LegendContent>
+                <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" RenderTransformOrigin="0.5,0.5" Text="dB/Hz" Foreground="{DynamicResource TextBrush}">
+                    <TextBlock.RenderTransform>
+                        <RotateTransform Angle="45"/>
+                    </TextBlock.RenderTransform>
+                </TextBlock>
+            </LocalWindows:Chart.LegendContent>
+            <LocalWindows:EnhancedSpectrumRenderer></LocalWindows:EnhancedSpectrumRenderer>
+        </LocalWindows:Chart>
+    </Windows:Visualization>
+</Windows:ConfigurableUIComponentBase>

@@ -1,0 +1,44 @@
+﻿<Windows:SquareConfigurableUIComponentBase x:Class="FoxTunes.Artwork"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:System="clr-namespace:System;assembly=mscorlib"
+             xmlns:ViewModel="clr-namespace:FoxTunes.ViewModel"                              
+             xmlns:Windows="clr-namespace:FoxTunes" 
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300"
+             SizeChanged="OnSizeChanged"
+             MouseUp="OnMouseUp"
+             Background="{DynamicResource ControlBrush}"
+             BorderBrush="{DynamicResource ControlBorderBrush}"
+             BorderThickness="1">
+    <Windows:SquareConfigurableUIComponentBase.Resources>
+        <ViewModel:Artwork x:Key="ViewModel" FileNameChanged="OnFileNameChanged"></ViewModel:Artwork>
+        <ViewModel:ArtworkImageConverter x:Key="ArtworkImageConverter" Width="{Binding ActualWidth, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Windows:Artwork}}}" Height="{Binding ActualHeight, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Windows:Artwork}}}"></ViewModel:ArtworkImageConverter>
+        <SolidColorBrush x:Key="Transparent" Color="Transparent"></SolidColorBrush>
+        <System:Boolean x:Key="True">True</System:Boolean>
+        <System:Boolean x:Key="False">False</System:Boolean>
+    </Windows:SquareConfigurableUIComponentBase.Resources>
+    <Rectangle DataContext="{Binding FileName, Converter={StaticResource ArtworkImageConverter}, Source={StaticResource ViewModel}}" Fill="{Binding Value, FallbackValue={StaticResource Transparent}}">
+        <Rectangle.Style>
+            <Style TargetType="{x:Type Rectangle}">
+                <Setter Property="Effect" Value="{x:Null}"/>
+                <Style.Triggers>
+                    <DataTrigger Value="{StaticResource True}">
+                        <DataTrigger.Binding>
+                            <Binding Path="Blur" Source="{StaticResource ViewModel}"></Binding>
+                        </DataTrigger.Binding>
+                        <DataTrigger.Setters>
+                            <Setter Property="Effect">
+                                <Setter.Value>
+                                    <BlurEffect Radius="20"/>
+                                </Setter.Value>
+                            </Setter>
+                        </DataTrigger.Setters>
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+        </Rectangle.Style>
+    </Rectangle>
+</Windows:SquareConfigurableUIComponentBase>
