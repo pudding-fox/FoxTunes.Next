@@ -10,7 +10,7 @@
 		<Platforms>AnyCPU</Platforms>
 		<SkipEnsureBindingRedirects>true</SkipEnsureBindingRedirects>
 		<SkipValidatePackageReferences>true</SkipValidatePackageReferences>
-		<AssemblyVersion>3.6.0.0</AssemblyVersion>
+		<AssemblyVersion>4.0.0.0</AssemblyVersion>
 	</PropertyGroup>
 
 	<ItemGroup>
