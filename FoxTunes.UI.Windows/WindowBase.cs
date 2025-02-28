@@ -88,6 +88,7 @@ namespace FoxTunes
             this.Background = Brushes.Transparent;
             WindowExtensions.SetAllowsTransparency(this, true);
             WindowExtensions.SetFontFamily(this, true);
+            WindowExtensions.SetFontSize(this, true);
             if (this.ApplyTemplate)
             {
                 this.ShowTemplate();

@@ -651,6 +651,9 @@
   <data name="WindowsUserInterfaceConfiguration.FontFamily" xml:space="preserve">
     <value>Font Family</value>
   </data>
+  <data name="WindowsUserInterfaceConfiguration.FontSize" xml:space="preserve">
+    <value>Font Size</value>
+  </data>
   <data name="WindowsUserInterfaceConfiguration.Layout" xml:space="preserve">
     <value>Layout</value>
   </data>
