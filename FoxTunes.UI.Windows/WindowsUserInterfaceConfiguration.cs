@@ -31,6 +31,14 @@ namespace FoxTunes
 
         public const string FONT_FAMILY = "OOOOA891-8854-484E-B3DF-5E571C9500FB";
 
+        public const string FONT_SIZE = "000148BA-F548-47F9-A021-71327BCD4486";
+
+        public const double DEFAULT_FONT_SIZE = 12;
+
+        public const double MIN_FONT_SIZE = 5;
+
+        public const double MAX_FONT_SIZE = 50;
+
         public static IEnumerable<ConfigurationSection> GetConfigurationSections()
         {
             yield return new ConfigurationSection(SECTION, Strings.WindowsUserInterfaceConfiguration_Section)
@@ -49,7 +57,9 @@ namespace FoxTunes
                 .WithElement(
                     new SelectionConfigurationElement(TRANSPARENCY_PROVIDER, Strings.WindowsUserInterfaceConfiguration_TransparencyProvider).DependsOn(SECTION, TRANSPARENCY))
                 .WithElement(
-                    new TextConfigurationElement(FONT_FAMILY, Strings.WindowsUserInterfaceConfiguration_FontFamily).WithFlags(ConfigurationElementFlags.FontFamily)
+                    new TextConfigurationElement(FONT_FAMILY, Strings.WindowsUserInterfaceConfiguration_FontFamily).WithFlags(ConfigurationElementFlags.FontFamily))
+                .WithElement(
+                    new DoubleConfigurationElement(FONT_SIZE, Strings.WindowsUserInterfaceConfiguration_FontSize).WithValue(DEFAULT_FONT_SIZE).WithValidationRule(new DoubleValidationRule(MIN_FONT_SIZE, MAX_FONT_SIZE))
             );
         }
 

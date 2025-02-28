@@ -1663,6 +1663,15 @@ namespace FoxTunes {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Font Size.
+        /// </summary>
+        internal static string WindowsUserInterfaceConfiguration_FontSize {
+            get {
+                return ResourceManager.GetString("WindowsUserInterfaceConfiguration.FontSize", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Layout.
         /// </summary>
         internal static string WindowsUserInterfaceConfiguration_Layout {
