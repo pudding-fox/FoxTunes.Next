@@ -34,7 +34,7 @@ namespace FoxTunes
         {
             get
             {
-                return "Like";
+                return Strings.LikeBehaviour_Like;
             }
         }
 
@@ -103,7 +103,7 @@ namespace FoxTunes
                 var set = database.Set<PlaylistColumn>(transaction);
                 set.Add(new PlaylistColumn()
                 {
-                    Name = "Like",
+                    Name = Strings.LikeBehaviour_Like,
                     Type = PlaylistColumnType.Plugin,
                     Sequence = 100,
                     Plugin = ID,
@@ -163,7 +163,7 @@ namespace FoxTunes
                         yield return new InvocationComponent(
                             InvocationComponent.CATEGORY_LIBRARY,
                             SET_LIBRARY_LIKE,
-                            "Like",
+                            Strings.LikeBehaviour_Like,
                             attributes: this.GetLibraryLike(this.LibraryManager.SelectedItem).Result ? InvocationComponent.ATTRIBUTE_SELECTED : InvocationComponent.ATTRIBUTE_NONE
                         );
                     }
@@ -172,7 +172,7 @@ namespace FoxTunes
                         yield return new InvocationComponent(
                             InvocationComponent.CATEGORY_PLAYLIST,
                             SET_PLAYLIST_LIKE,
-                            "Like",
+                            Strings.LikeBehaviour_Like,
                             attributes: this.GetPlaylistLike(this.PlaylistManager.SelectedItems).Result ? InvocationComponent.ATTRIBUTE_SELECTED : InvocationComponent.ATTRIBUTE_NONE
                         );
                     }

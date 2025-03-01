@@ -70,6 +70,15 @@ namespace FoxTunes {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Like.
+        /// </summary>
+        internal static string LikeBehaviour_Like {
+            get {
+                return ResourceManager.GetString("LikeBehaviour.Like", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Update likes for {0} tracks?.
         /// </summary>
         internal static string LikeManager_Confirm {
@@ -84,6 +93,42 @@ namespace FoxTunes {
         internal static string Rating_Name {
             get {
                 return ResourceManager.GetString("Rating.Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Rating.
+        /// </summary>
+        internal static string RatingBehaviour_Rating {
+            get {
+                return ResourceManager.GetString("RatingBehaviour.Rating", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reset.
+        /// </summary>
+        internal static string RatingBehaviour_Reset {
+            get {
+                return ResourceManager.GetString("RatingBehaviour.Reset", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Set Rating.
+        /// </summary>
+        internal static string RatingBehaviour_SetRating {
+            get {
+                return ResourceManager.GetString("RatingBehaviour.SetRating", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} Stars.
+        /// </summary>
+        internal static string RatingBehaviour_Stars {
+            get {
+                return ResourceManager.GetString("RatingBehaviour.Stars", resourceCulture);
             }
         }
         
