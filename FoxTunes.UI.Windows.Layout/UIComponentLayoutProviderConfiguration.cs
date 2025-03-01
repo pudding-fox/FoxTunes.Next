@@ -25,7 +25,9 @@ namespace FoxTunes
                     .WithValue(Resources.Main_1)
                     .WithFlags(ConfigurationElementFlags.MultiLine)
                     .DependsOn(SECTION, LAYOUT, UIComponentLayoutProvider.ID))
-                .WithElement(new CommandConfigurationElement(REFRESH, Strings.UIComponentLayoutProviderConfiguration_Refresh, path: Strings.UIComponentLayoutProviderConfiguration_Path).WithHandler(Refresh)
+                .WithElement(new CommandConfigurationElement(REFRESH, Strings.UIComponentLayoutProviderConfiguration_Refresh, path: Strings.UIComponentLayoutProviderConfiguration_Path)
+                    .WithHandler(Refresh)
+                    .DependsOn(SECTION, LAYOUT, UIComponentLayoutProvider.ID)
             );
         }
 
