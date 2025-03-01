@@ -31,7 +31,7 @@ namespace FoxTunes
 
         public const string FONT_FAMILY = "OOOOA891-8854-484E-B3DF-5E571C9500FB";
 
-        public const string FONT_SIZE = "000148BA-F548-47F9-A021-71327BCD4486";
+        public const string FONT_SIZE = "PPPP48BA-F548-47F9-A021-71327BCD4486";
 
         public const double DEFAULT_FONT_SIZE = 12;
 
