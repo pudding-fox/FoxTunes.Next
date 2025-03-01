@@ -120,11 +120,26 @@
   <data name="Like.Name" xml:space="preserve">
     <value>Like</value>
   </data>
+  <data name="LikeBehaviour.Like" xml:space="preserve">
+    <value>Like</value>
+  </data>
   <data name="LikeManager.Confirm" xml:space="preserve">
     <value>Update likes for {0} tracks?</value>
   </data>
   <data name="Rating.Name" xml:space="preserve">
     <value>Rating</value>
+  </data>
+  <data name="RatingBehaviour.Rating" xml:space="preserve">
+    <value>Rating</value>
+  </data>
+  <data name="RatingBehaviour.Reset" xml:space="preserve">
+    <value>Reset</value>
+  </data>
+  <data name="RatingBehaviour.SetRating" xml:space="preserve">
+    <value>Set Rating</value>
+  </data>
+  <data name="RatingBehaviour.Stars" xml:space="preserve">
+    <value>{0} Stars</value>
   </data>
   <data name="RatingManager.Confirm" xml:space="preserve">
     <value>Update ratings for {0} tracks?</value>

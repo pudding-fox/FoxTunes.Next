@@ -36,7 +36,7 @@ namespace FoxTunes
         {
             get
             {
-                return "Rating Stars";
+                return Strings.RatingBehaviour_Rating;
             }
         }
 
@@ -105,7 +105,7 @@ namespace FoxTunes
                 var set = database.Set<PlaylistColumn>(transaction);
                 set.Add(new PlaylistColumn()
                 {
-                    Name = "Rating",
+                    Name = Strings.RatingBehaviour_Rating,
                     Type = PlaylistColumnType.Plugin,
                     Sequence = 100,
                     Plugin = ID,
@@ -193,8 +193,8 @@ namespace FoxTunes
                             var invocationComponent = new InvocationComponent(
                                 InvocationComponent.CATEGORY_PLAYLIST,
                                 SET_PLAYLIST_RATING,
-                                string.Format("{0} Stars", a),
-                                path: "Set Rating"
+                                string.Format(Strings.RatingBehaviour_Stars, a),
+                                path: Strings.RatingBehaviour_SetRating
                             );
                             invocationComponents.Add((byte)a, invocationComponent);
                             yield return invocationComponent;
@@ -202,8 +202,8 @@ namespace FoxTunes
                         yield return new InvocationComponent(
                             InvocationComponent.CATEGORY_PLAYLIST,
                             SET_PLAYLIST_RATING,
-                            "Reset",
-                            path: "Set Rating",
+                            Strings.RatingBehaviour_Reset,
+                            path: Strings.RatingBehaviour_SetRating,
                             attributes: InvocationComponent.ATTRIBUTE_SEPARATOR
                         );
                         //Don't block the menu from opening while we fetch ratings.
@@ -314,7 +314,7 @@ namespace FoxTunes
         protected virtual Task SetLibraryRating(string name)
         {
             var rating = default(byte);
-            if (string.Equals(name, "Reset", StringComparison.OrdinalIgnoreCase))
+            if (string.Equals(name, Strings.RatingBehaviour_Reset, StringComparison.OrdinalIgnoreCase))
             {
                 rating = 0;
             }
@@ -341,7 +341,7 @@ namespace FoxTunes
         protected virtual Task SetPlaylistRating(string name)
         {
             var rating = default(byte);
-            if (string.Equals(name, "Reset", StringComparison.OrdinalIgnoreCase))
+            if (string.Equals(name, Strings.RatingBehaviour_Reset, StringComparison.OrdinalIgnoreCase))
             {
                 rating = 0;
             }
