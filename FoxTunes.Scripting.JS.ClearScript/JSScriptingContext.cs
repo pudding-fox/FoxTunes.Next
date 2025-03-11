@@ -51,17 +51,30 @@ namespace FoxTunes
             }
             if (value is IDictionary dictionary)
             {
-                var propertyBag = new PropertyBag(true, StringComparer.OrdinalIgnoreCase);
-                foreach (var key in dictionary.Keys)
-                {
-                    propertyBag.SetPropertyNoCheck(Convert.ToString(key), dictionary[key]);
-                }
-                this.Engine.Global.SetProperty(name, propertyBag);
+                this.Engine.Global.SetProperty(name, this.GetPropertyBag(dictionary));
             }
             else
             {
                 this.Engine.Global.SetProperty(name, value);
             }
+        }
+
+        private PropertyBag GetPropertyBag(IDictionary content)
+        {
+            var result = new PropertyBag(true, StringComparer.OrdinalIgnoreCase);
+            foreach (var key in content.Keys)
+            {
+                var value = content[key];
+                if (value is IDictionary dictionary)
+                {
+                    result.SetPropertyNoCheck(Convert.ToString(key), this.GetPropertyBag(dictionary));
+                }
+                else
+                {
+                    result.SetPropertyNoCheck(Convert.ToString(key), value);
+                }
+            }
+            return result;
         }
 
         public override object Run(string script)
