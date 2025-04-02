@@ -1,4 +1,5 @@
-﻿using FoxTunes.Interfaces;
+﻿#pragma warning disable 0436
+using FoxTunes.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -18,6 +19,32 @@ namespace FoxTunes
             get
             {
                 return LogManager.Logger;
+            }
+        }
+
+        public static void Save(Stream stream, IEnumerable<ToolWindowConfiguration> configs)
+        {
+            using (var writer = new XmlTextWriter(stream, Encoding.Default))
+            {
+                writer.Formatting = Formatting.Indented;
+                writer.WriteStartDocument();
+                writer.WriteStartElement(Publication.Product);
+                foreach (var config in configs)
+                {
+                    writer.WriteStartElement(nameof(ToolWindowConfiguration));
+                    writer.WriteAttributeString(nameof(ToolWindowConfiguration.Title), config.Title);
+                    writer.WriteAttributeString(nameof(ToolWindowConfiguration.Left), Convert.ToString(config.Left));
+                    writer.WriteAttributeString(nameof(ToolWindowConfiguration.Top), Convert.ToString(config.Top));
+                    writer.WriteAttributeString(nameof(ToolWindowConfiguration.Width), Convert.ToString(config.Width));
+                    writer.WriteAttributeString(nameof(ToolWindowConfiguration.Height), Convert.ToString(config.Height));
+                    writer.WriteAttributeString(nameof(ToolWindowConfiguration.ShowWithMainWindow), Convert.ToString(config.ShowWithMainWindow));
+                    writer.WriteAttributeString(nameof(ToolWindowConfiguration.ShowWithMiniWindow), Convert.ToString(config.ShowWithMiniWindow));
+                    writer.WriteAttributeString(nameof(ToolWindowConfiguration.AlwaysOnTop), Convert.ToString(config.AlwaysOnTop));
+                    SaveComponent(writer, config.Component);
+                    writer.WriteEndElement();
+                }
+                writer.WriteEndElement();
+                writer.WriteEndDocument();
             }
         }
 
@@ -76,6 +103,47 @@ namespace FoxTunes
             writer.WriteAttributeString(nameof(Serializer.Name), key);
             writer.WriteAttributeString(nameof(Serializer.Value), value);
             writer.WriteEndElement();
+        }
+
+        public static IEnumerable<ToolWindowConfiguration> LoadWindows(Stream stream)
+        {
+            using (var reader = new XmlTextReader(stream))
+            {
+                reader.WhitespaceHandling = WhitespaceHandling.Significant;
+                reader.ReadStartElement(Publication.Product);
+                while (reader.IsStartElement(nameof(ToolWindowConfiguration)))
+                {
+                    var title = reader.GetAttribute(nameof(ToolWindowConfiguration.Title));
+                    var left = reader.GetAttribute(nameof(ToolWindowConfiguration.Left));
+                    var top = reader.GetAttribute(nameof(ToolWindowConfiguration.Top));
+                    var width = reader.GetAttribute(nameof(ToolWindowConfiguration.Width));
+                    var height = reader.GetAttribute(nameof(ToolWindowConfiguration.Height));
+                    var showWithMainWindow = reader.GetAttribute(nameof(ToolWindowConfiguration.ShowWithMainWindow));
+                    var showWithMiniWindow = reader.GetAttribute(nameof(ToolWindowConfiguration.ShowWithMiniWindow));
+                    var alwaysOnTop = reader.GetAttribute(nameof(ToolWindowConfiguration.AlwaysOnTop));
+                    reader.ReadStartElement(nameof(ToolWindowConfiguration));
+                    yield return new ToolWindowConfiguration()
+                    {
+                        Title = title,
+                        Left = Convert.ToInt32(left),
+                        Top = Convert.ToInt32(top),
+                        Width = Convert.ToInt32(width),
+                        Height = Convert.ToInt32(height),
+                        ShowWithMainWindow = Convert.ToBoolean(showWithMainWindow),
+                        ShowWithMiniWindow = Convert.ToBoolean(showWithMiniWindow),
+                        AlwaysOnTop = Convert.ToBoolean(alwaysOnTop),
+                        Component = LoadComponent(reader)
+                    };
+                    if (reader.NodeType == XmlNodeType.EndElement && string.Equals(reader.Name, nameof(ToolWindowConfiguration)))
+                    {
+                        reader.ReadEndElement();
+                    }
+                }
+                if (reader.NodeType == XmlNodeType.EndElement && string.Equals(reader.Name, Publication.Product))
+                {
+                    reader.ReadEndElement();
+                }
+            }
         }
 
         public static UIComponentConfiguration LoadComponent(string value)

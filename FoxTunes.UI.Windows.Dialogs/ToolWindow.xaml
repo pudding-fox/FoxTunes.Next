@@ -5,6 +5,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
         xmlns:Core="clr-namespace:FoxTunes;assembly=FoxTunes.Core" 
         xmlns:Windows="clr-namespace:FoxTunes;assembly=FoxTunes.UI.Windows" 
+        xmlns:Layout="clr-namespace:FoxTunes;assembly=FoxTunes.UI.Windows.Layout"
         xmlns:LocalWindows="clr-namespace:FoxTunes"
         xmlns:LocalViewModel="clr-namespace:FoxTunes.ViewModel"
         x:Class="FoxTunes.ToolWindow"
@@ -19,5 +20,5 @@
         <!-- This seems to produce a binding warning but I don't know why. The FallbackValue doesn't seem to help. -->
         <Binding Path="Title" Source="{StaticResource ViewModel}" Mode="OneWay" FallbackValue="Tool Window"/>
     </Window.Title>
-    <LocalWindows:UIComponentRoot x:Name="Root" Grid.Row="1" Configuration="{Binding Component, Source={StaticResource ViewModel}}"></LocalWindows:UIComponentRoot>
+    <Layout:UIComponentRoot x:Name="Root" Grid.Row="1" Configuration="{Binding Component, Source={StaticResource ViewModel}}"></Layout:UIComponentRoot>
 </Windows:WindowBase>

@@ -9,10 +9,10 @@
 //------------------------------------------------------------------------------
 
 namespace FoxTunes.Properties {
-
-
+    
+    
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "17.3.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "17.1.0.0")]
     internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
         
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
@@ -26,12 +26,12 @@ namespace FoxTunes.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("0,0,0,0")]
-        public global::System.Windows.Rect LayoutTreeWindowBounds {
+        public global::System.Windows.Rect ToolWindowBounds {
             get {
-                return ((global::System.Windows.Rect)(this["LayoutTreeWindowBounds"]));
+                return ((global::System.Windows.Rect)(this["ToolWindowBounds"]));
             }
             set {
-                this["LayoutTreeWindowBounds"] = value;
+                this["ToolWindowBounds"] = value;
             }
         }
     }

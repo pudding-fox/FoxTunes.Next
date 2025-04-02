@@ -384,6 +384,14 @@ namespace FoxTunes
                     PackageFlags.Default
                 ),
                 new Package(
+                    "dialogs",
+                    new PackageElement[]
+                    {
+                        "FoxTunes.UI.Windows.Dialogs.dll"
+                    },
+                    PackageFlags.Default
+                ),
+                new Package(
                     "directsound",
                     new PackageElement[]
                     {

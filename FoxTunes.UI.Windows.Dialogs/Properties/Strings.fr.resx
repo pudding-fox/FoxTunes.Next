@@ -118,261 +118,120 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="LayoutDesignerBehaviour.Design" xml:space="preserve">
-    <value>Edit</value>
+    <value>Modifier la mise en page</value>
   </data>
-  <data name="LayoutDesignerBehaviour.Load" xml:space="preserve">
-    <value>Load Preset</value>
+  <data name="ToolWindowBehaviour.Manage" xml:space="preserve">
+    <value>Gérer</value>
   </data>
-  <data name="LayoutDesignerBehaviour.Overwrite" xml:space="preserve">
-    <value>The current layout has been modified, overwrite it?</value>
+  <data name="ToolWindowBehaviour.New" xml:space="preserve">
+    <value>Nouveau</value>
   </data>
-  <data name="LayoutDesignerBehaviour.Path" xml:space="preserve">
-    <value>Layout</value>
+  <data name="ToolWindowBehaviour.NewWindow" xml:space="preserve">
+    <value>Nouvelle fenêtre</value>
   </data>
-  <data name="LayoutDesignerBehaviourTask.Name" xml:space="preserve">
-    <value>Editing Layout</value>
-  </data>
-  <data name="LayoutDesignerKeyBindingsBehaviourConfiguration.Edit" xml:space="preserve">
-    <value>Edit Layout</value>
-  </data>
-  <data name="LayoutEditor.Cancel" xml:space="preserve">
-    <value>Cancel</value>
-  </data>
-  <data name="LayoutEditor.Save" xml:space="preserve">
-    <value>Save</value>
-  </data>
-  <data name="LayoutSelector.Name" xml:space="preserve">
-    <value>Layout Selector</value>
-  </data>
-  <data name="LayoutTreeWindow.Title" xml:space="preserve">
-    <value>Layout Tree</value>
+  <data name="ToolWindowBehaviour.Path" xml:space="preserve">
+    <value>Dialogues</value>
   </data>
   <data name="UIComponentContainer.Clear" xml:space="preserve">
-    <value>Clear</value>
+    <value>Effacer</value>
   </data>
   <data name="UIComponentContainer.Exit" xml:space="preserve">
-    <value>Done</value>
-  </data>
-  <data name="UIComponentContainer.Replace" xml:space="preserve">
-    <value>Replace</value>
-  </data>
-  <data name="UIComponentContainer.Wrap" xml:space="preserve">
-    <value>Wrap</value>
-  </data>
-  <data name="UIComponentDesignerOverlay.Path.Child" xml:space="preserve">
-    <value>Layout\{0}</value>
-  </data>
-  <data name="UIComponentDesignerOverlay.Path.Parent" xml:space="preserve">
-    <value>Layout\{0} (Container)</value>
+    <value>Fait</value>
   </data>
   <data name="UIComponentDockContainer.Collapse" xml:space="preserve">
-    <value>Collapsable</value>
+    <value>Pliable</value>
   </data>
   <data name="UIComponentDockContainer.DockBottom" xml:space="preserve">
-    <value>Dock Bottom</value>
+    <value>Ancrer en bas</value>
   </data>
   <data name="UIComponentDockContainer.DockLeft" xml:space="preserve">
-    <value>Dock Left</value>
+    <value>Ancrer à gauche</value>
   </data>
   <data name="UIComponentDockContainer.DockRight" xml:space="preserve">
-    <value>Dock Right</value>
+    <value>Ancrer à droite</value>
   </data>
   <data name="UIComponentDockContainer.DockTop" xml:space="preserve">
-    <value>Dock Top</value>
+    <value>Ancrer en haut</value>
   </data>
   <data name="UIComponentDockContainer.Name" xml:space="preserve">
     <value>Dock</value>
   </data>
   <data name="UIComponentGridContainer.Add" xml:space="preserve">
-    <value>Add</value>
-  </data>
-  <data name="UIComponentGridContainer.AlignBottom" xml:space="preserve">
-    <value>Align Bottom</value>
+    <value>Ajouter</value>
   </data>
   <data name="UIComponentGridContainer.AlignLeft" xml:space="preserve">
-    <value>Align Left</value>
+    <value>Aligner à gauche</value>
   </data>
   <data name="UIComponentGridContainer.AlignRight" xml:space="preserve">
-    <value>Align Right</value>
+    <value>Aligner à droite</value>
   </data>
   <data name="UIComponentGridContainer.AlignStretch" xml:space="preserve">
-    <value>Align Center</value>
-  </data>
-  <data name="UIComponentGridContainer.AlignTop" xml:space="preserve">
-    <value>Align Top</value>
-  </data>
-  <data name="UIComponentGridContainer.MoveDown" xml:space="preserve">
-    <value>Move Down</value>
+    <value>Aligner au centre</value>
   </data>
   <data name="UIComponentGridContainer.MoveLeft" xml:space="preserve">
-    <value>Move Left</value>
+    <value>Déplacer à gauche</value>
   </data>
   <data name="UIComponentGridContainer.MoveRight" xml:space="preserve">
-    <value>Move Right</value>
+    <value>Déplacer à droite</value>
   </data>
-  <data name="UIComponentGridContainer.MoveUp" xml:space="preserve">
-    <value>Move Up</value>
+  <data name="UIComponentGridContainer.Name" xml:space="preserve">
+    <value>Grille horizontale</value>
   </data>
   <data name="UIComponentGridContainer.Remove" xml:space="preserve">
-    <value>Remove</value>
-  </data>
-  <data name="UIComponentGroupContainer.Name" xml:space="preserve">
-    <value>Group Box</value>
-  </data>
-  <data name="UIComponentGroupContainer.Rename" xml:space="preserve">
-    <value>Rename</value>
-  </data>
-  <data name="UIComponentHorizontalGridContainer.Name" xml:space="preserve">
-    <value>Horizontal Grid</value>
+    <value>Supprimer</value>
   </data>
   <data name="UIComponentHorizontalSplitContainer.CollapseBottom" xml:space="preserve">
-    <value>Collapse Bottom</value>
+    <value>Réduire le bas</value>
   </data>
   <data name="UIComponentHorizontalSplitContainer.CollapseTop" xml:space="preserve">
-    <value>Collapse Top</value>
+    <value>Réduire le haut</value>
   </data>
   <data name="UIComponentHorizontalSplitContainer.FreezeBottom" xml:space="preserve">
-    <value>Freeze Bottom</value>
+    <value>Geler le fond</value>
   </data>
   <data name="UIComponentHorizontalSplitContainer.FreezeTop" xml:space="preserve">
-    <value>Freeze Top</value>
+    <value>Geler le dessus</value>
   </data>
   <data name="UIComponentHorizontalSplitContainer.Name" xml:space="preserve">
-    <value>Splitter (top | bottom)</value>
+    <value>Fractionnement horizontal</value>
   </data>
   <data name="UIComponentLayoutProvider.Description" xml:space="preserve">
     <value />
   </data>
   <data name="UIComponentLayoutProvider.Name" xml:space="preserve">
-    <value>Customizable</value>
+    <value>Personnalisable</value>
   </data>
   <data name="UIComponentLayoutProviderConfiguration.MainLayout" xml:space="preserve">
-    <value>Main Layout</value>
+    <value>Disposition principale</value>
   </data>
   <data name="UIComponentLayoutProviderConfiguration.Path" xml:space="preserve">
-    <value>Advanced\Layouts</value>
+    <value>Avancé\Disposition</value>
   </data>
   <data name="UIComponentLayoutProviderConfiguration.Preset" xml:space="preserve">
-    <value>Preset</value>
-  </data>
-  <data name="UIComponentLayoutProviderConfiguration.Refresh" xml:space="preserve">
-    <value>Refresh</value>
+    <value>Préréglage</value>
   </data>
   <data name="UIComponentLayoutProviderPresets.Main.1" xml:space="preserve">
-    <value>Default</value>
+    <value>Défaut</value>
   </data>
   <data name="UIComponentLayoutProviderPresets.Main.2" xml:space="preserve">
-    <value>Default (With WaveBar)</value>
-  </data>
-  <data name="UIComponentLayoutProviderPresets.Main.3" xml:space="preserve">
-    <value>Default (With Visualizations)</value>
-  </data>
-  <data name="UIComponentLayoutProviderPresets.Main.4" xml:space="preserve">
-    <value>Default (With Visualizations + Properties)</value>
-  </data>
-  <data name="UIComponentLayoutProviderPresets.Main.5" xml:space="preserve">
-    <value>Development 1</value>
-  </data>
-  <data name="UIComponentLayoutProviderPresets.Main.6" xml:space="preserve">
-    <value>Development 2</value>
-  </data>
-  <data name="UIComponentLayoutProviderPresets.Simple.1" xml:space="preserve">
-    <value>Simple</value>
-  </data>
-  <data name="UIComponentLayoutProviderPresets.Simple.2" xml:space="preserve">
-    <value>Simple (With Library)</value>
-  </data>
-  <data name="UIComponentLayoutProviderPresets.Simple.3" xml:space="preserve">
-    <value>Simple (With Library + Properties)</value>
-  </data>
-  <data name="UIComponentStackContainer.Add" xml:space="preserve">
-    <value>Add</value>
-  </data>
-  <data name="UIComponentStackContainer.AlignBottom" xml:space="preserve">
-    <value>Align Bottom</value>
-  </data>
-  <data name="UIComponentStackContainer.AlignLeft" xml:space="preserve">
-    <value>Align Left</value>
-  </data>
-  <data name="UIComponentStackContainer.AlignRight" xml:space="preserve">
-    <value>Align Right</value>
-  </data>
-  <data name="UIComponentStackContainer.AlignTop" xml:space="preserve">
-    <value>Align Top</value>
-  </data>
-  <data name="UIComponentStackContainer.Fill" xml:space="preserve">
-    <value>Fill</value>
-  </data>
-  <data name="UIComponentStackContainer.MoveDown" xml:space="preserve">
-    <value>Move Down</value>
-  </data>
-  <data name="UIComponentStackContainer.MoveUp" xml:space="preserve">
-    <value>Move Up</value>
+    <value>Défaut (Avec WaveBar)</value>
   </data>
   <data name="UIComponentStackContainer.Name" xml:space="preserve">
     <value>Stack Grid</value>
   </data>
-  <data name="UIComponentStackContainer.Remove" xml:space="preserve">
-    <value>Remove</value>
-  </data>
-  <data name="UIComponentTabContainer.Add" xml:space="preserve">
-    <value>Add Tab</value>
-  </data>
-  <data name="UIComponentTabContainer.MoveLeft" xml:space="preserve">
-    <value>Move Left</value>
-  </data>
-  <data name="UIComponentTabContainer.MoveRight" xml:space="preserve">
-    <value>Move Right</value>
-  </data>
-  <data name="UIComponentTabContainer.Name" xml:space="preserve">
-    <value>Tabs</value>
-  </data>
-  <data name="UIComponentTabContainer.NewTab" xml:space="preserve">
-    <value>New Tab</value>
-  </data>
-  <data name="UIComponentTabContainer.Remove" xml:space="preserve">
-    <value>Remove Tab</value>
-  </data>
-  <data name="UIComponentTabContainer.Rename" xml:space="preserve">
-    <value>Rename</value>
-  </data>
-  <data name="UIComponentTabContainer.TabName" xml:space="preserve">
-    <value>Tab Name</value>
-  </data>
-  <data name="UIComponentToolbar.Name" xml:space="preserve">
-    <value>Standard Toolbar</value>
-  </data>
-  <data name="UIComponentToolbar.Reset" xml:space="preserve">
-    <value>Reset</value>
-  </data>
-  <data name="UIComponentVerticalGridContainer.Name" xml:space="preserve">
-    <value>Vertical Grid</value>
-  </data>
   <data name="UIComponentVerticalSplitContainer.CollapseLeft" xml:space="preserve">
-    <value>Collapse Left</value>
+    <value>Réduire à gauche</value>
   </data>
   <data name="UIComponentVerticalSplitContainer.CollapseRight" xml:space="preserve">
-    <value>Collapse Right</value>
+    <value>Réduire à droite</value>
   </data>
   <data name="UIComponentVerticalSplitContainer.FreezeLeft" xml:space="preserve">
-    <value>Freeze Left</value>
+    <value>Figer à gauche</value>
   </data>
   <data name="UIComponentVerticalSplitContainer.FreezeRight" xml:space="preserve">
-    <value>Freeze Right</value>
+    <value>Figer à droite</value>
   </data>
   <data name="UIComponentVerticalSplitContainer.Name" xml:space="preserve">
-    <value>Splitter (left | right)</value>
-  </data>
-  <data name="UIComponentGridContainer.Name" xml:space="preserve">
-    <value />
-  </data>
-  <data name="LayoutEditingMode.LayoutEditingMode" xml:space="preserve">
-    <value>Layout Editing Mode</value>
-  </data>
-  <data name="LayoutEditingMode.Name" xml:space="preserve">
-    <value>Layout Editing Mode</value>
-  </data>
-  <data name="UIComponentLayoutProviderPresets.Main.7" xml:space="preserve">
-    <value>Development 3</value>
+    <value>Fractionnement vertical</value>
   </data>
 </root>
