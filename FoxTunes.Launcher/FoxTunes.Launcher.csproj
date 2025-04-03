@@ -43,7 +43,7 @@
     </EmbeddedResource>
   </ItemGroup>
 
-  <Import Project="$(UserProfile)\.nuget\packages\Microsoft.Bcl.Build\1.0.21\build\Microsoft.Bcl.Build.targets" Condition="'$(TargetFramework)' == 'net40'" />
+
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
     <Exec Command="copy /Y &quot;$(TargetPath)&quot; &quot;$(TargetDir)$(TargetName).x86$(TargetExt)&quot;" />

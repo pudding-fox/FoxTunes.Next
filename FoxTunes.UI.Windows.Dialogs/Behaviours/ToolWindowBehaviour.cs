@@ -1,4 +1,5 @@
-﻿using FoxTunes.Interfaces;
+﻿#pragma warning disable 0436
+using FoxTunes.Interfaces;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;

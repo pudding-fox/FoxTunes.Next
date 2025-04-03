@@ -77,6 +77,6 @@
     </None>
   </ItemGroup>
 
-  <Import Project="$(UserProfile)\.nuget\packages\Microsoft.Bcl.Build\1.0.21\build\Microsoft.Bcl.Build.targets" Condition="'$(TargetFramework)' == 'net40'" />
+
 
 </Project>
