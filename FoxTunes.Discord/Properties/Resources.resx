@@ -117,19 +117,11 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="DiscordBehaviourConfiguration.DetailsScript" xml:space="preserve">
-    <value>Details Script</value>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="Details" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Details.js;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
-  <data name="DiscordBehaviourConfiguration.Enabled" xml:space="preserve">
-    <value>Enabled</value>
-  </data>
-  <data name="DiscordBehaviourConfiguration.Section" xml:space="preserve">
-    <value>Discord</value>
-  </data>
-  <data name="DiscordBehaviourConfiguration.StateScript" xml:space="preserve">
-    <value>State Script</value>
-  </data>
-  <data name="General.Advanced" xml:space="preserve">
-    <value>Advanced</value>
+  <data name="State" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\State.js;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
 </root>

@@ -1006,6 +1006,7 @@ namespace Discord
         }
 
         private GCHandle? setLogHook;
+        private GCHandle? getLogHook;
 
         public Discord(Int64 clientId, UInt64 flags)
         {
@@ -1409,10 +1410,16 @@ namespace Discord
             callback(result, ref oauth2Token);
         }
 
+        private GCHandle? getOAuth2TokenHook;
+
         public void GetOAuth2Token(GetOAuth2TokenHandler callback)
         {
-            GCHandle wrapped = GCHandle.Alloc(callback);
-            Methods.GetOAuth2Token(MethodsPtr, GCHandle.ToIntPtr(wrapped), GetOAuth2TokenCallbackImpl);
+            if (getOAuth2TokenHook.HasValue)
+            {
+                getOAuth2TokenHook.Value.Free();
+            }
+            getOAuth2TokenHook = GCHandle.Alloc(callback);
+            Methods.GetOAuth2Token(MethodsPtr, GCHandle.ToIntPtr(getOAuth2TokenHook.Value), GetOAuth2TokenCallbackImpl);
         }
 
         [MonoPInvokeCallback]
@@ -1843,10 +1850,16 @@ namespace Discord
             callback(result);
         }
 
+        private GCHandle? updateActivityHook;
+
         public void UpdateActivity(Activity activity, UpdateActivityHandler callback)
         {
-            GCHandle wrapped = GCHandle.Alloc(callback);
-            Methods.UpdateActivity(MethodsPtr, ref activity, GCHandle.ToIntPtr(wrapped), UpdateActivityCallbackImpl);
+            if (updateActivityHook.HasValue)
+            {
+                updateActivityHook.Value.Free();
+            }
+            updateActivityHook = GCHandle.Alloc(callback);
+            Methods.UpdateActivity(MethodsPtr, ref activity, GCHandle.ToIntPtr(updateActivityHook.Value), UpdateActivityCallbackImpl);
         }
 
         [MonoPInvokeCallback]
@@ -1858,10 +1871,16 @@ namespace Discord
             callback(result);
         }
 
+        private GCHandle? clearActivityHook;
+
         public void ClearActivity(ClearActivityHandler callback)
         {
-            GCHandle wrapped = GCHandle.Alloc(callback);
-            Methods.ClearActivity(MethodsPtr, GCHandle.ToIntPtr(wrapped), ClearActivityCallbackImpl);
+            if (clearActivityHook.HasValue)
+            {
+                clearActivityHook.Value.Free();
+            }
+            updateActivityHook = GCHandle.Alloc(callback);
+            Methods.ClearActivity(MethodsPtr, GCHandle.ToIntPtr(clearActivityHook.Value), ClearActivityCallbackImpl);
         }
 
         [MonoPInvokeCallback]

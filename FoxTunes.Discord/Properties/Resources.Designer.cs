@@ -22,14 +22,14 @@ namespace FoxTunes {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class Strings {
+    internal class Resources {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal Strings() {
+        internal Resources() {
         }
         
         /// <summary>
@@ -39,7 +39,7 @@ namespace FoxTunes {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("FoxTunes.Discord.Properties.Strings", typeof(Strings).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("FoxTunes.Discord.Properties.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -61,47 +61,41 @@ namespace FoxTunes {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Details Script.
+        ///   Looks up a localized string similar to (function () {
+        ///    var parts = [];
+        ///    if (tag.track) {
+        ///        parts.push(zeropad2(tag.track, tag.trackcount, 2));
+        ///    }
+        ///    if (tag.title) {
+        ///        parts.push(tag.title);
+        ///    }
+        ///    else {
+        ///        parts.push(filename(file));
+        ///    }
+        ///    return parts.join(&quot; - &quot;);
+        ///})().
         /// </summary>
-        internal static string DiscordBehaviourConfiguration_DetailsScript {
+        internal static string Details {
             get {
-                return ResourceManager.GetString("DiscordBehaviourConfiguration.DetailsScript", resourceCulture);
+                return ResourceManager.GetString("Details", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Enabled.
+        ///   Looks up a localized string similar to (function () {
+        ///    var parts = [];
+        ///    if (tag.artist) {
+        ///        parts.push(tag.artist);
+        ///    }
+        ///    if (tag.album) {
+        ///        parts.push(tag.album);
+        ///    }
+        ///    return parts.join(&quot; - &quot;);
+        ///})().
         /// </summary>
-        internal static string DiscordBehaviourConfiguration_Enabled {
+        internal static string State {
             get {
-                return ResourceManager.GetString("DiscordBehaviourConfiguration.Enabled", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Discord.
-        /// </summary>
-        internal static string DiscordBehaviourConfiguration_Section {
-            get {
-                return ResourceManager.GetString("DiscordBehaviourConfiguration.Section", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to State Script.
-        /// </summary>
-        internal static string DiscordBehaviourConfiguration_StateScript {
-            get {
-                return ResourceManager.GetString("DiscordBehaviourConfiguration.StateScript", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Advanced.
-        /// </summary>
-        internal static string General_Advanced {
-            get {
-                return ResourceManager.GetString("General.Advanced", resourceCulture);
+                return ResourceManager.GetString("State", resourceCulture);
             }
         }
     }
