@@ -1,6 +1,7 @@
 using System;
 using System.Runtime.InteropServices;
 using System.Text;
+using static Discord.ApplicationManager.FFIMethods;
 
 namespace Discord
 {
@@ -1412,6 +1413,8 @@ namespace Discord
 
         private GCHandle? getOAuth2TokenHook;
 
+        static GetOAuth2TokenCallback _GetOAuth2TokenCallbackImpl = GetOAuth2TokenCallbackImpl;
+
         public void GetOAuth2Token(GetOAuth2TokenHandler callback)
         {
             if (getOAuth2TokenHook.HasValue)
@@ -1419,7 +1422,7 @@ namespace Discord
                 getOAuth2TokenHook.Value.Free();
             }
             getOAuth2TokenHook = GCHandle.Alloc(callback);
-            Methods.GetOAuth2Token(MethodsPtr, GCHandle.ToIntPtr(getOAuth2TokenHook.Value), GetOAuth2TokenCallbackImpl);
+            Methods.GetOAuth2Token(MethodsPtr, GCHandle.ToIntPtr(getOAuth2TokenHook.Value), _GetOAuth2TokenCallbackImpl);
         }
 
         [MonoPInvokeCallback]

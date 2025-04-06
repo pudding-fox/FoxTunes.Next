@@ -62,9 +62,21 @@ namespace FoxTunes {
         
         /// <summary>
         ///   Looks up a localized string similar to (function () {
+        ///    if (!file) {
+        ///        return version();
+        ///    }
         ///    var parts = [];
+        ///    if (tag.disccount != 1 &amp;&amp; tag.disc) {
+        ///        parts.push(tag.disc);
+        ///    }
         ///    if (tag.track) {
         ///        parts.push(zeropad2(tag.track, tag.trackcount, 2));
+        ///    }
+        ///    if (tag.artist) {
+        ///        parts.push(tag.artist);
+        ///    }
+        ///    if (tag.album) {
+        ///        parts.push(tag.album);
         ///    }
         ///    if (tag.title) {
         ///        parts.push(tag.title);
@@ -72,8 +84,7 @@ namespace FoxTunes {
         ///    else {
         ///        parts.push(filename(file));
         ///    }
-        ///    return parts.join(&quot; - &quot;);
-        ///})().
+        ///    if (tag [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string Details {
             get {
@@ -83,14 +94,7 @@ namespace FoxTunes {
         
         /// <summary>
         ///   Looks up a localized string similar to (function () {
-        ///    var parts = [];
-        ///    if (tag.artist) {
-        ///        parts.push(tag.artist);
-        ///    }
-        ///    if (tag.album) {
-        ///        parts.push(tag.album);
-        ///    }
-        ///    return parts.join(&quot; - &quot;);
+        ///    return &quot;Listening&quot;;
         ///})().
         /// </summary>
         internal static string State {
