@@ -1855,6 +1855,8 @@ namespace Discord
 
         private GCHandle? updateActivityHook;
 
+        private FFIMethods.UpdateActivityCallback _UpdateActivityCallbackImpl = UpdateActivityCallbackImpl;
+
         public void UpdateActivity(Activity activity, UpdateActivityHandler callback)
         {
             if (updateActivityHook.HasValue)
@@ -1862,7 +1864,7 @@ namespace Discord
                 updateActivityHook.Value.Free();
             }
             updateActivityHook = GCHandle.Alloc(callback);
-            Methods.UpdateActivity(MethodsPtr, ref activity, GCHandle.ToIntPtr(updateActivityHook.Value), UpdateActivityCallbackImpl);
+            Methods.UpdateActivity(MethodsPtr, ref activity, GCHandle.ToIntPtr(updateActivityHook.Value), _UpdateActivityCallbackImpl);
         }
 
         [MonoPInvokeCallback]

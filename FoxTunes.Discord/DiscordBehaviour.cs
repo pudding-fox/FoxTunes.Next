@@ -2,11 +2,14 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Timers;
 
 namespace FoxTunes
 {
     public class DiscordBehaviour : StandardBehaviour, IConfigurableComponent, IDisposable
     {
+        public static readonly int INTERVAL = 1000;
+
         static DiscordBehaviour()
         {
             Loader.Load("discord_game_sdk.dll");
@@ -111,6 +114,8 @@ namespace FoxTunes
 
         public global::Discord.Discord Discord { get; private set; }
 
+        public global::System.Timers.Timer Timer { get; private set; }
+
         public string Token { get; private set; }
 
         public string Scopes { get; private set; }
@@ -158,6 +163,11 @@ namespace FoxTunes
                 }
             });
             this.Discord.RunCallbacks();
+            this.Timer = new global::System.Timers.Timer();
+            this.Timer.Interval = INTERVAL;
+            this.Timer.AutoReset = false;
+            this.Timer.Elapsed += this.OnElapsed;
+            this.Timer.Start();
             this.PlaybackManager.CurrentStreamChanged += this.OnCurrentStreamChanged;
             this.Enabled = true;
         }
@@ -174,7 +184,33 @@ namespace FoxTunes
                 this.Discord.Dispose();
                 this.Discord = null;
             }
+            if (this.Timer != null)
+            {
+                this.Timer.Stop();
+                this.Timer.Elapsed -= this.OnElapsed;
+                this.Timer.Dispose();
+                this.Timer = null;
+            }
             this.Enabled = false;
+        }
+
+        protected virtual void OnElapsed(object sender, ElapsedEventArgs e)
+        {
+            try
+            {
+                if (this.Discord != null)
+                {
+                    this.Discord.RunCallbacks();
+                }
+                if (this.Timer != null)
+                {
+                    this.Timer.Start();
+                }
+            }
+            catch
+            {
+                //Nothing can be done, never throw on background thread.
+            }
         }
 
         public void Refresh()
