@@ -12,6 +12,7 @@ namespace FoxTunes
         static DiscordBehaviour()
         {
             Loader.Load("discord_game_sdk.dll");
+            Loader.Load("discord");
         }
 
         public const long CLIENT_ID = 1357689312660946984;
@@ -128,7 +129,7 @@ namespace FoxTunes
             {
                 return;
             }
-            this.Discord = DiscordManager.Create(CLIENT_ID, DiscordManager.CreateFlags.Default);
+            this.Discord = DiscordManager.Create(CLIENT_ID, DiscordManager.CreateFlags.NoRequireDiscord);
             if (IntPtr.Zero.Equals(this.Discord))
             {
                 this.ErrorEmitter.Send(this, "Failed to initialise the discord sdk.");
@@ -182,7 +183,7 @@ namespace FoxTunes
 
         public void Refresh()
         {
-            if (this.Discord == null)
+            if (IntPtr.Zero.Equals(this.Discord))
             {
                 return;
             }
