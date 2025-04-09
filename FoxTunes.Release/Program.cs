@@ -408,6 +408,19 @@ namespace FoxTunes
                     PackageFlags.Default
                 ),
                 new Package(
+                    "discord",
+                    new PackageElement[]
+                    {
+                        "FoxTunes.Discord.dll",
+                        "Discord.Sharp.dll",
+                        new PackageElement("x86/discord.dll", "x86"),
+                        new PackageElement("x86/discord-rpc.dll", "x86"),
+                        new PackageElement("x64/discord.dll", "x64"),
+                        new PackageElement("x64/discord-rpc.dll", "x64")
+                    },
+                    PackageFlags.Default
+                ),
+                new Package(
                     "dsd",
                     new PackageElement[]
                     {
