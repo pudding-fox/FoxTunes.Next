@@ -1,7 +1,8 @@
-﻿using Discord.Net;
+﻿using Discord.Sharp;
 using FoxTunes.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Timers;
 
 namespace FoxTunes
 {
@@ -11,11 +12,13 @@ namespace FoxTunes
 
         static DiscordBehaviour()
         {
-            Loader.Load("discord_game_sdk.dll");
+            Loader.Load("discord-rpc.dll");
             Loader.Load("discord");
         }
 
-        public const long CLIENT_ID = 1357689312660946984;
+        public const string CLIENT_ID = "1357689312660946984";
+
+        public global::System.Timers.Timer Timer { get; private set; }
 
         public IPlaybackManager PlaybackManager { get; private set; }
 
@@ -115,55 +118,28 @@ namespace FoxTunes
 
         public bool Enabled { get; private set; }
 
-        public IntPtr Discord { get; private set; }
-
-        public string AccessToken { get; private set; }
-
-        public string Scopes { get; private set; }
-
-        public long Expires { get; private set; }
-
         public void Enable()
         {
             if (this.Enabled)
             {
                 return;
             }
-            this.Discord = DiscordManager.Create(CLIENT_ID, DiscordManager.CreateFlags.NoRequireDiscord);
-            if (IntPtr.Zero.Equals(this.Discord))
+            try
             {
-                this.ErrorEmitter.Send(this, "Failed to initialise the discord sdk.");
-                return;
+                DiscordManager.Create(CLIENT_ID);
+                this.Timer = new global::System.Timers.Timer();
+                this.Timer.Interval = INTERVAL;
+                this.Timer.AutoReset = false;
+                this.Timer.Elapsed += this.OnElapsed;
+                this.Timer.Start();
+                this.PlaybackManager.CurrentStreamChanged += this.OnCurrentStreamChanged;
+                this.Enabled = true;
             }
+            catch(Exception e)
             {
-                var result = DiscordManager.GetResult(this.Discord);
-                if (result != DiscordManager.Result.Ok)
-                {
-                    this.ErrorEmitter.Send(this, string.Format("Failed to initialise the discord sdk: {0}", Enum.GetName(typeof(DiscordManager.Result), result)));
-                    this.Disable();
-                    return;
-                }
+                this.ErrorEmitter.Send(this, e);
+                this.Disable();
             }
-            {
-                DiscordManager.FetchToken(this.Discord);
-                var result = DiscordManager.WaitForResult(this.Discord);
-                if (result != DiscordManager.Result.Ok)
-                {
-                    this.ErrorEmitter.Send(this, string.Format("Failed to authenticate: {0}", Enum.GetName(typeof(DiscordManager.Result), result)));
-                    this.Disable();
-                    return;
-                }
-            }
-            {
-                var token = default(DiscordManager.OAuth2Token);
-                DiscordManager.GetToken(this.Discord, ref token);
-                this.AccessToken = token.AccessToken;
-                this.Scopes = token.Scopes;
-                this.Expires = token.Expires;
-
-            }
-            this.PlaybackManager.CurrentStreamChanged += this.OnCurrentStreamChanged;
-            this.Enabled = true;
         }
 
         public void Disable()
@@ -173,20 +149,24 @@ namespace FoxTunes
                 return;
             }
             this.PlaybackManager.CurrentStreamChanged -= this.OnCurrentStreamChanged;
-            if (!IntPtr.Zero.Equals(this.Discord))
+            if (this.Timer != null)
             {
-                DiscordManager.Free(this.Discord);
-                this.Discord = IntPtr.Zero;
+                this.Timer.Stop();
+                this.Timer.Elapsed -= this.OnElapsed;
+                this.Timer.Dispose();
+                this.Timer = null;
             }
+            DiscordManager.Free();
             this.Enabled = false;
+        }
+
+        protected virtual void OnElapsed(object sender, ElapsedEventArgs e)
+        {
+            DiscordManager.RunCallbacks();
         }
 
         public void Refresh()
         {
-            if (IntPtr.Zero.Equals(this.Discord))
-            {
-                return;
-            }
             if (this.PlaybackManager.CurrentStream != null)
             {
                 this.UpdateActivity(this.PlaybackManager.CurrentStream);
@@ -199,25 +179,9 @@ namespace FoxTunes
 
         protected virtual void UpdateActivity(IOutputStream outputStream)
         {
-            var activity = this.GetActivity(outputStream);
-            DiscordManager.SetActivity(this.Discord, ref activity);
-            DiscordManager.UpdateActivity(this.Discord);
-            var result = DiscordManager.WaitForResult(this.Discord);
-            if (result != DiscordManager.Result.Ok)
-            {
-                this.ErrorEmitter.Send(this, string.Format("Failed to update activity: {0}", Enum.GetName(typeof(DiscordManager.Result), result)));
-                this.Disable();
-                return;
-            }
-        }
-
-        protected virtual DiscordManager.Activity GetActivity(IOutputStream outputStream)
-        {
-            return new DiscordManager.Activity()
-            {
-                State = this.GetState(outputStream),
-                Details = this.GetDetails(outputStream),
-            };
+            var state = this.GetState(outputStream);
+            var details = this.GetDetails(outputStream);
+            DiscordManager.UpdatePresence(state, details);
         }
 
         protected virtual string GetState(IOutputStream outputStream)
@@ -244,14 +208,7 @@ namespace FoxTunes
 
         protected virtual void ClearActivity()
         {
-            DiscordManager.ClearActivity(this.Discord);
-            var result = DiscordManager.WaitForResult(this.Discord);
-            if (result != DiscordManager.Result.Ok)
-            {
-                this.ErrorEmitter.Send(this, string.Format("Failed to clear activity: {0}", Enum.GetName(typeof(DiscordManager.Result), result)));
-                this.Disable();
-                return;
-            }
+            DiscordManager.ClearPresence();
         }
 
         protected virtual void OnCurrentStreamChanged(object sender, EventArgs e)

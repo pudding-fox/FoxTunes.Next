@@ -1,30 +1,48 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-	<PropertyGroup>
-		<TargetFrameworks>net40;net48</TargetFrameworks>
-		<AssemblyName>FoxTunes.Discord</AssemblyName>
-		<OutputPath>..\distribution\</OutputPath>
-		<SkipEnsureBindingRedirects>true</SkipEnsureBindingRedirects>
-		<SkipValidatePackageReferences>true</SkipValidatePackageReferences>
-		<AssemblyVersion>4.0.1.0</AssemblyVersion>
-		<Platforms>AnyCPU</Platforms>
-	</PropertyGroup>
+  <PropertyGroup>
+    <TargetFrameworks>net40;net48</TargetFrameworks>
+    <AssemblyName>FoxTunes.Discord</AssemblyName>
+    <OutputPath>..\distribution\</OutputPath>
+    <SkipEnsureBindingRedirects>true</SkipEnsureBindingRedirects>
+    <SkipValidatePackageReferences>true</SkipValidatePackageReferences>
+    <AssemblyVersion>4.0.1.0</AssemblyVersion>
+    <Platforms>AnyCPU</Platforms>
+  </PropertyGroup>
 
   <ItemGroup>
-    <None Include="..\lib\x86\discord_game_sdk.dll" Link="x86\discord_game_sdk.dll">
+    <Reference Include="Discord.Sharp" Condition="'$(TargetFramework)' == 'net40'">
+      <HintPath>..\lib\net40\Discord.Sharp.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Discord.Sharp" Condition="'$(TargetFramework)' == 'net462' or '$(TargetFramework)' == 'net48'">
+      <HintPath>..\lib\net462\Discord.Sharp.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\lib\x86\discord-rpc.dll" Link="x86\discord-rpc.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\lib\x86\discord.dll" Link="x86\discord.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="..\lib\x64\discord_game_sdk.dll" Link="x64\discord_game_sdk.dll">
+    <None Include="..\lib\x64\discord-rpc.dll" Link="x64\discord-rpc.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\lib\x64\discord.dll" Link="x64\discord.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
 
-	<ItemGroup>
-		<ProjectReference Include="..\FoxTunes.Core\FoxTunes.Core.csproj" />
-	</ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\FoxTunes.Core\FoxTunes.Core.csproj" />
+  </ItemGroup>
 
   <ItemGroup>
     <Compile Update="Properties\Strings.Designer.cs">
@@ -52,10 +70,9 @@
     </EmbeddedResource>
   </ItemGroup>
 
-	<ItemGroup>
-		<PackageReference Include="Discord.Net" Version="0.0.3" />
-		<PackageReference Include="Microsoft.Bcl.Async" Version="1.0.168" Condition="'$(TargetFramework)' == 'net40'" />
-		<PackageReference Include="Microsoft.Bcl.Build" Version="1.0.21" Condition="'$(TargetFramework)' == 'net40'" />
-	</ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Bcl.Async" Version="1.0.168" Condition="'$(TargetFramework)' == 'net40'" />
+    <PackageReference Include="Microsoft.Bcl.Build" Version="1.0.21" Condition="'$(TargetFramework)' == 'net40'" />
+  </ItemGroup>
 
 </Project>
