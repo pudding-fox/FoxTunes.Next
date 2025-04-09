@@ -134,6 +134,7 @@ namespace FoxTunes
                 this.Timer.Start();
                 this.PlaybackManager.CurrentStreamChanged += this.OnCurrentStreamChanged;
                 this.Enabled = true;
+                this.Refresh();
             }
             catch(Exception e)
             {
