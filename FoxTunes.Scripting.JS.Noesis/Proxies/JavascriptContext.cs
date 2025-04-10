@@ -1,9 +1,18 @@
-﻿using System;
+﻿using FoxTunes.Interfaces;
+using System;
 
 namespace FoxTunes.Proxies
 {
     public class JavascriptContext : IDisposable
     {
+        protected static ILogger Logger
+        {
+            get
+            {
+                return LogManager.Logger;
+            }
+        }
+
         public JavascriptContext(object context, JavascriptContextHandlers handlers)
         {
             this.Context = context;
@@ -57,7 +66,7 @@ namespace FoxTunes.Proxies
 
         ~JavascriptContext()
         {
-            //Logger.Write(this.GetType(), LogLevel.Error, "Component was not disposed: {0}", this.GetType().Name);
+            Logger.Write(this.GetType(), LogLevel.Error, "Component was not disposed: {0}", this.GetType().Name);
             try
             {
                 this.Dispose(true);

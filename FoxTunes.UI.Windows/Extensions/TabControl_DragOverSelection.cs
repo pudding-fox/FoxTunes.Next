@@ -81,7 +81,7 @@ namespace FoxTunes
                 if (tabItem == null)
                 {
                     //This message removed as it fires a lot.
-                    //Logger.Write(typeof(DragOverSelectionBehaviour), LogLevel.Trace, "No tab under cursor, cancelling selection.");
+                    Logger.Write(typeof(DragOverSelectionBehaviour), LogLevel.Trace, "No tab under cursor, cancelling selection.");
                     this.Debouncer.Cancel(this.UpdateSelection);
                 }
                 else if (!object.ReferenceEquals(this.TabItem, tabItem))

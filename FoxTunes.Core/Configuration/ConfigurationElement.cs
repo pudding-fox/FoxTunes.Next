@@ -347,7 +347,7 @@ namespace FoxTunes
         public override void InitializeComponent()
         {
             //TODO: This log message is noisy.
-            //Logger.Write(typeof(ConfigurationSection), LogLevel.Trace, "Setting default value for configuration element \"{0}\": {1}", this.Name, Convert.ToString(this.Value));
+            Logger.Write(typeof(ConfigurationSection), LogLevel.Trace, "Setting default value for configuration element \"{0}\": {1}", this.Name, Convert.ToString(this.Value));
             this.DefaultValue = this.Value;
             base.InitializeComponent();
         }

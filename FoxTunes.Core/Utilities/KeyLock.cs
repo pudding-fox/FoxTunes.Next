@@ -83,6 +83,14 @@ namespace FoxTunes
 
         public class Counter : IDisposable
         {
+            protected static ILogger Logger
+            {
+                get
+                {
+                    return LogManager.Logger;
+                }
+            }
+
             public Counter()
             {
                 this.Count = 1;
@@ -118,7 +126,7 @@ namespace FoxTunes
 
             ~Counter()
             {
-                //Logger.Write(this.GetType(), LogLevel.Error, "Component was not disposed: {0}", this.GetType().Name);
+                Logger.Write(this.GetType(), LogLevel.Error, "Component was not disposed: {0}", this.GetType().Name);
                 try
                 {
                     this.Dispose(true);
@@ -132,6 +140,14 @@ namespace FoxTunes
 
         public class Releaser : IDisposable
         {
+            protected static ILogger Logger
+            {
+                get
+                {
+                    return LogManager.Logger;
+                }
+            }
+
             public Releaser(KeyLock<T> owner, T key)
             {
                 this.Owner = owner;
@@ -167,7 +183,7 @@ namespace FoxTunes
 
             ~Releaser()
             {
-                //Logger.Write(this.GetType(), LogLevel.Error, "Component was not disposed: {0}", this.GetType().Name);
+                Logger.Write(this.GetType(), LogLevel.Error, "Component was not disposed: {0}", this.GetType().Name);
                 try
                 {
                     this.Dispose(true);
@@ -181,6 +197,14 @@ namespace FoxTunes
 
         public class NoOp : IDisposable
         {
+            protected static ILogger Logger
+            {
+                get
+                {
+                    return LogManager.Logger;
+                }
+            }
+
             public bool IsDisposed { get; private set; }
 
             public void Dispose()
@@ -206,7 +230,7 @@ namespace FoxTunes
 
             ~NoOp()
             {
-                //Logger.Write(this.GetType(), LogLevel.Error, "Component was not disposed: {0}", this.GetType().Name);
+                Logger.Write(this.GetType(), LogLevel.Error, "Component was not disposed: {0}", this.GetType().Name);
                 try
                 {
                     this.Dispose(true);
