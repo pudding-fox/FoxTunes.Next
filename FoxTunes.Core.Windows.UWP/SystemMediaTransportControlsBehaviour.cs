@@ -3,12 +3,15 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
+using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using System.Timers;
 using Windows.Media;
 using Windows.Media.Playback;
 using Windows.Storage;
 using Windows.Storage.Streams;
+using Windows.UI.Composition;
 
 namespace FoxTunes
 {
@@ -16,8 +19,6 @@ namespace FoxTunes
     public class SystemMediaTransportControlsBehaviour : StandardBehaviour, IConfigurableComponent, IDisposable
     {
         const int UPDATE_INTERVAL = 1000;
-
-        public MediaPlayer MediaPlayer { get; private set; }
 
         public SystemMediaTransportControls TransportControls { get; private set; }
 
@@ -28,6 +29,8 @@ namespace FoxTunes
         public IPlaybackManager PlaybackManager { get; private set; }
 
         public IArtworkProvider ArtworkProvider { get; private set; }
+
+        public IUserInterface UserInterface { get; private set; }
 
         public IConfiguration Configuration { get; private set; }
 
@@ -46,6 +49,7 @@ namespace FoxTunes
                 this.PlaylistManager = core.Managers.Playlist;
                 this.PlaybackManager = core.Managers.Playback;
                 this.ArtworkProvider = core.Components.ArtworkProvider;
+                this.UserInterface = core.Components.UserInterface;
                 this.Configuration = core.Components.Configuration;
                 this.Configuration.GetElement<BooleanConfigurationElement>(
                     SystemMediaTransportControlsBehaviourConfiguration.SECTION,
@@ -54,7 +58,7 @@ namespace FoxTunes
                 {
                     if (value)
                     {
-                        this.Enable();
+                        this.Dispatch(this.Enable);
                     }
                     else
                     {
@@ -69,14 +73,28 @@ namespace FoxTunes
             base.InitializeComponent(core);
         }
 
-        public void Enable()
+        public async Task Enable()
         {
             if (this.Enabled)
             {
                 return;
             }
-            this.MediaPlayer = new MediaPlayer();
-            this.TransportControls = this.MediaPlayer.SystemMediaTransportControls;
+            //TODO: Bad .Result
+            var window = await this.UserInterface.GetMainWindow().ConfigureAwait(false);
+            if (window != null)
+            {
+                this.TransportControls = SystemMediaTransportControlsInterop.GetForWindow(window.Handle);
+                if (this.TransportControls == null)
+                {
+                    Logger.Write(this, LogLevel.Warn, "Failed to construct for main window, falling back to global SMTC.");
+                    this.TransportControls = this.GetGlobalSystemMediaTransportControls();
+                }
+            }
+            else
+            {
+                Logger.Write(this, LogLevel.Warn, "Failed to determine the main window, falling back to global SMTC.");
+                this.TransportControls = this.GetGlobalSystemMediaTransportControls();
+            }
             this.TransportControls.IsEnabled = true;
             this.TransportControls.IsPlayEnabled = true;
             this.TransportControls.IsPauseEnabled = true;
@@ -123,6 +141,12 @@ namespace FoxTunes
             //this.TransportControls.PropertyChanged -= this.OnPropertyChanged;
             this.TransportControls = null;
             Logger.Write(this, LogLevel.Debug, "SystemMediaTransportControls disabled.");
+        }
+
+        protected virtual SystemMediaTransportControls GetGlobalSystemMediaTransportControls()
+        {
+            var mediaPlayer = new MediaPlayer();
+            return mediaPlayer.SystemMediaTransportControls;
         }
 
         public void Refresh()
@@ -440,6 +464,29 @@ namespace FoxTunes
             catch
             {
                 //Nothing can be done, never throw on GC thread.
+            }
+        }
+
+        [Guid("ddb0472d-c911-4a1f-86d9-dc3d71a95f5a")]
+        [InterfaceType(ComInterfaceType.InterfaceIsIInspectable)]
+        public interface ISystemMediaTransportControlsInterop
+        {
+            int GetForWindow(IntPtr handle, ref Guid id, [MarshalAs(UnmanagedType.IUnknown)] out object systemMediaTransportControls);
+        }
+
+        public static class SystemMediaTransportControlsInterop
+        {
+            public static SystemMediaTransportControls GetForWindow(IntPtr handle)
+            {
+                var interop = (ISystemMediaTransportControlsInterop)WindowsRuntimeMarshal.GetActivationFactory(typeof(SystemMediaTransportControls));
+                var id = new Guid("99FA3FF4-1742-42A6-902E-087D41F965EC");
+                var systemMediaTransportControls = default(object);
+                var result = interop.GetForWindow(handle, ref id, out systemMediaTransportControls);
+                if (result != 0)
+                {
+                    return null;
+                }
+                return (SystemMediaTransportControls)systemMediaTransportControls;
             }
         }
     }

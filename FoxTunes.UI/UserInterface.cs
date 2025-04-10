@@ -9,6 +9,8 @@ namespace FoxTunes
     {
         public abstract IEnumerable<IUserInterfaceWindow> Windows { get; }
 
+        public abstract Task<IUserInterfaceWindow> GetMainWindow();
+
         public abstract Task Show();
 
         public abstract void Activate();

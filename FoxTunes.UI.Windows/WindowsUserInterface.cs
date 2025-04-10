@@ -3,6 +3,7 @@ using FoxTunes.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
@@ -87,6 +88,30 @@ namespace FoxTunes
             {
                 return WindowBase.Active;
             }
+        }
+
+        public override Task<IUserInterfaceWindow> GetMainWindow()
+        {
+            var timeout = 10000;
+            var interval = 100;
+            for (var attempt = 0; attempt <= timeout; attempt += interval)
+            {
+                var window = this.Windows.FirstOrDefault(_window => _window.Role == UserInterfaceWindowRole.Main);
+                if (window != null)
+                {
+#if NET40
+                    return TaskEx.FromResult(window);
+#else
+                    return Task.FromResult(window);
+#endif
+                }
+                Thread.Sleep(interval);
+            }
+#if NET40
+            return TaskEx.FromResult(default(IUserInterfaceWindow));
+#else
+            return Task.FromResult(default(IUserInterfaceWindow));
+#endif
         }
 
         public override Task Show()

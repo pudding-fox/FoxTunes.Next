@@ -19,6 +19,11 @@ namespace FoxTunes
             }
         }
 
+        public Task<IUserInterfaceWindow> GetMainWindow()
+        {
+            throw new NotImplementedException();
+        }
+
         public void Activate()
         {
             throw new NotImplementedException();

@@ -8,6 +8,8 @@ namespace FoxTunes.Interfaces
     {
         IEnumerable<IUserInterfaceWindow> Windows { get; }
 
+        Task<IUserInterfaceWindow> GetMainWindow();
+
         Task Show();
 
         void Activate();
