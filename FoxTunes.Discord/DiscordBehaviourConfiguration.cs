@@ -16,8 +16,12 @@ namespace FoxTunes
         {
             yield return new ConfigurationSection(SECTION, Strings.DiscordBehaviourConfiguration_Section)
                 .WithElement(new BooleanConfigurationElement(ENABLED, Strings.DiscordBehaviourConfiguration_Enabled))
-                .WithElement(new TextConfigurationElement(STATE_SCRIPT, Strings.DiscordBehaviourConfiguration_StateScript, path: Strings.General_Advanced).WithValue(Resources.State))
-                .WithElement(new TextConfigurationElement(DETAILS_SCRIPT, Strings.DiscordBehaviourConfiguration_DetailsScript, path: Strings.General_Advanced).WithValue(Resources.Details)
+                .WithElement(new TextConfigurationElement(STATE_SCRIPT, Strings.DiscordBehaviourConfiguration_StateScript, path: Strings.General_Advanced)
+                    .WithValue(Resources.State)
+                    .DependsOn(SECTION, ENABLED))
+                .WithElement(new TextConfigurationElement(DETAILS_SCRIPT, Strings.DiscordBehaviourConfiguration_DetailsScript, path: Strings.General_Advanced)
+                    .WithValue(Resources.Details)
+                    .DependsOn(SECTION, ENABLED)
             );
         }
     }
