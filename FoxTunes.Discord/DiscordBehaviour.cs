@@ -136,7 +136,7 @@ namespace FoxTunes
                 this.Enabled = true;
                 this.Refresh();
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 this.ErrorEmitter.Send(this, e);
                 this.Disable();
@@ -182,7 +182,7 @@ namespace FoxTunes
         {
             var state = this.GetState(outputStream);
             var details = this.GetDetails(outputStream);
-            DiscordManager.UpdatePresence(state, details);
+            DiscordManager.UpdatePresence(state, details, null, null, null, null);
         }
 
         protected virtual string GetState(IOutputStream outputStream)
