@@ -11,7 +11,6 @@ using Windows.Media;
 using Windows.Media.Playback;
 using Windows.Storage;
 using Windows.Storage.Streams;
-using Windows.UI.Composition;
 
 namespace FoxTunes
 {

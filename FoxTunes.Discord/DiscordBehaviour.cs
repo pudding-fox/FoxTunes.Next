@@ -2,6 +2,11 @@
 using FoxTunes.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Net;
+using System.Security.Cryptography;
+using System.Text;
+using System.Threading.Tasks;
 using System.Timers;
 
 namespace FoxTunes
@@ -27,6 +32,8 @@ namespace FoxTunes
         public IScriptingContext ScriptingContext { get; private set; }
 
         public IErrorEmitter ErrorEmitter { get; private set; }
+
+        public IArtworkProvider ArtworkProvider { get; private set; }
 
         public IConfiguration Configuration { get; private set; }
 
@@ -90,6 +97,7 @@ namespace FoxTunes
             this.ScriptingRuntime = core.Components.ScriptingRuntime;
             this.ScriptingContext = this.ScriptingRuntime.CreateContext();
             this.ErrorEmitter = core.Components.ErrorEmitter;
+            this.ArtworkProvider = core.Components.ArtworkProvider;
             this.Configuration = core.Components.Configuration;
             this.Configuration.GetElement<TextConfigurationElement>(
                 DiscordBehaviourConfiguration.SECTION,
@@ -166,23 +174,32 @@ namespace FoxTunes
             DiscordManager.RunCallbacks();
         }
 
-        public void Refresh()
+        public Task Refresh()
         {
             if (this.PlaybackManager.CurrentStream != null)
             {
-                this.UpdateActivity(this.PlaybackManager.CurrentStream);
+                return this.UpdateActivity(this.PlaybackManager.CurrentStream);
             }
             else
             {
                 this.ClearActivity();
+#if NET40
+                return TaskEx.FromResult(false);
+#else
+                return Task.CompletedTask;
+#endif
             }
         }
 
-        protected virtual void UpdateActivity(IOutputStream outputStream)
+        protected virtual async Task UpdateActivity(IOutputStream outputStream)
         {
             var state = this.GetState(outputStream);
             var details = this.GetDetails(outputStream);
-            DiscordManager.UpdatePresence(state, details, null, null, null, null);
+            var largeImageText = this.GetLargeImageText(outputStream);
+            var largeImageKey = await this.GetLargeImageKey(outputStream).ConfigureAwait(false);
+            var smallImageText = this.GetSmallImageText(outputStream);
+            var smallImageKey = this.GetSmallImageKey(outputStream);
+            DiscordManager.UpdatePresence(state, details, smallImageText, smallImageKey, largeImageText, largeImageKey);
         }
 
         protected virtual string GetState(IOutputStream outputStream)
@@ -206,6 +223,105 @@ namespace FoxTunes
             runner.Prepare();
             return Convert.ToString(runner.Run());
         }
+
+        protected virtual string GetLargeImageText(IOutputStream outputStream)
+        {
+            return null;
+        }
+
+        protected virtual async Task<string> GetLargeImageKey(IOutputStream outputStream)
+        {
+            var fileName = await this.ArtworkProvider.Find(outputStream.PlaylistItem, ArtworkType.FrontCover).ConfigureAwait(false);
+            if (!string.IsNullOrEmpty(fileName) && File.Exists(fileName))
+            {
+                fileName = await this.GetThumbnail(fileName).ConfigureAwait(false);
+                var location = await this.Upload(fileName);
+                return location;
+            }
+            return null;
+        }
+
+        protected virtual string GetSmallImageText(IOutputStream outputStream)
+        {
+            return null;
+        }
+
+        protected virtual string GetSmallImageKey(IOutputStream outputStream)
+        {
+            //return "https://ft-thumbs.b-cdn.net/Square310x310Logo.scale-200.png";
+            return null;
+        }
+
+        protected virtual Task<string> GetThumbnail(string fileName)
+        {
+            //TODO: Resize.
+#if NET40
+            return TaskEx.FromResult(fileName);
+#else
+            return Task.FromResult(fileName);
+#endif
+        }
+
+        protected virtual async Task<string> Upload(string fileName)
+        {
+            var storageZoneFileName = this.GetStorageZoneFileName(fileName);
+            var request = await this.GetUploadRequest(fileName, storageZoneFileName).ConfigureAwait(false);
+            var response = await this.GetUploadResponse(request);
+            return string.Concat("http://", "ft-thumbs.b-cdn.net", "/", storageZoneFileName);
+        }
+
+        protected virtual string GetStorageZoneFileName(string fileName)
+        {
+            using (var sha1 = new SHA1Managed())
+            {
+                var builder = new StringBuilder();
+                var sequence = sha1.ComputeHash(Encoding.UTF8.GetBytes(fileName));
+                foreach (var element in sequence)
+                {
+                    builder.Append(element.ToString("x2"));
+                }
+                return builder.ToString();
+            }
+        }
+
+        protected virtual async Task<HttpWebRequest> GetUploadRequest(string fileName, string storageZoneFileName)
+        {
+            var hostName = "storage.bunnycdn.com";
+            var storageZoneName = "ft-thumbs";
+            var accessKey = DiscordManager.Key();
+
+            var url = string.Concat("https://", hostName, "/", storageZoneName, "/", storageZoneFileName);
+
+            var request = (HttpWebRequest)WebRequest.Create(url);
+            request.Method = "PUT";
+            request.ContentType = "application/octet-stream";
+            request.Headers.Add("AccessKey", accessKey);
+
+            using (var fileStream = File.OpenRead(fileName))
+            {
+                using (var requestStream = await request.GetRequestStreamAsync().ConfigureAwait(false))
+                {
+                    await fileStream.CopyToAsync(requestStream);
+                }
+            }
+
+            return request;
+        }
+
+        protected virtual async Task<HttpWebResponse> GetUploadResponse(HttpWebRequest request)
+        {
+            var response = (HttpWebResponse)await request.GetResponseAsync().ConfigureAwait(false);
+            using (var stream = response.GetResponseStream())
+            {
+                using (var reader = new StreamReader(stream))
+                {
+                    var responseString = reader.ReadToEnd();
+                    //TODO: Logging?
+                }
+            }
+            return response;
+        }
+
 
         protected virtual void ClearActivity()
         {
