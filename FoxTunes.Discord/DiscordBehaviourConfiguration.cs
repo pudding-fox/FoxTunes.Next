@@ -8,6 +8,8 @@ namespace FoxTunes
 
         public const string ENABLED = "AAAA0FEC-C50C-4296-BE5C-7AC8D94EF9A6";
 
+        public const string BUNNY_API_KEY = "AABB5343-49D3-4BBE-84F2-8B3C47FF3854";
+
         public const string STATE_SCRIPT = "BBBB2666-6F4A-45BA-825E-FFE82E73CF87";
 
         public const string DETAILS_SCRIPT = "CCCC0548-618C-4014-95E3-2D6C623B44A7";
@@ -16,6 +18,8 @@ namespace FoxTunes
         {
             yield return new ConfigurationSection(SECTION, Strings.DiscordBehaviourConfiguration_Section)
                 .WithElement(new BooleanConfigurationElement(ENABLED, Strings.DiscordBehaviourConfiguration_Enabled))
+                .WithElement(new TextConfigurationElement(BUNNY_API_KEY, Strings.DiscordBehaviourConfiguration_BunnyApiKey)
+                    .DependsOn(SECTION, ENABLED))
                 .WithElement(new TextConfigurationElement(STATE_SCRIPT, Strings.DiscordBehaviourConfiguration_StateScript, path: Strings.General_Advanced)
                     .WithValue(Resources.State)
                     .DependsOn(SECTION, ENABLED))

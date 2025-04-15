@@ -61,6 +61,15 @@ namespace FoxTunes {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Bunny API Key.
+        /// </summary>
+        internal static string DiscordBehaviourConfiguration_BunnyApiKey {
+            get {
+                return ResourceManager.GetString("DiscordBehaviourConfiguration.BunnyApiKey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Details Script.
         /// </summary>
         internal static string DiscordBehaviourConfiguration_DetailsScript {

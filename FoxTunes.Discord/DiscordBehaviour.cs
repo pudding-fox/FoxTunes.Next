@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
+using System.Security;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
@@ -36,6 +37,33 @@ namespace FoxTunes
         public IArtworkProvider ArtworkProvider { get; private set; }
 
         public IConfiguration Configuration { get; private set; }
+
+        private string _BunnyApiKey { get; set; }
+
+        public string BunnyApiKey
+        {
+            get
+            {
+                return this._BunnyApiKey;
+            }
+            set
+            {
+                this._BunnyApiKey = value;
+                this.OnBunnyApiKeyChanged();
+            }
+        }
+
+        protected virtual void OnBunnyApiKeyChanged()
+        {
+            this.Refresh();
+            if (this.BunnyApiKeyChanged != null)
+            {
+                this.BunnyApiKeyChanged(this, EventArgs.Empty);
+            }
+            this.OnPropertyChanged("BunnyApiKey");
+        }
+
+        public event EventHandler BunnyApiKeyChanged;
 
         private string _StateScript { get; set; }
 
@@ -99,6 +127,10 @@ namespace FoxTunes
             this.ErrorEmitter = core.Components.ErrorEmitter;
             this.ArtworkProvider = core.Components.ArtworkProvider;
             this.Configuration = core.Components.Configuration;
+            this.Configuration.GetElement<TextConfigurationElement>(
+                DiscordBehaviourConfiguration.SECTION,
+                DiscordBehaviourConfiguration.BUNNY_API_KEY
+            ).ConnectValue(value => this.BunnyApiKey = value);
             this.Configuration.GetElement<TextConfigurationElement>(
                 DiscordBehaviourConfiguration.SECTION,
                 DiscordBehaviourConfiguration.STATE_SCRIPT
@@ -231,12 +263,24 @@ namespace FoxTunes
 
         protected virtual async Task<string> GetLargeImageKey(IOutputStream outputStream)
         {
-            var fileName = await this.ArtworkProvider.Find(outputStream.PlaylistItem, ArtworkType.FrontCover).ConfigureAwait(false);
-            if (!string.IsNullOrEmpty(fileName) && File.Exists(fileName))
+            if (string.IsNullOrEmpty(this.BunnyApiKey))
             {
-                fileName = await this.GetThumbnail(fileName).ConfigureAwait(false);
-                var location = await this.Upload(fileName);
-                return location;
+                Logger.Write(this, LogLevel.Debug, "Skipping file upload, no api key.");
+                return null;
+            }
+            try
+            {
+                var fileName = await this.ArtworkProvider.Find(outputStream.PlaylistItem, ArtworkType.FrontCover).ConfigureAwait(false);
+                if (!string.IsNullOrEmpty(fileName) && File.Exists(fileName))
+                {
+                    fileName = await this.GetThumbnail(fileName).ConfigureAwait(false);
+                    var location = await this.Upload(fileName);
+                    return location;
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.Write(this, LogLevel.Error, "Failed to fetch or upload image: {0}", e.Message);
             }
             return null;
         }
@@ -288,7 +332,7 @@ namespace FoxTunes
         {
             var hostName = "storage.bunnycdn.com";
             var storageZoneName = "ft-thumbs";
-            var accessKey = DiscordManager.Key();
+            var accessKey = this.BunnyApiKey;
 
             var url = string.Concat("https://", hostName, "/", storageZoneName, "/", storageZoneFileName);
 
