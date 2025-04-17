@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
-using System.Security;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
@@ -55,7 +54,7 @@ namespace FoxTunes
 
         protected virtual void OnBunnyApiKeyChanged()
         {
-            this.Refresh();
+            var task = this.Refresh();
             if (this.BunnyApiKeyChanged != null)
             {
                 this.BunnyApiKeyChanged(this, EventArgs.Empty);
@@ -64,6 +63,60 @@ namespace FoxTunes
         }
 
         public event EventHandler BunnyApiKeyChanged;
+
+        private string _BunnyUploadUrl { get; set; }
+
+        public string BunnyUploadUrl
+        {
+            get
+            {
+                return this._BunnyUploadUrl;
+            }
+            set
+            {
+                this._BunnyUploadUrl = value;
+                this.OnBunnyUploadUrlChanged();
+            }
+        }
+
+        protected virtual void OnBunnyUploadUrlChanged()
+        {
+            var task = this.Refresh();
+            if (this.BunnyUploadUrlChanged != null)
+            {
+                this.BunnyUploadUrlChanged(this, EventArgs.Empty);
+            }
+            this.OnPropertyChanged("BunnyUploadUrl");
+        }
+
+        public event EventHandler BunnyUploadUrlChanged;
+
+        private string _BunnyDownloadUrl { get; set; }
+
+        public string BunnyDownloadUrl
+        {
+            get
+            {
+                return this._BunnyDownloadUrl;
+            }
+            set
+            {
+                this._BunnyDownloadUrl = value;
+                this.OnBunnyDownloadUrlChanged();
+            }
+        }
+
+        protected virtual void OnBunnyDownloadUrlChanged()
+        {
+            var task = this.Refresh();
+            if (this.BunnyDownloadUrlChanged != null)
+            {
+                this.BunnyDownloadUrlChanged(this, EventArgs.Empty);
+            }
+            this.OnPropertyChanged("BunnyDownloadUrl");
+        }
+
+        public event EventHandler BunnyDownloadUrlChanged;
 
         private string _StateScript { get; set; }
 
@@ -82,7 +135,7 @@ namespace FoxTunes
 
         protected virtual void OnStateScriptChanged()
         {
-            this.Refresh();
+            var task = this.Refresh();
             if (this.StateScriptChanged != null)
             {
                 this.StateScriptChanged(this, EventArgs.Empty);
@@ -109,7 +162,7 @@ namespace FoxTunes
 
         protected virtual void OnDetailsScriptChanged()
         {
-            this.Refresh();
+            var task = this.Refresh();
             if (this.DetailsScriptChanged != null)
             {
                 this.DetailsScriptChanged(this, EventArgs.Empty);
@@ -118,6 +171,17 @@ namespace FoxTunes
         }
 
         public event EventHandler DetailsScriptChanged;
+
+        public bool CanUpload
+        {
+            get
+            {
+                return
+                    !string.IsNullOrEmpty(this.BunnyApiKey) &&
+                    !string.IsNullOrEmpty(this.BunnyUploadUrl) &&
+                    !string.IsNullOrEmpty(this.BunnyDownloadUrl);
+            }
+        }
 
         public override void InitializeComponent(ICore core)
         {
@@ -131,6 +195,14 @@ namespace FoxTunes
                 DiscordBehaviourConfiguration.SECTION,
                 DiscordBehaviourConfiguration.BUNNY_API_KEY
             ).ConnectValue(value => this.BunnyApiKey = value);
+            this.Configuration.GetElement<TextConfigurationElement>(
+                DiscordBehaviourConfiguration.SECTION,
+                DiscordBehaviourConfiguration.BUNNY_UPLOAD_URL
+            ).ConnectValue(value => this.BunnyUploadUrl = value);
+            this.Configuration.GetElement<TextConfigurationElement>(
+                DiscordBehaviourConfiguration.SECTION,
+                DiscordBehaviourConfiguration.BUNNY_DOWNLOAD_URL
+            ).ConnectValue(value => this.BunnyDownloadUrl = value);
             this.Configuration.GetElement<TextConfigurationElement>(
                 DiscordBehaviourConfiguration.SECTION,
                 DiscordBehaviourConfiguration.STATE_SCRIPT
@@ -174,7 +246,7 @@ namespace FoxTunes
                 this.Timer.Start();
                 this.PlaybackManager.CurrentStreamChanged += this.OnCurrentStreamChanged;
                 this.Enabled = true;
-                this.Refresh();
+                var task = this.Refresh();
             }
             catch (Exception e)
             {
@@ -263,9 +335,9 @@ namespace FoxTunes
 
         protected virtual async Task<string> GetLargeImageKey(IOutputStream outputStream)
         {
-            if (string.IsNullOrEmpty(this.BunnyApiKey))
+            if (!this.CanUpload)
             {
-                Logger.Write(this, LogLevel.Debug, "Skipping file upload, no api key.");
+                Logger.Write(this, LogLevel.Debug, "Skipping file upload, missing settings.");
                 return null;
             }
             try
@@ -311,7 +383,8 @@ namespace FoxTunes
             var storageZoneFileName = this.GetStorageZoneFileName(fileName);
             var request = await this.GetUploadRequest(fileName, storageZoneFileName).ConfigureAwait(false);
             var response = await this.GetUploadResponse(request);
-            return string.Concat("http://", "ft-thumbs.b-cdn.net", "/", storageZoneFileName);
+            var url = string.Concat(this.BunnyDownloadUrl, "/", storageZoneFileName);
+            return url;
         }
 
         protected virtual string GetStorageZoneFileName(string fileName)
@@ -330,12 +403,8 @@ namespace FoxTunes
 
         protected virtual async Task<HttpWebRequest> GetUploadRequest(string fileName, string storageZoneFileName)
         {
-            var hostName = "storage.bunnycdn.com";
-            var storageZoneName = "ft-thumbs";
             var accessKey = this.BunnyApiKey;
-
-            var url = string.Concat("https://", hostName, "/", storageZoneName, "/", storageZoneFileName);
-
+            var url = string.Concat(this.BunnyUploadUrl, "/", storageZoneFileName);
             var request = (HttpWebRequest)WebRequest.Create(url);
             request.Method = "PUT";
             request.ContentType = "application/octet-stream";

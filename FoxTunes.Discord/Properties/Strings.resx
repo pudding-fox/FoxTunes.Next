@@ -120,6 +120,12 @@
   <data name="DiscordBehaviourConfiguration.BunnyApiKey" xml:space="preserve">
     <value>Bunny API Key</value>
   </data>
+  <data name="DiscordBehaviourConfiguration.BunnyDownloadUrl" xml:space="preserve">
+    <value>Bunny Download Url</value>
+  </data>
+  <data name="DiscordBehaviourConfiguration.BunnyUploadUrl" xml:space="preserve">
+    <value>Bunny Upload Url</value>
+  </data>
   <data name="DiscordBehaviourConfiguration.DetailsScript" xml:space="preserve">
     <value>Details Script</value>
   </data>

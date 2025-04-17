@@ -70,6 +70,24 @@ namespace FoxTunes {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Bunny Download Url.
+        /// </summary>
+        internal static string DiscordBehaviourConfiguration_BunnyDownloadUrl {
+            get {
+                return ResourceManager.GetString("DiscordBehaviourConfiguration.BunnyDownloadUrl", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Bunny Upload Url.
+        /// </summary>
+        internal static string DiscordBehaviourConfiguration_BunnyUploadUrl {
+            get {
+                return ResourceManager.GetString("DiscordBehaviourConfiguration.BunnyUploadUrl", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Details Script.
         /// </summary>
         internal static string DiscordBehaviourConfiguration_DetailsScript {
