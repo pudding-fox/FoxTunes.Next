@@ -11,6 +11,7 @@ using System.Timers;
 
 namespace FoxTunes
 {
+    [ComponentDependency(Slot = ComponentSlots.UserInterface)]
     public class DiscordBehaviour : StandardBehaviour, IConfigurableComponent, IDisposable
     {
         public static readonly int INTERVAL = 1000;

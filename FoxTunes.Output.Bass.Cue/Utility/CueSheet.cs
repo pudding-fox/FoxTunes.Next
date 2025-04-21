@@ -114,15 +114,9 @@ namespace FoxTunes
         {
             get
             {
-                switch (this.Indexes.Length)
-                {
-                    case 0:
-                        return null;
-                    case 1:
-                        return this.Indexes[0];
-                    default:
-                        return this.Indexes[1];
-                }
+                return this.Indexes.OrderBy(
+                    index => index.Position
+                ).FirstOrDefault();
             }
         }
     }
