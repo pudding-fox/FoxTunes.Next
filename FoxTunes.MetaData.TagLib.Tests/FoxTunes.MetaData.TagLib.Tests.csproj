@@ -31,7 +31,7 @@
 
   <ItemGroup>
     <Reference Include="taglib-sharp" Condition="'$(TargetFramework)' == 'net462' or '$(TargetFramework)' == 'net48'">
-      <HintPath>..\lib\taglib-sharp.dll</HintPath>
+      <HintPath>..\lib\net462\taglib-sharp.dll</HintPath>
     </Reference>
   </ItemGroup>
 
