@@ -21,6 +21,7 @@ namespace FoxTunes.Interfaces
         None = 0,
         FrontCover = 1,
         BackCover = 2,
+        Artist = 4,
         Unknown = 255
     }
 }

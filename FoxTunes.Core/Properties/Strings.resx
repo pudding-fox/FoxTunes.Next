@@ -168,6 +168,9 @@
   <data name="LibraryHierarchyPopulator.Plugin" xml:space="preserve">
     <value>Plugin</value>
   </data>
+  <data name="MetaDataBehaviourConfiguration.Artist" xml:space="preserve">
+    <value>Artist</value>
+  </data>
   <data name="MetaDataBehaviourConfiguration.BackCover" xml:space="preserve">
     <value>Back Cover</value>
   </data>

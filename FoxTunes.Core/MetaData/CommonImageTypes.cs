@@ -5,5 +5,7 @@
         public const string FrontCover = "FrontCover";
 
         public const string BackCover = "BackCover";
+
+        public const string Artist = "Artist";
     }
 }

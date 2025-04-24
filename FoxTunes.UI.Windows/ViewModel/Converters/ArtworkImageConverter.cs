@@ -172,6 +172,10 @@ namespace FoxTunes.ViewModel
             {
                 return null;
             }
+            if (value == null && !this.ShowPlaceholder)
+            {
+                return null;
+            }
             var fileName = default(string);
             if (value is string)
             {
@@ -189,11 +193,11 @@ namespace FoxTunes.ViewModel
                     ArtworkType.FrontCover
                 ).Result;
             }
-            var size = global::System.Convert.ToInt32(Math.Max(this.Width, this.Height));
+            //var size = global::System.Convert.ToInt32(Math.Max(this.Width, this.Height));
             return Factory.Create(
                 fileName,
-                size,
-                size
+                global::System.Convert.ToInt32(this.Width),
+                global::System.Convert.ToInt32(this.Height)
             );
         }
 

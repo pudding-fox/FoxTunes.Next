@@ -35,6 +35,8 @@ namespace FoxTunes
 
         public string[] Back { get; private set; }
 
+        public string[] Artist { get; private set; }
+
         public string[] Folders { get; private set; }
 
         public int MaxSize { get; private set; }
@@ -52,19 +54,27 @@ namespace FoxTunes
             this.Configuration.GetElement<TextConfigurationElement>(
                MetaDataBehaviourConfiguration.SECTION,
                MetaDataBehaviourConfiguration.LOOSE_IMAGES_FRONT
-           ).ConnectValue(value =>
-           {
-               this.Front = this.Parse(value);
-               this.Store.Clear();
-           });
+            ).ConnectValue(value =>
+            {
+                this.Front = this.Parse(value);
+                this.Store.Clear();
+            });
             this.Configuration.GetElement<TextConfigurationElement>(
-               MetaDataBehaviourConfiguration.SECTION,
-               MetaDataBehaviourConfiguration.LOOSE_IMAGES_BACK
-           ).ConnectValue(value =>
-           {
-               this.Back = this.Parse(value);
-               this.Store.Clear();
-           });
+                MetaDataBehaviourConfiguration.SECTION,
+                MetaDataBehaviourConfiguration.LOOSE_IMAGES_BACK
+            ).ConnectValue(value =>
+            {
+                this.Back = this.Parse(value);
+                this.Store.Clear();
+            });
+            this.Configuration.GetElement<TextConfigurationElement>(
+                MetaDataBehaviourConfiguration.SECTION,
+                MetaDataBehaviourConfiguration.LOOSE_IMAGES_ARTIST
+            ).ConnectValue(value =>
+            {
+                this.Artist = this.Parse(value);
+                this.Store.Clear();
+            });
             this.Configuration.GetElement<TextConfigurationElement>(
                MetaDataBehaviourConfiguration.SECTION,
                MetaDataBehaviourConfiguration.LOOSE_IMAGES_FOLDER
@@ -128,6 +138,9 @@ namespace FoxTunes
                 case ArtworkType.BackCover:
                     names = this.Back;
                     break;
+                case ArtworkType.Artist:
+                    names = this.Artist;
+                    break;
                 default:
                     throw new NotImplementedException();
             }
@@ -139,7 +152,7 @@ namespace FoxTunes
             return Path.Combine(directoryName, string.Concat(name, ".", extension.TrimStart('.')));
         }
 
-        public IEnumerable<string> GetDirectoryNames(string root)
+        public IEnumerable<string> GetDirectoryNames(string root, ArtworkType type)
         {
             yield return root;
             foreach (var path in this.Folders)
@@ -150,6 +163,20 @@ namespace FoxTunes
                     continue;
                 }
                 yield return folder;
+            }
+            if (type == ArtworkType.Artist)
+            {
+                //Scan the parents for artist images.
+                do
+                {
+                    var folder = Directory.GetParent(root);
+                    if (folder == null)
+                    {
+                        break;
+                    }
+                    root = folder.FullName;
+                    yield return root;
+                } while (true);
             }
         }
 
@@ -172,6 +199,9 @@ namespace FoxTunes
                     case ArtworkType.BackCover:
                         names = this.Back;
                         break;
+                    case ArtworkType.Artist:
+                        names = this.Artist;
+                        break;
                     default:
                         throw new NotImplementedException();
                 }
@@ -179,7 +209,7 @@ namespace FoxTunes
                 {
                     foreach (var name in names)
                     {
-                        foreach (var directoryName in this.GetDirectoryNames(root))
+                        foreach (var directoryName in this.GetDirectoryNames(root, type))
                         {
                             foreach (var fileName in FileSystemHelper.EnumerateFiles(directoryName, string.Format("{0}.*", name), FileSystemHelper.SearchOption.None))
                             {

@@ -214,6 +214,15 @@ namespace FoxTunes {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Artist.
+        /// </summary>
+        internal static string MetaDataBehaviourConfiguration_Artist {
+            get {
+                return ResourceManager.GetString("MetaDataBehaviourConfiguration.Artist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Back Cover.
         /// </summary>
         internal static string MetaDataBehaviourConfiguration_BackCover {
