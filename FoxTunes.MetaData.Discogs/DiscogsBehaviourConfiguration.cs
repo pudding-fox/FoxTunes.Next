@@ -51,7 +51,7 @@ namespace FoxTunes
                 .WithElement(new BooleanConfigurationElement(AUTO_LOOKUP, Strings.DiscogsBehaviourConfiguration_AutoLookup)
                     .DependsOn(SECTION, ENABLED))
                 .WithElement(new BooleanConfigurationElement(CONFIRM_LOOKUP, Strings.DiscogsBehaviourConfiguration_ConfirmLookup)
-                    .WithValue(true)
+                    .WithValue(false)
                     .DependsOn(SECTION, ENABLED))
                 .WithElement(new BooleanConfigurationElement(WRITE_TAGS, Strings.DiscogsBehaviourConfiguration_WriteTags)
                     .WithValue(true)

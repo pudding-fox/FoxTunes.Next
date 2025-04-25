@@ -26,29 +26,64 @@ namespace FoxTunes
         protected override async Task<bool> OnLookupSuccess(Discogs.ReleaseLookup releaseLookup)
         {
             var result = default(bool);
-            var frontCover = await this.ImportFrontCover(releaseLookup).ConfigureAwait(false);
-            if (!string.IsNullOrEmpty(frontCover))
+            if (this.ShouldImportFrontCover(releaseLookup))
             {
-                releaseLookup.MetaData[CommonImageTypes.FrontCover] = frontCover;
-                result = true;
+                var frontCover = await this.ImportFrontCover(releaseLookup).ConfigureAwait(false);
+                if (!string.IsNullOrEmpty(frontCover))
+                {
+                    releaseLookup.MetaData[CommonImageTypes.FrontCover] = frontCover;
+                    result = true;
+                }
+                else
+                {
+                    Logger.Write(this, LogLevel.Warn, "Failed to download artwork for album {0} - {1}: Releases don't contain images or they count not be downloaded.", releaseLookup.Artist, releaseLookup.Album);
+                    releaseLookup.AddError(Strings.DiscogsFetchArtworkTask_NotFound);
+                    result = false;
+                }
             }
-            else
+            if (this.ShouldLookupArtist(releaseLookup))
             {
-                Logger.Write(this, LogLevel.Warn, "Failed to download artwork for album {0} - {1}: Releases don't contain images or they count not be downloaded.", releaseLookup.Artist, releaseLookup.Album);
-                releaseLookup.AddError(Strings.DiscogsFetchArtworkTask_NotFound);
-                result = false;
+                var artist = await this.ImportArtist(releaseLookup).ConfigureAwait(false);
+                if (!string.IsNullOrEmpty(artist))
+                {
+                    releaseLookup.MetaData[CommonImageTypes.Artist] = artist;
+                    result = true;
+                }
+                else
+                {
+                    Logger.Write(this, LogLevel.Warn, "Failed to download artwork for album {0} - {1}: Releases don't contain images or they count not be downloaded.", releaseLookup.Artist, releaseLookup.Album);
+                    releaseLookup.AddError(Strings.DiscogsFetchArtworkTask_NotFound);
+                    result = false;
+                }
             }
-            var artist = await this.ImportArtist(releaseLookup).ConfigureAwait(false);
-            if (!string.IsNullOrEmpty(artist))
+            return result;
+        }
+
+        protected virtual bool ShouldImportFrontCover(Discogs.ReleaseLookup releaseLookup)
+        {
+            return !this.HasMetaData(releaseLookup.FileDatas, CommonImageTypes.FrontCover, MetaDataItemType.Image);
+        }
+
+        protected virtual bool ShouldLookupArtist(Discogs.ReleaseLookup releaseLookup)
+        {
+            return !this.HasMetaData(releaseLookup.FileDatas, CommonImageTypes.Artist, MetaDataItemType.Image);
+        }
+
+        protected virtual bool HasMetaData(IEnumerable<IFileData> fileDatas, string name, MetaDataItemType type)
+        {
+            var result = true;
+            foreach (var fileData in fileDatas)
             {
-                releaseLookup.MetaData[CommonImageTypes.Artist] = artist;
-                result = true;
-            }
-            else
-            {
-                Logger.Write(this, LogLevel.Warn, "Failed to download artwork for album {0} - {1}: Releases don't contain images or they count not be downloaded.", releaseLookup.Artist, releaseLookup.Album);
-                releaseLookup.AddError(Strings.DiscogsFetchArtworkTask_NotFound);
-                result = false;
+                lock (fileData.MetaDatas)
+                {
+                    var metaDataItem = fileData.MetaDatas.FirstOrDefault(
+                         element => string.Equals(element.Name, name, StringComparison.OrdinalIgnoreCase) && element.Type == type
+                    );
+                    if (metaDataItem == null)
+                    {
+                        result = false;
+                    }
+                }
             }
             return result;
         }
