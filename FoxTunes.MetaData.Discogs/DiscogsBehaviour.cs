@@ -174,7 +174,7 @@ namespace FoxTunes
             {
                 return;
             }
-            var releaseLookups = await this.FetchArtwork(libraryItems, updateType).ConfigureAwait(false);
+            var releaseLookups = await this.FetchReleases(libraryItems, updateType).ConfigureAwait(false);
             this.OnReport(releaseLookups);
             await this.OnDemandMetaDataProvider.SetMetaData(
                 new OnDemandMetaDataRequest(
@@ -182,7 +182,7 @@ namespace FoxTunes
                     MetaDataItemType.Image,
                     updateType
                 ),
-                this.GetMetaDataValues(releaseLookups)
+                this.GetMetaDataValues(releaseLookups, CommonImageTypes.FrontCover)
             ).ConfigureAwait(false);
         }
 
@@ -197,7 +197,7 @@ namespace FoxTunes
             {
                 return;
             }
-            var releaseLookups = await this.FetchArtwork(playlistItems, updateType).ConfigureAwait(false);
+            var releaseLookups = await this.FetchReleases(playlistItems, updateType).ConfigureAwait(false);
             this.OnReport(releaseLookups);
             await this.OnDemandMetaDataProvider.SetMetaData(
                 new OnDemandMetaDataRequest(
@@ -205,11 +205,11 @@ namespace FoxTunes
                     MetaDataItemType.Image,
                     updateType
                 ),
-                this.GetMetaDataValues(releaseLookups)
+                this.GetMetaDataValues(releaseLookups, CommonImageTypes.FrontCover)
             ).ConfigureAwait(false);
         }
 
-        public async Task<IEnumerable<Discogs.ReleaseLookup>> FetchArtwork(IEnumerable<IFileData> fileDatas, MetaDataUpdateType updateType)
+        public async Task<IEnumerable<Discogs.ReleaseLookup>> FetchReleases(IEnumerable<IFileData> fileDatas, MetaDataUpdateType updateType)
         {
             var releaseLookups = Discogs.ReleaseLookup.FromFileDatas(fileDatas).ToArray();
             if (releaseLookups.Any())
@@ -224,7 +224,7 @@ namespace FoxTunes
             return releaseLookups;
         }
 
-        public OnDemandMetaDataValues GetMetaDataValues(IEnumerable<Discogs.ReleaseLookup> releaseLookups)
+        public OnDemandMetaDataValues GetMetaDataValues(IEnumerable<Discogs.ReleaseLookup> releaseLookups, string name)
         {
             var values = new List<OnDemandMetaDataValue>();
             foreach (var releaseLookup in releaseLookups)
@@ -234,7 +234,7 @@ namespace FoxTunes
                     continue;
                 }
                 var value = default(string);
-                if (!releaseLookup.MetaData.TryGetValue(CommonImageTypes.FrontCover, out value))
+                if (!releaseLookup.MetaData.TryGetValue(name, out value))
                 {
                     continue;
                 }

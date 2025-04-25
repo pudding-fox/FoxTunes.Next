@@ -598,15 +598,19 @@ namespace FoxTunes
             {
                 const string ID = "id";
                 const string RESOURCE_URL = "resource_url";
+                const string THUMBNAIL_URL = "thumbnail_url";
                 const string NAME = "name";
                 this.Id = Convert.ToString(data.GetValueOrDefault(ID));
                 this.ResourceUrl = Convert.ToString(data.GetValueOrDefault(RESOURCE_URL));
+                this.ThumbnailUrl = Convert.ToString(data.GetValueOrDefault(THUMBNAIL_URL));
                 this.Name = Convert.ToString(data.GetValueOrDefault(NAME));
             }
 
             public string Id { get; private set; }
 
             public string ResourceUrl { get; private set; }
+
+            public string ThumbnailUrl { get; private set; }
 
             public string Name { get; private set; }
 

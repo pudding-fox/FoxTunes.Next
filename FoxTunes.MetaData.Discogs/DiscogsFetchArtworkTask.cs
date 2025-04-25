@@ -1,5 +1,7 @@
 ﻿using FoxTunes.Interfaces;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace FoxTunes
@@ -23,27 +25,70 @@ namespace FoxTunes
 
         protected override async Task<bool> OnLookupSuccess(Discogs.ReleaseLookup releaseLookup)
         {
-            var value = await this.ImportImage(releaseLookup).ConfigureAwait(false);
-            if (!string.IsNullOrEmpty(value))
+            var result = default(bool);
+            var frontCover = await this.ImportFrontCover(releaseLookup).ConfigureAwait(false);
+            if (!string.IsNullOrEmpty(frontCover))
             {
-                releaseLookup.MetaData[CommonImageTypes.FrontCover] = value;
-                return true;
+                releaseLookup.MetaData[CommonImageTypes.FrontCover] = frontCover;
+                result = true;
             }
             else
             {
                 Logger.Write(this, LogLevel.Warn, "Failed to download artwork for album {0} - {1}: Releases don't contain images or they count not be downloaded.", releaseLookup.Artist, releaseLookup.Album);
                 releaseLookup.AddError(Strings.DiscogsFetchArtworkTask_NotFound);
-                return false;
+                result = false;
             }
+            var artist = await this.ImportArtist(releaseLookup).ConfigureAwait(false);
+            if (!string.IsNullOrEmpty(artist))
+            {
+                releaseLookup.MetaData[CommonImageTypes.Artist] = artist;
+                result = true;
+            }
+            else
+            {
+                Logger.Write(this, LogLevel.Warn, "Failed to download artwork for album {0} - {1}: Releases don't contain images or they count not be downloaded.", releaseLookup.Artist, releaseLookup.Album);
+                releaseLookup.AddError(Strings.DiscogsFetchArtworkTask_NotFound);
+                result = false;
+            }
+            return result;
         }
 
-        protected virtual async Task<string> ImportImage(Discogs.ReleaseLookup releaseLookup)
+        protected virtual Task<string> ImportFrontCover(Discogs.ReleaseLookup releaseLookup)
         {
             var urls = new[]
             {
                 releaseLookup.Release.CoverUrl,
                 releaseLookup.Release.ThumbUrl
             };
+            return this.FetchData(releaseLookup, urls);
+        }
+
+        protected virtual async Task<string> ImportArtist(Discogs.ReleaseLookup releaseLookup)
+        {
+            var release = default(Discogs.ReleaseDetails);
+            try
+            {
+                Logger.Write(this, LogLevel.Debug, "Fetching release details: {0}", releaseLookup.Release.ResourceUrl);
+                release = await this.Discogs.GetRelease(releaseLookup.Release).ConfigureAwait(false);
+                if (release == null)
+                {
+                    Logger.Write(this, LogLevel.Error, "Failed to fetch release details \"{0}\": Unknown error.", releaseLookup.Release.ResourceUrl);
+                    return null;
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.Write(this, LogLevel.Error, "Failed to fetch release details \"{0}\": {1}", releaseLookup.Release.ResourceUrl, e.Message);
+                releaseLookup.AddError(e.Message);
+            }
+            var urls = release.Artists.Select(
+                artist => artist.ThumbnailUrl
+            );
+            return await this.FetchData(releaseLookup, urls);
+        }
+
+        protected virtual async Task<string> FetchData(Discogs.ReleaseLookup releaseLookup, IEnumerable<string> urls)
+        {
             foreach (var url in urls)
             {
                 if (!string.IsNullOrEmpty(url))
@@ -73,7 +118,7 @@ namespace FoxTunes
                     }
                 }
             }
-            return string.Empty;
+            return null;
         }
     }
 }

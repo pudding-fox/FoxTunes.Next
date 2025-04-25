@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace FoxTunes
 {
     [ComponentDependency(Slot = ComponentSlots.UserInterface)]
-    public class DiscogsFrontCoverMetaDataSource : StandardComponent, IOnDemandMetaDataSource
+    public class DiscogsArtistMetaDataSource : StandardComponent, IOnDemandMetaDataSource
     {
         public DiscogsBehaviour Behaviour { get; private set; }
 
@@ -29,7 +29,7 @@ namespace FoxTunes
         {
             get
             {
-                return CommonImageTypes.FrontCover;
+                return CommonImageTypes.Artist;
             }
         }
 
@@ -65,7 +65,7 @@ namespace FoxTunes
         public async Task<OnDemandMetaDataValues> GetValues(IEnumerable<IFileData> fileDatas, OnDemandMetaDataRequest request)
         {
             var releaseLookups = await this.Behaviour.FetchReleases(fileDatas, request.UpdateType).ConfigureAwait(false);
-            return this.Behaviour.GetMetaDataValues(releaseLookups, CommonImageTypes.FrontCover);
+            return this.Behaviour.GetMetaDataValues(releaseLookups, CommonImageTypes.Artist);
         }
     }
 }
