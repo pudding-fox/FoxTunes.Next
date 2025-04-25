@@ -57,10 +57,7 @@ namespace FoxTunes
 
         public static bool AddOrUpdate(this IFileData fileData, Func<IDictionary<string, MetaDataItem>, IEnumerable<MetaDataItem>> factory, ISet<string> names)
         {
-            var source = fileData.MetaDatas.ToDictionary(
-                metaDataItem => metaDataItem.Name,
-                StringComparer.OrdinalIgnoreCase
-            );
+            var source = fileData.MetaDatas.ToDictionary();
             var metaDataItems = factory(source);
             foreach (var metaDataItem in metaDataItems)
             {
@@ -80,10 +77,7 @@ namespace FoxTunes
 
         public static bool AddOrUpdate(this IFileData fileData, IEnumerable<MetaDataItem> metaDataItems, ISet<string> names)
         {
-            var source = fileData.MetaDatas.ToDictionary(
-                metaDataItem => metaDataItem.Name,
-                StringComparer.OrdinalIgnoreCase
-            );
+            var source = fileData.MetaDatas.ToDictionary();
             foreach (var metaDataItem in metaDataItems)
             {
                 if (fileData.AddOrUpdate(source, metaDataItem.Name, metaDataItem.Type, metaDataItem.Value))

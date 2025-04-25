@@ -38,7 +38,7 @@ namespace FoxTunes
         public async Task CanReadMetaData(string fileName, string artist, string performer, string year, string album, string disc, string track, string title)
         {
             var metaDataSource = this.Core.Factories.MetaDataSource.Create();
-            var metaData = (await metaDataSource.GetMetaData(fileName).ConfigureAwait(false)).ToDictionary(metaDataItem => metaDataItem.Name, metaDataItem => metaDataItem.Value);
+            var metaData = (await metaDataSource.GetMetaData(fileName).ConfigureAwait(false)).ToDictionary2();
             Assert.AreEqual(artist, metaData[CommonMetaData.Artist]);
             if (!string.IsNullOrEmpty(performer))
             {

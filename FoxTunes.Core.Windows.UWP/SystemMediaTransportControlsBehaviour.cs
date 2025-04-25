@@ -209,11 +209,7 @@ namespace FoxTunes
                     var metaData = default(IDictionary<string, string>);
                     lock (outputStream.PlaylistItem.MetaDatas)
                     {
-                        metaData = outputStream.PlaylistItem.MetaDatas.ToDictionary(
-                            metaDataItem => metaDataItem.Name,
-                            metaDataItem => metaDataItem.Value,
-                            StringComparer.OrdinalIgnoreCase
-                        );
+                        metaData = outputStream.PlaylistItem.MetaDatas.ToDictionary2();
                     }
                     this.Try(() => updater.MusicProperties.Title = metaData.GetValueOrDefault(CommonMetaData.Title) ?? string.Empty, this.ErrorHandler);
                     this.Try(() => updater.MusicProperties.Artist = metaData.GetValueOrDefault(CommonMetaData.Performer) ?? string.Empty, this.ErrorHandler);
@@ -244,7 +240,7 @@ namespace FoxTunes
                 var updater = this.TransportControls.DisplayUpdater;
                 if (outputStream != null)
                 {
-                    var fileName = await this.ArtworkProvider.Find(outputStream.PlaylistItem, ArtworkType.FrontCover).ConfigureAwait(false);
+                    var fileName = await this.ArtworkProvider.Find(outputStream.PlaylistItem, CommonImageTypes.FrontCover, ArtworkType.FrontCover).ConfigureAwait(false);
                     if (!string.IsNullOrEmpty(fileName) && File.Exists(fileName))
                     {
                         var stream = await this.GetThumbnail(fileName).ConfigureAwait(false);

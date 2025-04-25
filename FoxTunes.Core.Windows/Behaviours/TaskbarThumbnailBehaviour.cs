@@ -470,7 +470,7 @@ namespace FoxTunes
                 {
                     fileData = outputStream.PlaylistItem;
                 }
-                var fileName = await this.ArtworkProvider.Find(fileData, ArtworkType.FrontCover).ConfigureAwait(false);
+                var fileName = await this.ArtworkProvider.Find(fileData, CommonImageTypes.FrontCover, ArtworkType.FrontCover).ConfigureAwait(false);
                 if (!string.IsNullOrEmpty(fileName) && File.Exists(fileName))
                 {
                     return TaskbarThumbnail.GetOrAdd(fileName);

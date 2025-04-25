@@ -152,10 +152,7 @@ namespace FoxTunes
             var result = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
             lock (source)
             {
-                var sourceMetaData = source.ToDictionary(
-                    metaDataItem => metaDataItem.Name,
-                    StringComparer.OrdinalIgnoreCase
-                );
+                var sourceMetaData = source.ToDictionary();
                 foreach (var destination in destinations)
                 {
                     lock (destination)
@@ -164,10 +161,7 @@ namespace FoxTunes
                         {
                             continue;
                         }
-                        var destinationMetaData = destination.ToDictionary(
-                            metaDataItem => metaDataItem.Name,
-                            StringComparer.OrdinalIgnoreCase
-                        );
+                        var destinationMetaData = destination.ToDictionary();
                         foreach (var sourceMetaDataItem in source)
                         {
                             if (names != null && names.Any() && !names.Contains(sourceMetaDataItem.Name, StringComparer.OrdinalIgnoreCase))

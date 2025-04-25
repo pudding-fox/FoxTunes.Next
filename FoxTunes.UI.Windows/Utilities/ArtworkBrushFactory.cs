@@ -80,7 +80,7 @@ namespace FoxTunes
             }
         }
 
-        public AsyncResult<ImageBrush> Create(string fileName, int width, int height)
+        public AsyncResult<ImageBrush> Create(string fileName, int width, int height, bool preserveAspectRatio)
         {
             this.PixelSizeConverter.Convert(ref width, ref height);
             var placeholder = this.PlaceholderBrushFactory.Create(width, height);
@@ -102,17 +102,18 @@ namespace FoxTunes
             }
             return new AsyncResult<ImageBrush>(placeholder, this.Factory.StartNew(() =>
             {
-                return this.Store.GetOrAdd(fileName, width, height, () => this.Create(fileName, width, height, true));
+                return this.Store.GetOrAdd(fileName, width, height, () => this.Create(fileName, width, height, preserveAspectRatio, true));
             }));
         }
 
-        protected virtual ImageBrush Create(string fileName, int width, int height, bool cache)
+        protected virtual ImageBrush Create(string fileName, int width, int height, bool preserveAspectRatio, bool cache)
         {
             Logger.Write(this, LogLevel.Debug, "Creating brush: {0}x{1}", width, height);
             var source = this.ImageLoader.Load(
                 fileName,
                 width,
                 height,
+                preserveAspectRatio,
                 cache
             );
             if (source == null)

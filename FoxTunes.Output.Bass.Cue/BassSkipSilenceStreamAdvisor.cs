@@ -76,10 +76,7 @@ namespace FoxTunes
             var leadOutMetaDataItem = default(MetaDataItem);
             lock (playlistItem.MetaDatas)
             {
-                var metaDatas = playlistItem.MetaDatas.ToDictionary(
-                    metaDataItem => metaDataItem.Name,
-                    StringComparer.OrdinalIgnoreCase
-                );
+                var metaDatas = playlistItem.MetaDatas.ToDictionary();
                 if (!metaDatas.TryGetValue(CustomMetaData.LeadIn, out leadInMetaDataItem))
                 {
                     leadInMetaDataItem = new MetaDataItem(
@@ -294,10 +291,7 @@ namespace FoxTunes
             var leadOutMetaDataItem = default(MetaDataItem);
             lock (playlistItem.MetaDatas)
             {
-                var metaDatas = playlistItem.MetaDatas.ToDictionary(
-                    metaDataItem => metaDataItem.Name,
-                    StringComparer.OrdinalIgnoreCase
-                );
+                var metaDatas = playlistItem.MetaDatas.ToDictionary();
                 metaDatas.TryGetValue(CustomMetaData.LeadIn, out leadInMetaDataItem);
                 metaDatas.TryGetValue(CustomMetaData.LeadOut, out leadOutMetaDataItem);
                 if (leadInMetaDataItem == null && leadOutMetaDataItem == null)

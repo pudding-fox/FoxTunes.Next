@@ -136,11 +136,7 @@ namespace FoxTunes
             var hasTitle = false;
             if (item.MetaDatas != null)
             {
-                var metaData = item.MetaDatas.ToDictionary(
-                    metaDataItem => metaDataItem.Name,
-                    metaDataItem => metaDataItem.Value,
-                    StringComparer.OrdinalIgnoreCase
-                );
+                var metaData = item.MetaDatas.ToDictionary2();
                 hasTrack = metaData.ContainsKey(CommonMetaData.Track);
                 hasTitle = metaData.ContainsKey(CommonMetaData.Title);
             }

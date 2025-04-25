@@ -282,10 +282,7 @@ namespace FoxTunes
             var names = new HashSet<string>();
             lock (stream.PlaylistItem.MetaDatas)
             {
-                var metaDatas = stream.PlaylistItem.MetaDatas.ToDictionary(
-                    element => element.Name,
-                    StringComparer.OrdinalIgnoreCase
-                );
+                var metaDatas = stream.PlaylistItem.MetaDatas.ToDictionary();
                 var metaDataItem = default(MetaDataItem);
                 if (gain != 0)
                 {

@@ -88,11 +88,7 @@ namespace FoxTunes
 
         protected virtual string GetFileName(string fileName, int track, IEnumerable<MetaDataItem> metaDatas)
         {
-            var metaData = metaDatas.ToDictionary(
-                metaDataItem => metaDataItem.Name,
-                metaDataItem => metaDataItem.Value,
-                StringComparer.OrdinalIgnoreCase
-            );
+            var metaData = metaDatas.ToDictionary2();
             var title = metaData.GetValueOrDefault(CommonMetaData.Title);
             if (!string.IsNullOrEmpty(title))
             {

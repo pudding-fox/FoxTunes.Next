@@ -14,7 +14,7 @@
              BorderThickness="1">
     <Windows:ConfigurableUIComponentBase.Resources>
         <ViewModel:Artist x:Key="ViewModel" FileNameChanged="OnFileNameChanged"></ViewModel:Artist>
-        <ViewModel:ArtworkImageConverter x:Key="ArtworkImageConverter" Width="{Binding ActualWidth, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Windows:Artist}}}" Height="{Binding ActualHeight, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Windows:Artist}}}" ShowPlaceholder="False"></ViewModel:ArtworkImageConverter>
+        <ViewModel:ArtworkImageConverter x:Key="ArtworkImageConverter" Width="{Binding ActualWidth, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Windows:Artist}}}" Height="{Binding ActualHeight, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Windows:Artist}}}" ShowPlaceholder="False" PreserveAspectRatio="True"></ViewModel:ArtworkImageConverter>
         <SolidColorBrush x:Key="Transparent" Color="Transparent"></SolidColorBrush>
         <System:Boolean x:Key="True">True</System:Boolean>
         <System:Boolean x:Key="False">False</System:Boolean>

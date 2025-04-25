@@ -157,7 +157,7 @@ namespace FoxTunes.ViewModel
         {
             if (names != null && names.Any())
             {
-                if (!names.Contains(CommonImageTypes.FrontCover, StringComparer.OrdinalIgnoreCase))
+                if (!names.Contains(CommonImageTypes.Artist, StringComparer.OrdinalIgnoreCase))
                 {
 #if NET40
                     return TaskEx.FromResult(false);
@@ -190,6 +190,7 @@ namespace FoxTunes.ViewModel
                 }
                 fileName = await this.ArtworkProvider.Find(
                     fileData,
+                    CommonImageTypes.Artist,
                     ArtworkType.Artist
                 ).ConfigureAwait(false);
             }

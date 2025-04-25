@@ -227,6 +227,7 @@ namespace FoxTunes.ViewModel
                 }
                 fileName = await this.ArtworkProvider.Find(
                     fileData,
+                    artworkType == ArtworkType.FrontCover ? CommonImageTypes.FrontCover : CommonImageTypes.BackCover,
                     artworkType
                 ).ConfigureAwait(false);
             }

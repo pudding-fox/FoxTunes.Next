@@ -234,12 +234,12 @@ namespace FoxTunes
             });
         }
 
-        public async Task<string> Find(IFileData fileData, ArtworkType type)
+        public async Task<string> Find(IFileData fileData, string name, ArtworkType type)
         {
             var fileName = await this.OnDemandMetaDataProvider.GetMetaData(
                 fileData,
                 new OnDemandMetaDataRequest(
-                    Enum.GetName(typeof(ArtworkType), type),
+                    name,
                     MetaDataItemType.Image,
                     MetaDataUpdateType.System
                 )

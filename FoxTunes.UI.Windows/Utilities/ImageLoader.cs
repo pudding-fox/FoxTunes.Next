@@ -58,23 +58,23 @@ namespace FoxTunes
             return ImageLoaderConfiguration.GetConfigurationSections();
         }
 
-        public ImageSource Load(string fileName, int width, int height, bool cache)
+        public ImageSource Load(string fileName, int width, int height, bool preserveAspectRatio, bool cache)
         {
             if (cache)
             {
-                return this.Store.GetOrAdd(fileName, width, height, () => this.LoadCore(fileName, width, height));
+                return this.Store.GetOrAdd(fileName, width, height, () => this.LoadCore(fileName, width, height, preserveAspectRatio));
             }
-            return this.LoadCore(fileName, width, height);
+            return this.LoadCore(fileName, width, height, preserveAspectRatio);
         }
 
-        private ImageSource LoadCore(string fileName, int width, int height)
+        private ImageSource LoadCore(string fileName, int width, int height, bool preserveAspectRatio)
         {
             try
             {
                 var decode = false;
                 if (width != 0 && height != 0 && this.HighQualityResizer)
                 {
-                    fileName = this.ImageResizer.Resize(fileName, width, height);
+                    fileName = this.ImageResizer.Resize(fileName, width, height, preserveAspectRatio);
                 }
                 else
                 {

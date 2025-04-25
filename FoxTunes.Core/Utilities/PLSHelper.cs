@@ -174,11 +174,7 @@ namespace FoxTunes
                 {
                     lock (playlistItem.MetaDatas)
                     {
-                        metaData = playlistItem.MetaDatas.ToDictionary(
-                            metaDataItem => metaDataItem.Name,
-                            metaDataItem => metaDataItem.Value,
-                            StringComparer.OrdinalIgnoreCase
-                        );
+                        metaData = playlistItem.MetaDatas.ToDictionary2();
                     }
                 }
                 var title = metaData.GetValueOrDefault(CommonMetaData.Title);

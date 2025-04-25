@@ -115,6 +115,7 @@ namespace FoxTunes
             {
                 Logger.Write(this, LogLevel.Error, "Failed to fetch release details \"{0}\": {1}", releaseLookup.Release.ResourceUrl, e.Message);
                 releaseLookup.AddError(e.Message);
+                return null;
             }
             var urls = release.Artists.Select(
                 artist => artist.ThumbnailUrl

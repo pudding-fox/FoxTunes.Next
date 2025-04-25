@@ -71,10 +71,7 @@ namespace FoxTunes
                 var parts = new List<string>();
                 lock (fileData.MetaDatas)
                 {
-                    var metaDatas = fileData.MetaDatas.ToDictionary(
-                        element => element.Name,
-                        StringComparer.OrdinalIgnoreCase
-                    );
+                    var metaDatas = fileData.MetaDatas.ToDictionary();
                     var metaDataItem = default(MetaDataItem);
                     if (metaDatas.TryGetValue(CommonMetaData.Year, out metaDataItem))
                     {

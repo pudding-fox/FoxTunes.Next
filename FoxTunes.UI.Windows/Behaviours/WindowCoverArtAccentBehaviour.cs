@@ -74,6 +74,7 @@ namespace FoxTunes
             }
             var fileName = await this.ArtworkProvider.Find(
                 fileData,
+                CommonImageTypes.FrontCover,
                 ArtworkType.FrontCover
             ).ConfigureAwait(false);
             if (string.IsNullOrEmpty(fileName))

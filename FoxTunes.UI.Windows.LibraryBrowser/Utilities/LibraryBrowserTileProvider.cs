@@ -88,7 +88,7 @@ namespace FoxTunes
                     var fileName = default(string);
                     if (this.ReadFromCache(libraryHierarchyNode, width, height, out fileName))
                     {
-                        return this.ImageLoader.Load(fileName, 0, 0, true);
+                        return this.ImageLoader.Load(fileName, 0, 0, false, true);
                     }
                 }
                 return this.CreateImageSourceCore(libraryHierarchyNode, metaDataItems, width, height, mode, cache);
@@ -137,7 +137,7 @@ namespace FoxTunes
 
         private ImageSource CreateImageSource1(LibraryHierarchyNode libraryHierarchyNode, string[] fileNames, int width, int height)
         {
-            return this.ImageLoader.Load(fileNames[0], width, height, true);
+            return this.ImageLoader.Load(fileNames[0], width, height, false, true);
         }
 
         private ImageSource CreateImageSource2(LibraryHierarchyNode libraryHierarchyNode, string[] fileNames, int width, int height, bool cache)
@@ -180,7 +180,7 @@ namespace FoxTunes
         {
             var region = this.GetRegion(context, position, count, width, height);
             var size = (int)Math.Max(region.Width, region.Height);
-            var source = this.ImageLoader.Load(fileName, size, size, false);
+            var source = this.ImageLoader.Load(fileName, size, size, false, false);
             if (source == null)
             {
                 //Image failed to load, nothing can be done.

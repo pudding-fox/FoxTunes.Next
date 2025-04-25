@@ -39,10 +39,7 @@ namespace FoxTunes
         {
             lock (this.PlaylistItem.MetaDatas)
             {
-                var metaDatas = this.PlaylistItem.MetaDatas.ToDictionary(
-                    metaDataItem => metaDataItem.Name,
-                    StringComparer.OrdinalIgnoreCase
-                );
+                var metaDatas = this.PlaylistItem.MetaDatas.ToDictionary();
                 this.UpdatePlayCount(metaDatas);
                 this.UpdateLastPlayed(metaDatas);
             }

@@ -162,6 +162,56 @@ namespace FoxTunes.ViewModel
 
         public event EventHandler ShowPlaceholderChanged;
 
+        public static readonly DependencyProperty PreserveAspectRatioProperty = DependencyProperty.Register(
+            "PreserveAspectRatio",
+            typeof(bool),
+            typeof(ArtworkImageConverter),
+            new PropertyMetadata(false, new PropertyChangedCallback(OnPreserveAspectRatioChanged))
+        );
+
+        public static bool GetPreserveAspectRatio(ViewModelBase source)
+        {
+            return global::System.Convert.ToBoolean(source.GetValue(PreserveAspectRatioProperty));
+        }
+
+        public static void SetPreserveAspectRatio(ViewModelBase source, bool value)
+        {
+            source.SetValue(PreserveAspectRatioProperty, value);
+        }
+
+        public static void OnPreserveAspectRatioChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
+        {
+            var artworkImageConverter = sender as ArtworkImageConverter;
+            if (artworkImageConverter == null)
+            {
+                return;
+            }
+            artworkImageConverter.OnPreserveAspectRatioChanged();
+        }
+
+        public bool PreserveAspectRatio
+        {
+            get
+            {
+                return global::System.Convert.ToBoolean(this.GetValue(PreserveAspectRatioProperty));
+            }
+            set
+            {
+                this.SetValue(PreserveAspectRatioProperty, value);
+            }
+        }
+
+        protected virtual void OnPreserveAspectRatioChanged()
+        {
+            if (this.PreserveAspectRatioChanged != null)
+            {
+                this.PreserveAspectRatioChanged(this, EventArgs.Empty);
+            }
+            this.OnPropertyChanged("PreserveAspectRatio");
+        }
+
+        public event EventHandler PreserveAspectRatioChanged;
+
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (Provider == null || Factory == null)
@@ -190,14 +240,15 @@ namespace FoxTunes.ViewModel
                 //TODO: Bad .Result
                 fileName = Provider.Find(
                     (IFileData)value,
+                    CommonImageTypes.FrontCover,
                     ArtworkType.FrontCover
                 ).Result;
             }
-            //var size = global::System.Convert.ToInt32(Math.Max(this.Width, this.Height));
             return Factory.Create(
                 fileName,
                 global::System.Convert.ToInt32(this.Width),
-                global::System.Convert.ToInt32(this.Height)
+                global::System.Convert.ToInt32(this.Height),
+                this.PreserveAspectRatio
             );
         }
 

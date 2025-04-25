@@ -71,11 +71,7 @@ namespace FoxTunes
                 var metaData = default(IDictionary<string, string>);
                 lock (metaDatas)
                 {
-                    metaData = metaDatas.ToDictionary(
-                        metaDataItem => metaDataItem.Name,
-                        metaDataItem => metaDataItem.Value,
-                        StringComparer.OrdinalIgnoreCase
-                    );
+                    metaData = metaDatas.ToDictionary2();
                 }
                 encoderItem.Bitrate = Convert.ToInt32(metaData.GetValueOrDefault(CommonProperties.AudioBitrate));
                 encoderItem.Channels = Convert.ToInt32(metaData.GetValueOrDefault(CommonProperties.AudioChannels));

@@ -51,11 +51,7 @@ namespace FoxTunes
             {
                 lock (fileData.MetaDatas)
                 {
-                    var metaData = fileData.MetaDatas.ToDictionary(
-                        metaDataItem => metaDataItem.Name,
-                        metaDataItem => metaDataItem.Value,
-                        StringComparer.OrdinalIgnoreCase
-                    );
+                    var metaData = fileData.MetaDatas.ToDictionary2();
                     var track = default(string);
                     var title = default(string);
                     if (!metaData.TryGetValue(CommonMetaData.Track, out track))

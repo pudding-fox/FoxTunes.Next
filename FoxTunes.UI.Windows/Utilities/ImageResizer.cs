@@ -39,13 +39,13 @@ namespace FoxTunes
 #endif
         }
 
-        public string Resize(string fileName, int width, int height)
+        public string Resize(string fileName, int width, int height, bool preserveAspectRatio)
         {
             var id = this.GetImageId(fileName, width, height);
-            return this.Resize(id, () => Bitmap.FromFile(fileName), width, height);
+            return this.Resize(id, () => Bitmap.FromFile(fileName), width, height, preserveAspectRatio);
         }
 
-        protected virtual string Resize(string id, Func<Image> factory, int width, int height)
+        protected virtual string Resize(string id, Func<Image> factory, int width, int height, bool preserveAspectRatio)
         {
             return FileMetaDataStore.IfNotExists(PREFIX, id, result =>
             {
@@ -56,7 +56,8 @@ namespace FoxTunes
                         graphics.SmoothingMode = SmoothingMode.HighQuality;
                         graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
                         graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
-                        this.Resize(graphics, factory, width, height);
+                        graphics.CompositingQuality = CompositingQuality.HighQuality;
+                        this.Resize(graphics, factory, width, height, preserveAspectRatio);
                     }
                     using (var stream = new MemoryStream())
                     {
@@ -68,11 +69,29 @@ namespace FoxTunes
             });
         }
 
-        protected virtual void Resize(Graphics graphics, Func<Image> factory, int width, int height)
+        protected virtual void Resize(Graphics graphics, Func<Image> factory, int width, int height, bool preserveAspectRatio)
         {
             using (var image = factory())
             {
-                graphics.DrawImage(image, new Rectangle(0, 0, width, height));
+                if (preserveAspectRatio)
+                {
+                    var ratioX = (double)width / (double)image.Width;
+                    var ratioY = (double)height / (double)image.Height;
+                    var ratio = ratioX < ratioY ? ratioX : ratioY;
+                    graphics.DrawImage(
+                        image, 
+                        new Rectangle(
+                            Convert.ToInt32((width - (image.Width * ratio)) / 2), 
+                            Convert.ToInt32((height - (image.Height * ratio)) / 2), 
+                            Convert.ToInt32(image.Width * ratio), 
+                            Convert.ToInt32(image.Height * ratio)
+                        )
+                    );
+                }
+                else
+                {
+                    graphics.DrawImage(image, new Rectangle(0, 0, width, height));
+                }
             }
         }
 
@@ -88,7 +107,8 @@ namespace FoxTunes
                         fileName,
                         () => bitmap,
                         MAX_WIDTH,
-                        MAX_HEIGHT
+                        MAX_HEIGHT,
+                        false
                     )
                 ) as Bitmap;
             }

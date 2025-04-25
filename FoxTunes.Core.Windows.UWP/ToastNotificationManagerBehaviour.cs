@@ -177,14 +177,11 @@ namespace FoxTunes
             var metaData = default(IDictionary<string, string>);
             lock (outputStream.PlaylistItem.MetaDatas)
             {
-                metaData = outputStream.PlaylistItem.MetaDatas.ToDictionary(
-                    metaDataItem => metaDataItem.Name,
-                    metaDataItem => metaDataItem.Value,
-                    StringComparer.OrdinalIgnoreCase
-                );
+                metaData = outputStream.PlaylistItem.MetaDatas.ToDictionary2();
             }
             var fileName = await this.ArtworkProvider.Find(
                 outputStream.PlaylistItem,
+                CommonImageTypes.FrontCover,
                 ArtworkType.FrontCover
             ).ConfigureAwait(false);
             var hasArtwork = !string.IsNullOrEmpty(fileName) && File.Exists(fileName);

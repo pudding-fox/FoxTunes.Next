@@ -8,7 +8,7 @@ namespace FoxTunes.Interfaces
 
         string Find(string path, ArtworkType type);
 
-        Task<string> Find(IFileData fileData, ArtworkType type);
+        Task<string> Find(IFileData fileData, string name, ArtworkType type);
 
         void Reset(string path, ArtworkType type);
     }

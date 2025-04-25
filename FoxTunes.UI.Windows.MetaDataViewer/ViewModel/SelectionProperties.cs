@@ -545,11 +545,7 @@ namespace FoxTunes.ViewModel
             }
             lock (fileData.MetaDatas)
             {
-                return fileData.MetaDatas.ToDictionary(
-                    metaDataItem => metaDataItem.Name,
-                    metaDataItem => metaDataItem.Value,
-                    StringComparer.OrdinalIgnoreCase
-                );
+                return fileData.MetaDatas.ToDictionary2();
             }
         }
 

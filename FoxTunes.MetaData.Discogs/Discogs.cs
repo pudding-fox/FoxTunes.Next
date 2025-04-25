@@ -399,11 +399,7 @@ namespace FoxTunes
                     var metaData = default(IDictionary<string, string>);
                     lock (fileData.MetaDatas)
                     {
-                        metaData = fileData.MetaDatas.ToDictionary(
-                            metaDataItem => metaDataItem.Name,
-                            metaDataItem => metaDataItem.Value,
-                            StringComparer.OrdinalIgnoreCase
-                        );
+                        metaData = fileData.MetaDatas.ToDictionary2();
                     }
                     var artist = metaData.GetValueOrDefault(CommonMetaData.Artist);
                     var album = metaData.GetValueOrDefault(CommonMetaData.Album);

@@ -6,6 +6,6 @@
 
         public const string BackCover = "BackCover";
 
-        public const string Artist = "Artist";
+        public const string Artist = "__FT_Artist";
     }
 }

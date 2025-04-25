@@ -124,10 +124,7 @@ namespace FoxTunes
                     var status = Enum.GetName(typeof(ScannerItemStatus), this.ScannerItem.Status);
                     lock (this.FileData.MetaDatas)
                     {
-                        var metaDatas = this.FileData.MetaDatas.ToDictionary(
-                            element => element.Name,
-                            StringComparer.OrdinalIgnoreCase
-                        );
+                        var metaDatas = this.FileData.MetaDatas.ToDictionary();
                         var metaDataItem = default(MetaDataItem);
                         if (metaDatas.TryGetValue(CommonMetaData.ReplayGainAlbumGain, out metaDataItem) && double.TryParse(metaDataItem.Value, out value))
                         {

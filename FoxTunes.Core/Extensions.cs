@@ -13,6 +13,14 @@ namespace FoxTunes
 {
     public static partial class Extensions
     {
+        private static ILogger Logger
+        {
+            get
+            {
+                return LogManager.Logger;
+            }
+        }
+
         public static bool HasCustomAttribute<T>(this Type type, out T attribute) where T : Attribute
         {
             return type.HasCustomAttribute<T>(false, out attribute);
@@ -688,6 +696,32 @@ namespace FoxTunes
         public static T BySequence<T>(this IEnumerable<T> components, int sequence) where T : ISequenceableComponent
         {
             return components.Where(component => component.Sequence == sequence).FirstOrDefault();
+        }
+
+        public static IDictionary<string, MetaDataItem> ToDictionary(this IEnumerable<MetaDataItem> metaDatas)
+        {
+            var result = new Dictionary<string, MetaDataItem>(StringComparer.OrdinalIgnoreCase);
+            foreach (var metaData in metaDatas)
+            {
+                if (!result.TryAdd(metaData.Name, metaData))
+                {
+                    Logger.Write(typeof(Extensions), LogLevel.Error, "Failed to create dictionary from meta data, duplicate key: {0}", metaData.Name);
+                }
+            }
+            return result;
+        }
+
+        public static IDictionary<string, string> ToDictionary2(this IEnumerable<MetaDataItem> metaDatas)
+        {
+            var result = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+            foreach (var metaData in metaDatas)
+            {
+                if (!result.TryAdd(metaData.Name, metaData.Value))
+                {
+                    Logger.Write(typeof(Extensions), LogLevel.Error, "Failed to create dictionary from meta data, duplicate key: {0}", metaData.Name);
+                }
+            }
+            return result;
         }
     }
 

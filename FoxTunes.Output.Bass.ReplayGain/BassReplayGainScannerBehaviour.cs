@@ -371,10 +371,7 @@ namespace FoxTunes
                     var fileData = this.GetFileData(scannerItem);
                     lock (fileData.MetaDatas)
                     {
-                        var metaDatas = fileData.MetaDatas.ToDictionary(
-                            element => element.Name,
-                            StringComparer.OrdinalIgnoreCase
-                        );
+                        var metaDatas = fileData.MetaDatas.ToDictionary();
                         var metaDataItem = default(MetaDataItem);
                         if (scannerItem.GroupGain != 0)
                         {
