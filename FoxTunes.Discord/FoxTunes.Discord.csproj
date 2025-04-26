@@ -45,6 +45,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\FoxTunes.UI.Windows\FoxTunes.UI.Windows.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Update="Properties\Strings.Designer.cs">
       <DependentUpon>Strings.resx</DependentUpon>
       <DesignTime>True</DesignTime>

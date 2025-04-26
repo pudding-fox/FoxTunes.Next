@@ -2,6 +2,7 @@
 using FoxTunes.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Net;
 using System.Security.Cryptography;
@@ -11,7 +12,7 @@ using System.Timers;
 
 namespace FoxTunes
 {
-    [ComponentDependency(Slot = ComponentSlots.UserInterface)]
+    [WindowsUserInterfaceDependency]
     public class DiscordBehaviour : StandardBehaviour, IConfigurableComponent, IDisposable
     {
         public static readonly int INTERVAL = 1000;
@@ -35,6 +36,8 @@ namespace FoxTunes
         public IErrorEmitter ErrorEmitter { get; private set; }
 
         public IArtworkProvider ArtworkProvider { get; private set; }
+
+        public ImageResizer ImageResizer { get; private set; }
 
         public IConfiguration Configuration { get; private set; }
 
@@ -191,6 +194,7 @@ namespace FoxTunes
             this.ScriptingContext = this.ScriptingRuntime.CreateContext();
             this.ErrorEmitter = core.Components.ErrorEmitter;
             this.ArtworkProvider = core.Components.ArtworkProvider;
+            this.ImageResizer = ComponentRegistry.Instance.GetComponent<ImageResizer>();
             this.Configuration = core.Components.Configuration;
             this.Configuration.GetElement<TextConfigurationElement>(
                 DiscordBehaviourConfiguration.SECTION,
@@ -346,7 +350,7 @@ namespace FoxTunes
                 var fileName = await this.ArtworkProvider.Find(outputStream.PlaylistItem, CommonImageTypes.FrontCover, ArtworkType.FrontCover).ConfigureAwait(false);
                 if (!string.IsNullOrEmpty(fileName) && File.Exists(fileName))
                 {
-                    fileName = await this.GetThumbnail(fileName).ConfigureAwait(false);
+                    fileName = this.GetThumbnail(fileName);
                     var location = await this.Upload(fileName);
                     return location;
                 }
@@ -369,21 +373,22 @@ namespace FoxTunes
             return null;
         }
 
-        protected virtual Task<string> GetThumbnail(string fileName)
+        protected virtual string GetThumbnail(string fileName)
         {
-            //TODO: Resize.
-#if NET40
-            return TaskEx.FromResult(fileName);
-#else
-            return Task.FromResult(fileName);
-#endif
+            const int WIDTH = 512;
+            const int HEIGHT = 512;
+            return this.ImageResizer.Resize(fileName, WIDTH, HEIGHT, false);
         }
 
         protected virtual async Task<string> Upload(string fileName)
         {
             var storageZoneFileName = this.GetStorageZoneFileName(fileName);
-            var request = await this.GetUploadRequest(fileName, storageZoneFileName).ConfigureAwait(false);
-            var response = await this.GetUploadResponse(request);
+            var exists = await this.Exists(fileName, storageZoneFileName).ConfigureAwait(false);
+            if (!exists)
+            {
+                var request = await this.GetUploadRequest(fileName, storageZoneFileName).ConfigureAwait(false);
+                var response = await this.GetResponse(request);
+            }
             var url = string.Concat(this.BunnyDownloadUrl, "/", storageZoneFileName);
             return url;
         }
@@ -400,6 +405,33 @@ namespace FoxTunes
                 }
                 return builder.ToString();
             }
+        }
+
+        protected virtual async Task<bool> Exists(string fileName, string storageZoneFileName)
+        {
+            var request = this.GetExistsRequest(fileName, storageZoneFileName);
+            try
+            {
+                var response = await this.GetResponse(request);
+                return true;
+            }
+            catch
+            {
+                Logger.Write(this, LogLevel.Debug, "File does not exists: {0}", storageZoneFileName);
+                return false;
+            }
+        }
+
+        protected virtual HttpWebRequest GetExistsRequest(string fileName, string storageZoneFileName)
+        {
+            var accessKey = this.BunnyApiKey;
+            var url = string.Concat(this.BunnyDownloadUrl, "/", storageZoneFileName);
+            var request = (HttpWebRequest)WebRequest.Create(url);
+            request.Method = "GET";
+            request.ContentType = "application/octet-stream";
+            request.Headers.Add("AccessKey", accessKey);
+
+            return request;
         }
 
         protected virtual async Task<HttpWebRequest> GetUploadRequest(string fileName, string storageZoneFileName)
@@ -422,7 +454,7 @@ namespace FoxTunes
             return request;
         }
 
-        protected virtual async Task<HttpWebResponse> GetUploadResponse(HttpWebRequest request)
+        protected virtual async Task<HttpWebResponse> GetResponse(HttpWebRequest request)
         {
             var response = (HttpWebResponse)await request.GetResponseAsync().ConfigureAwait(false);
             using (var stream = response.GetResponseStream())
