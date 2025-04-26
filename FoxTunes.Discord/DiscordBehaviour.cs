@@ -19,8 +19,7 @@ namespace FoxTunes
 
         static DiscordBehaviour()
         {
-            Loader.Load("discord-rpc.dll");
-            Loader.Load("discord");
+            DiscordManager.Load();
         }
 
         public const string CLIENT_ID = "1357689312660946984";
