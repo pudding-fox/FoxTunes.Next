@@ -94,9 +94,16 @@ namespace FoxTunes
             if (!force)
             {
                 //Filter by framework.
+                if (package.Flags.HasFlag(PackageFlags.FrameworkNET40))
+                {
+                    if (!flags.HasFlag(ReleaseFlags.FrameworkNET40))
+                    {
+                        return;
+                    }
+                }
                 if (package.Flags.HasFlag(PackageFlags.FrameworkNET48))
                 {
-                    if (flags.HasFlag(ReleaseFlags.FrameworkNET48) && !package.Flags.HasFlag(PackageFlags.FrameworkNET48))
+                    if (!flags.HasFlag(ReleaseFlags.FrameworkNET48))
                     {
                         return;
                     }
@@ -112,9 +119,16 @@ namespace FoxTunes
         private static void AddPackageElement(string target, Package package, PackageElement element, ReleaseFlags flags)
         {
             //Filter by framework.
+            if (element.Flags.HasFlag(PackageElementFlags.FrameworkNET40))
+            {
+                if (!flags.HasFlag(ReleaseFlags.FrameworkNET40))
+                {
+                    return;
+                }
+            }
             if (element.Flags.HasFlag(PackageElementFlags.FrameworkNET48))
             {
-                if (flags.HasFlag(ReleaseFlags.FrameworkNET48) && !element.Flags.HasFlag(PackageElementFlags.FrameworkNET48))
+                if (!flags.HasFlag(ReleaseFlags.FrameworkNET48))
                 {
                     return;
                 }
@@ -504,7 +518,7 @@ namespace FoxTunes
                         "x64/msvcp100.dll",
                         "x64/msvcr100.dll"
                     },
-                    PackageFlags.Default | PackageFlags.Minimal
+                    PackageFlags.Default | PackageFlags.Minimal | PackageFlags.FrameworkNET40
                 ),
                 new Package(
                     "clearscript",
@@ -834,7 +848,8 @@ namespace FoxTunes
             None = 0,
             Default = 1,
             Minimal = 2,
-            FrameworkNET48 = 16
+            FrameworkNET40 = 4,
+            FrameworkNET48 = 8
         }
 
         public class PackageElement
