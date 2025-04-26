@@ -1,8 +1,8 @@
 # FoxTunes
 A **portable, modular music player and converter** using the BASS framework for Windows XP/.../10/11.
 
-The main release is [FoxTunes-5.0.0-net48.zip](https://github.com/pudding-fox/FoxTunes.Next/releases/download/5.0.0/FoxTunes-5.0.0-net48.zip).  
-For additional plugins, download [FoxTunes-5.0.0-Plugins-net48.zip](https://github.com/pudding-fox/FoxTunes.Next/releases/download/5.0.0/FoxTunes-5.0.0-Plugins-net48.zip) (extract and copy required folders to the FoxTunes\lib directory).
+The main release is [FoxTunes-5.0.1-net48.zip](https://github.com/pudding-fox/FoxTunes.Next/releases/download/5.0.1/FoxTunes-5.0.1-net48.zip).  
+For additional plugins, download [FoxTunes-5.0.1-Plugins-net48.zip](https://github.com/pudding-fox/FoxTunes.Next/releases/download/5.0.1/FoxTunes-5.0.1-Plugins-net48.zip) (extract and copy required folders to the FoxTunes\lib directory).
 
 There is also a [Microsoft Store](https://www.microsoft.com/store/productId/9MWPJTXWTXLG) package.
 
