@@ -133,12 +133,19 @@ namespace FoxTunes
                     return false;
                 }
             }
+        retry:
             Logger.Write(this, LogLevel.Debug, "Selecting releases: {0}", description);
             releaseLookup.Release = await this.ConfirmRelease(releaseLookup, releases.ToArray()).ConfigureAwait(false);
             if (releaseLookup.Release != null)
             {
                 Logger.Write(this, LogLevel.Debug, "Selected {0}: {1}", description, releaseLookup.Release.Url);
-                return await this.OnLookupSuccess(releaseLookup).ConfigureAwait(false);
+                var result = await this.OnLookupSuccess(releaseLookup).ConfigureAwait(false);
+                if (result)
+                {
+                    return result;
+                }
+                releases = releases.Except(releaseLookup.Release);
+                goto retry;
             }
             else
             {

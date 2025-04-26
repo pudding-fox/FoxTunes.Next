@@ -723,6 +723,11 @@ namespace FoxTunes
             }
             return result;
         }
+
+        public static IEnumerable<T> Except<T>(this IEnumerable<T> sequence, T element)
+        {
+            return sequence.Except(new[] { element });
+        }
     }
 
     public class NumericFallbackComparer : IComparer<string>
