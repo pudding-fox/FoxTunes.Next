@@ -133,6 +133,8 @@ namespace FoxTunes
                     return false;
                 }
             }
+            const int ATTEMPTS = 3;
+            var attempts = 0;
         retry:
             Logger.Write(this, LogLevel.Debug, "Selecting releases: {0}", description);
             releaseLookup.Release = await this.ConfirmRelease(releaseLookup, releases.ToArray()).ConfigureAwait(false);
@@ -144,8 +146,11 @@ namespace FoxTunes
                 {
                     return result;
                 }
-                releases = releases.Except(releaseLookup.Release);
-                goto retry;
+                if (attempts++ < ATTEMPTS)
+                {
+                    releases = releases.Except(releaseLookup.Release);
+                    goto retry;
+                }
             }
             else
             {

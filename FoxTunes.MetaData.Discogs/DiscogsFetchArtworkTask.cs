@@ -25,14 +25,13 @@ namespace FoxTunes
 
         protected override async Task<bool> OnLookupSuccess(Discogs.ReleaseLookup releaseLookup)
         {
-            var result = default(bool);
+            var result = true;
             if (this.ShouldImportFrontCover(releaseLookup))
             {
                 var frontCover = await this.ImportFrontCover(releaseLookup).ConfigureAwait(false);
                 if (!string.IsNullOrEmpty(frontCover))
                 {
                     releaseLookup.MetaData[CommonImageTypes.FrontCover] = frontCover;
-                    result = true;
                 }
                 else
                 {
@@ -47,7 +46,6 @@ namespace FoxTunes
                 if (!string.IsNullOrEmpty(artist))
                 {
                     releaseLookup.MetaData[CommonImageTypes.Artist] = artist;
-                    result = true;
                 }
                 else
                 {
