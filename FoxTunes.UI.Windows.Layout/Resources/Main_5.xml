@@ -11,9 +11,14 @@
           <UIComponentConfiguration Component="18E98420-F039-4504-A116-3D0F26BEAAD5">
             <UIComponentConfiguration Component="A6820FDA-E415-40C6-AEFB-A73B6FBE4C93">
               <UIComponentConfiguration Component="3E899F79-380C-4EF7-8570-4B4E3B3467CB">
-                <UIComponentConfiguration Component="86276AD4-3962-4659-A00F-95065CD92117" />
-                <UIComponentConfiguration Component="F5B28CA5-163F-491B-83B6-9D08DAB11B3F" />
+                <UIComponentConfiguration Component="3E899F79-380C-4EF7-8570-4B4E3B3467CB">
+                  <UIComponentConfiguration Component="86276AD4-3962-4659-A00F-95065CD92117" />
+                  <UIComponentConfiguration Component="F5B28CA5-163F-491B-83B6-9D08DAB11B3F" />
+                  <MetaDataEntry Name="DockLocation" Value="Bottom" />
+                </UIComponentConfiguration>
+                <UIComponentConfiguration Component="3ACC518E-9A7C-4ACD-8299-318C8BBB2D47" />
                 <MetaDataEntry Name="DockLocation" Value="Top" />
+                <MetaDataEntry Name="Collapse" Value="True" />
               </UIComponentConfiguration>
               <UIComponentConfiguration Component="A6820FDA-E415-40C6-AEFB-A73B6FBE4C93">
                 <UIComponentConfiguration Component="1155473E-FA29-4D31-8A28-4E4F5582261A">
