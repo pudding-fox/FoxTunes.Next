@@ -10,9 +10,6 @@ namespace FoxTunes
 {
     public class TagLibMetaDataSource : BaseComponent, IMetaDataSource
     {
-        //10MB
-        public static int MAX_TAG_SIZE = 10240000;
-
         public TagLibMetaDataSource()
         {
             this.Warnings = new ConcurrentDictionary<string, IList<string>>(StringComparer.OrdinalIgnoreCase);
@@ -52,6 +49,8 @@ namespace FoxTunes
 
         public BooleanConfigurationElement CopyImages { get; private set; }
 
+        public IntegerConfigurationElement MaxTagSize { get; private set; }
+
         public IntegerConfigurationElement MaxImageSize { get; private set; }
 
         public BooleanConfigurationElement Extended { get; private set; }
@@ -89,6 +88,10 @@ namespace FoxTunes
             this.CopyImages = this.Configuration.GetElement<BooleanConfigurationElement>(
                 MetaDataBehaviourConfiguration.SECTION,
                 MetaDataBehaviourConfiguration.COPY_IMAGES_ELEMENT
+            );
+            this.MaxTagSize = this.Configuration.GetElement<IntegerConfigurationElement>(
+                MetaDataBehaviourConfiguration.SECTION,
+                MetaDataBehaviourConfiguration.MAX_TAG_SIZE
             );
             this.MaxImageSize = this.Configuration.GetElement<IntegerConfigurationElement>(
                 MetaDataBehaviourConfiguration.SECTION,
@@ -163,7 +166,7 @@ namespace FoxTunes
                     {
                         this.AddWarnings(fileName, file.CorruptionReasons);
                     }
-                    if (file.InvariantStartPosition > MAX_TAG_SIZE)
+                    if (file.InvariantStartPosition > (this.MaxTagSize.Value * 1024000))
                     {
                         collect = true;
                     }
@@ -272,7 +275,7 @@ namespace FoxTunes
                             this.SetTag(metaDataItem, file);
                             break;
                         case MetaDataItemType.Image:
-                            if (file.InvariantStartPosition > MAX_TAG_SIZE)
+                            if (file.InvariantStartPosition > (this.MaxTagSize.Value * 1024000))
                             {
                                 collect = true;
                             }

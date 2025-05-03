@@ -26,6 +26,8 @@ namespace FoxTunes
 
         public const string IMAGES_PREFERENCE_LOOSE = "BBBB2170-3E86-4255-9BC6-EF31D870741E";
 
+        public const string MAX_TAG_SIZE = "EEFF49CC-B1D3-46D4-9032-9386A5E9162D";
+
         public const string MAX_IMAGE_SIZE = "EEFFD218-2EF5-4256-A6FE-A9266BBEEC72";
 
         public const string COPY_IMAGES_ELEMENT = "FFFFA875-8195-49AF-A1A4-2EAB2294A6D8";
@@ -74,11 +76,13 @@ namespace FoxTunes
                 .WithElement(
                     new TextConfigurationElement(LOOSE_IMAGES_ARTIST, Strings.MetaDataBehaviourConfiguration_Artist, path: Strings.General_Advanced).WithValue("artist").DependsOn(SECTION, READ_LOOSE_IMAGES))
                 .WithElement(
-                    new TextConfigurationElement(LOOSE_IMAGES_FOLDER, Strings.MetaDataBehaviourConfiguration_Folder, path: Strings.General_Advanced).WithValue("covers").DependsOn(SECTION, READ_LOOSE_IMAGES))
+                    new TextConfigurationElement(LOOSE_IMAGES_FOLDER, Strings.MetaDataBehaviourConfiguration_Folder, path: Strings.General_Advanced).WithValue("cover, covers, scans, artwork, artworks").DependsOn(SECTION, READ_LOOSE_IMAGES))
                 .WithElement(
                     new SelectionConfigurationElement(IMAGES_PREFERENCE, Strings.MetaDataBehaviourConfiguration_Preference, path: Strings.General_Advanced).WithOptions(GetImagesPreferenceOptions()).DependsOn(SECTION, READ_EMBEDDED_IMAGES).DependsOn(SECTION, READ_LOOSE_IMAGES))
                 .WithElement(
-                    new IntegerConfigurationElement(MAX_IMAGE_SIZE, Strings.MetaDataBehaviourConfiguration_ImageSize, path: Strings.General_Advanced).WithValue(4).WithValidationRule(new IntegerValidationRule(1, 16)))
+                    new IntegerConfigurationElement(MAX_TAG_SIZE, Strings.MetaDataBehaviourConfiguration_TagSize, path: Strings.General_Advanced).WithValue(16).WithValidationRule(new IntegerValidationRule(1, 16)))
+                .WithElement(
+                    new IntegerConfigurationElement(MAX_IMAGE_SIZE, Strings.MetaDataBehaviourConfiguration_ImageSize, path: Strings.General_Advanced).WithValue(16).WithValidationRule(new IntegerValidationRule(1, 16)))
                 .WithElement(
                     new BooleanConfigurationElement(COPY_IMAGES_ELEMENT, Strings.MetaDataBehaviourConfiguration_ImageCopy, path: Strings.General_Advanced).WithValue(true))
                 .WithElement(

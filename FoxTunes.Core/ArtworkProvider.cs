@@ -14,7 +14,7 @@ namespace FoxTunes
 
         const string DELIMITER = ",";
 
-        public static readonly string[] EXTENSIONS = new[] { ".jpg", ".jpeg", ".png", ".bmp", ".bin" };
+        public static readonly string[] EXTENSIONS = new[] { ".jpg", ".jpeg", ".png", ".bmp", ".bin", ".tif" };
 
         public ArtworkProvider()
         {

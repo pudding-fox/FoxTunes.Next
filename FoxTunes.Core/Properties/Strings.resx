@@ -225,6 +225,9 @@
   <data name="MetaDataBehaviourConfiguration.Section" xml:space="preserve">
     <value>Meta Data</value>
   </data>
+  <data name="MetaDataBehaviourConfiguration.TagSize" xml:space="preserve">
+    <value>Max Tag Size (MB)</value>
+  </data>
   <data name="MetaDataBehaviourConfiguration.Threads" xml:space="preserve">
     <value>Background Threads</value>
   </data>

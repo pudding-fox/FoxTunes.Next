@@ -74,9 +74,9 @@ namespace FoxTunes
             var types = ArtworkType.None;
             try
             {
-                if (file.InvariantStartPosition > TagLibMetaDataSource.MAX_TAG_SIZE)
+                if (file.InvariantStartPosition > source.MaxTagSize.Value * 1024000)
                 {
-                    Logger.Write(typeof(ImageManager), LogLevel.Warn, "Not importing images from file \"{0}\" due to size: {1} > {2}", file.Name, file.InvariantStartPosition, TagLibMetaDataSource.MAX_TAG_SIZE);
+                    Logger.Write(typeof(ImageManager), LogLevel.Warn, "Not importing images from file \"{0}\" due to size: {1} > {2}", file.Name, file.InvariantStartPosition, source.MaxTagSize.Value * 1024000);
                     return false;
                 }
 

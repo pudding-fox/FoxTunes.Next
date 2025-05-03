@@ -1,6 +1,7 @@
 ﻿using FoxTunes.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using TagLib;
@@ -27,9 +28,9 @@ namespace FoxTunes
         {
             try
             {
-                if (file.InvariantStartPosition > TagLibMetaDataSource.MAX_TAG_SIZE)
+                if (file.InvariantStartPosition > (source.MaxTagSize.Value * 1024000))
                 {
-                    Logger.Write(typeof(ImageManager), LogLevel.Warn, "Not importing documents from file \"{0}\" due to size: {1} > {2}", file.Name, file.InvariantStartPosition, TagLibMetaDataSource.MAX_TAG_SIZE);
+                    Logger.Write(typeof(ImageManager), LogLevel.Warn, "Not importing documents from file \"{0}\" due to size: {1} > {2}", file.Name, file.InvariantStartPosition, source.MaxTagSize.Value * 1024000);
                     return;
                 }
 

@@ -385,6 +385,15 @@ namespace FoxTunes {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Max Tag Size (MB).
+        /// </summary>
+        internal static string MetaDataBehaviourConfiguration_TagSize {
+            get {
+                return ResourceManager.GetString("MetaDataBehaviourConfiguration.TagSize", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Background Threads.
         /// </summary>
         internal static string MetaDataBehaviourConfiguration_Threads {
