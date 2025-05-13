@@ -182,7 +182,7 @@ namespace FoxTunes
                     MetaDataItemType.Image,
                     updateType
                 ),
-                this.GetMetaDataValues(releaseLookups, CommonImageTypes.FrontCover)
+                this.GetMetaDataValues(releaseLookups, CommonImageTypes.FrontCover, true)
             ).ConfigureAwait(false);
         }
 
@@ -205,7 +205,7 @@ namespace FoxTunes
                     MetaDataItemType.Image,
                     updateType
                 ),
-                this.GetMetaDataValues(releaseLookups, CommonImageTypes.FrontCover)
+                this.GetMetaDataValues(releaseLookups, CommonImageTypes.FrontCover, true)
             ).ConfigureAwait(false);
         }
 
@@ -224,7 +224,7 @@ namespace FoxTunes
             return releaseLookups;
         }
 
-        public OnDemandMetaDataValues GetMetaDataValues(IEnumerable<Discogs.ReleaseLookup> releaseLookups, string name)
+        public OnDemandMetaDataValues GetMetaDataValues(IEnumerable<Discogs.ReleaseLookup> releaseLookups, string name, bool writeToFiles)
         {
             var values = new List<OnDemandMetaDataValue>();
             foreach (var releaseLookup in releaseLookups)
@@ -244,7 +244,7 @@ namespace FoxTunes
                 }
             }
             var flags = MetaDataUpdateFlags.None;
-            if (this.WriteTags.Value)
+            if (this.WriteTags.Value && writeToFiles)
             {
                 flags |= MetaDataUpdateFlags.WriteToFiles;
             }

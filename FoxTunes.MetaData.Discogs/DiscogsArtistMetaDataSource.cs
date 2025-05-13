@@ -65,7 +65,7 @@ namespace FoxTunes
         public async Task<OnDemandMetaDataValues> GetValues(IEnumerable<IFileData> fileDatas, OnDemandMetaDataRequest request)
         {
             var releaseLookups = await this.Behaviour.FetchReleases(fileDatas, request.UpdateType).ConfigureAwait(false);
-            return this.Behaviour.GetMetaDataValues(releaseLookups, CommonImageTypes.Artist);
+            return this.Behaviour.GetMetaDataValues(releaseLookups, CommonImageTypes.Artist, false);
         }
     }
 }
