@@ -342,6 +342,9 @@
   <data name="MetaDataItemType.Tag" xml:space="preserve">
     <value>Tag</value>
   </data>
+  <data name="MetaDataName.BackCover" xml:space="preserve">
+    <value>Back Cover</value>
+  </data>
   <data name="MetaDataName.Description" xml:space="preserve">
     <value>Codec</value>
   </data>
@@ -360,6 +363,9 @@
   <data name="MetaDataName.FileSize" xml:space="preserve">
     <value>Size</value>
   </data>
+  <data name="MetaDataName.FrontCover" xml:space="preserve">
+    <value>Front Cover</value>
+  </data>
   <data name="MetaDataName.IsCompilation" xml:space="preserve">
     <value>Compilation</value>
   </data>
@@ -377,6 +383,9 @@
   </data>
   <data name="MetaDataName.SelectionCount" xml:space="preserve">
     <value>Items Selected</value>
+  </data>
+  <data name="MetaDataName.__FT_Artist" xml:space="preserve">
+    <value>Artist</value>
   </data>
   <data name="MetaDataProvidersSettingsDialog.Cancel" xml:space="preserve">
     <value>Cancel</value>

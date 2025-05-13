@@ -41,7 +41,7 @@ namespace FoxTunes
 
         public string Resize(string fileName, int width, int height, bool preserveAspectRatio)
         {
-            var id = this.GetImageId(fileName, width, height);
+            var id = this.GetImageId(fileName, width, height, preserveAspectRatio);
             return this.Resize(id, () => Bitmap.FromFile(fileName), width, height, preserveAspectRatio);
         }
 
@@ -79,11 +79,11 @@ namespace FoxTunes
                     var ratioY = (double)height / (double)image.Height;
                     var ratio = ratioX < ratioY ? ratioX : ratioY;
                     graphics.DrawImage(
-                        image, 
+                        image,
                         new Rectangle(
-                            Convert.ToInt32((width - (image.Width * ratio)) / 2), 
-                            Convert.ToInt32((height - (image.Height * ratio)) / 2), 
-                            Convert.ToInt32(image.Width * ratio), 
+                            Convert.ToInt32((width - (image.Width * ratio)) / 2),
+                            Convert.ToInt32((height - (image.Height * ratio)) / 2),
+                            Convert.ToInt32(image.Width * ratio),
                             Convert.ToInt32(image.Height * ratio)
                         )
                     );
@@ -128,7 +128,7 @@ namespace FoxTunes
         }
 
 
-        private string GetImageId(string fileName, int width, int height)
+        private string GetImageId(string fileName, int width, int height, bool preserveAspectRatio)
         {
             var hashCode = default(int);
             unchecked
@@ -139,6 +139,7 @@ namespace FoxTunes
                 }
                 hashCode = (hashCode * 29) + width.GetHashCode();
                 hashCode = (hashCode * 29) + height.GetHashCode();
+                hashCode = (hashCode * 29) + preserveAspectRatio.GetHashCode();
             }
             return Math.Abs(hashCode).ToString();
         }

@@ -736,6 +736,24 @@ namespace FoxTunes {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Artist.
+        /// </summary>
+        internal static string MetaDataName___FT_Artist {
+            get {
+                return ResourceManager.GetString("MetaDataName.__FT_Artist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Back Cover.
+        /// </summary>
+        internal static string MetaDataName_BackCover {
+            get {
+                return ResourceManager.GetString("MetaDataName.BackCover", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Codec.
         /// </summary>
         internal static string MetaDataName_Description {
@@ -786,6 +804,15 @@ namespace FoxTunes {
         internal static string MetaDataName_FileSize {
             get {
                 return ResourceManager.GetString("MetaDataName.FileSize", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Front Cover.
+        /// </summary>
+        internal static string MetaDataName_FrontCover {
+            get {
+                return ResourceManager.GetString("MetaDataName.FrontCover", resourceCulture);
             }
         }
         

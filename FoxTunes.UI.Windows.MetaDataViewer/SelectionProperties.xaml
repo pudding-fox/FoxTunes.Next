@@ -12,7 +12,7 @@
     <UserControl.Resources>
         <LocalViewModel:SelectionProperties x:Key="ViewModel"></LocalViewModel:SelectionProperties>
         <ViewModel:MetaDataNameConverter x:Key="MetaDataNameConverter"></ViewModel:MetaDataNameConverter>
-        <ViewModel:ArtworkImageConverter x:Key="ArtworkImageConverter" Width="100" Height="100"></ViewModel:ArtworkImageConverter>
+        <ViewModel:ArtworkImageConverter x:Key="ArtworkImageConverter" Width="100" Height="100"  PreserveAspectRatio="True"></ViewModel:ArtworkImageConverter>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"></BooleanToVisibilityConverter>
         <SolidColorBrush x:Key="Transparent" Color="Transparent"></SolidColorBrush>
     </UserControl.Resources>

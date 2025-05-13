@@ -62,7 +62,7 @@ namespace FoxTunes
         {
             if (cache)
             {
-                return this.Store.GetOrAdd(fileName, width, height, () => this.LoadCore(fileName, width, height, preserveAspectRatio));
+                return this.Store.GetOrAdd(fileName, width, height, preserveAspectRatio, () => this.LoadCore(fileName, width, height, preserveAspectRatio));
             }
             return this.LoadCore(fileName, width, height, preserveAspectRatio);
         }
@@ -117,7 +117,7 @@ namespace FoxTunes
         {
             if (cache)
             {
-                return this.Store.GetOrAdd(id, width, height, () => this.LoadCore(factory, width, height));
+                return this.Store.GetOrAdd(id, width, height, false, () => this.LoadCore(factory, width, height));
             }
             return this.LoadCore(factory, width, height);
         }
@@ -164,9 +164,9 @@ namespace FoxTunes
 
             public CappedDictionary<Key, ImageSource> Store { get; private set; }
 
-            public ImageSource GetOrAdd(string fileName, int width, int height, Func<ImageSource> factory)
+            public ImageSource GetOrAdd(string fileName, int width, int height, bool preserveAspectRatio, Func<ImageSource> factory)
             {
-                var key = new Key(fileName, width, height);
+                var key = new Key(fileName, width, height, preserveAspectRatio);
                 return this.Store.GetOrAdd(key, factory);
             }
 
@@ -177,7 +177,7 @@ namespace FoxTunes
 
             public class Key : IEquatable<Key>
             {
-                public Key(string fileName, int width, int height)
+                public Key(string fileName, int width, int height, bool preserveAspectRatio)
                 {
                     this.FileName = fileName;
                     this.Width = width;
@@ -189,6 +189,8 @@ namespace FoxTunes
                 public int Width { get; private set; }
 
                 public int Height { get; private set; }
+
+                public bool PreserveAspectRatio { get; private set; }
 
                 public virtual bool Equals(Key other)
                 {
@@ -212,6 +214,10 @@ namespace FoxTunes
                     {
                         return false;
                     }
+                    if (this.PreserveAspectRatio != other.PreserveAspectRatio)
+                    {
+                        return false;
+                    }
                     return true;
                 }
 
@@ -231,6 +237,7 @@ namespace FoxTunes
                         }
                         hashCode += this.Width.GetHashCode();
                         hashCode += this.Height.GetHashCode();
+                        hashCode += this.PreserveAspectRatio.GetHashCode();
                     }
                     return hashCode;
                 }

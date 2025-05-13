@@ -13,15 +13,15 @@ namespace FoxTunes
 
         public CappedDictionary<Key, ImageBrush> Store { get; private set; }
 
-        public bool TryGetValue(T value, int width, int height, out ImageBrush brush)
+        public bool TryGetValue(T value, int width, int height, bool preserveAspectRatio, out ImageBrush brush)
         {
-            var key = new Key(value, width, height);
+            var key = new Key(value, width, height, preserveAspectRatio);
             return this.Store.TryGetValue(key, out brush);
         }
 
-        public ImageBrush GetOrAdd(T value, int width, int height, Func<ImageBrush> factory)
+        public ImageBrush GetOrAdd(T value, int width, int height, bool preserveAspectRatio, Func<ImageBrush> factory)
         {
-            var key = new Key(value, width, height);
+            var key = new Key(value, width, height, preserveAspectRatio);
             return this.Store.GetOrAdd(key, factory);
         }
 
@@ -32,11 +32,12 @@ namespace FoxTunes
 
         public class Key : IEquatable<Key>
         {
-            public Key(T value, int width, int height)
+            public Key(T value, int width, int height, bool preserveAspectRatio)
             {
                 this.Value = value;
                 this.Width = width;
                 this.Height = height;
+                this.PreserveAspectRatio = preserveAspectRatio;
             }
 
             public T Value { get; private set; }
@@ -44,6 +45,8 @@ namespace FoxTunes
             public int Width { get; private set; }
 
             public int Height { get; private set; }
+
+            public bool PreserveAspectRatio { get; private set; }
 
             public virtual bool Equals(Key other)
             {
@@ -67,6 +70,10 @@ namespace FoxTunes
                 {
                     return false;
                 }
+                if (this.PreserveAspectRatio != other.PreserveAspectRatio)
+                {
+                    return false;
+                }
                 return true;
             }
 
@@ -86,6 +93,7 @@ namespace FoxTunes
                     }
                     hashCode += this.Width.GetHashCode();
                     hashCode += this.Height.GetHashCode();
+                    hashCode += this.PreserveAspectRatio.GetHashCode();
                 }
                 return hashCode;
             }

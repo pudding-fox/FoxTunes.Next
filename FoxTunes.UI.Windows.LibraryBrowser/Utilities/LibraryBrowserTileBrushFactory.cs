@@ -105,10 +105,10 @@ namespace FoxTunes
             if (cache)
             {
                 var value = new Func<Task<ImageBrush>>(() => this.Factory.StartNew(
-                    () => this.Store.GetOrAdd(new Tuple<LibraryHierarchyNode, LibraryBrowserImageMode>(libraryHierarchyNode, libraryBrowserTile.Mode), libraryBrowserTile.Width, libraryBrowserTile.Height, factory)
+                    () => this.Store.GetOrAdd(new Tuple<LibraryHierarchyNode, LibraryBrowserImageMode>(libraryHierarchyNode, libraryBrowserTile.Mode), libraryBrowserTile.Width, libraryBrowserTile.Height, false, factory)
                 ));
                 var brush = default(ImageBrush);
-                if (this.Store.TryGetValue(new Tuple<LibraryHierarchyNode, LibraryBrowserImageMode>(libraryHierarchyNode, libraryBrowserTile.Mode), libraryBrowserTile.Width, libraryBrowserTile.Height, out brush))
+                if (this.Store.TryGetValue(new Tuple<LibraryHierarchyNode, LibraryBrowserImageMode>(libraryHierarchyNode, libraryBrowserTile.Mode), libraryBrowserTile.Width, libraryBrowserTile.Height, false, out brush))
                 {
                     return new MonitoringAsyncResult<ImageBrush>(libraryHierarchyNode, brush, value);
                 }

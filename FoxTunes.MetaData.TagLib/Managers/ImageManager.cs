@@ -19,18 +19,20 @@ namespace FoxTunes
 
         private static readonly string PREFIX = typeof(TagLibMetaDataSource).Name;
 
-        public static ArtworkType ArtworkTypes = ArtworkType.FrontCover | ArtworkType.BackCover;
+        public static ArtworkType ArtworkTypes = ArtworkType.FrontCover | ArtworkType.BackCover | ArtworkType.Artist;
 
         public static readonly IDictionary<ArtworkType, PictureType> ArtworkTypeMapping = new Dictionary<ArtworkType, PictureType>()
         {
             { ArtworkType.FrontCover, PictureType.FrontCover },
             { ArtworkType.BackCover, PictureType.BackCover },
+            { ArtworkType.Artist, PictureType.Artist }
         };
 
         public static readonly IDictionary<PictureType, ArtworkType> PrimaryPictureTypeMapping = new Dictionary<PictureType, ArtworkType>()
         {
             { PictureType.FrontCover, ArtworkType.FrontCover },
             { PictureType.BackCover, ArtworkType.BackCover },
+            { PictureType.Artist, ArtworkType.Artist }
         };
 
         //Embedded images are sometimes misconfigured, try these if nothing else works.

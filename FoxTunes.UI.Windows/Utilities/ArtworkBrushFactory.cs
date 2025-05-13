@@ -89,7 +89,7 @@ namespace FoxTunes
                 return AsyncResult<ImageBrush>.FromValue(placeholder);
             }
             var brush = default(ImageBrush);
-            if (this.Store.TryGetValue(fileName, width, height, out brush))
+            if (this.Store.TryGetValue(fileName, width, height, preserveAspectRatio, out brush))
             {
                 if (brush != null)
                 {
@@ -102,7 +102,7 @@ namespace FoxTunes
             }
             return new AsyncResult<ImageBrush>(placeholder, this.Factory.StartNew(() =>
             {
-                return this.Store.GetOrAdd(fileName, width, height, () => this.Create(fileName, width, height, preserveAspectRatio, true));
+                return this.Store.GetOrAdd(fileName, width, height, preserveAspectRatio, () => this.Create(fileName, width, height, preserveAspectRatio, true));
             }));
         }
 

@@ -15,7 +15,7 @@
     <UserControl.Resources>
         <LocalViewModel:MetaDataEditor x:Key="ViewModel"></LocalViewModel:MetaDataEditor>
         <ViewModel:NegatingBooleanToVisibilityConverter x:Key="NegatingBooleanToVisibilityConverter"></ViewModel:NegatingBooleanToVisibilityConverter>
-        <ViewModel:ArtworkImageConverter x:Key="ArtworkImageConverter" Width="100" Height="100" ShowPlaceholder="False"></ViewModel:ArtworkImageConverter>
+        <ViewModel:ArtworkImageConverter x:Key="ArtworkImageConverter" Width="100" Height="100" ShowPlaceholder="False" PreserveAspectRatio="True"></ViewModel:ArtworkImageConverter>
         <ViewModel:StringToBooleanConverter x:Key="StringToBooleanConverter"></ViewModel:StringToBooleanConverter>
         <ViewModel:MetaDataNameConverter x:Key="MetaDataNameConverter"></ViewModel:MetaDataNameConverter>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"></BooleanToVisibilityConverter>

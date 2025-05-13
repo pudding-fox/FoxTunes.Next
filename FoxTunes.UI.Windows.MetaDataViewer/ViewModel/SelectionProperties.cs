@@ -59,7 +59,9 @@ namespace FoxTunes.ViewModel
 
         private static readonly string[] IMAGES = new[]
         {
-            CommonImageTypes.FrontCover
+            CommonImageTypes.FrontCover,
+            CommonImageTypes.BackCover,
+            CommonImageTypes.Artist
         };
 
         private static readonly IDictionary<string, ValueProvider> PROVIDERS = new Dictionary<string, ValueProvider>(StringComparer.OrdinalIgnoreCase)
@@ -72,6 +74,8 @@ namespace FoxTunes.ViewModel
             { CommonMetaData.ReplayGainAlbumGain, DecibelValueProvider.Instance },
             { CommonMetaData.ReplayGainTrackGain, DecibelValueProvider.Instance },
             { CommonImageTypes.FrontCover, MetaDataValueProvider.Instance },
+            { CommonImageTypes.BackCover, MetaDataValueProvider.Instance },
+            { CommonImageTypes.Artist, MetaDataValueProvider.Instance },
         };
 
         private static readonly IDictionary<string, ValueAggregator> AGGREGATORS = new Dictionary<string, ValueAggregator>(StringComparer.OrdinalIgnoreCase)
