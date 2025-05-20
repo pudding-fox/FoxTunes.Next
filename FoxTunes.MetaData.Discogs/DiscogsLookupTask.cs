@@ -121,21 +121,22 @@ namespace FoxTunes
         protected virtual async Task<bool> Lookup(Discogs.ReleaseLookup releaseLookup)
         {
             var description = releaseLookup.ToString();
-            Logger.Write(this, LogLevel.Debug, "Fetching master releases: {0}", description);
-            var releases = await this.Discogs.GetReleases(releaseLookup, true).ConfigureAwait(false);
-            if (!releases.Any())
+            var master = true;
+        retry:
+            if (master)
+            {
+                Logger.Write(this, LogLevel.Debug, "Fetching master releases: {0}", description);
+            }
+            else
             {
                 Logger.Write(this, LogLevel.Warn, "No master releases: {0}, fetching others", description);
-                releases = await this.Discogs.GetReleases(releaseLookup, false).ConfigureAwait(false);
-                if (!releases.Any())
-                {
-                    Logger.Write(this, LogLevel.Warn, "No releases: {0}", description);
-                    return false;
-                }
             }
-            const int ATTEMPTS = 3;
-            var attempts = 0;
-        retry:
+            var releases = await this.Discogs.GetReleases(releaseLookup, master).ConfigureAwait(false);
+            if (!releases.Any())
+            {
+                Logger.Write(this, LogLevel.Warn, "No releases: {0}", description);
+                return false;
+            }
             Logger.Write(this, LogLevel.Debug, "Selecting releases: {0}", description);
             releaseLookup.Release = await this.ConfirmRelease(releaseLookup, releases.ToArray()).ConfigureAwait(false);
             if (releaseLookup.Release != null)
@@ -146,11 +147,8 @@ namespace FoxTunes
                 {
                     return result;
                 }
-                if (attempts++ < ATTEMPTS)
-                {
-                    releases = releases.Except(releaseLookup.Release);
-                    goto retry;
-                }
+                master = false;
+                goto retry;
             }
             else
             {
