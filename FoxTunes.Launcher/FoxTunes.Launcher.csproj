@@ -11,7 +11,7 @@
     <Platforms>AnyCPU</Platforms>
     <SkipEnsureBindingRedirects>true</SkipEnsureBindingRedirects>
     <SkipValidatePackageReferences>true</SkipValidatePackageReferences>
-    <AssemblyVersion>5.0.1.0</AssemblyVersion>
+    <AssemblyVersion>5.0.2.0</AssemblyVersion>
   </PropertyGroup>
 
   <ItemGroup>

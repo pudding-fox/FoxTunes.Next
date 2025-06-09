@@ -575,6 +575,10 @@ namespace FoxTunes
 
         public static string Remove(this string subject, Func<char, bool> predicate)
         {
+            if (string.IsNullOrEmpty(subject))
+            {
+                return string.Empty;
+            }
             var characters = subject.Where(@char => !predicate(@char));
             return new string(characters.ToArray());
         }
