@@ -106,7 +106,7 @@ namespace FoxTunes
             }
             catch (Exception e)
             {
-                Logger.Write(this, LogLevel.Debug, "Failed to add file \"{0}\" to playlist: {0}", fileName, e.Message);
+                Logger.Write(this, LogLevel.Debug, "Failed to add file \"{0}\" to playlist: {1}", fileName, e.Message);
                 return false;
             }
         }
