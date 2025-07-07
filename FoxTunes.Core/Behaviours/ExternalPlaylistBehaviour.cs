@@ -3,6 +3,7 @@ using FoxDb.Interfaces;
 using FoxTunes.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Drawing.Drawing2D;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -91,7 +92,7 @@ namespace FoxTunes
             {
                 return false;
             }
-            if (!File.Exists(path) || !PLSHelper.EXTENSIONS.Contains(path.GetExtension(), StringComparer.OrdinalIgnoreCase))
+            if (!File.Exists(path) || !PLSHelper.EXTENSIONS.Any(extension => path.EndsWith(extension, StringComparison.OrdinalIgnoreCase)))
             {
                 return false;
             }
