@@ -29,7 +29,7 @@ namespace FoxTunes
 
         protected override DatabaseTestResult OnTest(IDatabase database)
         {
-            if (File.Exists(SQLiteDatabase.FileName))
+            if (File.Exists(SQLiteDatabase._FileName))
             {
                 try
                 {
@@ -64,12 +64,12 @@ namespace FoxTunes
         protected virtual void CreateDatabase(IDatabase database)
         {
             var exception = default(Exception);
-            if (File.Exists(SQLiteDatabase.FileName))
+            if (File.Exists(SQLiteDatabase._FileName))
             {
                 SQLiteConnection.ClearAllPools();
-                File.Delete(SQLiteDatabase.FileName);
+                File.Delete(SQLiteDatabase._FileName);
             }
-            database.Provider.CreateDatabase(SQLiteDatabase.FileName);
+            database.Provider.CreateDatabase(SQLiteDatabase._FileName);
             try
             {
                 database.Execute(database.QueryFactory.Create(Resources.Database));
@@ -82,18 +82,18 @@ namespace FoxTunes
                 try
                 {
                     database.Connection.Close();
-                    database.Provider.DeleteDatabase(SQLiteDatabase.FileName);
+                    database.Provider.DeleteDatabase(SQLiteDatabase._FileName);
                 }
                 catch
                 {
                     //Nothing can be done.
                 }
             }
-            if (File.Exists(SQLiteDatabase.FileName))
+            if (File.Exists(SQLiteDatabase._FileName))
             {
                 try
                 {
-                    File.Delete(SQLiteDatabase.FileName);
+                    File.Delete(SQLiteDatabase._FileName);
                 }
                 catch
                 {

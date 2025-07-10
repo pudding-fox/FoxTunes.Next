@@ -70,7 +70,7 @@ namespace FoxTunes
 
         protected virtual void CreateModel()
         {
-            this.Model = LLamaWeights.LoadFromFile(this.Parameters));
+            this.Model = LLamaWeights.LoadFromFile(this.Parameters);
         }
 
         protected virtual void CreateContext()
