@@ -437,5 +437,13 @@
                 return Strings.PlaylistSelectorList_Remove;
             }
         }
+
+        public static string PlaylistConfigDialog_Prompt
+        {
+            get
+            {
+                return Strings.PlaylistConfigDialog_Prompt;
+            }
+        }
     }
 }

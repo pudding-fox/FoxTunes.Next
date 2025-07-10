@@ -20,6 +20,9 @@ namespace FoxTunes
 
         public const string DefaultGenres = "";
 
+        //TODO: This actually belongs to AIPlaylistBehaviour, in another assembly.
+        public const string DefaultPrompt = "";
+
         public const bool DefaultLike = false;
 
         public const int DefaultMinRating = 4;

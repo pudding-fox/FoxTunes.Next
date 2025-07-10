@@ -465,6 +465,9 @@
   <data name="PlaylistConfigDialog.MinRating" xml:space="preserve">
     <value>Min Rating</value>
   </data>
+  <data name="PlaylistConfigDialog.Prompt" xml:space="preserve">
+    <value>Prompt</value>
+  </data>
   <data name="PlaylistManager.Cancel" xml:space="preserve">
     <value>Cancel</value>
   </data>

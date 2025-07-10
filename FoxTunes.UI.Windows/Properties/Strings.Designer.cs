@@ -1105,6 +1105,15 @@ namespace FoxTunes {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Prompt.
+        /// </summary>
+        internal static string PlaylistConfigDialog_Prompt {
+            get {
+                return ResourceManager.GetString("PlaylistConfigDialog.Prompt", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Cancel.
         /// </summary>
         internal static string PlaylistManager_Cancel {

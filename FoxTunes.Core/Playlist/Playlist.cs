@@ -201,6 +201,7 @@ namespace FoxTunes
         Selection = 1,
         Dynamic = 2,
         Smart = 3,
-        Everything = 4
+        Everything = 4,
+        AI = 8
     }
 }

@@ -13,6 +13,8 @@ namespace FoxTunes.ViewModel
                     return new DynamicPlaylistConfig(playlist);
                 case PlaylistType.Smart:
                     return new SmartPlaylistConfig(playlist);
+                case PlaylistType.AI:
+                    return new AIPlaylistConfig(playlist);
             }
             return default(PlaylistConfigBase);
         }
@@ -204,6 +206,44 @@ namespace FoxTunes.ViewModel
         protected override Freezable CreateInstanceCore()
         {
             return new SmartPlaylistConfig(null);
+        }
+    }
+
+    public class AIPlaylistConfig : PlaylistConfigBase
+    {
+        public AIPlaylistConfig(Playlist playlist) : base(playlist)
+        {
+
+        }
+
+        public string Prompt
+        {
+            get
+            {
+                return this.Config.GetValueOrDefault(nameof(Prompt), Convert.ToString(SmartPlaylistBehaviour.DefaultPrompt));
+            }
+            set
+            {
+                this.Config[nameof(Prompt)] = value;
+                this.OnPromptChanged();
+            }
+        }
+
+        protected virtual void OnPromptChanged()
+        {
+            this.Config.Save();
+            if (this.PromptChanged != null)
+            {
+                this.PromptChanged(this, EventArgs.Empty);
+            }
+            this.OnPropertyChanged("Prompt");
+        }
+
+        public event EventHandler PromptChanged;
+
+        protected override Freezable CreateInstanceCore()
+        {
+            return new AIPlaylistConfig(null);
         }
     }
 }
