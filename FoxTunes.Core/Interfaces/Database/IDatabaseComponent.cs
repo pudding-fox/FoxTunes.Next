@@ -5,6 +5,8 @@ namespace FoxTunes.Interfaces
 {
     public interface IDatabaseComponent : IDatabase, IBaseComponent, IInitializable
     {
+        string FileName { get; }
+
         IsolationLevel PreferredIsolationLevel { get; }
 
         IDatabaseTables Tables { get; }

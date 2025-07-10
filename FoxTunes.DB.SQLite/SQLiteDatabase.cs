@@ -9,7 +9,7 @@ namespace FoxTunes
 {
     public class SQLiteDatabase : Database
     {
-        public static readonly string FileName = Path.Combine(
+        new public static readonly string _FileName = Path.Combine(
             Publication.StoragePath,
             "Database.db"
         );
@@ -18,6 +18,14 @@ namespace FoxTunes
             : base(GetProvider())
         {
 
+        }
+
+        public override string FileName
+        {
+            get
+            {
+                return _FileName;
+            }
         }
 
         public override IsolationLevel PreferredIsolationLevel
@@ -38,7 +46,7 @@ namespace FoxTunes
         private static IProvider GetProvider()
         {
             var builder = new SQLiteConnectionStringBuilder();
-            builder.DataSource = FileName;
+            builder.DataSource = _FileName;
             builder.Pooling = true;
             builder.JournalMode = SQLiteJournalModeEnum.Wal;
             builder["cache"] = "shared";

@@ -24,6 +24,8 @@ namespace FoxTunes
 
         public ICore Core { get; private set; }
 
+        public abstract string FileName { get; }
+
         public abstract IsolationLevel PreferredIsolationLevel { get; }
 
         public IDatabaseTables Tables { get; private set; }
