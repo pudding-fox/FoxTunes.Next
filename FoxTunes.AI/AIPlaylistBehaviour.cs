@@ -1,14 +1,12 @@
 ﻿using FoxTunes.Interfaces;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace FoxTunes.AI
 {
     [ComponentDependency(Slot = ComponentSlots.Database)]
-    public class AIPlaylistBehaviour : PlaylistBehaviourBase
+    public class AIPlaylistBehaviour : PlaylistBehaviourBase, IConfigurableComponent
     {
         public const string Prompt = "Genres";
 
@@ -58,6 +56,11 @@ namespace FoxTunes.AI
                 task.InitializeComponent(this.Core);
                 await task.Run().ConfigureAwait(false);
             }
+        }
+
+        public IEnumerable<ConfigurationSection> GetConfigurationSections()
+        {
+            return AIPlaylistBehaviourConfiguration.GetConfigurationSections();
         }
     }
 }

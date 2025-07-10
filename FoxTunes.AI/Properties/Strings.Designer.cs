@@ -59,5 +59,23 @@ namespace FoxTunes {
                 resourceCulture = value;
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Model Location.
+        /// </summary>
+        internal static string AIPlaylistBehaviourConfiguration_ModelLocation {
+            get {
+                return ResourceManager.GetString("AIPlaylistBehaviourConfiguration.ModelLocation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to AI.
+        /// </summary>
+        internal static string AIPlaylistBehaviourConfiguration_Section {
+            get {
+                return ResourceManager.GetString("AIPlaylistBehaviourConfiguration.Section", resourceCulture);
+            }
+        }
     }
 }

@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net40;net48</TargetFrameworks>
+    <TargetFrameworks>net48</TargetFrameworks>
     <AssemblyName>FoxTunes.AI</AssemblyName>
     <OutputPath>..\distribution\</OutputPath>
     <SkipEnsureBindingRedirects>true</SkipEnsureBindingRedirects>
@@ -14,6 +14,11 @@
     <ProjectReference Include="..\FoxTunes.Core\FoxTunes.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="LLamaSharp" Version="0.24.0"></PackageReference>
+    <PackageReference Include="LLamaSharp.Backend.Cpu" Version="0.24.0" />
+  </ItemGroup>
+  
   <ItemGroup>
     <Compile Update="Properties\Strings.Designer.cs">
       <DependentUpon>Strings.resx</DependentUpon>

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FoxTunes.Interfaces;
+using System;
 using System.Threading.Tasks;
 
 namespace FoxTunes
@@ -11,6 +12,17 @@ namespace FoxTunes
         }
 
         public string Prompt { get; private set; }
+
+        public TextConfigurationElement ModelLocation { get; private set; }
+
+        public override void InitializeComponent(ICore core)
+        {
+            base.InitializeComponent(core);
+            this.ModelLocation = this.Configuration.GetElement<TextConfigurationElement>(
+                AIPlaylistBehaviourConfiguration.SECTION,
+                AIPlaylistBehaviourConfiguration.MODEL_LOCATION
+            );
+        }
 
         protected override Task OnRun()
         {
