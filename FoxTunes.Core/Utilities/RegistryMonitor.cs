@@ -25,7 +25,7 @@ namespace FoxTunes
 
         public RegChangeNotifyFilter Filter { get; private set; }
 
-        public RegistryMonitor(RegistryHive registryHive, string subKey)
+        public RegistryMonitor(RegistryHive registryHive, string subKey) : this()
         {
             this.InitRegistryKey(registryHive, subKey);
         }
@@ -83,10 +83,11 @@ namespace FoxTunes
 
         public void Stop()
         {
-            if (this.Thread != null)
+            var thread = this.Thread;
+            if (thread != null)
             {
                 this.Event.Set();
-                this.Thread.Join();
+                thread.Join();
             }
         }
 

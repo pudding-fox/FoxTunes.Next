@@ -30,8 +30,6 @@ namespace FoxTunes
 
         public SelectionConfigurationElement Provider { get; private set; }
 
-        public RegistryMonitor RegistryMonitor { get; private set; }
-
         public override void InitializeComponent(ICore core)
         {
             WindowBase.ActiveChanged += this.OnActiveChanged;
