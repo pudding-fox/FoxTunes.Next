@@ -104,12 +104,26 @@ namespace FoxTunes
                 foreach (var window in Registrations.Windows)
                 {
                     Logger.Write(typeof(Windows), LogLevel.Debug, "Closing window: {0}/{1}", window.GetType().Name, window.Title);
-                    window.Close();
+                    try
+                    {
+                        window.Close();
+                    }
+                    catch
+                    {
+                        //Nothing can be done.
+                    }
                 }
                 foreach (var window in WindowBase.Active)
                 {
                     Logger.Write(typeof(Windows), LogLevel.Debug, "Closing window: {0}/{1}", window.GetType().Name, window.Title);
-                    window.Close();
+                    try
+                    {
+                        window.Close();
+                    }
+                    catch
+                    {
+                        //Nothing can be done.
+                    }
                 }
                 UIBehaviour.Shutdown();
             });

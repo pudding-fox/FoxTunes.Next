@@ -1,5 +1,6 @@
 ﻿using FoxTunes.Interfaces;
 using System.ComponentModel;
+using System.Windows.Input;
 
 namespace FoxTunes
 {
@@ -47,6 +48,15 @@ namespace FoxTunes
             {
                 return false;
             }
+        }
+
+        protected override void OnMouseDown(MouseButtonEventArgs e)
+        {
+            if (e.ChangedButton == MouseButton.Left)
+            {
+                this.DragMove();
+            }
+            base.OnMouseDown(e);
         }
 
         protected override void OnClosing(CancelEventArgs e)
