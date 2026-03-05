@@ -205,7 +205,7 @@ namespace FoxTunes
             }
             else
             {
-                value = Discogs.Release.None;
+                value = null;
             }
             foreach (var fileData in releaseLookup.FileDatas)
             {

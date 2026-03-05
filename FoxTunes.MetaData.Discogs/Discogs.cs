@@ -13,10 +13,15 @@ namespace FoxTunes
 {
     public class Discogs : BaseComponent, IDisposable
     {
+        const int CACHE_SIZE = 32;
+
+        public static CappedDictionary<string, Task<object>> Store { get; private set; }
+
         public static RateLimiter RateLimiter { get; private set; }
 
         static Discogs()
         {
+            Store = new CappedDictionary<string, Task<object>>(CACHE_SIZE);
             RateLimiter = new RateLimiter(1000 / MAX_REQUESTS);
         }
 
@@ -52,33 +57,43 @@ namespace FoxTunes
         public async Task<IEnumerable<Release>> GetReleases(ReleaseLookup releaseLookup, bool master)
         {
             var url = this.GetUrl(releaseLookup, master);
-            Logger.Write(this, LogLevel.Debug, "Querying the API: {0}", url);
-            var request = this.CreateRequest(url);
-            using (var response = (HttpWebResponse)request.GetResponse())
+            var result = await Store.GetOrAdd(url, async () =>
             {
-                if (response.StatusCode != HttpStatusCode.OK)
+                Logger.Write(this, LogLevel.Debug, "Querying the API: {0}", url);
+                var request = this.CreateRequest(url);
+                using (var response = (HttpWebResponse)request.GetResponse())
                 {
-                    Logger.Write(this, LogLevel.Warn, "Status code does not indicate success.");
-                    return Enumerable.Empty<Release>();
+                    if (response.StatusCode != HttpStatusCode.OK)
+                    {
+                        Logger.Write(this, LogLevel.Warn, "Status code does not indicate success.");
+                        return Enumerable.Empty<Release>();
+                    }
+                    var releases = await this.GetReleases(response.GetResponseStream()).ConfigureAwait(false);
+                    return releases.ToArray();
                 }
-                return await this.GetReleases(response.GetResponseStream()).ConfigureAwait(false);
-            }
+            });
+            return result as IEnumerable<Release>;
         }
 
         protected virtual async Task<IEnumerable<Release>> GetReleases(Stream stream)
         {
-            const string RESULTS = "results";
             using (var reader = new StreamReader(stream))
             {
                 var json = await reader.ReadToEndAsync().ConfigureAwait(false);
                 var data = json.FromJson<Dictionary<string, object>>();
-                if (data != null)
+                return this.GetReleases(data);
+            }
+        }
+
+        protected virtual IEnumerable<Release> GetReleases(IDictionary<string, object> data)
+        {
+            const string RESULTS = "results";
+            if (data != null)
+            {
+                var results = default(object);
+                if (data.TryGetValue(RESULTS, out results) && results is IList<object> resultsList)
                 {
-                    var results = default(object);
-                    if (data.TryGetValue(RESULTS, out results) && results is IList<object> resultsList)
-                    {
-                        return Release.FromResults(resultsList);
-                    }
+                    return Release.FromResults(resultsList);
                 }
             }
             return Enumerable.Empty<Release>();
@@ -87,17 +102,21 @@ namespace FoxTunes
         public async Task<ReleaseDetails> GetRelease(Release release)
         {
             var url = release.ResourceUrl;
-            Logger.Write(this, LogLevel.Debug, "Querying the API: {0}", url);
-            var request = this.CreateRequest(url);
-            using (var response = (HttpWebResponse)request.GetResponse())
+            var result = await Store.GetOrAdd(url, async () =>
             {
-                if (response.StatusCode != HttpStatusCode.OK)
+                Logger.Write(this, LogLevel.Debug, "Querying the API: {0}", url);
+                var request = this.CreateRequest(url);
+                using (var response = (HttpWebResponse)request.GetResponse())
                 {
-                    Logger.Write(this, LogLevel.Warn, "Status code does not indicate success.");
-                    return null;
+                    if (response.StatusCode != HttpStatusCode.OK)
+                    {
+                        Logger.Write(this, LogLevel.Warn, "Status code does not indicate success.");
+                        return null;
+                    }
+                    return await this.GetRelease(response.GetResponseStream()).ConfigureAwait(false);
                 }
-                return await this.GetRelease(response.GetResponseStream()).ConfigureAwait(false);
-            }
+            });
+            return result as ReleaseDetails;
         }
 
         protected virtual async Task<ReleaseDetails> GetRelease(Stream stream)
@@ -114,23 +133,23 @@ namespace FoxTunes
             return default(ReleaseDetails);
         }
 
-        public Task<byte[]> GetData(string url)
+        public async Task<byte[]> GetData(string url)
         {
-            Logger.Write(this, LogLevel.Debug, "Querying the API: {0}", url);
-            var request = this.CreateRequest(url);
-            using (var response = (HttpWebResponse)request.GetResponse())
+            var result = await Store.GetOrAdd(url, async () =>
             {
-                if (response.StatusCode != HttpStatusCode.OK)
+                Logger.Write(this, LogLevel.Debug, "Querying the API: {0}", url);
+                var request = this.CreateRequest(url);
+                using (var response = (HttpWebResponse)request.GetResponse())
                 {
-                    Logger.Write(this, LogLevel.Warn, "Status code does not indicate success.");
-#if NET40
-                    return TaskEx.FromResult(default(byte[]));
-#else
-                    return Task.FromResult(default(byte[]));
-#endif
+                    if (response.StatusCode != HttpStatusCode.OK)
+                    {
+                        Logger.Write(this, LogLevel.Warn, "Status code does not indicate success.");
+                        return null;
+                    }
+                    return await this.GetData(response.GetResponseStream()).ConfigureAwait(false);
                 }
-                return this.GetData(response.GetResponseStream());
-            }
+            });
+            return result as byte[];
         }
 
         protected virtual Task<byte[]> GetData(Stream stream)
@@ -288,13 +307,20 @@ namespace FoxTunes
 
         public class ReleaseLookup
         {
-            const int ERROR_CAPACITY = 10;
+            const int CACHE_SIZE = 32;
+
+            public static Cache Store { get; private set; }
+
+            static ReleaseLookup()
+            {
+                Store = new Cache(CACHE_SIZE);
+            }
 
             private ReleaseLookup()
             {
                 this.Id = Guid.NewGuid();
                 this.MetaData = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-                this._Errors = new List<string>(ERROR_CAPACITY);
+                this._Errors = new List<string>();
             }
 
             private ReleaseLookup(IFileData[] fileDatas) : this()
@@ -362,10 +388,6 @@ namespace FoxTunes
             public void AddError(string error)
             {
                 this._Errors.Add(error);
-                if (this._Errors.Count > ERROR_CAPACITY)
-                {
-                    this._Errors.RemoveAt(0);
-                }
             }
 
             public override string ToString()
@@ -437,13 +459,146 @@ namespace FoxTunes
                 {
                     if (!string.IsNullOrEmpty(group.Key.Artist) && !string.IsNullOrEmpty(group.Key.Album))
                     {
-                        return new ReleaseLookup(group.Key.Artist, group.Key.Album, group.Key.IsCompilation, group.ToArray());
+                        return GetOrAdd(group.Key.Artist, group.Key.Album, group.Key.IsCompilation, group.ToArray());
                     }
                     else
                     {
-                        return new ReleaseLookup(group.Key.Artist, group.Key.Title, group.ToArray());
+                        return GetOrAdd(group.Key.Artist, group.Key.Title, group.ToArray());
                     }
                 });
+            }
+
+            private static ReleaseLookup GetOrAdd(string artist, string title, IFileData[] fileData)
+            {
+                return Store.GetOrAdd(artist, title, fileData);
+            }
+
+            private static ReleaseLookup GetOrAdd(string artist, string album, bool isCompilation, IFileData[] fileData)
+            {
+                return Store.GetOrAdd(artist, album, isCompilation, fileData);
+            }
+
+            public class Cache
+            {
+                public Cache(int capacity)
+                {
+                    this.Store = new CappedDictionary<Key, ReleaseLookup>(capacity);
+                }
+
+                public CappedDictionary<Key, ReleaseLookup> Store { get; private set; }
+
+                public ReleaseLookup GetOrAdd(string artist, string title, IFileData[] fileData)
+                {
+                    var key = new Key(artist, title, fileData);
+                    return this.Store.GetOrAdd(key, () => new ReleaseLookup(artist, title, fileData));
+                }
+
+                public ReleaseLookup GetOrAdd(string artist, string album, bool isCompilation, IFileData[] fileData)
+                {
+                    var key = new Key(artist, album, isCompilation, fileData);
+                    return this.Store.GetOrAdd(key, () => new ReleaseLookup(artist, album, isCompilation, fileData));
+                }
+
+                public class Key : IEquatable<Key>
+                {
+                    private Key(IFileData[] fileDatas)
+                    {
+                        this.FileDatas = fileDatas;
+                    }
+
+                    public Key(string artist, string title, IFileData[] fileDatas) : this(fileDatas)
+                    {
+                        this.Artist = artist;
+                        this.Title = title;
+                    }
+
+                    public Key(string artist, string album, bool isCompilation, IFileData[] fileDatas) : this(fileDatas)
+                    {
+                        this.Artist = artist;
+                        this.Album = album;
+                        this.IsCompilation = isCompilation;
+                    }
+
+                    public string Artist { get; private set; }
+
+                    public string Album { get; private set; }
+
+                    public string Title { get; private set; }
+
+                    public bool IsCompilation { get; private set; }
+
+                    public IFileData[] FileDatas { get; private set; }
+
+                    public virtual bool Equals(Key other)
+                    {
+                        if (other == null)
+                        {
+                            return false;
+                        }
+                        if (object.ReferenceEquals(this, other))
+                        {
+                            return true;
+                        }
+                        if (!string.Equals(this.Artist, other.Artist))
+                        {
+                            return false;
+                        }
+                        if (!string.Equals(this.Album, other.Album))
+                        {
+                            return false;
+                        }
+                        if (!string.Equals(this.Title, other.Title))
+                        {
+                            return false;
+                        }
+                        if (this.IsCompilation != other.IsCompilation)
+                        {
+                            return false;
+                        }
+                        if (!Enumerable.SequenceEqual(this.FileDatas, other.FileDatas))
+                        {
+                            return false;
+                        }
+                        return true;
+                    }
+
+                    public override bool Equals(object obj)
+                    {
+                        return this.Equals(obj as Key);
+                    }
+
+                    public override int GetHashCode()
+                    {
+                        var hashCode = default(int);
+                        unchecked
+                        {
+
+                        }
+                        return hashCode;
+                    }
+
+                    public static bool operator ==(Key a, Key b)
+                    {
+                        if ((object)a == null && (object)b == null)
+                        {
+                            return true;
+                        }
+                        if ((object)a == null || (object)b == null)
+                        {
+                            return false;
+                        }
+                        if (object.ReferenceEquals((object)a, (object)b))
+                        {
+                            return true;
+                        }
+                        return a.Equals(b);
+                    }
+
+                    public static bool operator !=(Key a, Key b)
+                    {
+                        return !(a == b);
+                    }
+                }
             }
         }
 
@@ -465,8 +620,6 @@ namespace FoxTunes
 
         public class Release
         {
-            public static readonly string None = "none (" + Publication.Version + ")";
-
             private Release(IDictionary<string, object> data)
             {
                 const string ID = "id";
