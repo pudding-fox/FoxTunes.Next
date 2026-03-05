@@ -23,7 +23,7 @@ namespace FoxTunes.ViewModel
                     {
                         foreach (var metaDataItem in child.MetaDatas)
                         {
-                            if (metaDataItem.Type == MetaDataItemType.Image)
+                            if (string.Equals(metaDataItem.Name, CommonImageTypes.FrontCover, StringComparison.OrdinalIgnoreCase) && metaDataItem.Type == MetaDataItemType.Image)
                             {
                                 metaDatas.Add(metaDataItem);
                             }
