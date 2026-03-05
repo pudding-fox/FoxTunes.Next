@@ -211,7 +211,7 @@ namespace FoxTunes
                     {
                         foreach (var directoryName in this.GetDirectoryNames(root, type))
                         {
-                            foreach (var fileName in FileSystemHelper.EnumerateFiles(directoryName, string.Format("{0}.*", name), FileSystemHelper.SearchOption.None))
+                            foreach (var fileName in FileSystemHelper.EnumerateFiles(directoryName, string.Format("*{0}*.*", name), FileSystemHelper.SearchOption.None))
                             {
                                 var info = new FileInfo(fileName);
                                 if (!EXTENSIONS.Contains(info.Extension, StringComparer.OrdinalIgnoreCase))

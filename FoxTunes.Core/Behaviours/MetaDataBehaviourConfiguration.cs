@@ -72,7 +72,7 @@ namespace FoxTunes
                 .WithElement(
                     new TextConfigurationElement(LOOSE_IMAGES_FRONT, Strings.MetaDataBehaviourConfiguration_FrontCover, path: Strings.General_Advanced).WithValue("front, cover, folder").DependsOn(SECTION, READ_LOOSE_IMAGES))
                 .WithElement(
-                    new TextConfigurationElement(LOOSE_IMAGES_BACK, Strings.MetaDataBehaviourConfiguration_BackCover, path: Strings.General_Advanced).WithValue("back").DependsOn(SECTION, READ_LOOSE_IMAGES))
+                    new TextConfigurationElement(LOOSE_IMAGES_BACK, Strings.MetaDataBehaviourConfiguration_BackCover, path: Strings.General_Advanced).WithValue("back, rear").DependsOn(SECTION, READ_LOOSE_IMAGES))
                 .WithElement(
                     new TextConfigurationElement(LOOSE_IMAGES_ARTIST, Strings.MetaDataBehaviourConfiguration_Artist, path: Strings.General_Advanced).WithValue("artist, band").DependsOn(SECTION, READ_LOOSE_IMAGES))
                 .WithElement(
