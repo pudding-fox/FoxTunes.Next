@@ -14,10 +14,6 @@ namespace FoxTunes
 {
     public abstract class RendererBase : FrameworkElement, IBaseComponent, IConfigurationTarget, INotifyPropertyChanged, IDisposable
     {
-        public const double DPIX = 96;
-
-        public const double DPIY = 96;
-
         public const int DB_MIN = -90;
 
         public const int DB_MAX = 0;
@@ -33,8 +29,6 @@ namespace FoxTunes
                 return LogManager.Logger;
             }
         }
-
-        public static readonly Duration LockTimeout = new Duration(TimeSpan.FromMilliseconds(1));
 
         public static readonly DependencyProperty BackgroundProperty = DependencyProperty.Register(
             "Background",
@@ -126,27 +120,30 @@ namespace FoxTunes
             }
         }
 
-        public WriteableBitmap Bitmap
+        private RendererTarget _RendererTarget { get; set; }
+
+        public RendererTarget RendererTarget
         {
             get
             {
-                if (this.Background is ImageBrush brush)
-                {
-                    return brush.ImageSource as WriteableBitmap;
-                }
-                return null;
+                return this._RendererTarget;
             }
             set
             {
-                if (value != null)
-                {
-                    var brush = new ImageBrush(value);
-                    this.Background = brush;
-                }
-                else
-                {
-                    this.Background = null;
-                }
+                this._RendererTarget = value;
+                this.OnRendererTargetChanged();
+            }
+        }
+
+        protected virtual void OnRendererTargetChanged()
+        {
+            if (this.RendererTarget != null)
+            {
+                this.Background = new ImageBrush(this.RendererTarget.ImageSource);
+            }
+            else
+            {
+                this.Background = null;
             }
         }
 
@@ -199,7 +196,7 @@ namespace FoxTunes
 
         protected override void OnRenderSizeChanged(SizeChangedInfo sizeInfo)
         {
-            var task = this.CreateBitmap();
+            var task = this.CreateRendererTarget();
             base.OnRenderSizeChanged(sizeInfo);
         }
 
@@ -208,7 +205,7 @@ namespace FoxTunes
             drawingContext.DrawRectangle(this.Background, null, new Rect(0, 0, this.ActualWidth, this.ActualHeight));
         }
 
-        protected virtual async Task<bool> CreateBitmap()
+        protected virtual async Task<bool> CreateRendererTarget()
         {
             var result = default(bool);
             await Windows.Invoke(() =>
@@ -219,12 +216,12 @@ namespace FoxTunes
                 {
                     return;
                 }
-                var bitmap = this.Bitmap;
-                if (bitmap != null)
+                var target = this.RendererTarget;
+                if (target != null)
                 {
-                    if (bitmap.PixelWidth == width && bitmap.PixelHeight == height)
+                    if (target.Width == width && target.Height == height)
                     {
-                        this.ClearBitmap(bitmap);
+                        this.ClearRendererTarget(target);
                         return;
                     }
                 }
@@ -232,28 +229,26 @@ namespace FoxTunes
                 {
                     return;
                 }
-                this.Bitmap = this.CreateBitmap(
-                    width,
-                    height
-                );
+                this.RendererTarget = this.CreateRendererTarget(width, height);
                 result = true;
             }).ConfigureAwait(false);
             return result;
         }
 
-        protected virtual WriteableBitmap CreateBitmap(int width, int height)
+        protected virtual RendererTarget CreateRendererTarget(int width, int height)
         {
-            return new WriteableBitmap(
+            return RendererTarget.Create(
                 width,
-                height,
-                DPIX,
-                DPIY,
-                PixelFormats.Pbgra32,
-                null
+                height
             );
         }
 
-        protected virtual Task RefreshBitmap()
+        protected virtual void ClearRendererTarget(RendererTarget target)
+        {
+            target.Clear();
+        }
+
+        protected virtual Task RefreshRendererTarget()
         {
             return Windows.Invoke(() =>
             {
@@ -267,46 +262,28 @@ namespace FoxTunes
                 {
                     return;
                 }
-                var bitmap = this.Bitmap;
-                if (bitmap != null && bitmap.PixelWidth == width && bitmap.PixelHeight == height)
+                var target = this.RendererTarget;
+                if (target != null && target.Width == width && target.Height == height)
                 {
                     return;
                 }
-                this.Bitmap = this.CreateBitmap(
+                this.RendererTarget = this.CreateRendererTarget(
                     width,
                     height
                 );
             });
         }
 
-        protected virtual void ClearBitmap(WriteableBitmap bitmap)
-        {
-            if (!bitmap.TryLock(LockTimeout))
-            {
-                return;
-            }
-            try
-            {
-                var info = BitmapHelper.CreateRenderInfo(bitmap, IntPtr.Zero);
-                BitmapHelper.Clear(ref info);
-                bitmap.AddDirtyRect(new global::System.Windows.Int32Rect(0, 0, bitmap.PixelWidth, bitmap.PixelHeight));
-            }
-            finally
-            {
-                bitmap.Unlock();
-            }
-        }
-
         protected virtual Task CreateData()
         {
             return Windows.Invoke(() =>
             {
-                var bitmap = this.Bitmap;
-                if (bitmap == null)
+                var target = this.RendererTarget;
+                if (target == null)
                 {
                     return;
                 }
-                this.CreateData(bitmap.PixelWidth, bitmap.PixelHeight);
+                this.CreateData(target.Width, target.Height);
             });
         }
 
@@ -354,12 +331,12 @@ namespace FoxTunes
         {
             return Windows.Invoke(() =>
             {
-                var bitmap = this.Bitmap;
-                if (bitmap == null)
+                var target = this.RendererTarget;
+                if (target == null)
                 {
                     return;
                 }
-                this.ClearBitmap(bitmap);
+                this.ClearRendererTarget(target);
             });
         }
 

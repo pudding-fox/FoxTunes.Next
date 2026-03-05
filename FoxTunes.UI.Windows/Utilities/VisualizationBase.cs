@@ -171,9 +171,9 @@ namespace FoxTunes
 
         protected global::FoxTunes.ViewModel.Visualization ViewModel;
 
-        protected override async Task<bool> CreateBitmap()
+        protected override async Task<bool> CreateRendererTarget()
         {
-            var success = await base.CreateBitmap().ConfigureAwait(false);
+            var success = await base.CreateRendererTarget().ConfigureAwait(false);
             if (success)
             {
                 await Windows.Invoke(() =>

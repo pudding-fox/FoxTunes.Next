@@ -59,7 +59,7 @@ namespace FoxTunes
                 this.ColorPalette.ValueChanged += this.OnValueChanged;
                 this.History.ValueChanged += this.OnValueChanged;
                 this.FFTSize.ValueChanged += this.OnValueChanged;
-                var task = this.CreateBitmap();
+                var task = this.CreateRendererTarget();
             }
             base.OnConfigurationChanged();
         }
@@ -110,30 +110,30 @@ namespace FoxTunes
             return BitmapHelper.CreatePalette(0, false, palette);
         }
 
-        protected override WriteableBitmap CreateBitmap(int width, int height)
+        protected override RendererTarget CreateRendererTarget(int width, int height)
         {
-            var bitmap = base.CreateBitmap(width, height);
+            var target = base.CreateRendererTarget(width, height);
             var data = this.RendererData;
             var history = this.RendererHistory;
             if (data != null && history != null && history.Count > 0)
             {
                 try
                 {
-                    if (bitmap.TryLock(LockTimeout))
+                    if (target.TryLock())
                     {
                         try
                         {
-                            var info = BitmapHelper.CreateRenderInfo(bitmap, data.Colors);
+                            var info = BitmapHelper.CreateRenderInfo(target, data.Colors);
                             BitmapHelper.DrawRectangle(ref info, 0, 0, info.Width, info.Height);
                             lock (history)
                             {
                                 Restore(info, data, history);
                             }
-                            bitmap.AddDirtyRect(new global::System.Windows.Int32Rect(0, 0, bitmap.PixelWidth, bitmap.PixelHeight));
+                            target.Invalidate();
                         }
                         finally
                         {
-                            bitmap.Unlock();
+                            target.Unlock();
                         }
                     }
                 }
@@ -144,31 +144,31 @@ namespace FoxTunes
             }
             else
             {
-                this.ClearBitmap(bitmap);
+                this.ClearRendererTarget(target);
             }
-            return bitmap;
+            return target;
         }
 
-        protected override void ClearBitmap(WriteableBitmap bitmap)
+        protected override void ClearRendererTarget(RendererTarget target)
         {
             var data = this.RendererData;
             if (data == null)
             {
                 return;
             }
-            if (!bitmap.TryLock(LockTimeout))
+            if (!target.TryLock())
             {
                 return;
             }
             try
             {
-                var info = BitmapHelper.CreateRenderInfo(bitmap, data.Colors);
+                var info = BitmapHelper.CreateRenderInfo(target, data.Colors);
                 BitmapHelper.DrawRectangle(ref info, 0, 0, info.Width, info.Height);
-                bitmap.AddDirtyRect(new global::System.Windows.Int32Rect(0, 0, bitmap.PixelWidth, bitmap.PixelHeight));
+                target.Invalidate();
             }
             finally
             {
-                bitmap.Unlock();
+                target.Unlock();
             }
         }
 
@@ -176,18 +176,18 @@ namespace FoxTunes
         {
             return Windows.Invoke(() =>
             {
-                var bitmap = this.Bitmap;
-                if (bitmap == null)
+                var target = this.RendererTarget;
+                if (target == null)
                 {
                     return;
                 }
 
-                if (!bitmap.TryLock(LockTimeout))
+                if (!target.TryLock())
                 {
                     return;
                 }
                 var success = default(bool);
-                var info = BitmapHelper.CreateRenderInfo(bitmap, data.Colors);
+                var info = BitmapHelper.CreateRenderInfo(target, data.Colors);
                 try
                 {
                     lock (data)
@@ -205,8 +205,8 @@ namespace FoxTunes
                     success = false;
 #endif
                 }
-                bitmap.AddDirtyRect(new global::System.Windows.Int32Rect(0, 0, bitmap.PixelWidth, bitmap.PixelHeight));
-                bitmap.Unlock();
+                target.Invalidate();
+                target.Unlock();
                 if (!success)
                 {
                     return;

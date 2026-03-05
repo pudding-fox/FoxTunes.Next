@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Security;
@@ -78,20 +77,15 @@ namespace FoxTunes
         [DllImport("bitmap_utilities.dll", EntryPoint = "clear")]
         private static extern bool Clear([In] ref RenderInfo info, [In] IntPtr color);
 
-        public static RenderInfo CreateRenderInfo(WriteableBitmap bitmap, IntPtr palette)
+        public static RenderInfo CreateRenderInfo(RendererTarget target, IntPtr palette)
         {
-            if (bitmap.Format != PixelFormats.Pbgra32)
-            {
-                throw new NotImplementedException();
-            }
-
             return new RenderInfo
             {
-                BytesPerPixel = bitmap.Format.BitsPerPixel / 8,
-                Width = bitmap.PixelWidth,
-                Height = bitmap.PixelHeight,
-                Stride = bitmap.PixelWidth * (bitmap.Format.BitsPerPixel / 8),
-                Buffer = bitmap.BackBuffer,
+                BytesPerPixel = target.BitsPerPixel / 8,
+                Width = target.Width,
+                Height = target.Height,
+                Stride = target.Width * (target.BitsPerPixel / 8),
+                Buffer = target.Buffer,
                 Palette = palette
             };
         }

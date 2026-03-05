@@ -74,7 +74,7 @@ namespace FoxTunes
                 this.CutOff.ValueChanged += this.OnValueChanged;
                 this.PreAmp.ValueChanged += this.OnValueChanged;
                 this.FFTSize.ValueChanged += this.OnValueChanged;
-                var task = this.CreateBitmap();
+                var task = this.CreateRendererTarget();
             }
             base.OnConfigurationChanged();
         }
@@ -84,7 +84,7 @@ namespace FoxTunes
             if (object.ReferenceEquals(sender, this.Bars))
             {
                 //Changing bars requires full refresh.
-                if (await this.CreateBitmap().ConfigureAwait(false))
+                if (await this.CreateRendererTarget().ConfigureAwait(false))
                 {
                     return;
                 }
@@ -145,16 +145,16 @@ namespace FoxTunes
             );
         }
 
-        protected override WriteableBitmap CreateBitmap(int width, int height)
+        protected override RendererTarget CreateRendererTarget(int width, int height)
         {
-            var bitmap = base.CreateBitmap(width, height);
-            this.ClearBitmap(bitmap);
-            return bitmap;
+            var target = base.CreateRendererTarget(width, height);
+            this.ClearRendererTarget(target);
+            return target;
         }
 
-        protected override void ClearBitmap(WriteableBitmap bitmap)
+        protected override void ClearRendererTarget(RendererTarget target)
         {
-            if (!bitmap.TryLock(LockTimeout))
+            if (!target.TryLock())
             {
                 return;
             }
@@ -164,19 +164,19 @@ namespace FoxTunes
                 var data = this.RendererData;
                 if (data != null)
                 {
-                    info = BitmapHelper.CreateRenderInfo(bitmap, data.Colors[SpectrumConfiguration.COLOR_PALETTE_BACKGROUND]);
+                    info = BitmapHelper.CreateRenderInfo(target, data.Colors[SpectrumConfiguration.COLOR_PALETTE_BACKGROUND]);
                 }
                 else
                 {
                     var palettes = this.GetColorPalettes(this.GetColorPaletteOrDefault(this.ColorPalette.Value), false);
-                    info = BitmapHelper.CreateRenderInfo(bitmap, palettes[SpectrumConfiguration.COLOR_PALETTE_BACKGROUND]);
+                    info = BitmapHelper.CreateRenderInfo(target, palettes[SpectrumConfiguration.COLOR_PALETTE_BACKGROUND]);
                 }
                 BitmapHelper.DrawRectangle(ref info, 0, 0, data.Width, data.Height);
-                bitmap.AddDirtyRect(new global::System.Windows.Int32Rect(0, 0, bitmap.PixelWidth, bitmap.PixelHeight));
+                target.Invalidate();
             }
             finally
             {
-                bitmap.Unlock();
+                target.Unlock();
             }
         }
 
@@ -184,18 +184,18 @@ namespace FoxTunes
         {
             return Windows.Invoke(() =>
             {
-                var bitmap = this.Bitmap;
-                if (bitmap == null)
+                var target = this.RendererTarget;
+                if (target == null)
                 {
                     return;
                 }
 
-                if (!bitmap.TryLock(LockTimeout))
+                if (!target.TryLock())
                 {
                     return;
                 }
                 var success = default(bool);
-                var info = GetRenderInfo(bitmap, data);
+                var info = GetRenderInfo(target, data);
                 try
                 {
                     Render(ref info, data);
@@ -210,8 +210,8 @@ namespace FoxTunes
                     success = false;
 #endif
                 }
-                bitmap.AddDirtyRect(new global::System.Windows.Int32Rect(0, 0, bitmap.PixelWidth, bitmap.PixelHeight));
-                bitmap.Unlock();
+                target.Invalidate();
+                target.Unlock();
                 if (!success)
                 {
                     return;
@@ -335,19 +335,19 @@ namespace FoxTunes
             base.OnDisposing();
         }
 
-        private static SpectrumRenderInfo GetRenderInfo(WriteableBitmap bitmap, SpectrumRendererData data)
+        private static SpectrumRenderInfo GetRenderInfo(RendererTarget target, SpectrumRendererData data)
         {
             var info = new SpectrumRenderInfo()
             {
-                Background = BitmapHelper.CreateRenderInfo(bitmap, data.Colors[SpectrumConfiguration.COLOR_PALETTE_BACKGROUND])
+                Background = BitmapHelper.CreateRenderInfo(target, data.Colors[SpectrumConfiguration.COLOR_PALETTE_BACKGROUND])
             };
             if (data.PeakElements != null)
             {
-                info.Peak = BitmapHelper.CreateRenderInfo(bitmap, data.Colors[SpectrumConfiguration.COLOR_PALETTE_PEAK]);
+                info.Peak = BitmapHelper.CreateRenderInfo(target, data.Colors[SpectrumConfiguration.COLOR_PALETTE_PEAK]);
             }
             if (data.ValueElements != null)
             {
-                info.Value = BitmapHelper.CreateRenderInfo(bitmap, data.Colors[SpectrumConfiguration.COLOR_PALETTE_VALUE]);
+                info.Value = BitmapHelper.CreateRenderInfo(target, data.Colors[SpectrumConfiguration.COLOR_PALETTE_VALUE]);
             }
             return info;
         }

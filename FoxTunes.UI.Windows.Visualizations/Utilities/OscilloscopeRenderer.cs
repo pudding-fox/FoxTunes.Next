@@ -7,7 +7,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
 
 namespace FoxTunes
 {
@@ -47,7 +46,7 @@ namespace FoxTunes
                 this.Window.ValueChanged += this.OnValueChanged;
                 this.ColorPalette.ValueChanged += this.OnValueChanged;
                 this.Duration.ValueChanged += this.OnValueChanged;
-                var task = this.CreateBitmap();
+                var task = this.CreateRendererTarget();
             }
             base.OnConfigurationChanged();
         }
@@ -105,16 +104,16 @@ namespace FoxTunes
             );
         }
 
-        protected override WriteableBitmap CreateBitmap(int width, int height)
+        protected override RendererTarget CreateRendererTarget(int width, int height)
         {
-            var bitmap = base.CreateBitmap(width, height);
-            this.ClearBitmap(bitmap);
-            return bitmap;
+            var target = base.CreateRendererTarget(width, height);
+            this.ClearRendererTarget(target);
+            return target;
         }
 
-        protected override void ClearBitmap(WriteableBitmap bitmap)
+        protected override void ClearRendererTarget(RendererTarget target)
         {
-            if (!bitmap.TryLock(LockTimeout))
+            if (!target.TryLock())
             {
                 return;
             }
@@ -124,19 +123,19 @@ namespace FoxTunes
                 var data = this.RendererData;
                 if (data != null)
                 {
-                    info = BitmapHelper.CreateRenderInfo(bitmap, data.Colors[OscilloscopeConfiguration.COLOR_PALETTE_BACKGROUND]);
+                    info = BitmapHelper.CreateRenderInfo(target, data.Colors[OscilloscopeConfiguration.COLOR_PALETTE_BACKGROUND]);
                 }
                 else
                 {
                     var palettes = this.GetColorPalettes(this.GetColorPaletteOrDefault(this.ColorPalette.Value));
-                    info = BitmapHelper.CreateRenderInfo(bitmap, palettes[OscilloscopeConfiguration.COLOR_PALETTE_BACKGROUND]);
+                    info = BitmapHelper.CreateRenderInfo(target, palettes[OscilloscopeConfiguration.COLOR_PALETTE_BACKGROUND]);
                 }
                 BitmapHelper.DrawRectangle(ref info, 0, 0, data.Width, data.Height);
-                bitmap.AddDirtyRect(new global::System.Windows.Int32Rect(0, 0, bitmap.PixelWidth, bitmap.PixelHeight));
+                target.Invalidate();
             }
             finally
             {
-                bitmap.Unlock();
+                target.Unlock();
             }
         }
 
@@ -144,18 +143,18 @@ namespace FoxTunes
         {
             return Windows.Invoke(() =>
             {
-                var bitmap = this.Bitmap;
-                if (bitmap == null)
+                var target = this.RendererTarget;
+                if (target == null)
                 {
                     return;
                 }
 
-                if (!bitmap.TryLock(LockTimeout))
+                if (!target.TryLock())
                 {
                     return;
                 }
                 var success = default(bool);
-                var info = GetRenderInfo(bitmap, data);
+                var info = GetRenderInfo(target, data);
                 try
                 {
                     Render(info, data);
@@ -170,8 +169,8 @@ namespace FoxTunes
                     success = false;
 #endif
                 }
-                bitmap.AddDirtyRect(new global::System.Windows.Int32Rect(0, 0, bitmap.PixelWidth, bitmap.PixelHeight));
-                bitmap.Unlock();
+                target.Invalidate();
+                target.Unlock();
                 if (!success)
                 {
                     return;
@@ -423,12 +422,12 @@ namespace FoxTunes
             base.OnDisposing();
         }
 
-        private static OscilloscopeRenderInfo GetRenderInfo(WriteableBitmap bitmap, OscilloscopeRendererData data)
+        private static OscilloscopeRenderInfo GetRenderInfo(RendererTarget target, OscilloscopeRendererData data)
         {
             var info = new OscilloscopeRenderInfo()
             {
-                Value = BitmapHelper.CreateRenderInfo(bitmap, data.Colors[OscilloscopeConfiguration.COLOR_PALETTE_VALUE]),
-                Background = BitmapHelper.CreateRenderInfo(bitmap, data.Colors[OscilloscopeConfiguration.COLOR_PALETTE_BACKGROUND])
+                Value = BitmapHelper.CreateRenderInfo(target, data.Colors[OscilloscopeConfiguration.COLOR_PALETTE_VALUE]),
+                Background = BitmapHelper.CreateRenderInfo(target, data.Colors[OscilloscopeConfiguration.COLOR_PALETTE_BACKGROUND])
             };
             return info;
         }

@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
@@ -125,7 +124,7 @@ namespace FoxTunes
                 this.ColorPalette.ValueChanged += this.OnValueChanged;
                 this.Duration.ValueChanged += this.OnValueChanged;
                 this.FFTSize.ValueChanged += this.OnValueChanged;
-                var task = this.CreateBitmap();
+                var task = this.CreateRendererTarget();
             }
             base.OnConfigurationChanged();
         }
@@ -194,16 +193,16 @@ namespace FoxTunes
             );
         }
 
-        protected override WriteableBitmap CreateBitmap(int width, int height)
+        protected override RendererTarget CreateRendererTarget(int width, int height)
         {
-            var bitmap = base.CreateBitmap(width, height);
-            this.ClearBitmap(bitmap);
-            return bitmap;
+            var target = base.CreateRendererTarget(width, height);
+            this.ClearRendererTarget(target);
+            return target;
         }
 
-        protected override void ClearBitmap(WriteableBitmap bitmap)
+        protected override void ClearRendererTarget(RendererTarget target)
         {
-            if (!bitmap.TryLock(LockTimeout))
+            if (!target.TryLock())
             {
                 return;
             }
@@ -213,19 +212,19 @@ namespace FoxTunes
                 var data = this.RendererData;
                 if (data != null)
                 {
-                    info = BitmapHelper.CreateRenderInfo(bitmap, data.Colors[PeakMeterConfiguration.COLOR_PALETTE_BACKGROUND]);
+                    info = BitmapHelper.CreateRenderInfo(target, data.Colors[PeakMeterConfiguration.COLOR_PALETTE_BACKGROUND]);
                 }
                 else
                 {
                     var palettes = this.GetColorPalettes(this.GetColorPaletteOrDefault(this.ColorPalette.Value), this.Orientation);
-                    info = BitmapHelper.CreateRenderInfo(bitmap, palettes[PeakMeterConfiguration.COLOR_PALETTE_BACKGROUND]);
+                    info = BitmapHelper.CreateRenderInfo(target, palettes[PeakMeterConfiguration.COLOR_PALETTE_BACKGROUND]);
                 }
                 BitmapHelper.DrawRectangle(ref info, 0, 0, data.Width, data.Height);
-                bitmap.AddDirtyRect(new global::System.Windows.Int32Rect(0, 0, bitmap.PixelWidth, bitmap.PixelHeight));
+                target.Invalidate();
             }
             finally
             {
-                bitmap.Unlock();
+                target.Unlock();
             }
         }
 
@@ -233,18 +232,18 @@ namespace FoxTunes
         {
             return Windows.Invoke(() =>
             {
-                var bitmap = this.Bitmap;
-                if (bitmap == null)
+                var target = this.RendererTarget;
+                if (target == null)
                 {
                     return;
                 }
 
-                if (!bitmap.TryLock(LockTimeout))
+                if (!target.TryLock())
                 {
                     return;
                 }
                 var success = default(bool);
-                var info = GetRenderInfo(bitmap, data);
+                var info = GetRenderInfo(target, data);
                 try
                 {
                     Render(ref info, data);
@@ -259,8 +258,8 @@ namespace FoxTunes
                     success = false;
 #endif
                 }
-                bitmap.AddDirtyRect(new global::System.Windows.Int32Rect(0, 0, bitmap.PixelWidth, bitmap.PixelHeight));
-                bitmap.Unlock();
+                target.Invalidate();
+                target.Unlock();
                 if (!success)
                 {
                     return;
@@ -359,13 +358,13 @@ namespace FoxTunes
             base.OnDisposing();
         }
 
-        private static PeakRenderInfo GetRenderInfo(WriteableBitmap bitmap, PeakRendererData data)
+        private static PeakRenderInfo GetRenderInfo(RendererTarget target, PeakRendererData data)
         {
             return new PeakRenderInfo()
             {
-                Background = BitmapHelper.CreateRenderInfo(bitmap, data.Colors[PeakMeterConfiguration.COLOR_PALETTE_BACKGROUND]),
-                Value = BitmapHelper.CreateRenderInfo(bitmap, data.Colors[PeakMeterConfiguration.COLOR_PALETTE_VALUE]),
-                Peak = BitmapHelper.CreateRenderInfo(bitmap, data.Colors[PeakMeterConfiguration.COLOR_PALETTE_PEAK])
+                Background = BitmapHelper.CreateRenderInfo(target, data.Colors[PeakMeterConfiguration.COLOR_PALETTE_BACKGROUND]),
+                Value = BitmapHelper.CreateRenderInfo(target, data.Colors[PeakMeterConfiguration.COLOR_PALETTE_VALUE]),
+                Peak = BitmapHelper.CreateRenderInfo(target, data.Colors[PeakMeterConfiguration.COLOR_PALETTE_PEAK])
             };
         }
 

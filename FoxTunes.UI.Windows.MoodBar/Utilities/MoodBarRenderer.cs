@@ -79,7 +79,7 @@ namespace FoxTunes
                 await this.Clear().ConfigureAwait(false);
             }
 
-            await this.RefreshBitmap().ConfigureAwait(false);
+            await this.RefreshRendererTarget().ConfigureAwait(false);
         }
 
         protected virtual void OnUpdated(object sender, EventArgs e)
@@ -133,16 +133,16 @@ namespace FoxTunes
             );
         }
 
-        protected override WriteableBitmap CreateBitmap(int width, int height)
+        protected override RendererTarget CreateRendererTarget(int width, int height)
         {
-            var bitmap = base.CreateBitmap(width, height);
-            this.ClearBitmap(bitmap);
-            return bitmap;
+            var target = base.CreateRendererTarget(width, height);
+            this.ClearRendererTarget(target);
+            return target;
         }
 
-        protected override void ClearBitmap(WriteableBitmap bitmap)
+        protected override void ClearRendererTarget(RendererTarget target)
         {
-            if (!bitmap.TryLock(LockTimeout))
+            if (!target.TryLock())
             {
                 return;
             }
@@ -152,19 +152,19 @@ namespace FoxTunes
                 var data = this.RendererData;
                 if (data != null)
                 {
-                    info = BitmapHelper.CreateRenderInfo(bitmap, data.Colors[MoodBarStreamPositionConfiguration.COLOR_PALETTE_BACKGROUND]);
+                    info = BitmapHelper.CreateRenderInfo(target, data.Colors[MoodBarStreamPositionConfiguration.COLOR_PALETTE_BACKGROUND]);
                 }
                 else
                 {
                     var palettes = this.GetColorPalettes(this.GetColorPaletteOrDefault(string.Empty));
-                    info = BitmapHelper.CreateRenderInfo(bitmap, palettes[MoodBarStreamPositionConfiguration.COLOR_PALETTE_BACKGROUND]);
+                    info = BitmapHelper.CreateRenderInfo(target, palettes[MoodBarStreamPositionConfiguration.COLOR_PALETTE_BACKGROUND]);
                 }
                 BitmapHelper.DrawRectangle(ref info, 0, 0, data.Width, data.Height);
-                bitmap.AddDirtyRect(new global::System.Windows.Int32Rect(0, 0, bitmap.PixelWidth, bitmap.PixelHeight));
+                target.Invalidate();
             }
             finally
             {
-                bitmap.Unlock();
+                target.Unlock();
             }
             this.Dispatch(this.Update);
         }
@@ -173,17 +173,17 @@ namespace FoxTunes
         {
             return Windows.Invoke(() =>
             {
-                var bitmap = this.Bitmap;
-                if (bitmap == null)
+                var target = this.RendererTarget;
+                if (target == null)
                 {
                     return;
                 }
 
-                if (!bitmap.TryLock(LockTimeout))
+                if (!target.TryLock())
                 {
                     return;
                 }
-                var info = GetRenderInfo(bitmap, data);
+                var info = GetRenderInfo(target, data);
                 Monitor.Enter(this.SyncRoot);
                 try
                 {
@@ -197,8 +197,8 @@ namespace FoxTunes
                 {
                     Monitor.Exit(this.SyncRoot);
                 }
-                bitmap.AddDirtyRect(new global::System.Windows.Int32Rect(0, 0, bitmap.PixelWidth, bitmap.PixelHeight));
-                bitmap.Unlock();
+                target.Invalidate();
+                target.Unlock();
             });
         }
 
@@ -321,11 +321,11 @@ namespace FoxTunes
             }
         }
 
-        private static MoodBarRenderInfo GetRenderInfo(WriteableBitmap bitmap, MoodBarRendererData data)
+        private static MoodBarRenderInfo GetRenderInfo(RendererTarget target, MoodBarRendererData data)
         {
             var info = new MoodBarRenderInfo()
             {
-                Background = BitmapHelper.CreateRenderInfo(bitmap, data.Colors[MoodBarStreamPositionConfiguration.COLOR_PALETTE_BACKGROUND])
+                Background = BitmapHelper.CreateRenderInfo(target, data.Colors[MoodBarStreamPositionConfiguration.COLOR_PALETTE_BACKGROUND])
             };
             return info;
         }
