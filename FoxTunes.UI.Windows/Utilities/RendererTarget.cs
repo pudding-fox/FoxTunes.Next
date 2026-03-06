@@ -4,7 +4,7 @@ using System.Windows.Media;
 
 namespace FoxTunes
 {
-    public abstract class RendererTarget
+    public abstract class RendererTarget : BaseComponent
     {
         public static readonly Duration LockTimeout = new Duration(TimeSpan.FromMilliseconds(1));
 

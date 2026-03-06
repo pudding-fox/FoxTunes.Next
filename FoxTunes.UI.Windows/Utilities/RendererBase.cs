@@ -130,6 +130,10 @@ namespace FoxTunes
             }
             set
             {
+                if (this._RendererTarget is IDisposable disposable)
+                {
+                    disposable.Dispose();
+                }
                 this._RendererTarget = value;
                 this.OnRendererTargetChanged();
             }
