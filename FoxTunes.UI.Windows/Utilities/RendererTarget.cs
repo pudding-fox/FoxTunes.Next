@@ -29,10 +29,5 @@ namespace FoxTunes
         public abstract void Unlock();
 
         public abstract void Clear();
-
-        public static RendererTarget Create(int width, int height)
-        {
-            return new WriteableBitmapRendererTarget(width, height);
-        }
     }
 }

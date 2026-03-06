@@ -1,6 +1,5 @@
 ﻿using ManagedBass;
 using System;
-using System.Collections.Generic;
 
 namespace FoxTunes.Interfaces
 {

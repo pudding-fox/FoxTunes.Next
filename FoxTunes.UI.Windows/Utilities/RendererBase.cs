@@ -172,6 +172,8 @@ namespace FoxTunes
             }
         }
 
+        public RendererTargetFactory RendererTargetFactory { get; private set; }
+
         public PixelSizeConverter PixelSizeConverter { get; private set; }
 
         public ThemeLoader ThemeLoader { get; private set; }
@@ -182,6 +184,7 @@ namespace FoxTunes
 
         public virtual void InitializeComponent(ICore core)
         {
+            this.RendererTargetFactory = ComponentRegistry.Instance.GetComponent<RendererTargetFactory>();
             this.PixelSizeConverter = ComponentRegistry.Instance.GetComponent<PixelSizeConverter>();
             this.ThemeLoader = ComponentRegistry.Instance.GetComponent<ThemeLoader>();
             this.ThemeLoader.ThemeChanged += this.OnThemeChanged;
@@ -237,10 +240,7 @@ namespace FoxTunes
 
         protected virtual RendererTarget CreateRendererTarget(int width, int height)
         {
-            return RendererTarget.Create(
-                width,
-                height
-            );
+            return this.RendererTargetFactory.Create(width, height);
         }
 
         protected virtual void ClearRendererTarget(RendererTarget target)

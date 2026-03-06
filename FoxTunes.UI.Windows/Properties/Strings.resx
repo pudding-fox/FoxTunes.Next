@@ -543,6 +543,15 @@
   <data name="ProfileSelector.Name" xml:space="preserve">
     <value>Profile Selector</value>
   </data>
+  <data name="RendererTargetFactoryConfiguration.Section" xml:space="preserve">
+    <value>Rendering</value>
+  </data>
+  <data name="RendererTargetFactoryConfiguration.Backend" xml:space="preserve">
+    <value>Backend</value>
+  </data>
+  <data name="WriteableBitmapRendererTargetBehaviour.Name" xml:space="preserve">
+    <value>Default</value>
+  </data>
   <data name="Report.Close" xml:space="preserve">
     <value>Close</value>
   </data>

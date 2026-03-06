@@ -1339,6 +1339,24 @@ namespace FoxTunes {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Backend.
+        /// </summary>
+        internal static string RendererTargetFactoryConfiguration_Backend {
+            get {
+                return ResourceManager.GetString("RendererTargetFactoryConfiguration.Backend", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Rendering.
+        /// </summary>
+        internal static string RendererTargetFactoryConfiguration_Section {
+            get {
+                return ResourceManager.GetString("RendererTargetFactoryConfiguration.Section", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Close.
         /// </summary>
         internal static string Report_Close {
@@ -1758,6 +1776,15 @@ namespace FoxTunes {
         internal static string WindowsUserInterfaceConfiguration_TransparencyProvider {
             get {
                 return ResourceManager.GetString("WindowsUserInterfaceConfiguration.TransparencyProvider", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Default.
+        /// </summary>
+        internal static string WriteableBitmapRendererTargetBehaviour_Name {
+            get {
+                return ResourceManager.GetString("WriteableBitmapRendererTargetBehaviour.Name", resourceCulture);
             }
         }
     }
