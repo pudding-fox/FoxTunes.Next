@@ -43,6 +43,22 @@ namespace FoxTunes
 
         public bool CanGetValue(IFileData fileData, OnDemandMetaDataRequest request)
         {
+            if (request.UpdateType.HasFlag(MetaDataUpdateType.User))
+            {
+                //User requests are always processed.
+                return true;
+            }
+            lock (fileData.MetaDatas)
+            {
+                var metaDataItem = fileData.MetaDatas.FirstOrDefault(
+                    element => string.Equals(element.Name, CustomMetaData.DiscogsRelease, StringComparison.OrdinalIgnoreCase) && element.Type == MetaDataItemType.Tag
+                );
+                if (metaDataItem != null && string.Equals(metaDataItem.Value, Discogs.Release.None, StringComparison.OrdinalIgnoreCase))
+                {
+                    //We have previously attempted a lookup and it failed, don't try again (automatically).
+                    return false;
+                }
+            }
             return true;
         }
 
