@@ -33,13 +33,7 @@ namespace FoxTunes
 
         public IConfiguration Configuration { get; private set; }
 
-        public bool Enabled
-        {
-            get
-            {
-                return this.TransportControls != null;
-            }
-        }
+        public BooleanConfigurationElement Enabled { get; private set; }
 
         public override void InitializeComponent(ICore core)
         {
@@ -49,21 +43,13 @@ namespace FoxTunes
                 this.PlaybackManager = core.Managers.Playback;
                 this.ArtworkProvider = core.Components.ArtworkProvider;
                 this.UserInterface = core.Components.UserInterface;
+                this.UserInterface.WindowCreated += this.OnWindowCreated;
                 this.Configuration = core.Components.Configuration;
-                this.Configuration.GetElement<BooleanConfigurationElement>(
+                this.Enabled = this.Configuration.GetElement<BooleanConfigurationElement>(
                     SystemMediaTransportControlsBehaviourConfiguration.SECTION,
                     SystemMediaTransportControlsBehaviourConfiguration.ENABLED_ELEMENT
-                ).ConnectValue(value =>
-                {
-                    if (value)
-                    {
-                        this.Dispatch(this.Enable);
-                    }
-                    else
-                    {
-                        this.Disable();
-                    }
-                });
+                );
+                this.Enabled.ValueChanged += this.OnValueChanged;
             }
             else
             {
@@ -72,28 +58,49 @@ namespace FoxTunes
             base.InitializeComponent(core);
         }
 
-        public async Task Enable()
+        protected virtual void OnWindowCreated(object sender, UserInterfaceWindowEventArgs e)
         {
-            if (this.Enabled)
+            if (this.Enabled.Value)
             {
-                return;
-            }
-            //TODO: Bad .Result
-            var window = await this.UserInterface.GetMainWindow().ConfigureAwait(false);
-            if (window != null)
-            {
-                this.TransportControls = SystemMediaTransportControlsInterop.GetForWindow(window.Handle);
                 if (this.TransportControls == null)
                 {
-                    Logger.Write(this, LogLevel.Warn, "Failed to construct for main window, falling back to global SMTC.");
-                    this.TransportControls = this.GetGlobalSystemMediaTransportControls();
+                    this.Enable(e.Window);
+                }
+            }
+        }
+
+        protected virtual void OnValueChanged(object sender, EventArgs e)
+        {
+            if (this.Enabled.Value)
+            {
+                if (this.TransportControls == null)
+                {
+                    var task = this.Enable();
                 }
             }
             else
             {
-                Logger.Write(this, LogLevel.Warn, "Failed to determine the main window, falling back to global SMTC.");
-                this.TransportControls = this.GetGlobalSystemMediaTransportControls();
+                if (this.TransportControls != null)
+                {
+                    this.Disable();
+                }
             }
+        }
+
+        public async Task Enable()
+        {
+            var window = await this.UserInterface.GetMainWindow().ConfigureAwait(false);
+            if (window == null)
+            {
+                Logger.Write(this, LogLevel.Warn, "Cannot create SystemMediaTransportControls, main window was not found.");
+                return;
+            }
+            this.Enable(window);
+        }
+
+        public void Enable(IUserInterfaceWindow window)
+        {
+            this.TransportControls = SystemMediaTransportControlsInterop.GetForWindow(window.Handle);
             this.TransportControls.IsEnabled = true;
             this.TransportControls.IsPlayEnabled = true;
             this.TransportControls.IsPauseEnabled = true;
@@ -121,10 +128,6 @@ namespace FoxTunes
 
         public void Disable()
         {
-            if (!this.Enabled)
-            {
-                return;
-            }
             this.Timer.Stop();
             this.Timer.Elapsed -= this.OnElapsed;
             this.Timer.Dispose();
