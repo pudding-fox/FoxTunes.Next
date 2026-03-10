@@ -114,15 +114,18 @@ namespace FoxTunes
         {
             get
             {
-                var invocationCategory = this.InvocationCategories.FirstOrDefault();
-                if (!string.IsNullOrEmpty(invocationCategory))
+                if (this.Configuration != null)
                 {
-                    yield return new InvocationComponent(
-                        invocationCategory,
-                        SETTINGS,
-                        StringResources.General_Settings,
-                        attributes: InvocationComponent.ATTRIBUTE_SEPARATOR
-                    );
+                    var invocationCategory = this.InvocationCategories.FirstOrDefault();
+                    if (!string.IsNullOrEmpty(invocationCategory))
+                    {
+                        yield return new InvocationComponent(
+                            invocationCategory,
+                            SETTINGS,
+                            StringResources.General_Settings,
+                            attributes: InvocationComponent.ATTRIBUTE_SEPARATOR
+                        );
+                    }
                 }
             }
         }
