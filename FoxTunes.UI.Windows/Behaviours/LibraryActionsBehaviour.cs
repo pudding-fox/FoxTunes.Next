@@ -1,5 +1,6 @@
 ﻿using FoxTunes.Interfaces;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace FoxTunes
@@ -10,6 +11,8 @@ namespace FoxTunes
         public const string APPEND_PLAYLIST = "AAAB";
 
         public const string REPLACE_PLAYLIST = "AAAC";
+
+        public const string LOCATE = "AAAD";
 
         public const string REBUILD = "ZZAA";
 
@@ -31,6 +34,10 @@ namespace FoxTunes
 
         public IUserInterface UserInterface { get; private set; }
 
+        public ILibraryHierarchyBrowser LibraryHierarchyBrowser { get; private set; }
+
+        public IFileSystemBrowser FileSystemBrowser { get; private set; }
+
         public override void InitializeComponent(ICore core)
         {
             this.Core = core;
@@ -39,6 +46,8 @@ namespace FoxTunes
             this.HierarchyManager = core.Managers.Hierarchy;
             this.MetaDataBrowser = core.Components.MetaDataBrowser;
             this.UserInterface = core.Components.UserInterface;
+            this.LibraryHierarchyBrowser = core.Components.LibraryHierarchyBrowser;
+            this.FileSystemBrowser = core.Components.FileSystemBrowser;
             base.InitializeComponent(core);
         }
 
@@ -60,6 +69,7 @@ namespace FoxTunes
                     {
                         yield return new InvocationComponent(InvocationComponent.CATEGORY_LIBRARY, APPEND_PLAYLIST, Strings.LibraryActionsBehaviour_AppendPlaylist);
                         yield return new InvocationComponent(InvocationComponent.CATEGORY_LIBRARY, REPLACE_PLAYLIST, Strings.LibraryActionsBehaviour_ReplacePlaylist);
+                        yield return new InvocationComponent(InvocationComponent.CATEGORY_LIBRARY, LOCATE, Strings.LibraryActionsBehaviour_Locate);
                     }
                 }
                 yield return new InvocationComponent(InvocationComponent.CATEGORY_LIBRARY, REBUILD, Strings.LibraryActionsBehaviour_Rebuild, path: Strings.LibraryActionsBehaviour_Library);
@@ -77,6 +87,8 @@ namespace FoxTunes
                     return this.AddToPlaylist(false);
                 case REPLACE_PLAYLIST:
                     return this.AddToPlaylist(true);
+                case LOCATE:
+                    return this.Locate();
                 case REBUILD:
                     return this.Rebuild();
                 case RESCAN:
@@ -108,6 +120,36 @@ namespace FoxTunes
                 this.LibraryManager.SelectedItem,
                 clear
             );
+        }
+
+        private Task Locate()
+        {
+            if (this.LibraryManager.SelectedItem == null)
+            {
+#if NET40
+                return TaskEx.FromResult(false);
+#else
+                return Task.CompletedTask;
+#endif
+            }
+            var libraryItems = this.LibraryHierarchyBrowser.GetItems(this.LibraryManager.SelectedItem);
+            if (!libraryItems.Any())
+            {
+#if NET40
+                return TaskEx.FromResult(false);
+#else
+                return Task.CompletedTask;
+#endif
+            }
+            var fileNames = libraryItems.Select(
+                libraryItem => libraryItem.FileName
+            ).ToArray();
+            this.FileSystemBrowser.Select(fileNames);
+#if NET40
+            return TaskEx.FromResult(false);
+#else
+            return Task.CompletedTask;
+#endif
         }
 
         protected virtual async Task Rebuild()

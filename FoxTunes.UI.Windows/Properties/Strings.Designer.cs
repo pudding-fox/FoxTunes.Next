@@ -394,6 +394,15 @@ namespace FoxTunes {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Locate.
+        /// </summary>
+        internal static string LibraryActionsBehaviour_Locate {
+            get {
+                return ResourceManager.GetString("LibraryActionsBehaviour.Locate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Rebuild View.
         /// </summary>
         internal static string LibraryActionsBehaviour_Rebuild {

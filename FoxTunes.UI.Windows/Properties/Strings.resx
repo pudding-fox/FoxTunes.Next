@@ -693,4 +693,7 @@
   <data name="WindowsUserInterfaceConfiguration.TransparencyProvider" xml:space="preserve">
     <value>Transparency Provider</value>
   </data>
+  <data name="LibraryActionsBehaviour.Locate" xml:space="preserve">
+    <value>Locate</value>
+  </data>
 </root>
