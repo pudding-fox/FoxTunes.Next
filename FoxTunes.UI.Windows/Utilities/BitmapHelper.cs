@@ -84,7 +84,7 @@ namespace FoxTunes
                 BytesPerPixel = target.BitsPerPixel / 8,
                 Width = target.Width,
                 Height = target.Height,
-                Stride = target.Width * (target.BitsPerPixel / 8),
+                Stride = target.Stride,
                 Buffer = target.Buffer,
                 Palette = palette
             };

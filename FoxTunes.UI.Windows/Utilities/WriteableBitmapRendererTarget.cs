@@ -37,6 +37,14 @@ namespace FoxTunes
             }
         }
 
+        public override int Stride
+        {
+            get
+            {
+                return this.Bitmap.BackBufferStride;
+            }
+        }
+
         public override int Width
         {
             get

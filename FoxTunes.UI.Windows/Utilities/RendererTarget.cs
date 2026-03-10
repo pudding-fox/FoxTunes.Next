@@ -16,6 +16,8 @@ namespace FoxTunes
 
         public abstract int BitsPerPixel { get; }
 
+        public abstract int Stride { get; }
+
         public abstract int Width { get; }
 
         public abstract int Height { get; }
