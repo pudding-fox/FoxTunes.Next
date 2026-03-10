@@ -3,12 +3,16 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Security.Cryptography;
 using System.Threading.Tasks;
 
 namespace FoxTunes
 {
     public static class FileMetaDataStore
     {
+        const int CACHE_SIZE = 128;
+
         public static readonly string DataStoreDirectoryName = Path.Combine(
             Publication.RelativeStoragePath,
             "DataStore"
@@ -17,6 +21,8 @@ namespace FoxTunes
         public static readonly KeyLock<string> KeyLock = new KeyLock<string>(StringComparer.OrdinalIgnoreCase);
 
         public static readonly object SyncRoot = new object();
+
+        public static readonly CappedDictionary<string, int> Store = new CappedDictionary<string, int>(CACHE_SIZE);
 
         public static bool Contains(string fileName)
         {
@@ -187,6 +193,35 @@ namespace FoxTunes
                 }
                 return await factory(result).ConfigureAwait(false);
             }
+        }
+
+        public static int GetHashCode(string fileName)
+        {
+            return Store.GetOrAdd(fileName, () =>
+            {
+                try
+                {
+                    using (var stream = File.OpenRead(fileName))
+                    {
+                        var md5 = MD5.Create();
+                        var sequence = md5.ComputeHash(stream);
+                        var hashCode = 0;
+                        unchecked
+                        {
+                            foreach (var element in sequence)
+                            {
+                                hashCode += element.GetHashCode();
+                            }
+                        }
+                        return hashCode;
+                    }
+                }
+                catch (Exception e)
+                {
+                    LogManager.Logger.Write(typeof(FileMetaDataStore), LogLevel.Error, "Failed to calculate hash code for file: {0} => {1}", fileName, e.Message);
+                    return 0;
+                }
+            });
         }
     }
 }

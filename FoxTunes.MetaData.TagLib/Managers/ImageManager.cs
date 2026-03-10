@@ -55,9 +55,9 @@ namespace FoxTunes
                 {
                     default:
                     case ImagePreference.Embedded:
-                        return await ReadEmbedded(source, metaDatas, file).ConfigureAwait(false) || await ReadLoose(source, metaDatas, file.Name).ConfigureAwait(false);
+                        return await ReadEmbedded(source, metaDatas, file).ConfigureAwait(false) || await ReadLoose(source, metaDatas, file).ConfigureAwait(false);
                     case ImagePreference.Loose:
-                        return await ReadLoose(source, metaDatas, file.Name).ConfigureAwait(false) || await ReadEmbedded(source, metaDatas, file).ConfigureAwait(false);
+                        return await ReadLoose(source, metaDatas, file).ConfigureAwait(false) || await ReadEmbedded(source, metaDatas, file).ConfigureAwait(false);
                 }
             }
             else if (embedded)
@@ -66,7 +66,7 @@ namespace FoxTunes
             }
             else if (loose)
             {
-                return await ReadLoose(source, metaDatas, file.Name).ConfigureAwait(false);
+                return await ReadLoose(source, metaDatas, file).ConfigureAwait(false);
             }
             return false;
         }
@@ -145,7 +145,7 @@ namespace FoxTunes
             return types != ArtworkType.None;
         }
 
-        public static async Task<bool> ReadLoose(TagLibMetaDataSource source, IList<MetaDataItem> metaDatas, string fileName)
+        public static async Task<bool> ReadLoose(TagLibMetaDataSource source, IList<MetaDataItem> metaDatas, File file)
         {
             var types = ArtworkType.None;
             try
@@ -156,12 +156,12 @@ namespace FoxTunes
                     {
                         continue;
                     }
-                    var value = ArtworkProvider.Find(fileName, type);
+                    var value = ArtworkProvider.Find(file.Name, type);
                     if (!string.IsNullOrEmpty(value) && global::System.IO.File.Exists(value))
                     {
                         if (source.CopyImages.Value)
                         {
-                            value = await ImportImage(value, value, false).ConfigureAwait(false);
+                            value = await ImportImage(file, value, type, false).ConfigureAwait(false);
                         }
                         metaDatas.Add(new MetaDataItem()
                         {
@@ -179,7 +179,7 @@ namespace FoxTunes
             }
             catch (Exception e)
             {
-                Logger.Write(typeof(ImageManager), LogLevel.Warn, "Failed to read pictures: {0} => {1}", fileName, e.Message);
+                Logger.Write(typeof(ImageManager), LogLevel.Warn, "Failed to read pictures: {0} => {1}", file.Name, e.Message);
             }
             return types != ArtworkType.None;
         }
@@ -195,17 +195,14 @@ namespace FoxTunes
             return FileMetaDataStore.IfNotExistsAsync(PREFIX, id, result => FileMetaDataStore.WriteAsync(PREFIX, id, value.Data.Data), overwrite);
         }
 
+        private static Task<string> ImportImage(File file, string fileName, ArtworkType type, bool overwrite)
+        {
+            var id = GetPictureId(file, fileName, type);
+            return ImportImage(fileName, id, overwrite);
+        }
+
         private static Task<string> ImportImage(string fileName, string id, bool overwrite)
         {
-            if (FileMetaDataStore.Contains(fileName))
-            {
-                //The file is already in the data store.
-#if NET40
-                return TaskEx.FromResult(fileName);
-#else
-                return Task.FromResult(fileName);
-#endif
-            }
             return FileMetaDataStore.IfNotExistsAsync(PREFIX, id, result => FileMetaDataStore.CopyAsync(PREFIX, id, fileName), overwrite);
         }
 
@@ -369,6 +366,29 @@ namespace FoxTunes
                 else
                 {
                     hashCode += picture.Data.Checksum;
+                }
+                hashCode = (hashCode * 29) + type.GetHashCode();
+            }
+            return Math.Abs(hashCode).ToString();
+        }
+
+        private static string GetPictureId(File file, string fileName, ArtworkType type)
+        {
+            //Year + (Album | Checksum) + Type
+            var hashCode = default(long);
+            unchecked
+            {
+                if (file.Tag.Year != 0)
+                {
+                    hashCode = (hashCode * 29) + file.Tag.Year.GetHashCode();
+                }
+                if (!string.IsNullOrEmpty(file.Tag.Album))
+                {
+                    hashCode += file.Tag.Album.ToLower().GetDeterministicHashCode();
+                }
+                else
+                {
+                    hashCode += FileMetaDataStore.GetHashCode(fileName);
                 }
                 hashCode = (hashCode * 29) + type.GetHashCode();
             }

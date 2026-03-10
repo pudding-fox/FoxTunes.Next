@@ -154,7 +154,6 @@ namespace FoxTunes
                 {
                     this.Try(() => FileSystemManager.Read(this, metaData, fileName), this.ErrorHandler);
                 }
-                await ImageManager.ReadLoose(this, metaData, fileName).ConfigureAwait(false);
                 return metaData;
             }
             var collect = default(bool);
