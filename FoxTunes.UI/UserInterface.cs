@@ -25,10 +25,6 @@ namespace FoxTunes
 
         public abstract string Prompt(string message, string value, UserInterfacePromptFlags flags = UserInterfacePromptFlags.None);
 
-        public abstract void SelectInShell(string fileName);
-
-        public abstract void OpenInShell(string fileName);
-
         public abstract Task<bool> ShowSettings(string title, IEnumerable<string> sections);
 
         public abstract Task<bool> ShowSettings(string title, IConfiguration configuration, IEnumerable<string> sections);

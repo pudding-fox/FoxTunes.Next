@@ -107,10 +107,10 @@ namespace FoxTunes
 
         public Task LocatePlaylistItems()
         {
-            foreach (var item in this.PlaylistManager.SelectedItems)
-            {
-                this.FileSystemBrowser.Select(item.FileName);
-            }
+            var fileNames = this.PlaylistManager.SelectedItems.Select(
+                playlistItem => playlistItem.FileName
+            ).ToArray();
+            this.FileSystemBrowser.Select(fileNames);
 #if NET40
             return TaskEx.FromResult(false);
 #else

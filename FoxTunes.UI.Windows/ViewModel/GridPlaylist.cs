@@ -1,10 +1,8 @@
 ﻿using FoxDb;
-using FoxTunes.Integration;
 using FoxTunes.Interfaces;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
@@ -194,33 +192,6 @@ namespace FoxTunes.ViewModel
             if (playlist != null)
             {
                 return this.PlaylistManager.Remove(playlist, this.SelectedItems.OfType<PlaylistItem>());
-            }
-#if NET40
-            return TaskEx.FromResult(false);
-#else
-            return Task.CompletedTask;
-#endif
-        }
-
-        protected virtual Task CropPlaylistItems()
-        {
-            var playlist = this.GetPlaylist();
-            if (playlist != null)
-            {
-                return this.PlaylistManager.Crop(playlist, this.SelectedItems.OfType<PlaylistItem>());
-            }
-#if NET40
-            return TaskEx.FromResult(false);
-#else
-            return Task.CompletedTask;
-#endif
-        }
-
-        protected virtual Task LocatePlaylistItems()
-        {
-            foreach (var item in this.SelectedItems.OfType<PlaylistItem>())
-            {
-                Explorer.Select(item.FileName);
             }
 #if NET40
             return TaskEx.FromResult(false);

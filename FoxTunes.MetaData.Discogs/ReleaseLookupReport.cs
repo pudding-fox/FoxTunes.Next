@@ -16,11 +16,11 @@ namespace FoxTunes
 
         public Discogs.ReleaseLookup[] ReleaseLookups { get; private set; }
 
-        public IUserInterface UserInterface { get; private set; }
+        public IFileSystemBrowser FileSystemBrowser { get; private set; }
 
         public override void InitializeComponent(ICore core)
         {
-            this.UserInterface = core.Components.UserInterface;
+            this.FileSystemBrowser = core.Components.FileSystemBrowser;
             base.InitializeComponent(core);
         }
 
@@ -129,7 +129,10 @@ namespace FoxTunes
             {
                 get
                 {
-                    yield return new InvocationComponent(InvocationComponent.CATEGORY_REPORT, ACTIVATE, attributes: InvocationComponent.ATTRIBUTE_SYSTEM);
+                    if (this.ReleaseLookup.Release != null)
+                    {
+                        yield return new InvocationComponent(InvocationComponent.CATEGORY_REPORT, ACTIVATE, attributes: InvocationComponent.ATTRIBUTE_SYSTEM);
+                    }
                 }
             }
 
@@ -139,7 +142,7 @@ namespace FoxTunes
                 {
                     case ACTIVATE:
                         var url = new Uri(new Uri("https://www.discogs.com"), this.ReleaseLookup.Release.Url).ToString();
-                        this.Report.UserInterface.OpenInShell(url);
+                        this.Report.FileSystemBrowser.Select(url);
                         break;
                 }
                 return base.InvokeAsync(component);

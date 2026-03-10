@@ -7,6 +7,8 @@ namespace FoxTunes.Interfaces
     {
         void Select(string fileName);
 
+        void Select(IEnumerable<string> fileNames);
+
         BrowseResult Browse(BrowseOptions options);
     }
 

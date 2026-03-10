@@ -16,6 +16,11 @@ namespace FoxTunes
             Explorer.Select(fileName);
         }
 
+        public void Select(IEnumerable<string> fileNames)
+        {
+            Explorer.Select(fileNames);
+        }
+
         public BrowseResult Browse(BrowseOptions options)
         {
             if (options.Flags.HasFlag(BrowseFlags.File))

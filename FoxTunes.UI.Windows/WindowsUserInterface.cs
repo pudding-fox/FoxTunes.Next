@@ -206,16 +206,6 @@ namespace FoxTunes
             return result;
         }
 
-        public override void SelectInShell(string fileName)
-        {
-            Explorer.Select(fileName);
-        }
-
-        public override void OpenInShell(string fileName)
-        {
-            Explorer.Open(fileName);
-        }
-
         public override Task<bool> ShowSettings(string title, IEnumerable<string> sections)
         {
             return this.ShowSettings(title, this.Configuration, sections);
