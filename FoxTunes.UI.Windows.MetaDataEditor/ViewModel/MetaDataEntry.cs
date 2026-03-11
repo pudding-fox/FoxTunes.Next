@@ -1,5 +1,6 @@
 ﻿using FoxTunes.Interfaces;
 using System;
+using System.CodeDom;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -35,6 +36,8 @@ namespace FoxTunes.ViewModel
         public static readonly ImageLoader ImageLoader = ComponentRegistry.Instance.GetComponent<ImageLoader>();
 
         public static readonly IFileSystemBrowser FileSystemBrowser = ComponentRegistry.Instance.GetComponent<IFileSystemBrowser>();
+
+        public static readonly IArtworkProvider ArtworkProvider = ComponentRegistry.Instance.GetComponent<IArtworkProvider>();
 
         private MetaDataEntry()
         {
@@ -389,7 +392,7 @@ namespace FoxTunes.ViewModel
                 directoryName,
                 new[]
                 {
-                    new BrowseFilter("Images", ArtworkProvider.EXTENSIONS)
+                    new BrowseFilter("Images", global::FoxTunes.ArtworkProvider.EXTENSIONS)
                 },
                 BrowseFlags.File
             );
@@ -399,6 +402,53 @@ namespace FoxTunes.ViewModel
                 return;
             }
             this.Value = result.Paths.FirstOrDefault();
+        }
+
+        public ICommand FindCommand
+        {
+            get
+            {
+                return new AsyncCommand(this.Find, () => this.CanFind);
+            }
+        }
+
+        public bool CanFind
+        {
+            get
+            {
+                return true;
+            }
+        }
+
+        public async Task Find()
+        {
+            var type = default(ArtworkType);
+            if (string.Equals(this.Name, CommonImageTypes.FrontCover, StringComparison.OrdinalIgnoreCase))
+            {
+                type = ArtworkType.FrontCover;
+            }
+            else if (string.Equals(this.Name, CommonImageTypes.BackCover, StringComparison.OrdinalIgnoreCase))
+            {
+                type = ArtworkType.BackCover;
+            }
+            else if (string.Equals(this.Name, CommonImageTypes.Artist, StringComparison.OrdinalIgnoreCase))
+            {
+                type = ArtworkType.Artist;
+            }
+            else
+            {
+                //Not supported.
+                return;
+            }
+            foreach (var fileData in this.Sources)
+            {
+                var fileName = await ArtworkProvider.Find(fileData, this.Name, type).ConfigureAwait(false);
+                if (!string.IsNullOrEmpty(fileName))
+                {
+                    await Windows.Invoke(() => this.Value = fileName).ConfigureAwait(false);
+                    return;
+                }
+            }
         }
 
         public ICommand DragEnterCommand

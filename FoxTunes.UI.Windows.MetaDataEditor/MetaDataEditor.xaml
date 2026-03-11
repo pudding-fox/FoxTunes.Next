@@ -101,6 +101,8 @@
                                     <ContextMenu>
                                         <MenuItem Header="Replace" Command="{Binding BrowseCommand, Mode=OneWay}"></MenuItem>
                                         <MenuItem Header="Remove" Command="{Binding ClearCommand, Mode=OneWay}"></MenuItem>
+                                        <Separator></Separator>
+                                        <MenuItem Header="Find" Command="{Binding FindCommand, Mode=OneWay}"></MenuItem>
                                     </ContextMenu>
                                 </StackPanel.ContextMenu>
                                 <Grid Width="100" Height="100">
