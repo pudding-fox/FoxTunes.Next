@@ -155,29 +155,18 @@ namespace FoxTunes
         public IEnumerable<string> GetDirectoryNames(string root, ArtworkType type)
         {
             yield return root;
-            foreach (var path in this.Folders)
+            do
             {
-                var folder = Path.Combine(root, path);
-                if (!Directory.Exists(folder))
+                foreach (var path in this.Folders)
                 {
-                    continue;
-                }
-                yield return folder;
-            }
-            if (type == ArtworkType.Artist)
-            {
-                //Scan the parents for artist images.
-                do
-                {
-                    var folder = Directory.GetParent(root);
-                    if (folder == null)
+                    var folder = Path.Combine(root, path);
+                    if (Directory.Exists(folder))
                     {
-                        break;
+                        yield return folder;
                     }
-                    root = folder.FullName;
-                    yield return root;
-                } while (true);
-            }
+                }
+                root = Path.GetDirectoryName(root);
+            } while (!string.IsNullOrEmpty(root));
         }
 
         public string Find(string path, ArtworkType type)
