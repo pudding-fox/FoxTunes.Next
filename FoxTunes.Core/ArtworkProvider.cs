@@ -196,9 +196,9 @@ namespace FoxTunes
                 }
                 try
                 {
-                    foreach (var name in names)
+                    foreach (var directoryName in this.GetDirectoryNames(root, type))
                     {
-                        foreach (var directoryName in this.GetDirectoryNames(root, type))
+                        foreach (var name in names)
                         {
                             foreach (var fileName in FileSystemHelper.EnumerateFiles(directoryName, string.Format("*{0}*.*", name), FileSystemHelper.SearchOption.None))
                             {
