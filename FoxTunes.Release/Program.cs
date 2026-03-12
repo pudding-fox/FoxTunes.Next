@@ -507,6 +507,14 @@ namespace FoxTunes
                     PackageFlags.Default | PackageFlags.Minimal
                 ),
                 new Package(
+                    "upmix",
+                    new PackageElement[]
+                    {
+                        "FoxTunes.Output.Bass.Upmix.dll"
+                    },
+                    PackageFlags.Default
+                ),
+                new Package(
                     "noesis",
                     new PackageElement[]
                     {
