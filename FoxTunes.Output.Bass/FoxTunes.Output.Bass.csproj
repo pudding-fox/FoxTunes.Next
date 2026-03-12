@@ -62,6 +62,9 @@
     <None Include="..\lib\x86\basswv.dll" Link="x86\Addon\basswv.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+	<None Include="..\lib\x86\basswebm.dll" Link="x86\Addon\basswebm.dll">
+		<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	</None>
     <None Include="..\lib\x86\bass.dll" Link="x86\bass.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -101,6 +104,9 @@
     <None Include="..\lib\x64\basswv.dll" Link="x64\Addon\basswv.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+	<None Include="..\lib\x64\basswebm.dll" Link="x64\Addon\basswebm.dll">
+		<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	</None>
     <None Include="..\lib\x64\bass.dll" Link="x64\bass.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
