@@ -511,33 +511,6 @@ namespace FoxTunes {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Crop.
-        /// </summary>
-        internal static string PlaylistActionsBehaviour_Crop {
-            get {
-                return ResourceManager.GetString("PlaylistActionsBehaviour.Crop", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Locate.
-        /// </summary>
-        internal static string PlaylistActionsBehaviour_Locate {
-            get {
-                return ResourceManager.GetString("PlaylistActionsBehaviour.Locate", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Remove.
-        /// </summary>
-        internal static string PlaylistActionsBehaviour_Remove {
-            get {
-                return ResourceManager.GetString("PlaylistActionsBehaviour.Remove", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Order.
         /// </summary>
         internal static string PlaylistBehaviour_Order {

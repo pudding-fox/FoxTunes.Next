@@ -1033,6 +1033,60 @@ namespace FoxTunes {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Crop.
+        /// </summary>
+        internal static string PlaylistActionsBehaviour_Crop {
+            get {
+                return ResourceManager.GetString("PlaylistActionsBehaviour.Crop", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Locate.
+        /// </summary>
+        internal static string PlaylistActionsBehaviour_Locate {
+            get {
+                return ResourceManager.GetString("PlaylistActionsBehaviour.Locate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Playlist.
+        /// </summary>
+        internal static string PlaylistActionsBehaviour_Playlist {
+            get {
+                return ResourceManager.GetString("PlaylistActionsBehaviour.Playlist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Remove.
+        /// </summary>
+        internal static string PlaylistActionsBehaviour_Remove {
+            get {
+                return ResourceManager.GetString("PlaylistActionsBehaviour.Remove", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Selection Follows Playback.
+        /// </summary>
+        internal static string PlaylistActionsBehaviour_SelectionFollowsPlayback {
+            get {
+                return ResourceManager.GetString("PlaylistActionsBehaviour.SelectionFollowsPlayback", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Settings.
+        /// </summary>
+        internal static string PlaylistActionsBehaviour_Settings {
+            get {
+                return ResourceManager.GetString("PlaylistActionsBehaviour.Settings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Add to playlist by dropping files here..
         /// </summary>
         internal static string PlaylistBase_Empty {

@@ -696,4 +696,22 @@
   <data name="LibraryActionsBehaviour.Locate" xml:space="preserve">
     <value>Locate</value>
   </data>
+  <data name="PlaylistActionsBehaviour.Crop" xml:space="preserve">
+    <value>Crop</value>
+  </data>
+  <data name="PlaylistActionsBehaviour.Locate" xml:space="preserve">
+    <value>Locate</value>
+  </data>
+  <data name="PlaylistActionsBehaviour.Playlist" xml:space="preserve">
+    <value>Playlist</value>
+  </data>
+  <data name="PlaylistActionsBehaviour.Remove" xml:space="preserve">
+    <value>Remove</value>
+  </data>
+  <data name="PlaylistActionsBehaviour.SelectionFollowsPlayback" xml:space="preserve">
+    <value>Selection Follows Playback</value>
+  </data>
+  <data name="PlaylistActionsBehaviour.Settings" xml:space="preserve">
+    <value>Settings</value>
+  </data>
 </root>

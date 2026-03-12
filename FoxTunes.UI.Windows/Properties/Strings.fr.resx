@@ -501,6 +501,24 @@
   <data name="Visualization.UnavailableDetail" xml:space="preserve">
     <value>Le mélangeur est requis pour le rendu, vérifiez vos paramètres de sortie.</value>
   </data>
+  <data name="Volume.Name" xml:space="preserve">
+    <value>Volume</value>
+  </data>
+  <data name="WindowsUserInterfaceConfiguration.Counters" xml:space="preserve">
+    <value>Afficher les compteurs</value>
+  </data>
+  <data name="WindowsUserInterfaceConfiguration.Cursors" xml:space="preserve">
+    <value>Afficher les ornements du curseur</value>
+  </data>
+  <data name="WindowsUserInterfaceConfiguration.Layout" xml:space="preserve">
+    <value>Disposition</value>
+  </data>
+  <data name="WindowsUserInterfaceConfiguration.Section" xml:space="preserve">
+    <value>Apparence</value>
+  </data>
+  <data name="WindowsUserInterfaceConfiguration.Theme" xml:space="preserve">
+    <value>Theme</value>
+  </data>
   <data name="VisualizationBehaviourConfiguration.FFTSize" xml:space="preserve">
     <value>FFT Size</value>
   </data>
@@ -522,28 +540,19 @@
   <data name="VisualizationBehaviourConfiguration.Smooth" xml:space="preserve">
     <value>Lisse</value>
   </data>
-  <data name="Volume.Name" xml:space="preserve">
-    <value>Volume</value>
-  </data>
-  <data name="WindowsUserInterfaceConfiguration.Counters" xml:space="preserve">
-    <value>Afficher les compteurs</value>
-  </data>
-  <data name="WindowsUserInterfaceConfiguration.Cursors" xml:space="preserve">
-    <value>Afficher les ornements du curseur</value>
-  </data>
-  <data name="WindowsUserInterfaceConfiguration.Layout" xml:space="preserve">
-    <value>Disposition</value>
-  </data>
   <data name="WindowsUserInterfaceConfiguration.MarqueeInterval" xml:space="preserve">
     <value>Marquee Interval</value>
   </data>
   <data name="WindowsUserInterfaceConfiguration.MarqueeStep" xml:space="preserve">
     <value>Marquee Step</value>
   </data>
-  <data name="WindowsUserInterfaceConfiguration.Section" xml:space="preserve">
-    <value>Apparence</value>
+  <data name="PlaylistActionsBehaviour.Crop" xml:space="preserve">
+    <value>Recadrer</value>
   </data>
-  <data name="WindowsUserInterfaceConfiguration.Theme" xml:space="preserve">
-    <value>Theme</value>
+  <data name="PlaylistActionsBehaviour.Locate" xml:space="preserve">
+    <value>Localiser</value>
+  </data>
+  <data name="PlaylistActionsBehaviour.Remove" xml:space="preserve">
+    <value>Supprimer</value>
   </data>
 </root>

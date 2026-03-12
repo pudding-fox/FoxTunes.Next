@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace FoxTunes
 {
-    [ComponentDependency(Slot = ComponentSlots.UserInterface)]
+    [WindowsUserInterfaceDependency]
     public class PlaylistActionsBehaviour : StandardBehaviour, IInvocableComponent
     {
         public const string REMOVE_PLAYLIST_ITEMS = "AAAA";
@@ -14,10 +14,16 @@ namespace FoxTunes
 
         public const string LOCATE_PLAYLIST_ITEMS = "AAAC";
 
+        public const string SELECTION_FOLLOW_PLAYBACK = "ZZAA";
+
+        public const string SETTINGS = "ZZZZ";
+
         public PlaylistActionsBehaviour()
         {
             Instance = this;
         }
+
+        public ICore Core { get; private set; }
 
         public IPlaylistManager PlaylistManager { get; private set; }
 
@@ -25,11 +31,21 @@ namespace FoxTunes
 
         public IFileSystemBrowser FileSystemBrowser { get; private set; }
 
+        public IConfiguration Configuration { get; private set; }
+
+        public BooleanConfigurationElement SelectionFollowsPlayback { get; private set; }
+
         public override void InitializeComponent(ICore core)
         {
+            this.Core = core;
             this.PlaylistManager = core.Managers.Playlist;
             this.FileActionHandlerManager = core.Managers.FileActionHandler;
             this.FileSystemBrowser = core.Components.FileSystemBrowser;
+            this.Configuration = core.Components.Configuration;
+            this.SelectionFollowsPlayback = this.Configuration.GetElement<BooleanConfigurationElement>(
+                SelectionFollowsPlaybackBehaviourConfiguration.SECTION,
+                SelectionFollowsPlaybackBehaviourConfiguration.SELECTION_FOLLOWS_PLAYBACK
+            );
             base.InitializeComponent(core);
         }
 
@@ -50,6 +66,8 @@ namespace FoxTunes
                     yield return new InvocationComponent(InvocationComponent.CATEGORY_PLAYLIST, REMOVE_PLAYLIST_ITEMS, Strings.PlaylistActionsBehaviour_Remove);
                     yield return new InvocationComponent(InvocationComponent.CATEGORY_PLAYLIST, CROP_PLAYLIST_ITEMS, Strings.PlaylistActionsBehaviour_Crop);
                     yield return new InvocationComponent(InvocationComponent.CATEGORY_PLAYLIST, LOCATE_PLAYLIST_ITEMS, Strings.PlaylistActionsBehaviour_Locate);
+                    yield return new InvocationComponent(InvocationComponent.CATEGORY_PLAYLIST, SELECTION_FOLLOW_PLAYBACK, Strings.PlaylistActionsBehaviour_SelectionFollowsPlayback, path: Strings.PlaylistActionsBehaviour_Playlist, attributes: this.SelectionFollowsPlayback.Value ? InvocationComponent.ATTRIBUTE_SELECTED : InvocationComponent.ATTRIBUTE_NONE);
+                    yield return new InvocationComponent(InvocationComponent.CATEGORY_PLAYLIST, SETTINGS, Strings.PlaylistActionsBehaviour_Settings, path: Strings.PlaylistActionsBehaviour_Playlist);
                 }
             }
         }
@@ -64,6 +82,11 @@ namespace FoxTunes
                     return this.CropPlaylistItems();
                 case LOCATE_PLAYLIST_ITEMS:
                     return this.LocatePlaylistItems();
+                case SELECTION_FOLLOW_PLAYBACK:
+                    this.SelectionFollowsPlayback.Value = !this.SelectionFollowsPlayback.Value;
+                    break;
+                case SETTINGS:
+                    return this.Settings();
             }
 #if NET40
             return TaskEx.FromResult(false);
@@ -116,6 +139,11 @@ namespace FoxTunes
 #else
             return Task.CompletedTask;
 #endif
+        }
+
+        public Task Settings()
+        {
+            return Windows.ShowDialog<PlaylistSettingsDialog>(this.Core, Strings.General_Settings);
         }
 
         public static PlaylistActionsBehaviour Instance { get; private set; }

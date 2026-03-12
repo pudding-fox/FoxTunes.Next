@@ -267,15 +267,6 @@
   <data name="PlaybackBehaviourConfiguration.Section" xml:space="preserve">
     <value>Playback</value>
   </data>
-  <data name="PlaylistActionsBehaviour.Crop" xml:space="preserve">
-    <value>Crop</value>
-  </data>
-  <data name="PlaylistActionsBehaviour.Locate" xml:space="preserve">
-    <value>Locate</value>
-  </data>
-  <data name="PlaylistActionsBehaviour.Remove" xml:space="preserve">
-    <value>Remove</value>
-  </data>
   <data name="PlaylistBehaviour.Order" xml:space="preserve">
     <value>Order</value>
   </data>

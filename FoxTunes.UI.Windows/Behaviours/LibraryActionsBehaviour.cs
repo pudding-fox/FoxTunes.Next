@@ -22,6 +22,11 @@ namespace FoxTunes
 
         public const string SETTINGS = "ZZZZ";
 
+        public LibraryActionsBehaviour()
+        {
+            Instance = this;
+        }
+
         public ICore Core { get; private set; }
 
         public ILibraryManager LibraryManager { get; private set; }
@@ -172,5 +177,7 @@ namespace FoxTunes
         {
             return Windows.ShowDialog<LibrarySettingsDialog>(this.Core, Strings.General_Settings);
         }
+
+        public static LibraryActionsBehaviour Instance { get; private set; }
     }
 }
