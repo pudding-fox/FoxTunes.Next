@@ -76,6 +76,7 @@ namespace FoxTunes
                 {
                     case global::System.Windows.Forms.DialogResult.OK:
                         success = true;
+                        BrowseOptions.PreviousFolderName = Path.GetDirectoryName(dialog.FileName);
                         break;
                 }
                 return new BrowseResult(new[] { dialog.FileName }, success);
@@ -101,6 +102,10 @@ namespace FoxTunes
             }
             var window = Windows.ActiveWindow;
             var success = dialog.ShowDialog(window);
+            if (success.GetValueOrDefault() && dialog.FileNames.Any())
+            {
+                BrowseOptions.PreviousFolderName = Path.GetDirectoryName(dialog.FileNames.First());
+            }
             return new BrowseResult(dialog.FileNames, success.GetValueOrDefault());
         }
 
@@ -138,6 +143,7 @@ namespace FoxTunes
                 {
                     case global::System.Windows.Forms.DialogResult.OK:
                         success = true;
+                        BrowseOptions.PreviousFolderName = dialog.SelectedPath;
                         break;
                 }
                 return new BrowseResult(new[] { dialog.SelectedPath }, success);

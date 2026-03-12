@@ -519,6 +519,15 @@
   <data name="WindowsUserInterfaceConfiguration.Theme" xml:space="preserve">
     <value>Theme</value>
   </data>
+  <data name="PlaylistActionsBehaviour.Crop" xml:space="preserve">
+    <value>Recadrer</value>
+  </data>
+  <data name="PlaylistActionsBehaviour.Locate" xml:space="preserve">
+    <value>Localiser</value>
+  </data>
+  <data name="PlaylistActionsBehaviour.Remove" xml:space="preserve">
+    <value>Supprimer</value>
+  </data>
   <data name="VisualizationBehaviourConfiguration.FFTSize" xml:space="preserve">
     <value>FFT Size</value>
   </data>
@@ -546,13 +555,14 @@
   <data name="WindowsUserInterfaceConfiguration.MarqueeStep" xml:space="preserve">
     <value>Marquee Step</value>
   </data>
-  <data name="PlaylistActionsBehaviour.Crop" xml:space="preserve">
-    <value>Recadrer</value>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="PlaylistActionsBehaviour.AddFiles" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
   </data>
-  <data name="PlaylistActionsBehaviour.Locate" xml:space="preserve">
-    <value>Localiser</value>
+  <data name="PlaylistActionsBehaviour.AddFolders" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
   </data>
-  <data name="PlaylistActionsBehaviour.Remove" xml:space="preserve">
-    <value>Supprimer</value>
+  <data name="PlaylistActionsBehaviour.All" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
   </data>
 </root>

@@ -1033,6 +1033,33 @@ namespace FoxTunes {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Add Files.
+        /// </summary>
+        internal static string PlaylistActionsBehaviour_AddFiles {
+            get {
+                return ResourceManager.GetString("PlaylistActionsBehaviour.AddFiles", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add Folders.
+        /// </summary>
+        internal static string PlaylistActionsBehaviour_AddFolders {
+            get {
+                return ResourceManager.GetString("PlaylistActionsBehaviour.AddFolders", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to All.
+        /// </summary>
+        internal static string PlaylistActionsBehaviour_All {
+            get {
+                return ResourceManager.GetString("PlaylistActionsBehaviour.All", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Crop.
         /// </summary>
         internal static string PlaylistActionsBehaviour_Crop {

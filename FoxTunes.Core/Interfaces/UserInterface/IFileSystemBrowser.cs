@@ -14,6 +14,8 @@ namespace FoxTunes.Interfaces
 
     public class BrowseOptions
     {
+        public static string PreviousFolderName { get; set; }
+
         public BrowseOptions(string title, string path, IEnumerable<BrowseFilter> filters, BrowseFlags flags)
         {
             this.Title = title;

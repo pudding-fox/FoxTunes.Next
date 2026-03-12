@@ -1,4 +1,5 @@
 ﻿using FoxTunes.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -8,15 +9,22 @@ namespace FoxTunes
     [WindowsUserInterfaceDependency]
     public class PlaylistActionsBehaviour : StandardBehaviour, IInvocableComponent
     {
+
         public const string REMOVE_PLAYLIST_ITEMS = "AAAA";
 
         public const string CROP_PLAYLIST_ITEMS = "AAAB";
 
         public const string LOCATE_PLAYLIST_ITEMS = "AAAC";
 
-        public const string SELECTION_FOLLOW_PLAYBACK = "ZZAA";
+        public const string ADD_FILES = "ZZAA";
+
+        public const string ADD_FOLDERS = "ZZAB";
+
+        public const string SELECTION_FOLLOW_PLAYBACK = "ZZAC";
 
         public const string SETTINGS = "ZZZZ";
+
+        public static readonly string MyMusic = Environment.GetFolderPath(Environment.SpecialFolder.MyMusic);
 
         public PlaylistActionsBehaviour()
         {
@@ -31,6 +39,8 @@ namespace FoxTunes
 
         public IFileSystemBrowser FileSystemBrowser { get; private set; }
 
+        public IOutput Output { get; private set; }
+
         public IConfiguration Configuration { get; private set; }
 
         public BooleanConfigurationElement SelectionFollowsPlayback { get; private set; }
@@ -41,6 +51,7 @@ namespace FoxTunes
             this.PlaylistManager = core.Managers.Playlist;
             this.FileActionHandlerManager = core.Managers.FileActionHandler;
             this.FileSystemBrowser = core.Components.FileSystemBrowser;
+            this.Output = core.Components.Output;
             this.Configuration = core.Components.Configuration;
             this.SelectionFollowsPlayback = this.Configuration.GetElement<BooleanConfigurationElement>(
                 SelectionFollowsPlaybackBehaviourConfiguration.SECTION,
@@ -66,9 +77,11 @@ namespace FoxTunes
                     yield return new InvocationComponent(InvocationComponent.CATEGORY_PLAYLIST, REMOVE_PLAYLIST_ITEMS, Strings.PlaylistActionsBehaviour_Remove);
                     yield return new InvocationComponent(InvocationComponent.CATEGORY_PLAYLIST, CROP_PLAYLIST_ITEMS, Strings.PlaylistActionsBehaviour_Crop);
                     yield return new InvocationComponent(InvocationComponent.CATEGORY_PLAYLIST, LOCATE_PLAYLIST_ITEMS, Strings.PlaylistActionsBehaviour_Locate);
-                    yield return new InvocationComponent(InvocationComponent.CATEGORY_PLAYLIST, SELECTION_FOLLOW_PLAYBACK, Strings.PlaylistActionsBehaviour_SelectionFollowsPlayback, path: Strings.PlaylistActionsBehaviour_Playlist, attributes: this.SelectionFollowsPlayback.Value ? InvocationComponent.ATTRIBUTE_SELECTED : InvocationComponent.ATTRIBUTE_NONE);
-                    yield return new InvocationComponent(InvocationComponent.CATEGORY_PLAYLIST, SETTINGS, Strings.PlaylistActionsBehaviour_Settings, path: Strings.PlaylistActionsBehaviour_Playlist);
                 }
+                yield return new InvocationComponent(InvocationComponent.CATEGORY_PLAYLIST, ADD_FILES, Strings.PlaylistActionsBehaviour_AddFiles, path: Strings.PlaylistActionsBehaviour_Playlist);
+                yield return new InvocationComponent(InvocationComponent.CATEGORY_PLAYLIST, ADD_FOLDERS, Strings.PlaylistActionsBehaviour_AddFolders, path: Strings.PlaylistActionsBehaviour_Playlist);
+                yield return new InvocationComponent(InvocationComponent.CATEGORY_PLAYLIST, SELECTION_FOLLOW_PLAYBACK, Strings.PlaylistActionsBehaviour_SelectionFollowsPlayback, path: Strings.PlaylistActionsBehaviour_Playlist, attributes: this.SelectionFollowsPlayback.Value ? InvocationComponent.ATTRIBUTE_SELECTED : InvocationComponent.ATTRIBUTE_NONE);
+                yield return new InvocationComponent(InvocationComponent.CATEGORY_PLAYLIST, SETTINGS, Strings.PlaylistActionsBehaviour_Settings, path: Strings.PlaylistActionsBehaviour_Playlist);
             }
         }
 
@@ -82,6 +95,10 @@ namespace FoxTunes
                     return this.CropPlaylistItems();
                 case LOCATE_PLAYLIST_ITEMS:
                     return this.LocatePlaylistItems();
+                case ADD_FILES:
+                    return this.AddFiles();
+                case ADD_FOLDERS:
+                    return this.AddFolders();
                 case SELECTION_FOLLOW_PLAYBACK:
                     this.SelectionFollowsPlayback.Value = !this.SelectionFollowsPlayback.Value;
                     break;
@@ -139,6 +156,93 @@ namespace FoxTunes
 #else
             return Task.CompletedTask;
 #endif
+        }
+
+        public Task AddFiles()
+        {
+            var playlist = this.PlaylistManager.SelectedPlaylist;
+            if (playlist == null)
+            {
+#if NET40
+                return TaskEx.FromResult(false);
+#else
+                return Task.CompletedTask;
+#endif
+            }
+            var directoryName = default(string);
+            if (!string.IsNullOrEmpty(BrowseOptions.PreviousFolderName))
+            {
+                directoryName = BrowseOptions.PreviousFolderName;
+            }
+            else
+            {
+                directoryName = MyMusic;
+            }
+            var options = new BrowseOptions(
+                Strings.PlaylistActionsBehaviour_AddFiles,
+                directoryName,
+                new[]
+                {
+                    new BrowseFilter(Strings.PlaylistActionsBehaviour_All, this.Output.SupportedExtensions)
+                },
+                BrowseFlags.File | BrowseFlags.Multiselect
+            );
+            var result = this.FileSystemBrowser.Browse(options);
+            if (!result.Success)
+            {
+#if NET40
+                return TaskEx.FromResult(false);
+#else
+                return Task.CompletedTask;
+#endif
+            }
+            return this.Add(
+                playlist,
+                result.Paths,
+                false
+            );
+        }
+
+        public Task AddFolders()
+        {
+            var playlist = this.PlaylistManager.SelectedPlaylist;
+            if (playlist == null)
+            {
+#if NET40
+                return TaskEx.FromResult(false);
+#else
+                return Task.CompletedTask;
+#endif
+            }
+            var directoryName = default(string);
+            if (!string.IsNullOrEmpty(BrowseOptions.PreviousFolderName))
+            {
+                directoryName = BrowseOptions.PreviousFolderName;
+            }
+            else
+            {
+                directoryName = MyMusic;
+            }
+            var options = new BrowseOptions(
+                Strings.PlaylistActionsBehaviour_AddFolders,
+                directoryName,
+                Enumerable.Empty<BrowseFilter>(),
+                BrowseFlags.Folder | BrowseFlags.Multiselect
+            );
+            var result = this.FileSystemBrowser.Browse(options);
+            if (!result.Success)
+            {
+#if NET40
+                return TaskEx.FromResult(false);
+#else
+                return Task.CompletedTask;
+#endif
+            }
+            return this.Add(
+                playlist,
+                result.Paths,
+                false
+            );
         }
 
         public Task Settings()
