@@ -320,6 +320,13 @@ namespace FoxTunes
                         attributes = InvocationComponent.ATTRIBUTE_NONE;
                     }
                 }
+                else
+                {
+                    foreach (var component in LayoutManager.Instance.Components)
+                    {
+                        yield return new InvocationComponent(InvocationComponent.CATEGORY_GLOBAL, REPLACE, component.Name, path: Strings.UIComponentContainer_Replace, attributes: attributes);
+                    }
+                }
                 yield return new InvocationComponent(InvocationComponent.CATEGORY_GLOBAL, CLEAR, Strings.UIComponentContainer_Clear, attributes: attributes);
             }
         }
