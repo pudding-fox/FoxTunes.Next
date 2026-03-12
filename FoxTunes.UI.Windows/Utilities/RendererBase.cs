@@ -3,11 +3,11 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 
 namespace FoxTunes
@@ -20,7 +20,28 @@ namespace FoxTunes
 
         public const int ROLLOFF_INTERVAL = 500;
 
-        public const DispatcherPriority DISPATCHER_PRIORITY = DispatcherPriority.Render;
+        static RendererBase()
+        {
+            ComponentRegistry.Instance.GetComponent<IConfiguration>().GetElement<SelectionConfigurationElement>(
+                RendererTargetFactoryConfiguration.SECTION,
+                RendererTargetFactoryConfiguration.PRIORITY
+            ).ConnectValue(value =>
+            {
+                switch (value.Id)
+                {
+                    case RendererTargetFactoryConfiguration.PRIORITY_LOW:
+                        RenderPriority = DispatcherPriority.Background;
+                        break;
+                    default:
+                    case RendererTargetFactoryConfiguration.PRIORITY_NORMAL:
+                        RenderPriority = DispatcherPriority.Normal;
+                        break;
+                    case RendererTargetFactoryConfiguration.PRIORITY_HIGH:
+                        RenderPriority = DispatcherPriority.Send;
+                        break;
+                }
+            });
+        }
 
         protected static ILogger Logger
         {
@@ -29,6 +50,8 @@ namespace FoxTunes
                 return LogManager.Logger;
             }
         }
+
+        protected static DispatcherPriority RenderPriority { get; private set; }
 
         public static readonly DependencyProperty BackgroundProperty = DependencyProperty.Register(
             "Background",

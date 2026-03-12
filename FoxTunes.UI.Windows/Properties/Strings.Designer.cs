@@ -1438,6 +1438,42 @@ namespace FoxTunes {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Priority.
+        /// </summary>
+        internal static string RendererTargetFactoryConfiguration_Priority {
+            get {
+                return ResourceManager.GetString("RendererTargetFactoryConfiguration.Priority", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to High.
+        /// </summary>
+        internal static string RendererTargetFactoryConfiguration_Priority_High {
+            get {
+                return ResourceManager.GetString("RendererTargetFactoryConfiguration.Priority.High", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Low.
+        /// </summary>
+        internal static string RendererTargetFactoryConfiguration_Priority_Low {
+            get {
+                return ResourceManager.GetString("RendererTargetFactoryConfiguration.Priority.Low", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Normal.
+        /// </summary>
+        internal static string RendererTargetFactoryConfiguration_Priority_Normal {
+            get {
+                return ResourceManager.GetString("RendererTargetFactoryConfiguration.Priority.Normal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Rendering.
         /// </summary>
         internal static string RendererTargetFactoryConfiguration_Section {

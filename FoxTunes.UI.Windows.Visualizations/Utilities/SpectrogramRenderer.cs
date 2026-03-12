@@ -3,7 +3,6 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
-using System.Windows.Media.Imaging;
 
 namespace FoxTunes
 {
@@ -217,7 +216,7 @@ namespace FoxTunes
                     Interlocked.Increment(ref this.ViewModel.Frames);
                 }
 #endif
-            }, DISPATCHER_PRIORITY);
+            }, RenderPriority);
         }
 
         protected override void OnUpdateData(object sender, ElapsedEventArgs e)

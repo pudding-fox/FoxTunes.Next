@@ -116,7 +116,14 @@ namespace FoxTunes
 
         public UIComponent GetComponent(string name, UIComponentRole role)
         {
-            return this.Components.FirstOrDefault(component => string.Equals(component.Name, name, StringComparison.OrdinalIgnoreCase) && component.Role == role);
+            if (role != UIComponentRole.None)
+            {
+                return this.Components.FirstOrDefault(component => string.Equals(component.Name, name, StringComparison.OrdinalIgnoreCase) && component.Role == role);
+            }
+            else
+            {
+                return this.Components.FirstOrDefault(component => string.Equals(component.Name, name, StringComparison.OrdinalIgnoreCase));
+            }
         }
 
         public IEnumerable<UIComponent> GetComponents(UIComponentRole role)

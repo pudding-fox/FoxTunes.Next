@@ -723,4 +723,16 @@
   <data name="PlaylistActionsBehaviour.All" xml:space="preserve">
     <value>All</value>
   </data>
+  <data name="RendererTargetFactoryConfiguration.Priority" xml:space="preserve">
+    <value>Priority</value>
+  </data>
+  <data name="RendererTargetFactoryConfiguration.Priority.Low" xml:space="preserve">
+    <value>Low</value>
+  </data>
+  <data name="RendererTargetFactoryConfiguration.Priority.Normal" xml:space="preserve">
+    <value>Normal</value>
+  </data>
+  <data name="RendererTargetFactoryConfiguration.Priority.High" xml:space="preserve">
+    <value>High</value>
+  </data>
 </root>

@@ -181,7 +181,7 @@ namespace FoxTunes
                     Interlocked.Increment(ref this.ViewModel.Frames);
                 }
 #endif
-            }, DISPATCHER_PRIORITY);
+            }, RenderPriority);
         }
 
         protected override void OnUpdateData(object sender, ElapsedEventArgs e)
