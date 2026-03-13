@@ -281,6 +281,7 @@ namespace FoxTunes
                 if (pipeline != null)
                 {
                     var bufferLength = pipeline.BufferLength;
+                    var offset = Bass.ChannelSeconds2Bytes(this.ChannelHandle, (double)bufferLength / 1000);
                     if (position >= this.Length)
                     {
                         //BASS cannot seek to the end of a stream.
@@ -295,7 +296,7 @@ namespace FoxTunes
                             pipeline.Pause();
                             pipeline.ClearBuffer();
                         }
-                        this.Stream.Position = position;
+                        this.Stream.Position = position + offset;
                         if (bufferLength > 0)
                         {
                             pipeline.Resume();
@@ -307,7 +308,7 @@ namespace FoxTunes
                         {
                             pipeline.ClearBuffer();
                         }
-                        this.Stream.Position = position;
+                        this.Stream.Position = position + offset;
                     }
                 }
             });

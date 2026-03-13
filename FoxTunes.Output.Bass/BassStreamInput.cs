@@ -32,7 +32,7 @@ namespace FoxTunes
         {
             get
             {
-                return false;
+                return false; 
             }
         }
 

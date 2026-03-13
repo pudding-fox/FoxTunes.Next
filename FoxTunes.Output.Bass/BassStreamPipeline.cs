@@ -11,8 +11,11 @@ namespace FoxTunes
 
         public BassStreamPipeline()
         {
+            this.BufferLengthMetric = new Metric(1000);
             this.Components = Enumerable.Empty<IBassStreamComponent>();
         }
+
+        public Metric BufferLengthMetric { get; private set; }
 
         public IBassStreamInput Input { get; private set; }
 
@@ -67,7 +70,7 @@ namespace FoxTunes
         {
             get
             {
-                return this.All.Sum(component => component.BufferLength);
+                return this.BufferLengthMetric.Average(this.All.Sum(component => component.BufferLength));
             }
         }
 

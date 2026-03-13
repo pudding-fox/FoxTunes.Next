@@ -45,7 +45,7 @@ namespace FoxTunes
         {
             get
             {
-                return BassMix.MixerBufferLength * Bass.PlaybackBufferLength;
+                return BassUtils.GetMixerBufferLength();
             }
         }
 
@@ -79,7 +79,7 @@ namespace FoxTunes
         {
             if (this.ChannelHandle != 0)
             {
-                Logger.Write(this, LogLevel.Debug, "Freeing BASS SOX stream: {0}", this.ChannelHandle);
+                Logger.Write(this, LogLevel.Debug, "Freeing BASS MIX stream: {0}", this.ChannelHandle);
                 BassUtils.OK(Bass.StreamFree(this.ChannelHandle));
             }
         }
