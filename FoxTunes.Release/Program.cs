@@ -498,6 +498,17 @@ namespace FoxTunes
                     PackageFlags.Default
                 ),
                 new Package(
+                    "ffmpeg",
+                    new PackageElement[]
+                    {
+                        "FoxTunes.Output.Bass.Ffmpeg.dll",
+                        "ManagedBass.Ffmpeg.dll",
+                        new PackageElement("x86/bass_ffmpeg.dll", "x86/addon"),
+                        new PackageElement("x64/bass_ffmpeg.dll", "x64/addon")
+                    },
+                    PackageFlags.Default
+                ),
+                new Package(
                     "gapless",
                     new PackageElement[]
                     {

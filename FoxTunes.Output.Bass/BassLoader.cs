@@ -83,6 +83,10 @@ namespace FoxTunes
                 {
                     foreach (var format in plugin.Info.Formats)
                     {
+                        if (format.FileExtensions == null)
+                        {
+                            continue;
+                        }
                         foreach (var extension in format.FileExtensions.Split(';'))
                         {
                             extensions.Add(extension.TrimStart('*', '.'));

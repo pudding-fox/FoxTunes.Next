@@ -4,7 +4,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
+using System.Windows.Markup;
 
 namespace FoxTunes
 {
@@ -148,6 +150,12 @@ namespace FoxTunes
                 Logger.Write(typeof(FileSystemHelper), LogLevel.Warn, "Failed to determine whether \"{0}\" is a local path: {1}", fileName, e.Message);
                 return false;
             }
+        }
+
+        public static bool HasExtension(string fileName, IEnumerable<string> extensions)
+        {
+            var extension = Path.GetExtension(fileName);
+            return extensions.Contains(extension, StringComparer.OrdinalIgnoreCase);
         }
 
         public static bool TryGetRelativePath(string path1, string path2, out string path)

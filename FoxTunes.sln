@@ -129,6 +129,15 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FoxTunes.Discord", "FoxTune
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FoxTunes.Output.Bass.Upmix", "FoxTunes.Output.Bass.Upmix\FoxTunes.Output.Bass.Upmix.csproj", "{4CCE9E4C-48A7-EEEE-21C9-32B2FEE8C3A9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FoxTunes.Output.Bass.Ffmpeg", "FoxTunes.Output.Bass.Ffmpeg\FoxTunes.Output.Bass.Ffmpeg.csproj", "{35E71E7F-2C9E-4DBA-D147-DBDF7FC9E233}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8EC462FD-D22E-90A8-E5CE-7E832BA40C5D}"
+	ProjectSection(SolutionItems) = preProject
+		FoxTunes.Manifest.xml = FoxTunes.Manifest.xml
+		NuGet.config = NuGet.config
+		README.md = README.md
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -359,6 +368,10 @@ Global
 		{4CCE9E4C-48A7-EEEE-21C9-32B2FEE8C3A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4CCE9E4C-48A7-EEEE-21C9-32B2FEE8C3A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4CCE9E4C-48A7-EEEE-21C9-32B2FEE8C3A9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{35E71E7F-2C9E-4DBA-D147-DBDF7FC9E233}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{35E71E7F-2C9E-4DBA-D147-DBDF7FC9E233}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{35E71E7F-2C9E-4DBA-D147-DBDF7FC9E233}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{35E71E7F-2C9E-4DBA-D147-DBDF7FC9E233}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -420,6 +433,7 @@ Global
 		{80D325F4-D792-A9BC-1C2A-F46EF9431999} = {05C1FA04-4070-44A7-9DFC-38B48FEFA3C2}
 		{D803E226-D5CB-2AB7-A75E-C764CF5A8D09} = {DCF7EA80-6EC0-4DB2-9B75-B31DEE97F4A0}
 		{4CCE9E4C-48A7-EEEE-21C9-32B2FEE8C3A9} = {B8B91C76-F6E7-47C7-A034-E0FC5B5466F2}
+		{35E71E7F-2C9E-4DBA-D147-DBDF7FC9E233} = {B8B91C76-F6E7-47C7-A034-E0FC5B5466F2}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {9293982D-B2F3-4C86-A307-057EE1CFA115}
