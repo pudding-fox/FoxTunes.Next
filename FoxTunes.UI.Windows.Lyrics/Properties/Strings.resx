@@ -117,14 +117,11 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="ChartLyrics" xml:space="preserve">
-    <value>Chart Lyrics</value>
+  <data name="LRCLIB" xml:space="preserve">
+    <value>LRCLIB</value>
   </data>
-  <data name="ChartLyricsProviderConfiguration.BaseUrl" xml:space="preserve">
+  <data name="LRCLIBLyricsProviderConfiguration.BaseUrl" xml:space="preserve">
     <value>Base Url</value>
-  </data>
-  <data name="ChartLyricsProviderConfiguration.MinConfidence" xml:space="preserve">
-    <value>Minimum Confidence</value>
   </data>
   <data name="Lyrics.Name" xml:space="preserve">
     <value>Lyrics</value>
