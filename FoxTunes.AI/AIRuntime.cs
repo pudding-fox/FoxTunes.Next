@@ -20,6 +20,6 @@ namespace FoxTunes
 
         public abstract ICorePrompts CorePrompts { get; }
 
-        public abstract IAIContext CreateContext(IEnumerable<string> preface);
+        public abstract IAIContext CreateContext(IEnumerable<IAIPrompt> prompts);
     }
 }

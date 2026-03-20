@@ -1,10 +1,13 @@
-﻿using FoxTunes.AI.LLama;
-using FoxTunes.Interfaces;
+﻿using FoxTunes.Interfaces;
 using LLama;
 using LLama.Common;
+using LLama.Native;
 using LLama.Sampling;
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
 
 namespace FoxTunes
 {
@@ -21,6 +24,7 @@ namespace FoxTunes
             this.InferenceParams = new Lazy<InferenceParams>(this.CreateInferenceParams);
             this.Model = new Lazy<LLamaWeights>(this.CreateModel);
             this.Executor = new Lazy<InteractiveExecutor>(this.CreateExecutor);
+            this.Embedder = new Lazy<LLamaEmbedder>(this.CreateEmbedder);
         }
 
         public Lazy<ModelParams> ModelParams { get; private set; }
@@ -30,6 +34,8 @@ namespace FoxTunes
         public Lazy<LLamaWeights> Model { get; private set; }
 
         public Lazy<InteractiveExecutor> Executor { get; private set; }
+
+        public Lazy<LLamaEmbedder> Embedder { get; private set; }
 
         public ICore Core { get; private set; }
 
@@ -43,8 +49,12 @@ namespace FoxTunes
         {
             return new ModelParams(LLamaAIModel.ModelPath)
             {
-                ContextSize = 16384,
-                Threads = 8
+                ContextSize = 8192,
+                BatchSize = 4096,
+                UBatchSize = 4096,
+                Threads = 4,
+                PoolingType = LLamaPoolingType.Mean,
+                Embeddings = true
             };
         }
 
@@ -68,6 +78,11 @@ namespace FoxTunes
             return new InteractiveExecutor(this.Model.Value.CreateContext(this.ModelParams.Value));
         }
 
+        protected virtual LLamaEmbedder CreateEmbedder()
+        {
+            return new LLamaEmbedder(this.Model.Value, this.ModelParams.Value);
+        }
+
         public override ICorePrompts CorePrompts
         {
             get
@@ -78,18 +93,54 @@ namespace FoxTunes
             }
         }
 
-        public override IAIContext CreateContext(IEnumerable<string> preface)
+        public override IAIContext CreateContext(IEnumerable<IAIPrompt> prompts)
         {
             Logger.Write(this, LogLevel.Debug, "Creating AI context.");
             var history = new ChatHistory();
-            foreach(var prompt in preface)
+            foreach (var prompt in prompts)
             {
-                history.AddMessage(AuthorRole.System, prompt);
+                switch (prompt.Type)
+                {
+                    case AIPromptType.Message:
+                        history.AddMessage(AuthorRole.System, prompt.Prompt);
+                        break;
+                    case AIPromptType.Embedding:
+                        foreach (var chunk in this.CreateEmbeddings(prompt.Prompt))
+                        {
+                            //TODO: Bad .Result
+                            var embeddings = this.Embedder.Value.GetEmbeddings(chunk).Result;
+                            var embedding = embeddings.Single();
+                            history.AddMessage(AuthorRole.System, string.Join(", ", embedding));
+                        }
+                        break;
+                }
             }
             var session = new ChatSession(this.Executor.Value, history);
             var context = new LLamaAIContext(session, this.InferenceParams.Value);
             context.InitializeComponent(this.Core);
             return context;
+        }
+
+        protected virtual IEnumerable<string> CreateEmbeddings(string prompt)
+        {
+            var builder = new StringBuilder();
+            using (var reader = new StringReader(prompt))
+            {
+                var line = default(string);
+                while ((line = reader.ReadLine()) != null)
+                {
+                    if (builder.Length + line.Length > this.ModelParams.Value.BatchSize)
+                    {
+                        yield return builder.ToString();
+                        builder.Clear();
+                    }
+                    builder.AppendLine(line);
+                }
+            }
+            if (builder.Length > 0)
+            {
+                yield return builder.ToString();
+            }
         }
 
         public bool IsDisposed { get; private set; }
@@ -112,7 +163,10 @@ namespace FoxTunes
 
         protected virtual void OnDisposing()
         {
-            //Nothing to do.
+            if (this.Embedder.IsValueCreated)
+            {
+                this.Embedder.Value.Dispose();
+            }
         }
 
         ~LLamaAIRuntime()

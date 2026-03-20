@@ -12,6 +12,6 @@ namespace FoxTunes.Interfaces
 
         ICorePrompts CorePrompts { get; }
 
-        IAIContext CreateContext(IEnumerable<string> preface);
+        IAIContext CreateContext(IEnumerable<IAIPrompt> prompts);
     }
 }

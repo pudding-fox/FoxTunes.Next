@@ -22,14 +22,14 @@ namespace FoxTunes {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class Strings {
+    internal class Resources {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal Strings() {
+        internal Resources() {
         }
         
         /// <summary>
@@ -39,7 +39,7 @@ namespace FoxTunes {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("FoxTunes.AI.LLama.Properties.Strings", typeof(Strings).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("FoxTunes.AI.LLama.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -61,11 +61,21 @@ namespace FoxTunes {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to LLama {0}.
+        ///   Looks up a localized string similar to Given the following available tracks in CSV format;.
         /// </summary>
-        internal static string LLamaAIRuntime_Name {
+        internal static string AvailableTracks {
             get {
-                return ResourceManager.GetString("LLamaAIRuntime.Name", resourceCulture);
+                return ResourceManager.GetString("AvailableTracks", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Create a playlist using the prompt: {0}
+        ///Return results in CSV format including the file name..
+        /// </summary>
+        internal static string CreatePlaylist {
+            get {
+                return ResourceManager.GetString("CreatePlaylist", resourceCulture);
             }
         }
     }

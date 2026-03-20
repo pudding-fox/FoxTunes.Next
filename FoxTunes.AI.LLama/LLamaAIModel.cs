@@ -6,7 +6,7 @@ namespace FoxTunes
     {
         private static readonly string CurrentDirectory = Path.GetDirectoryName(typeof(LLamaAIModel).Assembly.Location);
 
-        private static readonly string FileName = @"Models\tinyllama-1.1b-chat-v1.0.Q2_K.gguf";
+        private static readonly string FileName = @"Models\biggie_groked_int8_q8_0.gguf";
 
         public static string ModelPath
         {

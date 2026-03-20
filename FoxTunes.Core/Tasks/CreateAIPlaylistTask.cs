@@ -1,5 +1,6 @@
 ﻿using FoxDb.Interfaces;
 using FoxTunes.Interfaces;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace FoxTunes
@@ -63,14 +64,61 @@ namespace FoxTunes
 
         private async Task AddPlaylistItems(ITransactionSource transaction)
         {
-            var preface = new[]
+            var library = await this.GetEntireLibrary().ConfigureAwait(false);
+            var prompts = new[]
             {
-                this.AIRuntime.CorePrompts.AllTracks
+                new AIPrompt(this.AIRuntime.CorePrompts.AvailableTracks, AIPromptType.Message),
+                new AIPrompt(library, AIPromptType.Embedding)
             };
-            using (var context = this.AIRuntime.CreateContext(preface))
+            using (var context = this.AIRuntime.CreateContext(prompts))
             {
-                var response = await context.Chat(this.Prompt);
+                var prompt = this.AIRuntime.CorePrompts.CreatePlaylist(this.Prompt);
+                var response = await context.Chat(prompt);
             }
+        }
+
+        private async Task<string> GetEntireLibrary()
+        {
+            var builder = new StringBuilder();
+            using (var transaction = this.Database.BeginTransaction(this.Database.PreferredIsolationLevel))
+            {
+                using (var reader = this.GetEntireLibrary(transaction))
+                {
+                    using (var sequence = reader.GetAsyncEnumerator())
+                    {
+                        while (await sequence.MoveNextAsync().ConfigureAwait(false))
+                        {
+                            if (builder.Length > 0)
+                            {
+                                builder.AppendLine();
+                            }
+                            builder.Append(string.Concat(
+                                "\"",
+                                sequence.Current.Get<string>("FileName"),
+                                "\", \"",
+                                sequence.Current.Get<string>("Name"),
+                                "\", \"",
+                                sequence.Current.Get<string>("Value"),
+                                "\""
+                            ));
+                        }
+                    }
+                }
+            }
+            return builder.ToString();
+        }
+
+        protected virtual IDatabaseReader GetEntireLibrary(ITransactionSource transaction)
+        {
+            return this.Database.ExecuteReader(this.Database.Queries.GetEntireLibrary, (parameters, phase) =>
+            {
+                switch (phase)
+                {
+                    case FoxDb.Interfaces.DatabaseParameterPhase.Fetch:
+                        //Nothing to do.
+                        break;
+                }
+            }, transaction);
         }
     }
 }

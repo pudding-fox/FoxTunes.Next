@@ -2,6 +2,8 @@
 {
     public interface ICorePrompts : IBaseComponent
     {
-        string AllTracks { get; }
+        string AvailableTracks { get; }
+
+        string CreatePlaylist(string prompt);
     }
 }

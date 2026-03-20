@@ -156,7 +156,8 @@ namespace FoxTunes {
         ///FROM &quot;LibraryItems&quot;
         ///	JOIN &quot;LibraryItem_MetaDataItem&quot; ON &quot;LibraryItems&quot;.&quot;Id&quot; = &quot;LibraryItem_MetaDataItem&quot;.&quot;LibraryItem_Id&quot;
         ///	JOIN &quot;MetaDataItems&quot; ON &quot;LibraryItem_MetaDataItem&quot;.&quot;MetaDataItem_Id&quot; = &quot;MetaDataItems&quot;.&quot;Id&quot;
-        ///WHERE &quot;MetaDataItems&quot;.&quot;Name&quot; IN (&apos;Artist&apos;, &apos;Album&apos;, &apos;Title&apos;).
+        ///WHERE &quot;MetaDataItems&quot;.&quot;Name&quot; IN (&apos;Artist&apos;, &apos;Album&apos;, &apos;Title&apos;)
+        ///ORDER BY &quot;LibraryItems&quot;.&quot;FileName&quot;.
         /// </summary>
         internal static string GetEntireLibrary {
             get {
