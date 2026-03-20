@@ -297,5 +297,15 @@ namespace FoxTunes
                 );
             }
         }
+
+        public IDatabaseQuery GetEntireLibrary
+        {
+            get
+            {
+                return this.Database.QueryFactory.Create(
+                    Resources.GetEntireLibrary
+                );
+            }
+        }
     }
 }

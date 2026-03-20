@@ -390,6 +390,14 @@
             }
         }
 
+        public static string PlaylistConfigDialog_Prompt
+        {
+            get
+            {
+                return Strings.PlaylistConfigDialog_Prompt;
+            }
+        }
+
         public static string PlaylistManager_Save
         {
             get

@@ -21,6 +21,8 @@ namespace FoxTunes
 
         public const string ScriptingRuntime = "24ECF207-EC44-4E98-9533-B78B050DCFDA";
 
+        public const string AIRuntime = "272698DC-E118-4174-8D31-9290756E8FE0";
+
         public const string Logger = "4F0E4441-89E9-45A4-9B05-94491ACF0A99";
 
         public const string Blocked = "FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF";
@@ -34,6 +36,7 @@ namespace FoxTunes
             { "MetaData", MetaData },
             { "Signaling", Signaling },
             { "ScriptingRuntime", ScriptingRuntime },
+            { "AIRuntime", AIRuntime },
             { "Logger", Logger }
         };
 

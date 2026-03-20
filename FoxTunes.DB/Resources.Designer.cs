@@ -152,6 +152,19 @@ namespace FoxTunes {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to SELECT &quot;LibraryItems&quot;.&quot;FileName&quot;, &quot;MetaDataItems&quot;.&quot;Name&quot;, &quot;MetaDataItems&quot;.&quot;Value&quot;
+        ///FROM &quot;LibraryItems&quot;
+        ///	JOIN &quot;LibraryItem_MetaDataItem&quot; ON &quot;LibraryItems&quot;.&quot;Id&quot; = &quot;LibraryItem_MetaDataItem&quot;.&quot;LibraryItem_Id&quot;
+        ///	JOIN &quot;MetaDataItems&quot; ON &quot;LibraryItem_MetaDataItem&quot;.&quot;MetaDataItem_Id&quot; = &quot;MetaDataItems&quot;.&quot;Id&quot;
+        ///WHERE &quot;MetaDataItems&quot;.&quot;Name&quot; IN (&apos;Artist&apos;, &apos;Album&apos;, &apos;Title&apos;).
+        /// </summary>
+        internal static string GetEntireLibrary {
+            get {
+                return ResourceManager.GetString("GetEntireLibrary", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to SELECT &quot;MetaDataItems&quot;.*
         ///FROM &quot;MetaDataItems&quot;
         ///	JOIN &quot;LibraryItem_MetaDataItem&quot; ON &quot;LibraryItem_MetaDataItem&quot;.&quot;MetaDataItem_Id&quot; = &quot;MetaDataItems&quot;.&quot;Id&quot;

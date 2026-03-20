@@ -18,6 +18,8 @@
 
         IScriptingRuntime ScriptingRuntime { get; }
 
+        IAIRuntime AIRuntime { get; }
+
         ISignalEmitter SignalEmitter { get; }
 
         IErrorEmitter ErrorEmitter { get; }

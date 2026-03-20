@@ -735,4 +735,7 @@
   <data name="RendererTargetFactoryConfiguration.Priority.High" xml:space="preserve">
     <value>High</value>
   </data>
+  <data name="PlaylistConfigDialog.Prompt" xml:space="preserve">
+    <value>Prompt</value>
+  </data>
 </root>

@@ -118,58 +118,13 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="AddLibraryHierarchyNode" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>resources\addlibraryhierarchynode.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  <data name="AllTracks" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\AllTracks.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
-  <data name="AddLibraryMetaDataItem" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>resources\addlibrarymetadataitem.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  <data name="CreatePlaylist" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\CreatePlaylist.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
-  <data name="AddPlaylistMetaDataItem" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>resources\addplaylistmetadataitem.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
-  </data>
-  <data name="ClearLibraryMetaDataItems" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>resources\clearlibrarymetadataitems.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
-  </data>
-  <data name="ClearPlaylistMetaDataItems" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>resources\clearplaylistmetadataitems.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
-  </data>
-  <data name="GetEntireLibrary" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\GetEntireLibrary.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
-  </data>
-  <data name="GetLibraryItemMetaData" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\GetLibraryItemMetaData.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
-  </data>
-  <data name="GetLibraryMetaData" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\GetLibraryMetaData.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
-  </data>
-  <data name="GetOrAddMetaDataItem" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>resources\getoraddmetadataitem.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
-  </data>
-  <data name="RemoveCancelledLibraryItems" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>resources\removecancelledlibraryitems.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
-  </data>
-  <data name="RemoveLibraryHierarchyItems" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>resources\removelibraryhierarchyitems.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
-  </data>
-  <data name="RemoveLibraryItems" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>resources\removelibraryitems.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
-  </data>
-  <data name="RemoveLibraryVariousArtists" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>resources\removelibraryvariousartists.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
-  </data>
-  <data name="RemovePlaylistItems" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>resources\removeplaylistitems.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
-  </data>
-  <data name="RemovePlaylistVariousArtists" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>resources\removeplaylistvariousartists.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
-  </data>
-  <data name="UpdateLibraryHierarchyNode" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>resources\updatelibraryhierarchynode.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
-  </data>
-  <data name="UpdateLibraryVariousArtists" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>resources\updatelibraryvariousartists.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
-  </data>
-  <data name="UpdatePlaylistVariousArtists" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>resources\updateplaylistvariousartists.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  <data name="LLamaAIRuntime.Name" xml:space="preserve">
+    <value>LLama {0}</value>
   </data>
 </root>

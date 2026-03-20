@@ -73,6 +73,14 @@ namespace FoxTunes
             }
         }
 
+        public IAIRuntime AIRuntime
+        {
+            get
+            {
+                return ComponentRegistry.Instance.GetComponent<IAIRuntime>();
+            }
+        }
+
         public ISignalEmitter SignalEmitter
         {
             get

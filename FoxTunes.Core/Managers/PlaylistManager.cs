@@ -533,6 +533,9 @@ namespace FoxTunes
                 case PlaylistType.Everything:
                     behaviour = ComponentRegistry.Instance.GetComponent<EverythingPlaylistBehaviour>();
                     break;
+                case PlaylistType.AI:
+                    behaviour = ComponentRegistry.Instance.GetComponent<AIPlaylistBehaviour>();
+                    break;
             }
             if (behaviour != null)
             {

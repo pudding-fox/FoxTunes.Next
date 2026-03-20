@@ -1,4 +1,5 @@
 ﻿using System;
+
 namespace FoxTunes.Interfaces
 {
     public interface IScriptingContext : IDisposable

@@ -100,7 +100,11 @@ namespace FoxTunes
                 {
                     continue;
                 }
-                if (!string.Equals(assemblyName.FullName, name, StringComparison.OrdinalIgnoreCase))
+                //if (!string.Equals(assemblyName.FullName, name, StringComparison.OrdinalIgnoreCase))
+                //{
+                //    continue;
+                //}
+                if (!name.StartsWith(string.Concat(assemblyName.Name, ","), StringComparison.OrdinalIgnoreCase))
                 {
                     continue;
                 }

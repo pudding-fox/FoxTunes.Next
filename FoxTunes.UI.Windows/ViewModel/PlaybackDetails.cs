@@ -41,6 +41,8 @@ namespace FoxTunes.ViewModel
 
         public IScriptingRuntime ScriptingRuntime { get; private set; }
 
+        public IAIRuntime AIRuntime { get; private set; }
+
         public IOutput Output { get; private set; }
 
         protected override void InitializeComponent(ICore core)
@@ -48,6 +50,7 @@ namespace FoxTunes.ViewModel
             PlaybackStateNotifier.Notify += this.OnNotify;
             this.DatabaseFactory = core.Factories.Database;
             this.ScriptingRuntime = core.Components.ScriptingRuntime;
+            this.AIRuntime = core.Components.AIRuntime;
             this.Output = core.Components.Output;
             base.InitializeComponent(core);
         }
@@ -88,6 +91,17 @@ namespace FoxTunes.ViewModel
                 else if (!string.IsNullOrEmpty(this.ScriptingRuntime.Name))
                 {
                     builder.AppendLine(this.ScriptingRuntime.Name);
+                }
+            }
+            if (this.AIRuntime != null)
+            {
+                if (!string.IsNullOrEmpty(this.AIRuntime.Description))
+                {
+                    builder.AppendLine(this.AIRuntime.Description);
+                }
+                else if (!string.IsNullOrEmpty(this.AIRuntime.Name))
+                {
+                    builder.AppendLine(this.AIRuntime.Name);
                 }
             }
             if (this.Output != null)

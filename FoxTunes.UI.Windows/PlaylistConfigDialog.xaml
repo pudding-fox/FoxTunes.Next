@@ -51,6 +51,19 @@
                     <Slider Grid.Column="1" Grid.Row="5" Minimum="12" Maximum="30" IsSnapToTickEnabled="True" SmallChange="1" LargeChange="5" TickFrequency="1" Value="{Binding Count}" ToolTip="{Binding Count}"></Slider>
                 </Grid>
             </DataTemplate>
+            <DataTemplate DataType="{x:Type ViewModel:AIPlaylistConfig}">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" SharedSizeGroup="Label"></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <Label Grid.Column="0" Grid.Row="0" Content="{x:Static ViewModel:StringResources.PlaylistConfigDialog_Prompt}"></Label>
+                    <TextBox Grid.Column="1" AcceptsReturn="True" AcceptsTab="True" SpellCheck.IsEnabled="False" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto" Text="{Binding Prompt}"></TextBox>
+                </Grid>
+            </DataTemplate>
         </ContentControl.Resources>
         <Binding Path="Config" Source="{StaticResource ViewModel}"/>
     </ContentControl>

@@ -1,0 +1,62 @@
+﻿using FoxTunes.Interfaces;
+using System;
+using System.Threading.Tasks;
+
+namespace FoxTunes
+{
+    [ComponentDependency(Slot = ComponentSlots.Database)]
+    [ComponentDependency(Slot = ComponentSlots.AIRuntime)]
+    public class AIPlaylistBehaviour : PlaylistBehaviourBase
+    {
+        public const string Prompt = "Prompt";
+
+        public const string DefaultPrompt = "energetic";
+
+        public override Func<Playlist, bool> Predicate
+        {
+            get
+            {
+                return playlist => playlist.Type == PlaylistType.AI && playlist.Enabled;
+            }
+        }
+
+        protected virtual void GetConfig(Playlist playlist, out string prompt)
+        {
+            var config = this.GetConfig(playlist);
+            prompt = config.GetValueOrDefault(Prompt);
+            if (string.IsNullOrEmpty(prompt))
+            {
+                prompt = DefaultPrompt;
+            }
+        }
+
+        public ICore Core { get; private set; }
+
+        public override void InitializeComponent(ICore core)
+        {
+            this.Core = core;
+            base.InitializeComponent(core);
+        }
+
+        public override Task Refresh(Playlist playlist, bool force)
+        {
+            var prompt = default(string);
+            this.GetConfig(playlist, out prompt);
+            return this.Refresh(playlist, prompt, force);
+        }
+
+        protected virtual async Task Refresh(Playlist playlist, string prompt, bool force)
+        {
+            if (!force)
+            {
+                //Only refresh when user requests.
+                return;
+            }
+            using (var task = new CreateAIPlaylistTask(playlist, prompt))
+            {
+                task.InitializeComponent(this.Core);
+                await task.Run().ConfigureAwait(false);
+            }
+        }
+    }
+}

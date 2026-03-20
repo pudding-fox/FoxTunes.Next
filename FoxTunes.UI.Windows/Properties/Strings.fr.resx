@@ -528,6 +528,28 @@
   <data name="PlaylistActionsBehaviour.Remove" xml:space="preserve">
     <value>Supprimer</value>
   </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="PlaylistActionsBehaviour.AddFiles" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="PlaylistActionsBehaviour.AddFolders" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="PlaylistActionsBehaviour.All" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="RendererTargetFactoryConfiguration.Priority" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="RendererTargetFactoryConfiguration.Priority.Low" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="RendererTargetFactoryConfiguration.Priority.Normal" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="RendererTargetFactoryConfiguration.Priority.High" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
   <data name="VisualizationBehaviourConfiguration.FFTSize" xml:space="preserve">
     <value>FFT Size</value>
   </data>
@@ -555,26 +577,7 @@
   <data name="WindowsUserInterfaceConfiguration.MarqueeStep" xml:space="preserve">
     <value>Marquee Step</value>
   </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="PlaylistActionsBehaviour.AddFiles" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
-  <data name="PlaylistActionsBehaviour.AddFolders" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
-  <data name="PlaylistActionsBehaviour.All" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
-  <data name="RendererTargetFactoryConfiguration.Priority" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
-  <data name="RendererTargetFactoryConfiguration.Priority.Low" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
-  <data name="RendererTargetFactoryConfiguration.Priority.Normal" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
-  </data>
-  <data name="RendererTargetFactoryConfiguration.Priority.High" type="System.Resources.ResXNullRef, System.Windows.Forms">
+  <data name="PlaylistConfigDialog.Prompt" type="System.Resources.ResXNullRef, System.Windows.Forms">
     <value />
   </data>
 </root>

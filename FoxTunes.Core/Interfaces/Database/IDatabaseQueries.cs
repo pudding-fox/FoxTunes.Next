@@ -53,5 +53,7 @@ namespace FoxTunes.Interfaces
         IDatabaseQuery UpdatePlaylistVariousArtists { get; }
 
         IDatabaseQuery RemovePlaylistVariousArtists { get; }
+
+        IDatabaseQuery GetEntireLibrary { get; }
     }
 }
