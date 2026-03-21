@@ -80,6 +80,7 @@ namespace FoxTunes
         private async Task<string> GetEntireLibrary()
         {
             var builder = new StringBuilder();
+            builder.AppendLine("\"FileName\",\"Name\",\"Value\"");
             using (var transaction = this.Database.BeginTransaction(this.Database.PreferredIsolationLevel))
             {
                 using (var reader = this.GetEntireLibrary(transaction))
