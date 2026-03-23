@@ -37,6 +37,8 @@ namespace FoxTunes
 
         public IErrorEmitter ErrorEmitter { get; private set; }
 
+        public IEnumerable<IPlaylistProvider> Providers { get; private set; }
+
         public override void InitializeComponent(ICore core)
         {
             this.Core = core;
@@ -49,6 +51,7 @@ namespace FoxTunes
             this.SignalEmitter.Signal += this.OnSignal;
             this.BackgroundTaskEmitter = core.Components.BackgroundTaskEmitter;
             this.ErrorEmitter = core.Components.ErrorEmitter;
+            this.Providers = ComponentRegistry.Instance.GetComponents<IPlaylistProvider>();
             this.Refresh();
             base.InitializeComponent(core);
         }
@@ -518,28 +521,10 @@ namespace FoxTunes
 
         public async Task Clear(Playlist playlist)
         {
-            var behaviour = default(PlaylistBehaviourBase);
-            switch (playlist.Type)
+            var provider = this.Providers.FirstOrDefault(_provider => _provider.Predicate(playlist));
+            if (provider != null)
             {
-                case PlaylistType.Selection:
-                    behaviour = ComponentRegistry.Instance.GetComponent<SelectionPlaylistBehaviour>();
-                    break;
-                case PlaylistType.Dynamic:
-                    behaviour = ComponentRegistry.Instance.GetComponent<DynamicPlaylistBehaviour>();
-                    break;
-                case PlaylistType.Smart:
-                    behaviour = ComponentRegistry.Instance.GetComponent<SmartPlaylistBehaviour>();
-                    break;
-                case PlaylistType.Everything:
-                    behaviour = ComponentRegistry.Instance.GetComponent<EverythingPlaylistBehaviour>();
-                    break;
-                case PlaylistType.AI:
-                    behaviour = ComponentRegistry.Instance.GetComponent<AIPlaylistBehaviour>();
-                    break;
-            }
-            if (behaviour != null)
-            {
-                await behaviour.Refresh(playlist, true).ConfigureAwait(false);
+                await provider.Refresh(playlist, true).ConfigureAwait(false);
             }
             else
             {
