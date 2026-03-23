@@ -1,6 +1,8 @@
 ﻿using FoxDb.Interfaces;
 using FoxTunes.Interfaces;
-using System.Text;
+using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace FoxTunes
@@ -64,23 +66,64 @@ namespace FoxTunes
 
         private async Task AddPlaylistItems(ITransactionSource transaction)
         {
-            var library = await this.GetEntireLibrary().ConfigureAwait(false);
-            var prompts = new[]
+            using (var context = this.AIRuntime.CreateContext())
             {
-                new AIPrompt(this.AIRuntime.CorePrompts.AvailableTracks, AIPromptType.Message),
-                new AIPrompt(library, AIPromptType.Embedding)
-            };
-            using (var context = this.AIRuntime.CreateContext(prompts))
-            {
-                var prompt = this.AIRuntime.CorePrompts.CreatePlaylist(this.Prompt);
-                var response = await context.Chat(prompt);
+                var fileId = default(string);
+                var vectorStoreId = default(string);
+                using (var stream = await this.GetEntireLibrary().ConfigureAwait(false))
+                {
+                    var store = context.CreateFileStore();
+                    fileId = await store.Create(stream, "library.txt").ConfigureAwait(false);
+                }
+                {
+                    var store = context.CreateVectorStore();
+                    vectorStoreId = await store.Create("library.txt").ConfigureAwait(false);
+                    await store.AddFile(vectorStoreId, fileId).ConfigureAwait(false);
+                }
+                {
+                    var store = context.CreateResponseStore();
+                    var result = await store.Create(string.Format("Create a playlist from my library using the prompt: {0}. Ensure that the output is in valid CSV format containing only the file name without headers.", this.Prompt), vectorStoreId);
+                    await this.AddPlaylistItems(result).ConfigureAwait(false);
+                }
             }
         }
 
-        private async Task<string> GetEntireLibrary()
+        private async Task AddPlaylistItems(string response)
         {
-            var builder = new StringBuilder();
-            builder.AppendLine("\"FileName\",\"Name\",\"Value\"");
+            using (var reader = new StringReader(response))
+            {
+                var line = default(string);
+                var foundHeader = default(bool);
+                while ((line = await reader.ReadLineAsync().ConfigureAwait(false)) != null)
+                {
+                    if (line.StartsWith("```csv"))
+                    {
+                        foundHeader = true;
+                        break;
+                    }
+                }
+                if (!foundHeader)
+                {
+                    throw new InvalidOperationException("Data could not be located in the response.");
+                }
+                var paths = new List<string>();
+                while ((line = await reader.ReadLineAsync()) != null)
+                {
+                    if (line.StartsWith("```"))
+                    {
+                        break;
+                    }
+                    paths.Add(line.Trim(new[] { '"', ' ' }));
+                }
+                await this.AddPlaylistItems(paths, CancellationToken.None).ConfigureAwait(false);
+            }
+        }
+
+        private async Task<Stream> GetEntireLibrary()
+        {
+            var stream = new MemoryStream();
+            var writer = new StreamWriter(stream);
+            await writer.WriteLineAsync("\"FileName\",\"Name\",\"Value\"").ConfigureAwait(false);
             using (var transaction = this.Database.BeginTransaction(this.Database.PreferredIsolationLevel))
             {
                 using (var reader = this.GetEntireLibrary(transaction))
@@ -89,11 +132,7 @@ namespace FoxTunes
                     {
                         while (await sequence.MoveNextAsync().ConfigureAwait(false))
                         {
-                            if (builder.Length > 0)
-                            {
-                                builder.AppendLine();
-                            }
-                            builder.Append(string.Concat(
+                            writer.WriteLine(string.Concat(
                                 "\"",
                                 sequence.Current.Get<string>("FileName"),
                                 "\", \"",
@@ -106,7 +145,8 @@ namespace FoxTunes
                     }
                 }
             }
-            return builder.ToString();
+            stream.Seek(0, SeekOrigin.Begin);
+            return stream;
         }
 
         protected virtual IDatabaseReader GetEntireLibrary(ITransactionSource transaction)

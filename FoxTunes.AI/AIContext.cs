@@ -1,13 +1,22 @@
 ﻿using FoxTunes.Interfaces;
 using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace FoxTunes
 {
     public abstract class AIContext : BaseComponent, IAIContext
     {
-        public abstract Task<IEnumerable<string>> Chat(string prompt);
+        protected AIContext(string model)
+        {
+            this.Model = model;
+        }
+
+        public string Model { get; private set; }
+
+        public abstract IAIFileStore CreateFileStore();
+
+        public abstract IAIVectorStore CreateVectorStore();
+
+        public abstract IAIResponseStore CreateResponseStore();
 
         public bool IsDisposed { get; private set; }
 

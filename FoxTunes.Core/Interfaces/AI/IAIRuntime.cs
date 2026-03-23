@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace FoxTunes.Interfaces
+﻿namespace FoxTunes.Interfaces
 {
     public interface IAIRuntime : IStandardComponent
     {
@@ -10,8 +8,6 @@ namespace FoxTunes.Interfaces
 
         string Description { get; }
 
-        ICorePrompts CorePrompts { get; }
-
-        IAIContext CreateContext(IEnumerable<IAIPrompt> prompts);
+        IAIContext CreateContext();
     }
 }

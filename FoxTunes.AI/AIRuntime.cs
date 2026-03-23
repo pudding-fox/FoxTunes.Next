@@ -1,5 +1,4 @@
 ﻿using FoxTunes.Interfaces;
-using System.Collections.Generic;
 
 namespace FoxTunes
 {
@@ -18,8 +17,6 @@ namespace FoxTunes
 
         public string Description { get; private set; }
 
-        public abstract ICorePrompts CorePrompts { get; }
-
-        public abstract IAIContext CreateContext(IEnumerable<IAIPrompt> prompts);
+        public abstract IAIContext CreateContext();
     }
 }
