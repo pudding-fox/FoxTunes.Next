@@ -79,7 +79,7 @@ namespace FoxTunes {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to API Key.
+        ///   Looks up a localized string similar to OpenAI API Key.
         /// </summary>
         internal static string OpenAIRuntimeConfiguration_ApiKey {
             get {
@@ -88,11 +88,11 @@ namespace FoxTunes {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to OpenAI.
+        ///   Looks up a localized string similar to OpenAI Model.
         /// </summary>
-        internal static string OpenAIRuntimeConfiguration_Section {
+        internal static string OpenAIRuntimeConfiguration_Model {
             get {
-                return ResourceManager.GetString("OpenAIRuntimeConfiguration.Section", resourceCulture);
+                return ResourceManager.GetString("OpenAIRuntimeConfiguration.Model", resourceCulture);
             }
         }
     }

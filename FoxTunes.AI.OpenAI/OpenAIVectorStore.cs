@@ -1,6 +1,7 @@
 ﻿#pragma warning disable OPENAI001
 using FoxTunes.Interfaces;
 using OpenAI.VectorStores;
+using System;
 using System.Threading.Tasks;
 
 namespace FoxTunes
@@ -25,11 +26,19 @@ namespace FoxTunes
                 id = result.Value.Id;
             }
             {
+                var attempt = 0;
             retry:
                 var result = await this.Client.GetVectorStoreAsync(id).ConfigureAwait(false);
                 if (result.Value.Status == VectorStoreStatus.InProgress)
                 {
-                    goto retry;
+                    if (attempt++ < 5)
+                    {
+                        goto retry;
+                    }
+                    else
+                    {
+                        throw new TimeoutException("Timed out waiting for vector store to become available.");
+                    }
                 }
             }
             return id;
@@ -41,11 +50,19 @@ namespace FoxTunes
                 var result = await this.Client.AddFileToVectorStoreAsync(vectorStoreId, fileId).ConfigureAwait(false);
             }
             {
+                var attempt = 0;
             retry:
                 var result = await this.Client.GetVectorStoreFileAsync(vectorStoreId, fileId).ConfigureAwait(false);
                 if (result.Value.Status == VectorStoreFileStatus.InProgress)
                 {
-                    goto retry;
+                    if (attempt++ < 3)
+                    {
+                        goto retry;
+                    }
+                    else
+                    {
+                        throw new TimeoutException("Timed out waiting for file to become available.");
+                    }
                 }
             }
         }

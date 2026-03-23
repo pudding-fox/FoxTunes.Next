@@ -3,6 +3,7 @@ using FoxTunes.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace FoxTunes
@@ -24,12 +25,22 @@ namespace FoxTunes
             }
         }
 
-        public IAIRuntime AIRuntime { get; private set; }
+        public IAIRuntime Runtime { get; private set; }
+
+        public TextConfigurationElement VectorStoreId { get; private set; }
 
         public override void InitializeComponent(ICore core)
         {
-            this.AIRuntime = core.Components.AIRuntime;
             base.InitializeComponent(core);
+            this.Runtime = core.Components.AIRuntime;
+            this.VectorStoreId = this.Configuration.GetElement<TextConfigurationElement>(
+                AIBehaviourConfiguration.SECTION,
+                AIBehaviourConfiguration.VECTOR_STORE_ID
+            );
+            if (string.IsNullOrEmpty(this.VectorStoreId.Value))
+            {
+                throw new InvalidOperationException("Vector store has not been configured, please check your settings.");
+            }
         }
 
         protected override async Task OnRun()
@@ -66,29 +77,29 @@ namespace FoxTunes
 
         private async Task AddPlaylistItems(ITransactionSource transaction)
         {
-            using (var context = this.AIRuntime.CreateContext())
+            using (var context = this.Runtime.CreateContext())
             {
-                var fileId = default(string);
-                var vectorStoreId = default(string);
-                using (var stream = await this.GetEntireLibrary().ConfigureAwait(false))
+                var store = context.CreateResponseStore();
+                var attempt = 0;
+            retry:
+                var result = await store.Create(string.Format("Create a playlist from my library using the prompt: {0}. Ensure that the output is in valid CSV format containing only the file name without headers.", this.Prompt), this.VectorStoreId.Value);
+                var paths = await this.GetPathsFromResponse(result).ConfigureAwait(false);
+                if (!paths.Any())
                 {
-                    var store = context.CreateFileStore();
-                    fileId = await store.Create(stream, "library.txt").ConfigureAwait(false);
+                    if (attempt++ < 5)
+                    {
+                        goto retry;
+                    }
+                    else
+                    {
+                        throw new TimeoutException("Timed out waiting for response.");
+                    }
                 }
-                {
-                    var store = context.CreateVectorStore();
-                    vectorStoreId = await store.Create("library.txt").ConfigureAwait(false);
-                    await store.AddFile(vectorStoreId, fileId).ConfigureAwait(false);
-                }
-                {
-                    var store = context.CreateResponseStore();
-                    var result = await store.Create(string.Format("Create a playlist from my library using the prompt: {0}. Ensure that the output is in valid CSV format containing only the file name without headers.", this.Prompt), vectorStoreId);
-                    await this.AddPlaylistItems(result).ConfigureAwait(false);
-                }
+                await this.AddPlaylistItems(paths, CancellationToken.None).ConfigureAwait(false);
             }
         }
 
-        private async Task AddPlaylistItems(string response)
+        protected virtual async Task<IEnumerable<string>> GetPathsFromResponse(string response)
         {
             using (var reader = new StringReader(response))
             {
@@ -115,51 +126,8 @@ namespace FoxTunes
                     }
                     paths.Add(line.Trim(new[] { '"', ' ' }));
                 }
-                await this.AddPlaylistItems(paths, CancellationToken.None).ConfigureAwait(false);
+                return paths;
             }
-        }
-
-        private async Task<Stream> GetEntireLibrary()
-        {
-            var stream = new MemoryStream();
-            var writer = new StreamWriter(stream);
-            await writer.WriteLineAsync("\"FileName\",\"Name\",\"Value\"").ConfigureAwait(false);
-            using (var transaction = this.Database.BeginTransaction(this.Database.PreferredIsolationLevel))
-            {
-                using (var reader = this.GetEntireLibrary(transaction))
-                {
-                    using (var sequence = reader.GetAsyncEnumerator())
-                    {
-                        while (await sequence.MoveNextAsync().ConfigureAwait(false))
-                        {
-                            writer.WriteLine(string.Concat(
-                                "\"",
-                                sequence.Current.Get<string>("FileName"),
-                                "\", \"",
-                                sequence.Current.Get<string>("Name"),
-                                "\", \"",
-                                sequence.Current.Get<string>("Value"),
-                                "\""
-                            ));
-                        }
-                    }
-                }
-            }
-            stream.Seek(0, SeekOrigin.Begin);
-            return stream;
-        }
-
-        protected virtual IDatabaseReader GetEntireLibrary(ITransactionSource transaction)
-        {
-            return this.Database.ExecuteReader(this.Database.Queries.GetEntireLibrary, (parameters, phase) =>
-            {
-                switch (phase)
-                {
-                    case FoxDb.Interfaces.DatabaseParameterPhase.Fetch:
-                        //Nothing to do.
-                        break;
-                }
-            }, transaction);
         }
     }
 }

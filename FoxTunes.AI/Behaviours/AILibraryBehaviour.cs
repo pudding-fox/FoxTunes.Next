@@ -29,12 +29,12 @@ namespace FoxTunes
             this.BackgroundTaskEmitter = core.Components.BackgroundTaskEmitter;
             this.Configuration = core.Components.Configuration;
             this.FileId = this.Configuration.GetElement<TextConfigurationElement>(
-                AILibraryBehaviourConfiguration.SECTION,
-                AILibraryBehaviourConfiguration.FILE_ID
+                AIBehaviourConfiguration.SECTION,
+                AIBehaviourConfiguration.FILE_ID
             );
             this.VectorStoreId = this.Configuration.GetElement<TextConfigurationElement>(
-                AILibraryBehaviourConfiguration.SECTION,
-                AILibraryBehaviourConfiguration.VECTOR_STORE_ID
+                AIBehaviourConfiguration.SECTION,
+                AIBehaviourConfiguration.VECTOR_STORE_ID
             );
             base.InitializeComponent(core);
         }

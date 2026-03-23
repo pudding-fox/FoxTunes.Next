@@ -44,7 +44,7 @@ namespace FoxTunes.ViewModel
         {
             get
             {
-                return this.Config.GetValueOrDefault(nameof(Expression), DynamicPlaylistBehaviour.DefaultExpression);
+                return this.Config.GetValueOrDefault(nameof(Expression), DynamicPlaylistProvider.DefaultExpression);
             }
             set
             {
@@ -82,7 +82,7 @@ namespace FoxTunes.ViewModel
         {
             get
             {
-                return this.Config.GetValueOrDefault(nameof(Genres), Convert.ToString(SmartPlaylistBehaviour.DefaultGenres));
+                return this.Config.GetValueOrDefault(nameof(Genres), Convert.ToString(SmartPlaylistProvider.DefaultGenres));
             }
             set
             {
@@ -107,7 +107,7 @@ namespace FoxTunes.ViewModel
         {
             get
             {
-                return Convert.ToBoolean(this.Config.GetValueOrDefault(nameof(Like), Convert.ToString(SmartPlaylistBehaviour.DefaultLike)));
+                return Convert.ToBoolean(this.Config.GetValueOrDefault(nameof(Like), Convert.ToString(SmartPlaylistProvider.DefaultLike)));
             }
             set
             {
@@ -132,7 +132,7 @@ namespace FoxTunes.ViewModel
         {
             get
             {
-                return Convert.ToInt32(this.Config.GetValueOrDefault(nameof(MinRating), Convert.ToString(SmartPlaylistBehaviour.DefaultMinRating)));
+                return Convert.ToInt32(this.Config.GetValueOrDefault(nameof(MinRating), Convert.ToString(SmartPlaylistProvider.DefaultMinRating)));
             }
             set
             {
@@ -157,7 +157,7 @@ namespace FoxTunes.ViewModel
         {
             get
             {
-                return Convert.ToInt32(this.Config.GetValueOrDefault(nameof(MinAge), Convert.ToString(SmartPlaylistBehaviour.DefaultMinAge)));
+                return Convert.ToInt32(this.Config.GetValueOrDefault(nameof(MinAge), Convert.ToString(SmartPlaylistProvider.DefaultMinAge)));
             }
             set
             {
@@ -182,7 +182,7 @@ namespace FoxTunes.ViewModel
         {
             get
             {
-                return Convert.ToInt32(this.Config.GetValueOrDefault(nameof(Count), Convert.ToString(SmartPlaylistBehaviour.DefaultCount)));
+                return Convert.ToInt32(this.Config.GetValueOrDefault(nameof(Count), Convert.ToString(SmartPlaylistProvider.DefaultCount)));
             }
             set
             {
@@ -220,7 +220,7 @@ namespace FoxTunes.ViewModel
         {
             get
             {
-                return this.Config.GetValueOrDefault(nameof(Prompt), AIPlaylistBehaviour.DefaultPrompt);
+                return this.Config.GetValueOrDefault(nameof(Prompt), AIPlaylistProvider.DefaultPrompt);
             }
             set
             {

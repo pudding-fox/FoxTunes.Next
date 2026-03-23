@@ -117,6 +117,15 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="AIBehaviourConfiguration.VectoreStoreId" xml:space="preserve">
+    <value>Vector Store Id</value>
+  </data>
+  <data name="AIBehaviourConfiguration.FileId" xml:space="preserve">
+    <value>File Id</value>
+  </data>
+  <data name="AIBehaviourConfiguration.Section" xml:space="preserve">
+    <value>AI</value>
+  </data>
   <data name="EnqueueNextItemBehaviourConfiguration.Count" xml:space="preserve">
     <value>Queue Size</value>
   </data>

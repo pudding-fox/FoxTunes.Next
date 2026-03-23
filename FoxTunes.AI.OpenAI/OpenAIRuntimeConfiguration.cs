@@ -4,7 +4,7 @@ namespace FoxTunes
 {
     public static class OpenAIRuntimeConfiguration
     {
-        public const string SECTION = "701433D1-5B14-4AAB-A58D-F895A7D5F136";
+        public const string SECTION = AIBehaviourConfiguration.SECTION;
 
         public const string API_KEY = "AAAAE6C8-078F-49D3-B7B4-1E39B86DD32E";
 
@@ -16,11 +16,11 @@ namespace FoxTunes
 
         public static IEnumerable<ConfigurationSection> GetConfigurationSections()
         {
-            yield return new ConfigurationSection(SECTION, Strings.OpenAIRuntimeConfiguration_Section)
+            yield return new ConfigurationSection(SECTION)
                 .WithElement(new TextConfigurationElement(API_KEY, Strings.OpenAIRuntimeConfiguration_ApiKey)
                     .WithValue(DEFAULT_API_KEY)
                     .WithFlags(ConfigurationElementFlags.Secret))
-                .WithElement(new TextConfigurationElement(MODEL)
+                .WithElement(new TextConfigurationElement(MODEL, Strings.OpenAIRuntimeConfiguration_Model)
                     .WithValue(DEFAULT_MODEL)
             );
         }

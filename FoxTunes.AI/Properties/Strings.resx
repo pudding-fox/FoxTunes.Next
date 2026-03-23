@@ -117,16 +117,7 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AILibraryBehaviourConfiguration.FileId" xml:space="preserve">
-    <value>File Id</value>
-  </data>
-  <data name="AILibraryBehaviourConfiguration.Section" xml:space="preserve">
-    <value>AI</value>
-  </data>
   <data name="AILibraryBehaviourConfiguration.Update" xml:space="preserve">
-    <value>Update</value>
-  </data>
-  <data name="AILibraryBehaviourConfiguration.VectorStoreId" xml:space="preserve">
-    <value>Vector Store Id</value>
+    <value>Update Library</value>
   </data>
 </root>

@@ -124,9 +124,9 @@
     <value>No API key, please update your settings.</value>
   </data>
   <data name="OpenAIRuntimeConfiguration.ApiKey" xml:space="preserve">
-    <value>API Key</value>
+    <value>OpenAI API Key</value>
   </data>
-  <data name="OpenAIRuntimeConfiguration.Section" xml:space="preserve">
-    <value>OpenAI</value>
+  <data name="OpenAIRuntimeConfiguration.Model" xml:space="preserve">
+    <value>OpenAI Model</value>
   </data>
 </root>
