@@ -8,5 +8,7 @@ namespace FoxTunes
         public abstract Task<string> Create(string name);
 
         public abstract Task AddFile(string vectorStoreId, string fileId);
+
+        public abstract Task Delete(string vectorStoreId);
     }
 }

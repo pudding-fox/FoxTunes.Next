@@ -19,8 +19,22 @@ namespace FoxTunes
 
         public override async Task<string> Create(Stream content, string fileName)
         {
-            var result = await this.Client.UploadFileAsync(content, fileName, FileUploadPurpose.Assistants).ConfigureAwait(false);
-            return result.Value.Id;
+            var id = default(string);
+            {
+                var result = await this.Client.UploadFileAsync(content, fileName, FileUploadPurpose.Assistants).ConfigureAwait(false);
+                id = result.Value.Id;
+            }
+            {
+                var result = await this.Client.GetFileAsync(id).ConfigureAwait(false);
+                //TODO: Wait for file to be processed somehow?
+            }
+            return id;
+        }
+
+        public override async Task Delete(string fileId)
+        {
+            var result = await this.Client.DeleteFileAsync(fileId).ConfigureAwait(false);
+            //Nothing to do.
         }
     }
 }
