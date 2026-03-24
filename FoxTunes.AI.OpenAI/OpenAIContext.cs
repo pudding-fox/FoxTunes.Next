@@ -15,16 +15,19 @@ namespace FoxTunes
 
         public override IAIFileStore CreateFileStore()
         {
+            Logger.Write(this, LogLevel.Debug, "Creating OpenAIFileStore.");
             return new OpenAIFileStore(this, this.Client.GetOpenAIFileClient());
         }
 
         public override IAIVectorStore CreateVectorStore()
         {
+            Logger.Write(this, LogLevel.Debug, "Creating OpenAIVectorStore.");
             return new OpenAIVectorStore(this, this.Client.GetVectorStoreClient());
         }
 
         public override IAIResponseStore CreateResponseStore()
         {
+            Logger.Write(this, LogLevel.Debug, "Creating OpenAIResponseStore.");
             return new OpenAIResponseStore(this, this.Client.GetResponsesClient());
         }
     }

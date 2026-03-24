@@ -1,5 +1,6 @@
 ﻿using FoxDb.Interfaces;
 using FoxTunes.Interfaces;
+using System;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -40,24 +41,53 @@ namespace FoxTunes.AI.Tasks
 
         protected override async Task OnRun()
         {
+            this.Name = "Uploading library";
+            Logger.Write(this, LogLevel.Debug, "Cleating AI context.");
             using (var context = this.Runtime.CreateContext())
             {
                 if (!string.IsNullOrEmpty(this.FileId))
                 {
+                    Logger.Write(this, LogLevel.Debug, "Cleaning up file store.");
+                    this.Description = "Cleaning up file store";
                     var store = context.CreateFileStore();
-                    await store.Delete(this.FileId).ConfigureAwait(false);
+                    try
+                    {
+                        await store.Delete(this.FileId).ConfigureAwait(false);
+                    }
+                    catch(Exception e)
+                    {
+                        Logger.Write(this, LogLevel.Warn, "Failed to clean up file store: {0}", e.Message);
+                    }
                 }
                 if (!string.IsNullOrEmpty(this.VectorStoreId))
                 {
+                    this.Description = "Cleaning up vector store";
                     var store = context.CreateVectorStore();
-                    await store.Delete(this.VectorStoreId).ConfigureAwait(false);
+                    Logger.Write(this, LogLevel.Debug, "Cleaning up vector store.");
+                    try
+                    {
+                        await store.Delete(this.VectorStoreId).ConfigureAwait(false);
+                    }
+                    catch(Exception e)
+                    {
+                        Logger.Write(this, LogLevel.Warn, "Failed to clean up vector store: {0}", e.Message);
+                    }
                 }
-                using (var stream = await this.GetEntireLibrary().ConfigureAwait(false))
                 {
-                    var store = context.CreateFileStore();
-                    this.FileId = await store.Create(stream, "library.txt").ConfigureAwait(false);
+                    Logger.Write(this, LogLevel.Debug, "Fetching library.");
+                    this.Description = "Fetching library";
+                    using (var stream = await this.GetEntireLibrary().ConfigureAwait(false))
+                    {
+                        Logger.Write(this, LogLevel.Debug, "library.txt is {0} bytes.", stream.Length);
+                        Logger.Write(this, LogLevel.Debug, "Creating file store.");
+                        this.Description = "Creating file store";
+                        var store = context.CreateFileStore();
+                        this.FileId = await store.Create(stream, "library.txt").ConfigureAwait(false);
+                    }
                 }
                 {
+                    Logger.Write(this, LogLevel.Debug, "Creating vectore store.");
+                    this.Description = "Creating vectore store";
                     var store = context.CreateVectorStore();
                     this.VectorStoreId = await store.Create("library.txt").ConfigureAwait(false);
                     await store.AddFile(this.VectorStoreId, this.FileId).ConfigureAwait(false);

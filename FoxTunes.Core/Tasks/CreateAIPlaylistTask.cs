@@ -77,21 +77,36 @@ namespace FoxTunes
 
         private async Task AddPlaylistItems(ITransactionSource transaction)
         {
+            this.Description = "Thinking";
+            Logger.Write(this, LogLevel.Debug, "Cleating AI context.");
             using (var context = this.Runtime.CreateContext())
             {
                 var store = context.CreateResponseStore();
                 var attempt = 0;
+                var prompt = string.Format("Create a playlist from my library using the prompt: {0}. Ensure that the output is in valid CSV format containing only the file name without headers.", this.Prompt);
             retry:
-                var result = await store.Create(string.Format("Create a playlist from my library using the prompt: {0}. Ensure that the output is in valid CSV format containing only the file name without headers.", this.Prompt), this.VectorStoreId.Value);
-                var paths = await this.GetPathsFromResponse(result).ConfigureAwait(false);
+                Logger.Write(this, LogLevel.Debug, "Sending request to AI: {0}", prompt);
+                var result = await store.Create(prompt, this.VectorStoreId.Value);
+                var paths = Enumerable.Empty<string>();
+                try
+                {
+                    paths = await this.GetPathsFromResponse(result).ConfigureAwait(false);
+                }
+                catch (Exception e)
+                {
+                    Logger.Write(this, LogLevel.Warn, "Failed to extract tracks from the response: {0}", e.Message);
+                }
                 if (!paths.Any())
                 {
                     if (attempt++ < 5)
                     {
+                        Logger.Write(this, LogLevel.Debug, "Will retry.");
+                        await Task.Delay(1000).ConfigureAwait(false);
                         goto retry;
                     }
                     else
                     {
+                        Logger.Write(this, LogLevel.Debug, "Timed out.");
                         throw new TimeoutException("Timed out waiting for response.");
                     }
                 }
@@ -107,7 +122,7 @@ namespace FoxTunes
                 var foundHeader = default(bool);
                 while ((line = await reader.ReadLineAsync().ConfigureAwait(false)) != null)
                 {
-                    if (line.StartsWith("```csv"))
+                    if (line.StartsWith("```"))
                     {
                         foundHeader = true;
                         break;

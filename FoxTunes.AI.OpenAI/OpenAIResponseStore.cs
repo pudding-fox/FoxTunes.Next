@@ -28,6 +28,8 @@ namespace FoxTunes
             {
                 vectorStoreId
             }));
+            Logger.Write(this, LogLevel.Debug, "Getting response for prompt: {0}", input);
+            Logger.Write(this, LogLevel.Debug, "Using vector store: {0}", vectorStoreId);
             var result = await this.Client.CreateResponseAsync(options).ConfigureAwait(false);
             return result.Value.GetOutputText();
         }

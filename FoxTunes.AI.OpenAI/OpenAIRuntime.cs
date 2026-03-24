@@ -47,14 +47,15 @@ namespace FoxTunes
         {
             if (string.IsNullOrEmpty(this.ApiKey.Value))
             {
+                Logger.Write(this, LogLevel.Warn, "Cannot create OpenAIClient, no API key.");
                 throw new InvalidOperationException(Strings.OpenAIRuntime_NoApiKey);
             }
+            Logger.Write(this, LogLevel.Debug, "Creating OpenAIClient.");
             return new OpenAIClient(this.ApiKey.Value);
         }
 
         public override IAIContext CreateContext()
         {
-            Logger.Write(this, LogLevel.Debug, "Creating AI context.");
             var model = this.Model.Value;
             if (string.IsNullOrEmpty(model))
             {
