@@ -120,26 +120,53 @@ namespace FoxTunes
             {
                 var line = default(string);
                 var foundHeader = default(bool);
+                var foundFooter = default(bool);
+                Logger.Write(this, LogLevel.Debug, "Locating the csv header.");
                 while ((line = await reader.ReadLineAsync().ConfigureAwait(false)) != null)
                 {
                     if (line.StartsWith("```"))
                     {
+                        Logger.Write(this, LogLevel.Debug, "Found the csv header.");
                         foundHeader = true;
                         break;
                     }
                 }
                 if (!foundHeader)
                 {
+                    Logger.Write(this, LogLevel.Warn, "Failed to locate the csv header.");
                     throw new InvalidOperationException("Data could not be located in the response.");
                 }
                 var paths = new List<string>();
+                Logger.Write(this, LogLevel.Debug, "Locating the csv footer.");
                 while ((line = await reader.ReadLineAsync()) != null)
                 {
                     if (line.StartsWith("```"))
                     {
+                        Logger.Write(this, LogLevel.Debug, "Found the csv footer.");
+                        foundFooter = true;
                         break;
                     }
-                    paths.Add(line.Trim(new[] { '"', ' ' }));
+                    var fileName = line.Trim(new[] { '"', ' ' });
+                    try
+                    {
+                        if (!File.Exists(fileName))
+                        {
+                            Logger.Write(this, LogLevel.Warn, "File \"{0}\" does not exist, skipping.", fileName);
+                            continue;
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        Logger.Write(this, LogLevel.Warn, "Failed to determine whether file \"{0}\" exists: {1}", fileName, e.Message);
+                        continue;
+                    }
+                    Logger.Write(this, LogLevel.Debug, "Found file: {0}", fileName);
+                    paths.Add(fileName);
+                }
+                if (!foundFooter)
+                {
+                    Logger.Write(this, LogLevel.Warn, "Failed to locate the csv footer.");
+                    throw new InvalidOperationException("Data could not be located in the response.");
                 }
                 return paths;
             }

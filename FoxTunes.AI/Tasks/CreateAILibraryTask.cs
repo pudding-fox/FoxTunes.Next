@@ -54,7 +54,7 @@ namespace FoxTunes.AI.Tasks
                     {
                         await store.Delete(this.FileId).ConfigureAwait(false);
                     }
-                    catch(Exception e)
+                    catch (Exception e)
                     {
                         Logger.Write(this, LogLevel.Warn, "Failed to clean up file store: {0}", e.Message);
                     }
@@ -68,7 +68,7 @@ namespace FoxTunes.AI.Tasks
                     {
                         await store.Delete(this.VectorStoreId).ConfigureAwait(false);
                     }
-                    catch(Exception e)
+                    catch (Exception e)
                     {
                         Logger.Write(this, LogLevel.Warn, "Failed to clean up vector store: {0}", e.Message);
                     }
@@ -78,6 +78,11 @@ namespace FoxTunes.AI.Tasks
                     this.Description = "Fetching library";
                     using (var stream = await this.GetEntireLibrary().ConfigureAwait(false))
                     {
+                        if (stream.Length == 0)
+                        {
+                            Logger.Write(this, LogLevel.Debug, "Library is empty, nothing to do.");
+                            return;
+                        }
                         Logger.Write(this, LogLevel.Debug, "library.txt is {0} bytes.", stream.Length);
                         Logger.Write(this, LogLevel.Debug, "Creating file store.");
                         this.Description = "Creating file store";
