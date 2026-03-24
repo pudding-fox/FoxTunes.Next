@@ -29,6 +29,8 @@ namespace FoxTunes
 
         public TextConfigurationElement VectorStoreId { get; private set; }
 
+        public TextConfigurationElement PromptTemplate { get; private set; }
+
         public override void InitializeComponent(ICore core)
         {
             base.InitializeComponent(core);
@@ -36,6 +38,10 @@ namespace FoxTunes
             this.VectorStoreId = this.Configuration.GetElement<TextConfigurationElement>(
                 AIBehaviourConfiguration.SECTION,
                 AIBehaviourConfiguration.VECTOR_STORE_ID
+            );
+            this.PromptTemplate = this.Configuration.GetElement<TextConfigurationElement>(
+                AIBehaviourConfiguration.SECTION,
+                AIBehaviourConfiguration.PLAYLIST_GENERATION_PROMPT_TEMPLATE
             );
             if (string.IsNullOrEmpty(this.VectorStoreId.Value))
             {
@@ -83,7 +89,7 @@ namespace FoxTunes
             {
                 var store = context.CreateResponseStore();
                 var attempt = 0;
-                var prompt = string.Format("Create a playlist from my library using the prompt: {0}. Ensure that the output is in valid CSV format containing only the file name without headers.", this.Prompt);
+                var prompt = string.Format(this.PromptTemplate.Value, this.Prompt);
             retry:
                 Logger.Write(this, LogLevel.Debug, "Sending request to AI: {0}", prompt);
                 var result = await store.Create(prompt, this.VectorStoreId.Value);

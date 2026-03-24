@@ -61,11 +61,29 @@ namespace FoxTunes {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Create a playlist from my library using the prompt: &quot;{0}&quot;. Ensure that the output is in valid CSV format containing only the file name without headers..
+        /// </summary>
+        internal static string AIBehaviourConfiguration_DefaultPlaylistGenerationPromptTemplate {
+            get {
+                return ResourceManager.GetString("AIBehaviourConfiguration.DefaultPlaylistGenerationPromptTemplate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to File Id.
         /// </summary>
         internal static string AIBehaviourConfiguration_FileId {
             get {
                 return ResourceManager.GetString("AIBehaviourConfiguration.FileId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Playlist Generation Prompt Template.
+        /// </summary>
+        internal static string AIBehaviourConfiguration_PlaylistGenerationPromptTemplate {
+            get {
+                return ResourceManager.GetString("AIBehaviourConfiguration.PlaylistGenerationPromptTemplate", resourceCulture);
             }
         }
         
