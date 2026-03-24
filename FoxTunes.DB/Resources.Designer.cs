@@ -19,7 +19,7 @@ namespace FoxTunes {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "18.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Resources {
@@ -156,8 +156,8 @@ namespace FoxTunes {
         ///FROM &quot;LibraryItems&quot;
         ///	JOIN &quot;LibraryItem_MetaDataItem&quot; ON &quot;LibraryItems&quot;.&quot;Id&quot; = &quot;LibraryItem_MetaDataItem&quot;.&quot;LibraryItem_Id&quot;
         ///	JOIN &quot;MetaDataItems&quot; ON &quot;LibraryItem_MetaDataItem&quot;.&quot;MetaDataItem_Id&quot; = &quot;MetaDataItems&quot;.&quot;Id&quot;
-        ///WHERE &quot;MetaDataItems&quot;.&quot;Name&quot; IN (&apos;Artist&apos;, &apos;Album&apos;, &apos;Title&apos;)
-        ///ORDER BY &quot;LibraryItems&quot;.&quot;FileName&quot;.
+        ///WHERE &quot;MetaDataItems&quot;.&quot;Name&quot; IN (@artist, @album, @title, @like, @rating)
+        ///ORDER BY &quot;LibraryItems&quot;.&quot;FileName&quot;, &quot;MetaDataItems&quot;.&quot;Name&quot;.
         /// </summary>
         internal static string GetEntireLibrary {
             get {

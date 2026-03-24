@@ -115,7 +115,7 @@ namespace FoxTunes.AI.Tasks
                         {
                             while (await sequence.MoveNextAsync().ConfigureAwait(false))
                             {
-                                writer.WriteLine(string.Concat(
+                                var row = string.Concat(
                                     "\"",
                                     sequence.Current.Get<string>("FileName"),
                                     "\", \"",
@@ -123,7 +123,8 @@ namespace FoxTunes.AI.Tasks
                                     "\", \"",
                                     sequence.Current.Get<string>("Value"),
                                     "\""
-                                ));
+                                );
+                                writer.WriteLine(row);
                             }
                         }
                     }
@@ -139,8 +140,12 @@ namespace FoxTunes.AI.Tasks
             {
                 switch (phase)
                 {
-                    case FoxDb.Interfaces.DatabaseParameterPhase.Fetch:
-                        //Nothing to do.
+                    case DatabaseParameterPhase.Fetch:
+                        parameters["artist"] = CommonMetaData.Artist;
+                        parameters["album"] = CommonMetaData.Album;
+                        parameters["title"] = CommonMetaData.Title;
+                        parameters["like"] = CommonStatistics.Like;
+                        parameters["rating"] = CommonStatistics.Rating;
                         break;
                 }
             }, transaction);

@@ -87,6 +87,7 @@ namespace FoxTunes
             retry:
                 Logger.Write(this, LogLevel.Debug, "Sending request to AI: {0}", prompt);
                 var result = await store.Create(prompt, this.VectorStoreId.Value);
+                Logger.Write(this, LogLevel.Debug, "Response from AI: {0}", result);
                 var paths = Enumerable.Empty<string>();
                 try
                 {
@@ -116,6 +117,7 @@ namespace FoxTunes
 
         protected virtual async Task<IEnumerable<string>> GetPathsFromResponse(string response)
         {
+            Logger.Write(this, LogLevel.Debug, "Extracting tracks from response.");
             using (var reader = new StringReader(response))
             {
                 var line = default(string);
