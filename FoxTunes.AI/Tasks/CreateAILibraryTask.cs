@@ -144,6 +144,8 @@ namespace FoxTunes.AI.Tasks
                         parameters["artist"] = CommonMetaData.Artist;
                         parameters["album"] = CommonMetaData.Album;
                         parameters["title"] = CommonMetaData.Title;
+                        parameters["genre"] = CommonMetaData.Genre;
+                        parameters["year"] = CommonMetaData.Year;
                         parameters["like"] = CommonStatistics.Like;
                         parameters["rating"] = CommonStatistics.Rating;
                         break;

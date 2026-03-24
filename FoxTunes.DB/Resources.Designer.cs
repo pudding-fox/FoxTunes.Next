@@ -152,12 +152,17 @@ namespace FoxTunes {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to SELECT &quot;LibraryItems&quot;.&quot;FileName&quot;, &quot;MetaDataItems&quot;.&quot;Name&quot;, &quot;MetaDataItems&quot;.&quot;Value&quot;
+        ///   Looks up a localized string similar to SELECT &quot;LibraryItems&quot;.&quot;FileName&quot;, 
+        ///	CASE 
+        ///		WHEN &quot;MetaDataItems&quot;.&quot;Name&quot; = @like THEN &apos;Like&apos; 
+        ///		ELSE &quot;MetaDataItems&quot;.&quot;Name&quot; 
+        ///	END AS &quot;Name&quot;, 
+        ///	&quot;MetaDataItems&quot;.&quot;Value&quot;
         ///FROM &quot;LibraryItems&quot;
         ///	JOIN &quot;LibraryItem_MetaDataItem&quot; ON &quot;LibraryItems&quot;.&quot;Id&quot; = &quot;LibraryItem_MetaDataItem&quot;.&quot;LibraryItem_Id&quot;
         ///	JOIN &quot;MetaDataItems&quot; ON &quot;LibraryItem_MetaDataItem&quot;.&quot;MetaDataItem_Id&quot; = &quot;MetaDataItems&quot;.&quot;Id&quot;
-        ///WHERE &quot;MetaDataItems&quot;.&quot;Name&quot; IN (@artist, @album, @title, @like, @rating)
-        ///ORDER BY &quot;LibraryItems&quot;.&quot;FileName&quot;, &quot;MetaDataItems&quot;.&quot;Name&quot;.
+        ///WHERE &quot;MetaDataItems&quot;.&quot;Name&quot; IN (@artist, @album, @title, @year, @like, @rating)
+        ///ORDER BY &quot;LibraryItems&quot;.&quot;FileName&quot;, &quot;Met [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string GetEntireLibrary {
             get {
