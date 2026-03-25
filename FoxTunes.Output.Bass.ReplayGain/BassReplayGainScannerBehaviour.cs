@@ -288,7 +288,6 @@ namespace FoxTunes
 
             private ScanTask() : base(ID)
             {
-                this.CancellationToken = new CancellationToken();
             }
 
             public ScanTask(BassReplayGainScannerBehaviour behaviour, IFileData[] fileDatas, ReplayGainMode mode) : this()
@@ -316,8 +315,6 @@ namespace FoxTunes
                     return true;
                 }
             }
-
-            public CancellationToken CancellationToken { get; private set; }
 
             public BassReplayGainScannerBehaviour Behaviour { get; private set; }
 
@@ -438,12 +435,6 @@ namespace FoxTunes
             protected virtual IFileData GetFileData(ScannerItem scannerItem)
             {
                 return this.FileDatas.FirstOrDefault(fileData => string.Equals(fileData.FileName, scannerItem.FileName, StringComparison.OrdinalIgnoreCase));
-            }
-
-            protected override void OnCancellationRequested()
-            {
-                this.CancellationToken.Cancel();
-                base.OnCancellationRequested();
             }
         }
     }

@@ -169,7 +169,6 @@ namespace FoxTunes
                         if (!File.Exists(fileName))
                         {
                             Logger.Write(this, LogLevel.Warn, "File \"{0}\" does not exist, skipping.", fileName);
-                            continue;
                         }
                     }
                     catch (Exception e)
