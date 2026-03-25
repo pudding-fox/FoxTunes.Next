@@ -641,12 +641,17 @@ namespace FoxTunes
             }
         }
 
-        public static async Task<bool> ShowDialog<T>(ICore core, string title) where T : new()
+        public static Task<bool> ShowDialog<T>(ICore core, string title) where T : new()
+        {
+            return ShowDialog<T>(core, title, () => new T());
+        }
+
+        public static async Task<bool> ShowDialog<T>(ICore core, string title, Func<T> factory)
         {
             var result = default(bool);
             await Invoke(() =>
             {
-                var content = new T();
+                var content = factory();
                 var window = new DialogWindow<T>(content)
                 {
                     Topmost = true,

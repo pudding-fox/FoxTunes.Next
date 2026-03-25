@@ -1,4 +1,6 @@
-﻿using System.Windows;
+﻿using FoxTunes.ViewModel;
+using System;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace FoxTunes
@@ -11,7 +13,8 @@ namespace FoxTunes
         public static readonly DependencyProperty PlaylistProperty = DependencyProperty.Register(
             "Playlist",
             typeof(Playlist),
-            typeof(PlaylistConfigDialog)
+            typeof(PlaylistConfigDialog),
+            new PropertyMetadata(new PropertyChangedCallback(OnPlaylistChanged))
         );
 
         public static Playlist GetPlaylist(PlaylistConfigDialog source)
@@ -22,6 +25,16 @@ namespace FoxTunes
         public static void SetPlaylist(PlaylistConfigDialog source, Playlist value)
         {
             source.SetValue(PlaylistProperty, value);
+        }
+
+        private static void OnPlaylistChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
+        {
+            var playlistConfigDialog = sender as PlaylistConfigDialog;
+            if (playlistConfigDialog == null)
+            {
+                return;
+            }
+            playlistConfigDialog.OnPlaylistChanged();
         }
 
         public PlaylistConfigDialog()
@@ -40,5 +53,15 @@ namespace FoxTunes
                 this.SetValue(PlaylistProperty, value);
             }
         }
+
+        protected virtual void OnPlaylistChanged()
+        {
+            if (this.PlaylistChanged != null)
+            {
+                this.PlaylistChanged(this, EventArgs.Empty);
+            }
+        }
+
+        public event EventHandler PlaylistChanged;
     }
 }

@@ -19,7 +19,7 @@ namespace FoxTunes {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "18.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Strings {
@@ -1200,6 +1200,15 @@ namespace FoxTunes {
         internal static string PlaylistConfigDialog_Prompt {
             get {
                 return ResourceManager.GetString("PlaylistConfigDialog.Prompt", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Playlist Config.
+        /// </summary>
+        internal static string PlaylistConfiguration_Name {
+            get {
+                return ResourceManager.GetString("PlaylistConfiguration.Name", resourceCulture);
             }
         }
         

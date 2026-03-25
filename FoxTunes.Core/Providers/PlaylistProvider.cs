@@ -31,7 +31,12 @@ namespace FoxTunes
 
         protected virtual IEnumerable<Playlist> GetPlaylists()
         {
-            return this.PlaylistBrowser.GetPlaylists().Where(this.Predicate);
+            return this.GetPlaylists(this.PlaylistBrowser.GetPlaylists());
+        }
+
+        protected virtual IEnumerable<Playlist> GetPlaylists(IEnumerable<Playlist> playlists)
+        {
+            return playlists.Where(this.Predicate);
         }
 
         protected virtual PlaylistConfig GetConfig(Playlist playlist)
@@ -45,6 +50,9 @@ namespace FoxTunes
             {
                 case CommonSignals.PlaylistUpdated:
                     this.OnPlaylistUpdated(signal.State as PlaylistUpdatedSignalState);
+                    break;
+                case CommonSignals.PlaylistConfigUpdated:
+                    this.OnPlaylistConfigUpdated(signal.State as PlaylistUpdatedSignalState);
                     break;
             }
 #if NET40
@@ -63,6 +71,21 @@ namespace FoxTunes
             else
             {
                 this.Dispatch(() => this.Refresh(true));
+            }
+        }
+
+        protected virtual void OnPlaylistConfigUpdated(PlaylistUpdatedSignalState state)
+        {
+            if (state != null && state.Playlists != null && state.Playlists.Any())
+            {
+                foreach (var playlist in this.GetPlaylists(state.Playlists))
+                {
+                    this.Dispatch(() => this.Refresh(playlist, true));
+                }
+            }
+            else
+            {
+                //Nothing to do.
             }
         }
 

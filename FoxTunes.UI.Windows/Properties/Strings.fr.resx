@@ -550,6 +550,9 @@
   <data name="RendererTargetFactoryConfiguration.Priority.High" type="System.Resources.ResXNullRef, System.Windows.Forms">
     <value />
   </data>
+  <data name="PlaylistConfigDialog.Prompt" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
   <data name="VisualizationBehaviourConfiguration.FFTSize" xml:space="preserve">
     <value>FFT Size</value>
   </data>
@@ -576,8 +579,5 @@
   </data>
   <data name="WindowsUserInterfaceConfiguration.MarqueeStep" xml:space="preserve">
     <value>Marquee Step</value>
-  </data>
-  <data name="PlaylistConfigDialog.Prompt" type="System.Resources.ResXNullRef, System.Windows.Forms">
-    <value />
   </data>
 </root>

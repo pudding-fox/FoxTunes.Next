@@ -1,0 +1,18 @@
+﻿<Windows:UIComponentBase x:Class="FoxTunes.PlaylistConfiguration"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:Core="clr-namespace:FoxTunes;assembly=FoxTunes.Core" 
+             xmlns:Windows="clr-namespace:FoxTunes" 
+             xmlns:ViewModel="clr-namespace:FoxTunes.ViewModel"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="600">
+    <Windows:UIComponentBase.Resources>
+        <ViewModel:PlaylistConfiguration x:Key="ViewModel"></ViewModel:PlaylistConfiguration>
+    </Windows:UIComponentBase.Resources>
+    <Windows:UIComponentBase.IsComponentEnabled>
+        <Binding Path="HasData" Source="{StaticResource ViewModel}"></Binding>
+    </Windows:UIComponentBase.IsComponentEnabled>
+    <Windows:PlaylistConfigDialog Playlist="{Binding SelectedPlaylist, Source={StaticResource ViewModel}}"></Windows:PlaylistConfigDialog>
+</Windows:UIComponentBase>

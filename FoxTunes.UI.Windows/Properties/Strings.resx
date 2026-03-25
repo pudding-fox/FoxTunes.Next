@@ -738,4 +738,7 @@
   <data name="PlaylistConfigDialog.Prompt" xml:space="preserve">
     <value>Prompt</value>
   </data>
+  <data name="PlaylistConfiguration.Name" xml:space="preserve">
+    <value>Playlist Config</value>
+  </data>
 </root>

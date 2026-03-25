@@ -121,6 +121,4 @@
 		<PackageReference Include="Expression.Blend.Sdk" Version="1.0.2" />
 	</ItemGroup>
 
-	
-
 </Project>
