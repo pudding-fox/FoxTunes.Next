@@ -15,10 +15,7 @@ namespace FoxTunes
 
         public OpenAIRuntime() : base(ID, string.Format(Strings.OpenAIRuntime_Name, VERSION))
         {
-            this.Client = new Lazy<OpenAIClient>(this.CreateClient);
         }
-
-        public Lazy<OpenAIClient> Client { get; private set; }
 
         public ICore Core { get; private set; }
 
@@ -61,7 +58,7 @@ namespace FoxTunes
             {
                 model = OpenAIRuntimeConfiguration.DEFAULT_MODEL;
             }
-            var client = this.Client.Value;
+            var client = this.CreateClient();
             return new OpenAIContext(client, model);
         }
 
