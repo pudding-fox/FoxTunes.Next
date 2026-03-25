@@ -273,6 +273,7 @@ namespace FoxTunes
                 "FoxDb.Core.dll",
                 "FoxDb.Linq.dll",
                 "FoxDb.Sql.dll",
+                "FoxTunes.AI.dll",
                 "FoxTunes.Core.dll",
                 "FoxTunes.DB.dll",
                 "FoxTunes.MetaData.dll",
@@ -518,6 +519,26 @@ namespace FoxTunes
                         new PackageElement("x64/bass_gapless.dll", "x64/addon")
                     },
                     PackageFlags.Default | PackageFlags.Minimal
+                ),
+                new Package(
+                    "openai",
+                    new PackageElement[]
+                    {
+                        "FoxTunes.AI.OpenAI.dll",
+                        "OpenAI.dll",
+                        "System.Buffers.dll",
+                        "System.ClientModel.dll",
+                        "System.Diagnostics.DiagnosticSource.dll",
+                        "System.IO.Pipelines.dll",
+                        "System.Memory.Data.dll",
+                        "System.Memory.dll",
+                        "System.Net.ServerSentEvents.dll",
+                        "System.Numerics.Vectors.dll",
+                        "System.Runtime.CompilerServices.Unsafe.dll",
+                        "System.Text.Encodings.Web.dll",
+                        "System.Text.Json.dll"
+                    },
+                    PackageFlags.Default
                 ),
                 new Package(
                     "upmix",

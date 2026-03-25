@@ -92,7 +92,16 @@ namespace FoxTunes
                 var prompt = string.Format(this.PromptTemplate.Value, this.Prompt);
             retry:
                 Logger.Write(this, LogLevel.Debug, "Sending request to AI: {0}", prompt);
-                var result = await store.Create(prompt, this.VectorStoreId.Value);
+                var result = default(string);
+                try
+                {
+                    result = await store.Create(prompt, this.VectorStoreId.Value);
+                }
+                catch (Exception e)
+                {
+                    Logger.Write(this, LogLevel.Warn, "Failed to get response from AI: {0}", e.Message);
+                    throw;
+                }
                 Logger.Write(this, LogLevel.Debug, "Response from AI: {0}", result);
                 var paths = Enumerable.Empty<string>();
                 try
