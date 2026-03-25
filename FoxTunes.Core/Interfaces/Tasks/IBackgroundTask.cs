@@ -27,6 +27,8 @@ namespace FoxTunes.Interfaces
 
         Task Run();
 
+        CancellationToken CancellationToken { get; }
+
         bool Cancellable { get; }
 
         void Cancel();

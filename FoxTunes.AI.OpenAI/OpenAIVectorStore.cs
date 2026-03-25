@@ -18,8 +18,9 @@ namespace FoxTunes
 
         public VectorStoreClient Client { get; private set; }
 
-        public override async Task<string> Create(string name)
+        public override async Task<string> Create(string name, CancellationToken cancellationToken)
         {
+            const int TIMEOUT = 300;
             var id = default(string);
             {
                 Logger.Write(this, LogLevel.Debug, "Creating vectore store.");
@@ -35,7 +36,12 @@ namespace FoxTunes
                 var result = await this.Client.GetVectorStoreAsync(id).ConfigureAwait(false);
                 if (result.Value.Status == VectorStoreStatus.InProgress)
                 {
-                    if (attempt++ < 60)
+                    if (cancellationToken.IsCancellationRequested)
+                    {
+                        Logger.Write(this, LogLevel.Warn, "Operation cancelled.");
+                        return null;
+                    }
+                    if (attempt++ < TIMEOUT)
                     {
                         Logger.Write(this, LogLevel.Warn, "Vector store is not yet available, retrying.");
                         goto retry;
@@ -50,8 +56,9 @@ namespace FoxTunes
             return id;
         }
 
-        public override async Task AddFile(string vectorStoreId, string fileId)
+        public override async Task AddFile(string vectorStoreId, string fileId, CancellationToken cancellationToken)
         {
+            const int TIMEOUT = 300;
             {
                 Logger.Write(this, LogLevel.Debug, "Adding file to vector store.");
                 var result = await this.Client.AddFileToVectorStoreAsync(vectorStoreId, fileId).ConfigureAwait(false);
@@ -64,7 +71,12 @@ namespace FoxTunes
                 var result = await this.Client.GetVectorStoreFileAsync(vectorStoreId, fileId).ConfigureAwait(false);
                 if (result.Value.Status == VectorStoreFileStatus.InProgress)
                 {
-                    if (attempt++ < 60)
+                    if (cancellationToken.IsCancellationRequested)
+                    {
+                        Logger.Write(this, LogLevel.Warn, "Operation cancelled.");
+                        return;
+                    }
+                    if (attempt++ < TIMEOUT)
                     {
                         Logger.Write(this, LogLevel.Warn, "File is not yet available, retrying.");
                         goto retry;

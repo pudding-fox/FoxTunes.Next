@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace FoxTunes
@@ -47,6 +46,7 @@ namespace FoxTunes
         protected BackgroundTask(string id)
         {
             this.Id = id;
+            this.CancellationToken = new CancellationToken();
         }
 
         public string Id { get; private set; }
@@ -58,6 +58,8 @@ namespace FoxTunes
                 return false;
             }
         }
+
+        public CancellationToken CancellationToken { get; private set; }
 
         public virtual bool Cancellable
         {
@@ -71,6 +73,7 @@ namespace FoxTunes
 
         protected virtual void OnCancellationRequested()
         {
+            this.CancellationToken.Cancel();
             if (this.CancellationRequested == null)
             {
                 return;

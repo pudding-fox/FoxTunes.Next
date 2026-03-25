@@ -28,6 +28,14 @@ namespace FoxTunes.AI.Tasks
             }
         }
 
+        public override bool Cancellable
+        {
+            get
+            {
+                return true;
+            }
+        }
+
         public IDatabaseFactory DatabaseFactory { get; private set; }
 
         public IAIRuntime Runtime { get; private set; }
@@ -94,8 +102,13 @@ namespace FoxTunes.AI.Tasks
                     Logger.Write(this, LogLevel.Debug, "Creating vectore store.");
                     this.Description = "Creating vectore store";
                     var store = context.CreateVectorStore();
-                    this.VectorStoreId = await store.Create("library.txt").ConfigureAwait(false);
-                    await store.AddFile(this.VectorStoreId, this.FileId).ConfigureAwait(false);
+                    this.VectorStoreId = await store.Create("library.txt", this.CancellationToken).ConfigureAwait(false);
+                    if (string.IsNullOrEmpty(this.VectorStoreId))
+                    {
+                        Logger.Write(this, LogLevel.Warn, "Failed to create vector store.");
+                        return;
+                    }
+                    await store.AddFile(this.VectorStoreId, this.FileId, this.CancellationToken).ConfigureAwait(false);
                 }
             }
         }
