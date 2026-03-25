@@ -7,35 +7,31 @@ namespace FoxTunes.ViewModel
 {
     public class PlaylistConfiguration : ViewModelBase
     {
-        private Playlist _SelectedPlaylist { get; set; }
+        private Playlist _Playlist { get; set; }
 
-        public Playlist SelectedPlaylist
+        public Playlist Playlist
         {
             get
             {
-                return this._SelectedPlaylist;
+                return this._Playlist;
             }
             set
             {
-                if (object.ReferenceEquals(this._SelectedPlaylist, value))
-                {
-                    return;
-                }
-                this._SelectedPlaylist = value;
-                this.OnSelectedPlaylistChanged();
+                this._Playlist = value;
+                this.OnPlaylistChanged();
             }
         }
 
-        protected virtual void OnSelectedPlaylistChanged()
+        protected virtual void OnPlaylistChanged()
         {
-            if (this.SelectedPlaylistChanged != null)
+            if (this.PlaylistChanged != null)
             {
-                this.SelectedPlaylistChanged(this, EventArgs.Empty);
+                this.PlaylistChanged(this, EventArgs.Empty);
             }
-            this.OnPropertyChanged("SelectedPlaylist");
+            this.OnPropertyChanged("Playlist");
         }
 
-        public event EventHandler SelectedPlaylistChanged;
+        public event EventHandler PlaylistChanged;
 
         private bool _HasData { get; set; }
 
@@ -65,10 +61,13 @@ namespace FoxTunes.ViewModel
 
         public IPlaylistManager PlaylistManager { get; private set; }
 
+        public ISignalEmitter SignalEmitter { get; private set; }
+
         protected override void InitializeComponent(ICore core)
         {
             this.PlaylistManager = core.Managers.Playlist;
             this.PlaylistManager.SelectedPlaylistChanged += this.OnSelectedPlaylistChanged;
+            this.SignalEmitter = core.Components.SignalEmitter;
             var task = this.Refresh();
             base.InitializeComponent(core);
         }
@@ -82,16 +81,41 @@ namespace FoxTunes.ViewModel
         {
             return Windows.Invoke(() =>
             {
-                this.SelectedPlaylist = this.PlaylistManager.SelectedPlaylist;
-                if (this.SelectedPlaylist != null && !string.IsNullOrEmpty(this.SelectedPlaylist.Config))
+                if (this.Playlist != null)
                 {
-                    this.HasData = true;
+                    this.Playlist.ConfigChanged -= this.OnConfigChanged;
+                }
+                this.Playlist = this.PlaylistManager.SelectedPlaylist;
+                if (this.Playlist != null)
+                {
+                    this.Playlist.ConfigChanged += this.OnConfigChanged;
+                    if (string.IsNullOrEmpty(this.Playlist.Config))
+                    {
+                        this.HasData = false;
+                    }
+                    else
+                    {
+                        this.HasData = true;
+                    }
                 }
                 else
                 {
                     this.HasData = false;
                 }
             });
+        }
+
+        protected virtual void OnConfigChanged(object sender, EventArgs e)
+        {
+            if (string.IsNullOrEmpty(this.Playlist.Config))
+            {
+                this.HasData = false;
+            }
+            else
+            {
+                this.HasData = true;
+            }
+            this.SignalEmitter.Send(new Signal(this, CommonSignals.PlaylistUpdated, new PlaylistUpdatedSignalState(this.Playlist, DataSignalType.Updated)));
         }
 
         protected override void OnDisposing()

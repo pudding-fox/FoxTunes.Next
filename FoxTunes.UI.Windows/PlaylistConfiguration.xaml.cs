@@ -1,4 +1,6 @@
-﻿namespace FoxTunes
+﻿using System;
+
+namespace FoxTunes
 {
     /// <summary>
     /// Interaction logic for PlaylistConfiguration.xaml
@@ -11,7 +13,21 @@
         public PlaylistConfiguration()
         {
             this.InitializeComponent();
+            var viewModel = default(global::FoxTunes.ViewModel.PlaylistConfiguration);
+            if (this.TryFindResource<global::FoxTunes.ViewModel.PlaylistConfiguration>("ViewModel", out viewModel))
+            {
+                viewModel.PlaylistChanged += this.OnPlaylistChanged;
+                this.OnPlaylistChanged(this, EventArgs.Empty);
+            }
+        }
 
+        protected virtual void OnPlaylistChanged(object sender, EventArgs e)
+        {
+            var viewModel = default(global::FoxTunes.ViewModel.PlaylistConfiguration);
+            if (this.TryFindResource<global::FoxTunes.ViewModel.PlaylistConfiguration>("ViewModel", out viewModel))
+            {
+                this.PlaylistConfigDialog.Playlist = viewModel.Playlist;
+            }
         }
     }
 }

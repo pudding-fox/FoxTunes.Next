@@ -14,5 +14,5 @@
     <Windows:UIComponentBase.IsComponentEnabled>
         <Binding Path="HasData" Source="{StaticResource ViewModel}"></Binding>
     </Windows:UIComponentBase.IsComponentEnabled>
-    <Windows:PlaylistConfigDialog Playlist="{Binding SelectedPlaylist, Source={StaticResource ViewModel}}"></Windows:PlaylistConfigDialog>
+    <Windows:PlaylistConfigDialog x:Name="PlaylistConfigDialog"></Windows:PlaylistConfigDialog>
 </Windows:UIComponentBase>
