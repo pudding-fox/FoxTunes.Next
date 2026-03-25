@@ -19,7 +19,7 @@ namespace FoxTunes {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "18.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Strings {
@@ -61,7 +61,7 @@ namespace FoxTunes {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Create a playlist from my library using the prompt: &quot;{0}&quot;. Ensure that the output is in valid CSV format containing only the file name without headers..
+        ///   Looks up a localized string similar to Create a playlist from my library using the prompt: &quot;{0}&quot;. Ensure that the output is in valid CSV format containing only the file path without headers..
         /// </summary>
         internal static string AIBehaviourConfiguration_DefaultPlaylistGenerationPromptTemplate {
             get {

@@ -12,7 +12,7 @@ namespace FoxTunes
 
         public const string MODEL = "BBBB55F5-5B58-4D09-8588-6A3E1DB273EE";
 
-        public const string DEFAULT_MODEL = "gpt-4o-mini";
+        public const string DEFAULT_MODEL = "gpt-5.4-nano";
 
         public static IEnumerable<ConfigurationSection> GetConfigurationSections()
         {

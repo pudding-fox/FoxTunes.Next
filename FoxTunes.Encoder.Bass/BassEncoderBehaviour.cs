@@ -228,7 +228,6 @@ namespace FoxTunes
 
             private EncodeTask() : base(ID)
             {
-                this.CancellationToken = new CancellationToken();
             }
 
             public EncodeTask(BassEncoderBehaviour behaviour, IFileData[] fileDatas, EncoderItem[] encoderItems) : this()
@@ -253,8 +252,6 @@ namespace FoxTunes
                     return true;
                 }
             }
-
-            public CancellationToken CancellationToken { get; private set; }
 
             public BassEncoderBehaviour Behaviour { get; private set; }
 
@@ -331,12 +328,6 @@ namespace FoxTunes
             protected virtual IFileData GetFileData(EncoderItem encoderItem)
             {
                 return this.FileDatas.FirstOrDefault(fileData => string.Equals(fileData.FileName, encoderItem.InputFileName, StringComparison.OrdinalIgnoreCase));
-            }
-
-            protected override void OnCancellationRequested()
-            {
-                this.CancellationToken.Cancel();
-                base.OnCancellationRequested();
             }
         }
     }

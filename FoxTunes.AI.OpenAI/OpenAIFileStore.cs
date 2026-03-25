@@ -26,10 +26,6 @@ namespace FoxTunes
                 id = result.Value.Id;
                 Logger.Write(this, LogLevel.Debug, "Uploaded file: {0}", id);
             }
-            {
-                var result = await this.Client.GetFileAsync(id).ConfigureAwait(false);
-                //TODO: Wait for file to be processed somehow?
-            }
             return id;
         }
 

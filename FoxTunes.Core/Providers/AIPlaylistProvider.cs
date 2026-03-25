@@ -10,7 +10,7 @@ namespace FoxTunes
     {
         public const string Prompt = "Prompt";
 
-        public const string DefaultPrompt = "energetic";
+        public const string DefaultPrompt = "";
 
         public override Func<Playlist, bool> Predicate
         {
@@ -32,9 +32,12 @@ namespace FoxTunes
 
         public ICore Core { get; private set; }
 
+        public IBackgroundTaskEmitter BackgroundTaskEmitter { get; private set; }
+
         public override void InitializeComponent(ICore core)
         {
             this.Core = core;
+            this.BackgroundTaskEmitter = core.Components.BackgroundTaskEmitter;
             base.InitializeComponent(core);
         }
 
@@ -55,6 +58,7 @@ namespace FoxTunes
             using (var task = new CreateAIPlaylistTask(playlist, prompt))
             {
                 task.InitializeComponent(this.Core);
+                await this.BackgroundTaskEmitter.Send(task).ConfigureAwait(false);
                 await task.Run().ConfigureAwait(false);
             }
         }

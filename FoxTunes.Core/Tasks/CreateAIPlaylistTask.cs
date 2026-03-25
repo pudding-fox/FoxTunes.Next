@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace FoxTunes
@@ -43,14 +44,14 @@ namespace FoxTunes
                 AIBehaviourConfiguration.SECTION,
                 AIBehaviourConfiguration.PLAYLIST_GENERATION_PROMPT_TEMPLATE
             );
-            if (string.IsNullOrEmpty(this.VectorStoreId.Value))
-            {
-                throw new InvalidOperationException("Vector store has not been configured, please check your settings.");
-            }
         }
 
         protected override async Task OnRun()
         {
+            if (string.IsNullOrEmpty(this.VectorStoreId.Value))
+            {
+                throw new InvalidOperationException("Vector store has not been configured, please check your settings.");
+            }
             await this.RemoveItems(PlaylistItemStatus.None).ConfigureAwait(false);
             await this.AddPlaylistItems().ConfigureAwait(false);
             await this.SetPlaylistItemsStatus(PlaylistItemStatus.None).ConfigureAwait(false);
@@ -133,59 +134,22 @@ namespace FoxTunes
         protected virtual async Task<IEnumerable<string>> GetPathsFromResponse(string response)
         {
             Logger.Write(this, LogLevel.Debug, "Extracting tracks from response.");
+            var paths = new List<string>();
+            var regex = new Regex(@"[a-z]:[\\\/](?:[a-z0-9]+[\\\/])*[a-z0-9]+", RegexOptions.IgnoreCase | RegexOptions.Compiled);
             using (var reader = new StringReader(response))
             {
                 var line = default(string);
-                var foundHeader = default(bool);
-                var foundFooter = default(bool);
-                Logger.Write(this, LogLevel.Debug, "Locating the csv header.");
                 while ((line = await reader.ReadLineAsync().ConfigureAwait(false)) != null)
                 {
-                    if (line.StartsWith("```"))
+                    if (regex.IsMatch(line))
                     {
-                        Logger.Write(this, LogLevel.Debug, "Found the csv header.");
-                        foundHeader = true;
-                        break;
+                        var fileName = line.Trim(' ', '"');
+                        Logger.Write(this, LogLevel.Debug, "Got file name from response: {0}", fileName);
+                        paths.Add(fileName);
                     }
                 }
-                if (!foundHeader)
-                {
-                    Logger.Write(this, LogLevel.Warn, "Failed to locate the csv header.");
-                    throw new InvalidOperationException("Data could not be located in the response.");
-                }
-                var paths = new List<string>();
-                Logger.Write(this, LogLevel.Debug, "Locating the csv footer.");
-                while ((line = await reader.ReadLineAsync()) != null)
-                {
-                    if (line.StartsWith("```"))
-                    {
-                        Logger.Write(this, LogLevel.Debug, "Found the csv footer.");
-                        foundFooter = true;
-                        break;
-                    }
-                    var fileName = line.Trim(new[] { '"', ' ' });
-                    try
-                    {
-                        if (!File.Exists(fileName))
-                        {
-                            Logger.Write(this, LogLevel.Warn, "File \"{0}\" does not exist, skipping.", fileName);
-                        }
-                    }
-                    catch (Exception e)
-                    {
-                        Logger.Write(this, LogLevel.Warn, "Failed to determine whether file \"{0}\" exists: {1}", fileName, e.Message);
-                        continue;
-                    }
-                    Logger.Write(this, LogLevel.Debug, "Found file: {0}", fileName);
-                    paths.Add(fileName);
-                }
-                if (!foundFooter)
-                {
-                    Logger.Write(this, LogLevel.Warn, "Failed to locate the csv footer.");
-                    throw new InvalidOperationException("Data could not be located in the response.");
-                }
-                return paths;
             }
+            return paths;
         }
     }
 }
