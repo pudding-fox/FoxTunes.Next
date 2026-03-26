@@ -24,7 +24,7 @@ namespace FoxTunes
         protected virtual void GetConfig(Playlist playlist, out string expression)
         {
             var config = this.GetConfig(playlist);
-            expression = config.GetValueOrDefault(Expression);
+            expression = config.GetValueOrDefault(Expression, DefaultExpression);
         }
 
         public ICore Core { get; private set; }

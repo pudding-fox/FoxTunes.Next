@@ -47,19 +47,19 @@ namespace FoxTunes
             {
                 genres = DefaultGenres;
             }
-            if (!bool.TryParse(config.GetValueOrDefault(Like), out like))
+            if (!bool.TryParse(config.GetValueOrDefault(Like, Convert.ToString(DefaultLike)), out like))
             {
                 like = DefaultLike;
             }
-            if (!int.TryParse(config.GetValueOrDefault(MinRating), out minRating))
+            if (!int.TryParse(config.GetValueOrDefault(MinRating, Convert.ToString(DefaultMinRating)), out minRating))
             {
                 minRating = DefaultMinRating;
             }
-            if (!int.TryParse(config.GetValueOrDefault(MinAge), out minAge))
+            if (!int.TryParse(config.GetValueOrDefault(MinAge, Convert.ToString(DefaultMinAge)), out minAge))
             {
                 minAge = DefaultMinAge;
             }
-            if (!int.TryParse(config.GetValueOrDefault(Count), out count))
+            if (!int.TryParse(config.GetValueOrDefault(Count, Convert.ToString(DefaultCount)), out count))
             {
                 count = DefaultCount;
             }

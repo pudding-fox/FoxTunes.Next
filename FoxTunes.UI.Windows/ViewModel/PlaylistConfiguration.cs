@@ -1,7 +1,9 @@
-﻿using FoxTunes.Interfaces;
+﻿using FoxDb;
+using FoxTunes.Interfaces;
 using System;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Input;
 
 namespace FoxTunes.ViewModel
 {
@@ -59,15 +61,21 @@ namespace FoxTunes.ViewModel
 
         public event EventHandler HasDataChanged;
 
+        public IDatabaseFactory DatabaseFactory { get; private set; }
+
         public IPlaylistManager PlaylistManager { get; private set; }
 
         public ISignalEmitter SignalEmitter { get; private set; }
 
+        public IErrorEmitter ErrorEmitter { get; private set; }
+
         protected override void InitializeComponent(ICore core)
         {
+            this.DatabaseFactory = core.Factories.Database;
             this.PlaylistManager = core.Managers.Playlist;
             this.PlaylistManager.SelectedPlaylistChanged += this.OnSelectedPlaylistChanged;
             this.SignalEmitter = core.Components.SignalEmitter;
+            this.ErrorEmitter = core.Components.ErrorEmitter;
             var task = this.Refresh();
             base.InitializeComponent(core);
         }
@@ -81,14 +89,9 @@ namespace FoxTunes.ViewModel
         {
             return Windows.Invoke(() =>
             {
-                if (this.Playlist != null)
-                {
-                    this.Playlist.ConfigChanged -= this.OnConfigChanged;
-                }
                 this.Playlist = this.PlaylistManager.SelectedPlaylist;
                 if (this.Playlist != null)
                 {
-                    this.Playlist.ConfigChanged += this.OnConfigChanged;
                     if (string.IsNullOrEmpty(this.Playlist.Config))
                     {
                         this.HasData = false;
@@ -105,17 +108,43 @@ namespace FoxTunes.ViewModel
             });
         }
 
-        protected virtual void OnConfigChanged(object sender, EventArgs e)
+        public ICommand SaveCommand
         {
-            if (string.IsNullOrEmpty(this.Playlist.Config))
+            get
             {
-                this.HasData = false;
+                return CommandFactory.Instance.CreateCommand(this.Save);
             }
-            else
+        }
+
+        public async Task Save()
+        {
+            var exception = default(Exception);
+            try
             {
-                this.HasData = true;
+                using (var database = this.DatabaseFactory.Create())
+                {
+                    using (var task = new SingletonReentrantTask(CancellationToken.None, ComponentSlots.Database, SingletonReentrantTask.PRIORITY_HIGH, async cancellationToken =>
+                    {
+                        using (var transaction = database.BeginTransaction(database.PreferredIsolationLevel))
+                        {
+                            var playlists = database.Set<Playlist>(transaction);
+                            await playlists.AddOrUpdateAsync(this.Playlist).ConfigureAwait(false);
+                            transaction.Commit();
+                        }
+                    }))
+                    {
+                        await task.Run().ConfigureAwait(false);
+                    }
+                }
+                await this.SignalEmitter.Send(new Signal(this, CommonSignals.PlaylistConfigUpdated, new PlaylistUpdatedSignalState(this.Playlist, DataSignalType.Updated))).ConfigureAwait(false);
+                return;
             }
-            this.SignalEmitter.Send(new Signal(this, CommonSignals.PlaylistUpdated, new PlaylistUpdatedSignalState(this.Playlist, DataSignalType.Updated)));
+            catch (Exception e)
+            {
+                exception = e;
+            }
+            await this.ErrorEmitter.Send(this, "Save", exception).ConfigureAwait(false);
+            throw exception;
         }
 
         protected override void OnDisposing()

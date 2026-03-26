@@ -14,5 +14,14 @@
     <Windows:UIComponentBase.IsComponentEnabled>
         <Binding Path="HasData" Source="{StaticResource ViewModel}"></Binding>
     </Windows:UIComponentBase.IsComponentEnabled>
-    <Windows:PlaylistConfigDialog x:Name="PlaylistConfigDialog"></Windows:PlaylistConfigDialog>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Windows:PlaylistConfigDialog Grid.Column="0" Grid.Row="0" x:Name="PlaylistConfigDialog"></Windows:PlaylistConfigDialog>
+        <StackPanel Grid.Column="0" Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button Width="70" Height="30" Margin="7,7,0,0" Windows:ButtonExtensions.Command="{Binding SaveCommand, Mode=OneWay, Source={StaticResource ViewModel}}" Content="{x:Static ViewModel:StringResources.PlaylistManager_Save}"/>
+        </StackPanel>
+    </Grid>
 </Windows:UIComponentBase>

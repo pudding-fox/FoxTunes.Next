@@ -10,7 +10,7 @@ namespace FoxTunes
     {
         public const string Prompt = "Prompt";
 
-        public const string DefaultPrompt = "";
+        public const string DefaultPrompt = "energetic";
 
         public override Func<Playlist, bool> Predicate
         {
@@ -23,7 +23,7 @@ namespace FoxTunes
         protected virtual void GetConfig(Playlist playlist, out string prompt)
         {
             var config = this.GetConfig(playlist);
-            prompt = config.GetValueOrDefault(Prompt);
+            prompt = config.GetValueOrDefault(Prompt, DefaultPrompt);
             if (string.IsNullOrEmpty(prompt))
             {
                 prompt = DefaultPrompt;
