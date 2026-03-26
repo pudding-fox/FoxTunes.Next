@@ -20,6 +20,10 @@ namespace FoxTunes.ViewModel
             }
         }
 
+        public BooleanConfigurationElement Transparency { get; private set;}
+
+        public SelectionConfigurationElement TransparencyProvider { get; private set; }
+
         protected virtual void OnLayoutProviderChanged()
         {
             if (this.LayoutProviderChanged != null)
@@ -42,6 +46,14 @@ namespace FoxTunes.ViewModel
             this.Layout = this.Configuration.GetElement<SelectionConfigurationElement>(
                 WindowsUserInterfaceConfiguration.SECTION,
                 WindowsUserInterfaceConfiguration.LAYOUT_ELEMENT
+            );
+            this.Transparency = this.Configuration.GetElement<BooleanConfigurationElement>(
+                WindowsUserInterfaceConfiguration.SECTION,
+                WindowsUserInterfaceConfiguration.TRANSPARENCY
+            );
+            this.TransparencyProvider = this.Configuration.GetElement<SelectionConfigurationElement>(
+                WindowsUserInterfaceConfiguration.SECTION,
+                WindowsUserInterfaceConfiguration.TRANSPARENCY_PROVIDER
             );
             base.InitializeComponent(core);
         }

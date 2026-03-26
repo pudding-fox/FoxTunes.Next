@@ -20,6 +20,8 @@
             <RowDefinition Height="Auto"></RowDefinition>
             <RowDefinition Height="Auto"></RowDefinition>
             <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
             <RowDefinition></RowDefinition>
         </Grid.RowDefinitions>
         <TextBlock Grid.Column="0" Grid.Row="0" Foreground="{DynamicResource TextBrush}" Text="{Binding Theme.Name, Source={StaticResource ViewModel}}" VerticalAlignment="Center" Margin="0,0,4,0"></TextBlock>
@@ -43,6 +45,36 @@
                 </Style>
             </ContentControl.Style>
         </ContentControl>
-        <Button Grid.Column="1" Grid.Row="3" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="70" Height="30" Click="OnClose">Save</Button>
+        <TextBlock Grid.Column="0" Grid.Row="3" Foreground="{DynamicResource TextBrush}" Text="{Binding Transparency.Name, Source={StaticResource ViewModel}}" VerticalAlignment="Center" Margin="0,0,4,0"></TextBlock>
+        <CheckBox Grid.Column="1" Grid.Row="3" Margin="0,0,0,4" IsChecked="{Binding Transparency.Value, Source={StaticResource ViewModel}}"></CheckBox>
+        <TextBlock Grid.Column="0" Grid.Row="4" Foreground="{DynamicResource TextBrush}" Text="{Binding TransparencyProvider.Name, Source={StaticResource ViewModel}}" VerticalAlignment="Center" Margin="0,0,4,0">
+            <TextBlock.Style>
+                <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource {x:Type TextBlock}}">
+                    <Style.Setters>
+                        <Setter Property="Visibility" Value="Collapsed"></Setter>
+                    </Style.Setters>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Transparency.Value, Source={StaticResource ViewModel}}" Value="True">
+                            <Setter Property="Visibility" Value="Visible"></Setter>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </TextBlock.Style>
+        </TextBlock>
+        <ComboBox Grid.Column="1" Grid.Row="4" Margin="0,0,0,4" ItemsSource="{Binding TransparencyProvider.Options, Source={StaticResource ViewModel}}" SelectedValue="{Binding TransparencyProvider.Value, Source={StaticResource ViewModel}}" DisplayMemberPath="Name">
+            <ComboBox.Style>
+                <Style TargetType="{x:Type ComboBox}" BasedOn="{StaticResource {x:Type ComboBox}}">
+                    <Style.Setters>
+                        <Setter Property="Visibility" Value="Collapsed"></Setter>
+                    </Style.Setters>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Transparency.Value, Source={StaticResource ViewModel}}" Value="True">
+                            <Setter Property="Visibility" Value="Visible"></Setter>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </ComboBox.Style>
+        </ComboBox>
+        <Button Grid.Column="1" Grid.Row="5" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="70" Height="30" Click="OnClose">Save</Button>
     </Grid>
 </UserControl>
