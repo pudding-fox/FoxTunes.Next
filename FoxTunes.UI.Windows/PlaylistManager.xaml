@@ -11,11 +11,6 @@
              d:DesignHeight="300" d:DesignWidth="600">
     <UserControl.Resources>
         <ViewModel:PlaylistManager x:Key="ViewModel"></ViewModel:PlaylistManager>
-        <ObjectDataProvider x:Key="PlaylistTypes" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
-            <ObjectDataProvider.MethodParameters>
-                <x:Type TypeName="Core:PlaylistType"/>
-            </ObjectDataProvider.MethodParameters>
-        </ObjectDataProvider>
     </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -94,7 +89,7 @@
                     <Label Grid.Column="0" Grid.Row="0">Name</Label>
                     <TextBox Grid.Column="1" Grid.Row="0" Text="{Binding Name}" Margin="0,0,0,5"></TextBox>
                     <Label Grid.Column="0" Grid.Row="1">Type</Label>
-                    <ComboBox Grid.Column="1" Grid.Row="1" SelectedValue="{Binding Type}" ItemsSource="{Binding Mode=OneWay, Source={StaticResource PlaylistTypes}}" Margin="0,0,0,5"></ComboBox>
+                    <ComboBox Grid.Column="1" Grid.Row="1" SelectedValue="{Binding Type}" ItemsSource="{Binding Types, Mode=OneWay, Source={StaticResource ViewModel}}" Margin="0,0,0,5"></ComboBox>
                     <Label Grid.Column="0" Grid.Row="2">Enabled</Label>
                     <CheckBox Grid.Column="1" Grid.Row="2" VerticalAlignment="Center" IsChecked="{Binding Enabled}"></CheckBox>
                 </Grid>

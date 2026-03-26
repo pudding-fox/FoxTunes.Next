@@ -1,6 +1,7 @@
 ﻿using FoxDb;
 using FoxTunes.Interfaces;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
@@ -21,6 +22,10 @@ namespace FoxTunes.ViewModel
 
         public IErrorEmitter ErrorEmitter { get; private set; }
 
+        public IConfiguration Configuration { get; private set; }
+
+        public BooleanConfigurationElement AIEnabled { get; private set; }
+
         public override bool EnabledOnly
         {
             get
@@ -29,11 +34,32 @@ namespace FoxTunes.ViewModel
             }
         }
 
+        public IEnumerable<PlaylistType> Types
+        {
+            get
+            {
+                yield return PlaylistType.None;
+                yield return PlaylistType.Selection;
+                yield return PlaylistType.Dynamic;
+                yield return PlaylistType.Smart;
+                yield return PlaylistType.Everything;
+                if (this.AIEnabled != null && this.AIEnabled.Value)
+                {
+                    yield return PlaylistType.AI;
+                }
+            }
+        }
+
         protected override void InitializeComponent(ICore core)
         {
             global::FoxTunes.BackgroundTask.ActiveChanged += this.OnActiveChanged;
             this.DatabaseFactory = core.Factories.Database;
             this.ErrorEmitter = core.Components.ErrorEmitter;
+            this.Configuration = core.Components.Configuration;
+            this.AIEnabled = this.Configuration.GetElement<BooleanConfigurationElement>(
+                AIBehaviourConfiguration.SECTION,
+                AIBehaviourConfiguration.ENABLED
+            );
             base.InitializeComponent(core);
         }
 
