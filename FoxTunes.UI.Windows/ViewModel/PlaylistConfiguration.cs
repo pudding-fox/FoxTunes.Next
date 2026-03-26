@@ -92,13 +92,16 @@ namespace FoxTunes.ViewModel
                 this.Playlist = this.PlaylistManager.SelectedPlaylist;
                 if (this.Playlist != null)
                 {
-                    if (string.IsNullOrEmpty(this.Playlist.Config))
+                    switch (this.Playlist.Type)
                     {
-                        this.HasData = false;
-                    }
-                    else
-                    {
-                        this.HasData = true;
+                        case PlaylistType.Dynamic:
+                        case PlaylistType.Smart:
+                        case PlaylistType.AI:
+                            this.HasData = true;
+                            break;
+                        default:
+                            this.HasData = false;
+                            break;
                     }
                 }
                 else

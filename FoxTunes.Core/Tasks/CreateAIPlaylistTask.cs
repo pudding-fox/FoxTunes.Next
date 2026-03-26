@@ -74,24 +74,6 @@ namespace FoxTunes
         private async Task AddPlaylistItems()
         {
             this.Name = "Creating playlist";
-            using (var task = new SingletonReentrantTask(this, ComponentSlots.Database, SingletonReentrantTask.PRIORITY_HIGH, async cancellationToken =>
-            {
-                using (var transaction = this.Database.BeginTransaction(this.Database.PreferredIsolationLevel))
-                {
-                    await this.AddPlaylistItems(transaction).ConfigureAwait(false);
-                    if (transaction.HasTransaction)
-                    {
-                        transaction.Commit();
-                    }
-                }
-            }))
-            {
-                await task.Run().ConfigureAwait(false);
-            }
-        }
-
-        private async Task AddPlaylistItems(ITransactionSource transaction)
-        {
             this.Description = "Thinking";
             if (this.Runtime == null)
             {
@@ -143,7 +125,7 @@ namespace FoxTunes
                         throw new TimeoutException("Timed out waiting for response.");
                     }
                 }
-                await this.AddPlaylistItems(paths, CancellationToken.None).ConfigureAwait(false);
+                await this.AddPaths(paths).ConfigureAwait(false);
             }
         }
 

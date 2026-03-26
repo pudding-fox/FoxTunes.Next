@@ -28,6 +28,11 @@ namespace FoxTunes
             "mp1", "mp2", "mp3", "ogg", "wav", "aif"
         }, StringComparer.OrdinalIgnoreCase);
 
+        public static readonly HashSet<string> BLACKLIST = new HashSet<string>(new[]
+        {
+            "txt"
+        }, StringComparer.OrdinalIgnoreCase);
+
         public static readonly HashSet<string> PATHS = new HashSet<string>(new[]
         {
             Path.Combine(Location, Environment.Is64BitProcess ? "x64" : "x86", "Addon")
@@ -144,7 +149,7 @@ namespace FoxTunes
 
         public bool IsSupported(string extension)
         {
-            return this.Extensions.Contains(extension);
+            return this.Extensions.Contains(extension) && !BLACKLIST.Contains(extension);
         }
 
         public void Load()
