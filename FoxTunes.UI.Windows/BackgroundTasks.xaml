@@ -11,8 +11,9 @@
              Width="250">
     <Windows:UIComponentBase.Resources>
         <ViewModel:BackgroundTasks x:Key="ViewModel"></ViewModel:BackgroundTasks>
+        <ViewModel:BrushAlphaConverter x:Key="BrushAlphaConverter" Alpha="150"></ViewModel:BrushAlphaConverter>
     </Windows:UIComponentBase.Resources>
-    <Border Background="{DynamicResource ControlBrush}" 
+    <Border DataContext="{DynamicResource ControlBrush}" Background="{Binding Converter={StaticResource BrushAlphaConverter}}" 
                     BorderBrush="{DynamicResource ControlBorderBrush}" 
                     BorderThickness="1" 
                     Padding="10">

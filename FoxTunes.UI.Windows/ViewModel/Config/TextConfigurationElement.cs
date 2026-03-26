@@ -54,6 +54,7 @@ namespace FoxTunes.ViewModel.Config
             this.OnIsMultilineChanged();
             this.OnIsSecretChanged();
             this.OnIsMultilineChanged();
+            this.OnIsReadOnlyChanged();
             this.OnCanBrowseChanged();
             this.OnCanHelpChanged();
             if (this.ElementChanged != null)
