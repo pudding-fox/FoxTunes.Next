@@ -70,6 +70,15 @@ namespace FoxTunes {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Enabled.
+        /// </summary>
+        internal static string AIBehaviourConfiguration_Enabled {
+            get {
+                return ResourceManager.GetString("AIBehaviourConfiguration.Enabled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to File Id.
         /// </summary>
         internal static string AIBehaviourConfiguration_FileId {

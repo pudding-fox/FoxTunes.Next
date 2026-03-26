@@ -6,6 +6,8 @@ namespace FoxTunes
     {
         public const string SECTION = AIBehaviourConfiguration.SECTION;
 
+        public const string ENABLED = AIBehaviourConfiguration.ENABLED;
+
         public const string API_KEY = "AAAAE6C8-078F-49D3-B7B4-1E39B86DD32E";
 
         public const string DEFAULT_API_KEY = "";
@@ -19,9 +21,11 @@ namespace FoxTunes
             yield return new ConfigurationSection(SECTION)
                 .WithElement(new TextConfigurationElement(API_KEY, Strings.OpenAIRuntimeConfiguration_ApiKey)
                     .WithValue(DEFAULT_API_KEY)
-                    .WithFlags(ConfigurationElementFlags.Secret))
+                    .WithFlags(ConfigurationElementFlags.Secret)
+                    .DependsOn(SECTION, ENABLED))
                 .WithElement(new TextConfigurationElement(MODEL, Strings.OpenAIRuntimeConfiguration_Model)
                     .WithValue(DEFAULT_MODEL)
+                    .DependsOn(SECTION, ENABLED)
             );
         }
     }

@@ -6,6 +6,8 @@ namespace FoxTunes
     {
         public const string SECTION = AIBehaviourConfiguration.SECTION;
 
+        public const string ENABLED = AIBehaviourConfiguration.ENABLED;
+
         public const string UPDATE = "ZZZZ1302-10C3-4097-873E-39CE344FF60A";
 
         public static IEnumerable<ConfigurationSection> GetConfigurationSections()
@@ -15,7 +17,8 @@ namespace FoxTunes
                 {
                     var behaviour = ComponentRegistry.Instance.GetComponent<AILibraryBehaviour>();
                     var task = behaviour.Refresh();
-                }));
+                })
+                .DependsOn(SECTION, ENABLED));
         }
     }
 }

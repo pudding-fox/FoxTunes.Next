@@ -17,6 +17,8 @@ namespace FoxTunes
 
         public IConfiguration Configuration { get; private set; }
 
+        public BooleanConfigurationElement Enabled { get; private set; }
+
         public TextConfigurationElement FileId { get; private set; }
 
         public TextConfigurationElement VectorStoreId { get; private set; }
@@ -28,6 +30,10 @@ namespace FoxTunes
             this.SignalEmitter.Signal += this.OnSignal;
             this.BackgroundTaskEmitter = core.Components.BackgroundTaskEmitter;
             this.Configuration = core.Components.Configuration;
+            this.Enabled = this.Configuration.GetElement<BooleanConfigurationElement>(
+                AIBehaviourConfiguration.SECTION,
+                AIBehaviourConfiguration.ENABLED
+            );
             this.FileId = this.Configuration.GetElement<TextConfigurationElement>(
                 AIBehaviourConfiguration.SECTION,
                 AIBehaviourConfiguration.FILE_ID
@@ -55,6 +61,11 @@ namespace FoxTunes
 
         public async Task Refresh()
         {
+            if (!this.Enabled.Value)
+            {
+                //Nothing to do.
+                return;
+            }
             using (var task = new CreateAILibraryTask(this.FileId.Value, this.VectorStoreId.Value))
             {
                 task.InitializeComponent(this.Core);
