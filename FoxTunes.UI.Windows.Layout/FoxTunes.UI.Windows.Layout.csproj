@@ -47,7 +47,7 @@
 			<DependentUpon>Strings.resx</DependentUpon>
 		</Compile>
 	</ItemGroup>
-	
+
 	<ItemGroup>
 		<EmbeddedResource Update="Properties\Resources.resx">
 			<Generator>ResXFileCodeGenerator</Generator>
@@ -68,18 +68,19 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <None Remove="Resources\001.jpg" />
-	  <None Remove="Resources\002.jpg" />
-	  <None Remove="Resources\003.jpg" />
-	  <None Remove="Resources\004.jpg" />
+		<None Remove="Resources\001.jpg" />
+		<None Remove="Resources\002.jpg" />
+		<None Remove="Resources\003.jpg" />
+		<None Remove="Resources\004.jpg" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Resource Include="Resources\001.jpg" />
-	  <Resource Include="Resources\002.jpg" />
-	  <Resource Include="Resources\003.jpg" />
-	  <Resource Include="Resources\004.jpg" />
+		<Resource Include="Resources\001.jpg" />
+		<Resource Include="Resources\002.jpg" />
+		<Resource Include="Resources\003.jpg" />
+		<Resource Include="Resources\004.jpg" />
 	</ItemGroup>
+
 
 	<ItemGroup>
 		<ProjectReference Include="..\FoxTunes.Core\FoxTunes.Core.csproj" />
@@ -95,13 +96,11 @@
 
 	<ItemGroup>
 		<PackageReference Include="Microsoft.Bcl.Async" Version="1.0.168" Condition="'$(TargetFramework)' == 'net40'" />
-    <PackageReference Include="Microsoft.Bcl.Build" Version="1.0.21" Condition="'$(TargetFramework)' == 'net40'" />
+		<PackageReference Include="Microsoft.Bcl.Build" Version="1.0.21" Condition="'$(TargetFramework)' == 'net40'" />
 	</ItemGroup>
 
 	<ItemGroup>
 		<PackageReference Include="Expression.Blend.Sdk" Version="1.0.2" />
 	</ItemGroup>
-
-	
 
 </Project>

@@ -19,7 +19,7 @@ namespace FoxTunes {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "18.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Resources {
@@ -57,6 +57,52 @@ namespace FoxTunes {
             }
             set {
                 resourceCulture = value;
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;Windows-1252&quot;?&gt;
+        ///&lt;FoxTunes&gt;
+        ///  &lt;UIComponentConfiguration Component=&quot;3451DAA4-C643-4CB2-8105-B441F0277559&quot;&gt;
+        ///    &lt;UIComponentConfiguration Component=&quot;8A4E9DDB-2390-455D-9BA9-57C9A441CD75&quot;&gt;
+        ///      &lt;MetaDataEntry Name=&quot;Configuration_AABBBC99-41C7-4563-BB7E-12EDAC59E57F&quot; Value=&quot;30&quot; /&gt;
+        ///      &lt;MetaDataEntry Name=&quot;Configuration_AAAA1509-4808-419D-93BB-B8D914C60646&quot; Value=&quot;pack://application:,,,/FoxTunes.UI.Windows.Layout;component/Resources/001.jpg &amp;#xD;&amp;#xA;pack://application:,,,/Fo [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string Development_1 {
+            get {
+                return ResourceManager.GetString("Development_1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;Windows-1252&quot;?&gt;
+        ///&lt;FoxTunes&gt;
+        ///  &lt;UIComponentConfiguration Component=&quot;3E899F79-380C-4EF7-8570-4B4E3B3467CB&quot;&gt;
+        ///    &lt;UIComponentConfiguration Component=&quot;3451DAA4-C643-4CB2-8105-B441F0277559&quot;&gt;
+        ///      &lt;UIComponentConfiguration Component=&quot;A6820FDA-E415-40C6-AEFB-A73B6FBE4C93&quot;&gt;
+        ///        &lt;UIComponentConfiguration Component=&quot;67A0F63C-DC86-4B4E-91E1-290B71822853&quot;&gt;
+        ///          &lt;UIComponentConfiguration Component=&quot;3E899F79-380C-4EF7-8570-4B4E3B3467CB&quot;&gt;
+        ///            &lt;UIComponentConfiguration  [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string Development_2 {
+            get {
+                return ResourceManager.GetString("Development_2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;Windows-1252&quot;?&gt;
+        ///&lt;FoxTunes&gt;
+        ///  &lt;UIComponentConfiguration Component=&quot;3451DAA4-C643-4CB2-8105-B441F0277559&quot;&gt;
+        ///    &lt;UIComponentConfiguration Component=&quot;3E899F79-380C-4EF7-8570-4B4E3B3467CB&quot;&gt;
+        ///      &lt;UIComponentConfiguration Component=&quot;3E899F79-380C-4EF7-8570-4B4E3B3467CB&quot;&gt;
+        ///        &lt;UIComponentConfiguration Component=&quot;18E98420-F039-4504-A116-3D0F26BEAAD5&quot;&gt;
+        ///          &lt;UIComponentConfiguration Component=&quot;A6820FDA-E415-40C6-AEFB-A73B6FBE4C93&quot;&gt;
+        ///            &lt;UIComponentConfiguration  [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string Development_3 {
+            get {
+                return ResourceManager.GetString("Development_3", resourceCulture);
             }
         }
         
@@ -127,46 +173,16 @@ namespace FoxTunes {
         /// <summary>
         ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;Windows-1252&quot;?&gt;
         ///&lt;FoxTunes&gt;
-        ///  &lt;UIComponentConfiguration Component=&quot;3451DAA4-C643-4CB2-8105-B441F0277559&quot;&gt;
-        ///    &lt;UIComponentConfiguration Component=&quot;8A4E9DDB-2390-455D-9BA9-57C9A441CD75&quot;&gt;
-        ///      &lt;MetaDataEntry Name=&quot;Configuration_AABBBC99-41C7-4563-BB7E-12EDAC59E57F&quot; Value=&quot;30&quot; /&gt;
-        ///      &lt;MetaDataEntry Name=&quot;Configuration_AAAA1509-4808-419D-93BB-B8D914C60646&quot; Value=&quot;pack://application:,,,/FoxTunes.UI.Windows.Layout;component/Resources/001.jpg &amp;#xD;&amp;#xA;pack://application:,,,/Fo [rest of string was truncated]&quot;;.
+        ///	&lt;UIComponentConfiguration Component=&quot;3E899F79-380C-4EF7-8570-4B4E3B3467CB&quot;&gt;
+        ///		&lt;UIComponentConfiguration Component=&quot;3451DAA4-C643-4CB2-8105-B441F0277559&quot;&gt;
+        ///			&lt;UIComponentConfiguration Component=&quot;18E98420-F039-4504-A116-3D0F26BEAAD5&quot;&gt;
+        ///				&lt;UIComponentConfiguration Component=&quot;3E899F79-380C-4EF7-8570-4B4E3B3467CB&quot;&gt;
+        ///					&lt;UIComponentConfiguration Component=&quot;3E899F79-380C-4EF7-8570-4B4E3B3467CB&quot;&gt;
+        ///						&lt;UIComponentConfiguration Component=&quot;3E899F79-3 [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string Main_5 {
             get {
                 return ResourceManager.GetString("Main_5", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;Windows-1252&quot;?&gt;
-        ///&lt;FoxTunes&gt;
-        ///  &lt;UIComponentConfiguration Component=&quot;3E899F79-380C-4EF7-8570-4B4E3B3467CB&quot;&gt;
-        ///    &lt;UIComponentConfiguration Component=&quot;3451DAA4-C643-4CB2-8105-B441F0277559&quot;&gt;
-        ///      &lt;UIComponentConfiguration Component=&quot;A6820FDA-E415-40C6-AEFB-A73B6FBE4C93&quot;&gt;
-        ///        &lt;UIComponentConfiguration Component=&quot;67A0F63C-DC86-4B4E-91E1-290B71822853&quot;&gt;
-        ///          &lt;UIComponentConfiguration Component=&quot;3E899F79-380C-4EF7-8570-4B4E3B3467CB&quot;&gt;
-        ///            &lt;UIComponentConfiguration  [rest of string was truncated]&quot;;.
-        /// </summary>
-        internal static string Main_6 {
-            get {
-                return ResourceManager.GetString("Main_6", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;Windows-1252&quot;?&gt;
-        ///&lt;FoxTunes&gt;
-        ///  &lt;UIComponentConfiguration Component=&quot;3451DAA4-C643-4CB2-8105-B441F0277559&quot;&gt;
-        ///    &lt;UIComponentConfiguration Component=&quot;3E899F79-380C-4EF7-8570-4B4E3B3467CB&quot;&gt;
-        ///      &lt;UIComponentConfiguration Component=&quot;3E899F79-380C-4EF7-8570-4B4E3B3467CB&quot;&gt;
-        ///        &lt;UIComponentConfiguration Component=&quot;18E98420-F039-4504-A116-3D0F26BEAAD5&quot;&gt;
-        ///          &lt;UIComponentConfiguration Component=&quot;A6820FDA-E415-40C6-AEFB-A73B6FBE4C93&quot;&gt;
-        ///            &lt;UIComponentConfiguration  [rest of string was truncated]&quot;;.
-        /// </summary>
-        internal static string Main_7 {
-            get {
-                return ResourceManager.GetString("Main_7", resourceCulture);
             }
         }
         

@@ -120,18 +120,6 @@
   <data name="LayoutDesignerBehaviour.Design" xml:space="preserve">
     <value>Modifier la mise en page</value>
   </data>
-  <data name="ToolWindowBehaviour.Manage" xml:space="preserve">
-    <value>Gérer</value>
-  </data>
-  <data name="ToolWindowBehaviour.New" xml:space="preserve">
-    <value>Nouveau</value>
-  </data>
-  <data name="ToolWindowBehaviour.NewWindow" xml:space="preserve">
-    <value>Nouvelle fenêtre</value>
-  </data>
-  <data name="ToolWindowBehaviour.Path" xml:space="preserve">
-    <value>Dialogues</value>
-  </data>
   <data name="UIComponentContainer.Clear" xml:space="preserve">
     <value>Effacer</value>
   </data>
@@ -173,9 +161,6 @@
   </data>
   <data name="UIComponentGridContainer.MoveRight" xml:space="preserve">
     <value>Déplacer à droite</value>
-  </data>
-  <data name="UIComponentGridContainer.Name" xml:space="preserve">
-    <value>Grille horizontale</value>
   </data>
   <data name="UIComponentGridContainer.Remove" xml:space="preserve">
     <value>Supprimer</value>
@@ -233,5 +218,20 @@
   </data>
   <data name="UIComponentVerticalSplitContainer.Name" xml:space="preserve">
     <value>Fractionnement vertical</value>
+  </data>
+  <data name="UIComponentGridContainer.Name" xml:space="preserve">
+    <value>Grille horizontale</value>
+  </data>
+  <data name="ToolWindowBehaviour.Manage" xml:space="preserve">
+    <value>Gérer</value>
+  </data>
+  <data name="ToolWindowBehaviour.New" xml:space="preserve">
+    <value>Nouveau</value>
+  </data>
+  <data name="ToolWindowBehaviour.NewWindow" xml:space="preserve">
+    <value>Nouvelle fenêtre</value>
+  </data>
+  <data name="ToolWindowBehaviour.Path" xml:space="preserve">
+    <value>Dialogues</value>
   </data>
 </root>

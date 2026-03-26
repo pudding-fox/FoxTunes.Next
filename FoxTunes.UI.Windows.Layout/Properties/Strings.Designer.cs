@@ -19,7 +19,7 @@ namespace FoxTunes {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "18.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Strings {
@@ -511,6 +511,33 @@ namespace FoxTunes {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Development 1.
+        /// </summary>
+        internal static string UIComponentLayoutProviderPresets_Development_1 {
+            get {
+                return ResourceManager.GetString("UIComponentLayoutProviderPresets.Development.1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Development 2.
+        /// </summary>
+        internal static string UIComponentLayoutProviderPresets_Development_2 {
+            get {
+                return ResourceManager.GetString("UIComponentLayoutProviderPresets.Development.2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Development 3.
+        /// </summary>
+        internal static string UIComponentLayoutProviderPresets_Development_3 {
+            get {
+                return ResourceManager.GetString("UIComponentLayoutProviderPresets.Development.3", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Default.
         /// </summary>
         internal static string UIComponentLayoutProviderPresets_Main_1 {
@@ -547,29 +574,11 @@ namespace FoxTunes {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Development 1.
+        ///   Looks up a localized string similar to Default (With Playlist Config).
         /// </summary>
         internal static string UIComponentLayoutProviderPresets_Main_5 {
             get {
                 return ResourceManager.GetString("UIComponentLayoutProviderPresets.Main.5", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Development 2.
-        /// </summary>
-        internal static string UIComponentLayoutProviderPresets_Main_6 {
-            get {
-                return ResourceManager.GetString("UIComponentLayoutProviderPresets.Main.6", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Development 3.
-        /// </summary>
-        internal static string UIComponentLayoutProviderPresets_Main_7 {
-            get {
-                return ResourceManager.GetString("UIComponentLayoutProviderPresets.Main.7", resourceCulture);
             }
         }
         

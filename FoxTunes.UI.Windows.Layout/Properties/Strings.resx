@@ -271,9 +271,12 @@
     <value>Default (With Visualizations + Properties)</value>
   </data>
   <data name="UIComponentLayoutProviderPresets.Main.5" xml:space="preserve">
+    <value>Default (With Playlist Config)</value>
+  </data>
+  <data name="UIComponentLayoutProviderPresets.Development.1" xml:space="preserve">
     <value>Development 1</value>
   </data>
-  <data name="UIComponentLayoutProviderPresets.Main.6" xml:space="preserve">
+  <data name="UIComponentLayoutProviderPresets.Development.2" xml:space="preserve">
     <value>Development 2</value>
   </data>
   <data name="UIComponentLayoutProviderPresets.Simple.1" xml:space="preserve">
@@ -372,7 +375,7 @@
   <data name="LayoutEditingMode.Name" xml:space="preserve">
     <value>Layout Editing Mode</value>
   </data>
-  <data name="UIComponentLayoutProviderPresets.Main.7" xml:space="preserve">
+  <data name="UIComponentLayoutProviderPresets.Development.3" xml:space="preserve">
     <value>Development 3</value>
   </data>
 </root>

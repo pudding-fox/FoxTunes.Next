@@ -407,6 +407,7 @@ namespace FoxTunes
         FolderName = 4,
         Secret = 8,
         Script = 16,
-        FontFamily = 32
+        FontFamily = 32,
+        ReadOnly = 64
     }
 }

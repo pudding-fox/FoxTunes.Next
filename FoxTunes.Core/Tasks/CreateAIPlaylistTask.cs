@@ -26,6 +26,14 @@ namespace FoxTunes
             }
         }
 
+        public override bool Cancellable
+        {
+            get
+            {
+                return true;
+            }
+        }
+
         public IAIRuntime Runtime { get; private set; }
 
         public TextConfigurationElement VectorStoreId { get; private set; }
@@ -85,6 +93,10 @@ namespace FoxTunes
         private async Task AddPlaylistItems(ITransactionSource transaction)
         {
             this.Description = "Thinking";
+            if (this.Runtime == null)
+            {
+                throw new InvalidOperationException("This feature requires an AI provider plugin.");
+            }
             Logger.Write(this, LogLevel.Debug, "Cleating AI context.");
             using (var context = this.Runtime.CreateContext())
             {
@@ -119,6 +131,10 @@ namespace FoxTunes
                     {
                         Logger.Write(this, LogLevel.Debug, "Will retry.");
                         await Task.Delay(1000).ConfigureAwait(false);
+                        if (this.IsCancellationRequested)
+                        {
+                            return;
+                        }
                         goto retry;
                     }
                     else

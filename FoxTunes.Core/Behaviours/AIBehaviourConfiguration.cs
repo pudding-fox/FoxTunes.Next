@@ -15,8 +15,10 @@ namespace FoxTunes
         public static IEnumerable<ConfigurationSection> GetConfigurationSections()
         {
             yield return new ConfigurationSection(SECTION, Strings.AIBehaviourConfiguration_Section)
-                .WithElement(new TextConfigurationElement(FILE_ID, Strings.AIBehaviourConfiguration_FileId))
-                .WithElement(new TextConfigurationElement(VECTOR_STORE_ID, Strings.AIBehaviourConfiguration_VectoreStoreId))
+                .WithElement(new TextConfigurationElement(FILE_ID, Strings.AIBehaviourConfiguration_FileId)
+                    .WithFlags(ConfigurationElementFlags.ReadOnly))
+                .WithElement(new TextConfigurationElement(VECTOR_STORE_ID, Strings.AIBehaviourConfiguration_VectoreStoreId)
+                    .WithFlags(ConfigurationElementFlags.ReadOnly))
                 .WithElement(new TextConfigurationElement(PLAYLIST_GENERATION_PROMPT_TEMPLATE, Strings.AIBehaviourConfiguration_PlaylistGenerationPromptTemplate)
                     .WithValue(Strings.AIBehaviourConfiguration_DefaultPlaylistGenerationPromptTemplate)
                     .WithFlags(ConfigurationElementFlags.MultiLine));

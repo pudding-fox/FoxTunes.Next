@@ -44,6 +44,9 @@
                             <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto"></Setter>
                             <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"></Setter>
                         </DataTrigger>
+                        <DataTrigger Binding="{Binding IsReadOnly, Mode=OneWay, Source={StaticResource ViewModel}}" Value="True">
+                            <Setter Property="IsReadOnly" Value="True"></Setter>
+                        </DataTrigger>
                     </Style.Triggers>
                 </Style>
             </TextBox.Style>

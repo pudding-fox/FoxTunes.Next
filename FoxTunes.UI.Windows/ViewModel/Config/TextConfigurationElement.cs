@@ -52,6 +52,8 @@ namespace FoxTunes.ViewModel.Config
         protected virtual void OnElementChanged()
         {
             this.OnIsMultilineChanged();
+            this.OnIsSecretChanged();
+            this.OnIsMultilineChanged();
             this.OnCanBrowseChanged();
             this.OnCanHelpChanged();
             if (this.ElementChanged != null)
@@ -100,6 +102,25 @@ namespace FoxTunes.ViewModel.Config
         }
 
         public event EventHandler IsSecretChanged;
+
+        public bool IsReadOnly
+        {
+            get
+            {
+                return this.Element != null && this.Element.Flags.HasFlag(ConfigurationElementFlags.ReadOnly);
+            }
+        }
+
+        protected virtual void OnIsReadOnlyChanged()
+        {
+            if (this.IsReadOnlyChanged != null)
+            {
+                this.IsReadOnlyChanged(this, EventArgs.Empty);
+            }
+            this.OnPropertyChanged("IsReadOnly");
+        }
+
+        public event EventHandler IsReadOnlyChanged;
 
         public ICommand BrowseCommand
         {

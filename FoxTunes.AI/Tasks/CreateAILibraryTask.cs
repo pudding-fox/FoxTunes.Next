@@ -50,6 +50,10 @@ namespace FoxTunes.AI.Tasks
         protected override async Task OnRun()
         {
             this.Name = "Uploading library";
+            if (this.Runtime == null)
+            {
+                throw new InvalidOperationException("This feature requires an AI provider plugin.");
+            }
             Logger.Write(this, LogLevel.Debug, "Cleating AI context.");
             using (var context = this.Runtime.CreateContext())
             {
