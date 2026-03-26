@@ -1,6 +1,5 @@
 ﻿using FoxTunes.Interfaces;
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -15,51 +14,46 @@ namespace FoxTunes
             this.Providers = new Lazy<IList<IFilterParserProvider>>(
                 () => ComponentRegistry.Instance.GetComponents<IFilterParserProvider>().ToList()
             );
-            this.Store = new ConcurrentDictionary<string, IFilterParserResult>(StringComparer.OrdinalIgnoreCase);
         }
 
         public Lazy<IList<IFilterParserProvider>> Providers { get; private set; }
 
-        public ConcurrentDictionary<string, IFilterParserResult> Store { get; private set; }
-
         public bool TryParse(string filter, out IFilterParserResult result)
         {
-            result = this.Store.GetOrAdd(filter, () =>
+            var success = default(bool);
+            var groups = new List<IFilterParserResultGroup>();
+            while (!string.IsNullOrEmpty(filter))
             {
-                var success = default(bool);
-                var groups = new List<IFilterParserResultGroup>();
-                while (!string.IsNullOrEmpty(filter))
+                filter = filter.Trim();
+                foreach (var provider in this.Providers.Value)
                 {
-                    filter = filter.Trim();
-                    foreach (var provider in this.Providers.Value)
+                    var currentGroups = default(IEnumerable<IFilterParserResultGroup>);
+                    if (provider.TryParse(ref filter, out currentGroups))
                     {
-                        var currentGroups = default(IEnumerable<IFilterParserResultGroup>);
-                        if (provider.TryParse(ref filter, out currentGroups))
-                        {
-                            groups.AddRange(currentGroups);
-                            success = true;
-                            break;
-                        }
-                    }
-                    if (!success)
-                    {
+                        groups.AddRange(currentGroups);
+                        success = true;
                         break;
                     }
                 }
-                if (!success && !string.IsNullOrEmpty(filter))
+                if (!success)
                 {
-                    Logger.Write(this, LogLevel.Warn, "Failed to parse filter: {0}", filter);
+                    break;
                 }
-                if (groups.Any())
-                {
-                    return new FilterParserResult(this.PostProcess(groups).ToArray());
-                }
-                else
-                {
-                    return null;
-                }
-            });
-            return result != null;
+            }
+            if (!success && !string.IsNullOrEmpty(filter))
+            {
+                Logger.Write(this, LogLevel.Warn, "Failed to parse filter: {0}", filter);
+            }
+            if (groups.Any())
+            {
+                result = new FilterParserResult(this.PostProcess(groups).ToArray());
+                return true;
+            }
+            else
+            {
+                result = null;
+                return true;
+            }
         }
 
         public bool AppliesTo(string filter, IEnumerable<string> names)

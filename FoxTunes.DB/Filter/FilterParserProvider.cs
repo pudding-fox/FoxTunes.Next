@@ -30,11 +30,11 @@ namespace FoxTunes
             var builder = new StringBuilder();
             if (position > 0)
             {
-                builder.Append(filter.Substring(0, position));
+                builder.AppendFormat(" {0} ", filter.Substring(0, position));
             }
             if (length > 0 && length < filter.Length)
             {
-                builder.Append(filter.Substring(position + length, filter.Length - (position + length)));
+                builder.AppendFormat(" {0} ", filter.Substring(position + length, filter.Length - (position + length)));
             }
             filter = builder.ToString();
         }

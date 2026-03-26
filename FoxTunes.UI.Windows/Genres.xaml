@@ -16,5 +16,12 @@
         <ViewModel:Genres x:Key="ViewModel"></ViewModel:Genres>
         <ViewModel:MultiSelectStringConverter x:Key="MultiSelectStringConverter"></ViewModel:MultiSelectStringConverter>
     </UserControl.Resources>
-    <ListBox SelectionMode="Multiple" ItemsSource="{Binding Names, Source={StaticResource ViewModel}}" Windows:ListBoxExtensions.SelectedItems="{Binding SelectedGenres, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Windows:Genres}}, Converter={StaticResource MultiSelectStringConverter}}"/>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+        </Grid.RowDefinitions>
+        <ListBox Grid.Row="0" Grid.Column="0" SelectionMode="Multiple" ItemsSource="{Binding Names, Source={StaticResource ViewModel}}" Windows:ListBoxExtensions.SelectedItems="{Binding SelectedGenres, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Windows:Genres}}, Converter={StaticResource MultiSelectStringConverter}}"/>
+        <Windows:SearchBox Grid.Row="1" Grid.Column="0" SearchText="{Binding Filter, Source={StaticResource ViewModel}}"></Windows:SearchBox>
+    </Grid>
 </UserControl>
