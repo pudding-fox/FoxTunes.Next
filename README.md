@@ -92,6 +92,8 @@ It needs at least;
   * Provides the "skip silence" feature which can trim silence from the start and end of media.
 * **Discogs** - Fetch meta data and images using the discogs API.
   * Automatically fetch missing artwork.
+* **Discord** - Adds current track information to discord.
+  * If you have a bunny api key, album art can be displayed.
 * **DirectSound** - Use standard windows audio session for output.
 * **DSD** - Required for DSD direct.
 * **DTS** - Play .dts multi channel format.
@@ -99,6 +101,7 @@ It needs at least;
   * Can split cue sheets with the CUE plugin.
   * Can rip CDs with the CD plugin.
   * Can up/down sample rate/depth with the Resampler plugin.
+* **FFMPEG** - Play many music formats.
 * **GAPLESS** - A "true" gapless input transport.
 * **GroupedPlaylist** - A scriptable playlist with grouping and artwork. 
 * **Noesis** - Use Noesis.Javascript for scriptable elements.
@@ -113,6 +116,8 @@ It needs at least;
 * **MetaDataViewer** - A simple meta data viewer.
 * **Minidisc** - Write physical minidiscs using a compatible netmd device.
 * **MOD** - Play various mod music formats.
+* **OpenAI** - Generate playlists from an AI prompt.
+  * An OpenAI API key is required.
 * **ParametricEqualizer** - A ten band parametric equalizer with EQ presets easily modifiable and addable (TEXT files).
 * **Ratings** - 1-5 based star rating system with several controls for viewing and editing.
 * **ReplayGain** - Calculate and utilize replay gain meta data for tracks and albums.
@@ -126,6 +131,7 @@ It needs at least;
 * **Tempo** - Adjust the tempo and pitch of media.
 * **Tools** - A framework for external tools.
   * Open media with MusicBrainz Picard.
+* **Upmix** - Upmix tracks to 5.1 or 7.1.
 * **WASAPI** - Windows Audio Session API output.
 * **WaveBar** - A wave form seek bar with mono and multi channel modes.
 * **Windows** - Global key bindings (Multi media keys), system tray icon, system media transport controls, taskbar controls, toast notifications.
