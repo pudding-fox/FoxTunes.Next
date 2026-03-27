@@ -61,7 +61,7 @@ namespace FoxTunes {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Get detailed information about the artist &quot;{0}&quot;. Return text only in HTML format..
+        ///   Looks up a localized string similar to Provide a detailed profile of the musical artist &quot;{0}&quot;. Include their genre, key musical influences, signature sound characteristics, top 5 essential songs, and a brief overview of their career impact. Return the result in HTML format..
         /// </summary>
         internal static string AIArtistConfiguration_DefaultPromptTemplate {
             get {

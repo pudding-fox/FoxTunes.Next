@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="AIArtistConfiguration.DefaultPromptTemplate" xml:space="preserve">
-    <value>Get detailed information about the artist "{0}". Return text only in HTML format.</value>
+    <value>Provide a detailed profile of the musical artist "{0}". Include their genre, key musical influences, signature sound characteristics, top 5 essential songs, and a brief overview of their career impact. Return the result in HTML format.</value>
   </data>
   <data name="AIArtistConfiguration.PromptTemplate" xml:space="preserve">
     <value>Prompt Template</value>
