@@ -1,6 +1,7 @@
 ﻿#pragma warning disable OPENAI001
 using FoxTunes.Interfaces;
 using OpenAI.Responses;
+using OpenAI.VectorStores;
 using System.Threading.Tasks;
 
 namespace FoxTunes
@@ -16,6 +17,18 @@ namespace FoxTunes
         public IAIContext Context { get; }
 
         public ResponsesClient Client { get; }
+
+        public override async Task<string> Create(string input)
+        {
+            var options = new CreateResponseOptions()
+            {
+                Model = this.Context.Model,
+            };
+            options.InputItems.Add(ResponseItem.CreateUserMessageItem(input));
+            Logger.Write(this, LogLevel.Debug, "Getting response for prompt: {0}", input);
+            var result = await this.Client.CreateResponseAsync(options).ConfigureAwait(false);
+            return result.Value.GetOutputText();
+        }
 
         public override async Task<string> Create(string input, string vectorStoreId)
         {
