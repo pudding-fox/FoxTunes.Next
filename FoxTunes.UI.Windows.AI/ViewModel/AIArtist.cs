@@ -2,8 +2,6 @@
 using System;
 using System.IO;
 using System.Linq;
-using System.Management.Instrumentation;
-using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -71,6 +69,52 @@ namespace FoxTunes.ViewModel
         }
 
         public event EventHandler ContentChanged;
+
+        private string _StatusMessage { get; set; }
+
+        public virtual string StatusMessage
+        {
+            get
+            {
+                return this._StatusMessage;
+            }
+            set
+            {
+                this._StatusMessage = value;
+                this.OnStatusMessageChanged();
+            }
+        }
+
+        protected virtual void OnStatusMessageChanged()
+        {
+            this.OnHasStatusMessageChanged();
+            if (this.StatusMessageChanged != null)
+            {
+                this.StatusMessageChanged(this, EventArgs.Empty);
+            }
+            this.OnPropertyChanged("StatusMessage");
+        }
+
+        public event EventHandler StatusMessageChanged;
+
+        public bool HasStatusMessage
+        {
+            get
+            {
+                return !string.IsNullOrEmpty(this.StatusMessage);
+            }
+        }
+
+        protected virtual void OnHasStatusMessageChanged()
+        {
+            if (this.HasStatusMessageChanged != null)
+            {
+                this.HasStatusMessageChanged(this, EventArgs.Empty);
+            }
+            this.OnPropertyChanged("HasStatusMessage");
+        }
+
+        public event EventHandler HasStatusMessageChanged;
 
         public IPlaybackManager PlaybackManager { get; private set; }
 
@@ -145,48 +189,56 @@ namespace FoxTunes.ViewModel
         protected virtual async Task Refresh(string artist)
         {
             Logger.Write(this, LogLevel.Debug, "Cleating AI context.");
-            using (var context = this.Runtime.CreateContext())
+            await Windows.Invoke(() => this.StatusMessage = Strings.AIArtist_Loading).ConfigureAwait(false);
+            try
             {
-                var store = context.CreateResponseStore();
-                var attempt = 0;
-                var prompt = string.Format(this.PromptTemplate.Value, artist);
-            retry:
-                Logger.Write(this, LogLevel.Debug, "Sending request to AI: {0}", prompt);
-                var result = default(string);
-                try
+                using (var context = this.Runtime.CreateContext())
                 {
-                    result = await store.Create(prompt).ConfigureAwait(false);
-                }
-                catch (Exception e)
-                {
-                    Logger.Write(this, LogLevel.Warn, "Failed to get response from AI: {0}", e.Message);
-                    throw;
-                }
-                Logger.Write(this, LogLevel.Debug, "Response from AI: {0}", result);
-                var content = default(string);
-                try
-                {
-                    content = await this.GetContentFromResponse(result).ConfigureAwait(false);
-                }
-                catch (Exception e)
-                {
-                    Logger.Write(this, LogLevel.Warn, "Failed to extract content from the response: {0}", e.Message);
-                }
-                if (string.IsNullOrEmpty(result))
-                {
-                    if (attempt++ < 5)
+                    var store = context.CreateResponseStore();
+                    var attempt = 0;
+                    var prompt = string.Format(this.PromptTemplate.Value, artist);
+                retry:
+                    Logger.Write(this, LogLevel.Debug, "Sending request to AI: {0}", prompt);
+                    var result = default(string);
+                    try
                     {
-                        Logger.Write(this, LogLevel.Debug, "Will retry.");
-                        await Task.Delay(1000).ConfigureAwait(false);
-                        goto retry;
+                        result = await store.Create(prompt).ConfigureAwait(false);
                     }
-                    else
+                    catch (Exception e)
                     {
-                        Logger.Write(this, LogLevel.Debug, "Timed out.");
-                        return;
+                        Logger.Write(this, LogLevel.Warn, "Failed to get response from AI: {0}", e.Message);
+                        throw;
                     }
+                    Logger.Write(this, LogLevel.Debug, "Response from AI: {0}", result);
+                    var content = default(string);
+                    try
+                    {
+                        content = await this.GetContentFromResponse(result).ConfigureAwait(false);
+                    }
+                    catch (Exception e)
+                    {
+                        Logger.Write(this, LogLevel.Warn, "Failed to extract content from the response: {0}", e.Message);
+                    }
+                    if (string.IsNullOrEmpty(result))
+                    {
+                        if (attempt++ < 5)
+                        {
+                            Logger.Write(this, LogLevel.Debug, "Will retry.");
+                            await Task.Delay(1000).ConfigureAwait(false);
+                            goto retry;
+                        }
+                        else
+                        {
+                            Logger.Write(this, LogLevel.Debug, "Timed out.");
+                            return;
+                        }
+                    }
+                    await Windows.Invoke(() => this.Content = content);
                 }
-                await Windows.Invoke(() => this.Content = content);
+            }
+            finally
+            {
+                await Windows.Invoke(() => this.StatusMessage = default(string)).ConfigureAwait(false);
             }
         }
 

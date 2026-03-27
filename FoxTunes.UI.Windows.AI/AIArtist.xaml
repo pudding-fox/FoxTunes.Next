@@ -18,5 +18,19 @@
     <Windows:ConfigurableUIComponentBase.Resources>
         <LocalViewModel:AIArtist x:Key="ViewModel" ContentChanged="OnContentChanged"></LocalViewModel:AIArtist>
     </Windows:ConfigurableUIComponentBase.Resources>
-    <WebView2:WebView2 x:Name="WebView2" CoreWebView2InitializationCompleted="OnCoreWebView2InitializationCompleted"></WebView2:WebView2>
+    <Grid>
+        <WebView2:WebView2 x:Name="WebView2" CoreWebView2InitializationCompleted="OnCoreWebView2InitializationCompleted"></WebView2:WebView2>
+        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding StatusMessage, Mode=OneWay, Source={StaticResource ViewModel}}" IsHitTestVisible="False" Foreground="Black">
+            <TextBlock.Style>
+                <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource {x:Type TextBlock}}">
+                    <Setter Property="Visibility" Value="Collapsed"/>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding HasStatusMessage, Mode=OneWay, Source={StaticResource ViewModel}}" Value="True">
+                            <Setter Property="Visibility" Value="Visible"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </TextBlock.Style>
+        </TextBlock>
+    </Grid>
 </Windows:ConfigurableUIComponentBase>

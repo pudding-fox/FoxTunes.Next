@@ -61,6 +61,15 @@ namespace FoxTunes {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Loading.....
+        /// </summary>
+        internal static string AIArtist_Loading {
+            get {
+                return ResourceManager.GetString("AIArtist.Loading", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Provide a detailed profile of the musical artist &quot;{0}&quot;. Include their genre, key musical influences, signature sound characteristics, top 5 essential songs, and a brief overview of their career impact. Return the result in HTML format..
         /// </summary>
         internal static string AIArtistConfiguration_DefaultPromptTemplate {
