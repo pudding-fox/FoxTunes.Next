@@ -104,16 +104,24 @@ namespace FoxTunes
             var url = release.ResourceUrl;
             var result = await Store.GetOrAdd(url, async () =>
             {
-                Logger.Write(this, LogLevel.Debug, "Querying the API: {0}", url);
-                var request = this.CreateRequest(url);
-                using (var response = (HttpWebResponse)request.GetResponse())
+                try
                 {
-                    if (response.StatusCode != HttpStatusCode.OK)
+                    Logger.Write(this, LogLevel.Debug, "Querying the API: {0}", url);
+                    var request = this.CreateRequest(url);
+                    using (var response = (HttpWebResponse)request.GetResponse())
                     {
-                        Logger.Write(this, LogLevel.Warn, "Status code does not indicate success.");
-                        return null;
+                        if (response.StatusCode != HttpStatusCode.OK)
+                        {
+                            Logger.Write(this, LogLevel.Warn, "Status code does not indicate success.");
+                            return null;
+                        }
+                        return await this.GetRelease(response.GetResponseStream()).ConfigureAwait(false);
                     }
-                    return await this.GetRelease(response.GetResponseStream()).ConfigureAwait(false);
+                }
+                catch (Exception e)
+                {
+                    Logger.Write(this, LogLevel.Warn, "Failed to get response from API: {0}", e.Message);
+                    return null;
                 }
             });
             return result as ReleaseDetails;
