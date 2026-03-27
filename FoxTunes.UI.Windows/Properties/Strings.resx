@@ -741,4 +741,7 @@
   <data name="PlaylistConfiguration.Name" xml:space="preserve">
     <value>Playlist Config</value>
   </data>
+  <data name="Explorer.WarnLimit" xml:space="preserve">
+    <value>Are you sure you want to open {0} paths?</value>
+  </data>
 </root>

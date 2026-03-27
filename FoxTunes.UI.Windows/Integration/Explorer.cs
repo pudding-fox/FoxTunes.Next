@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FoxTunes.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -37,7 +38,7 @@ namespace FoxTunes.Integration
                         continue;
                     }
                 }
-                
+
                 //It's a file or folder path.
                 var directoryName = Path.GetDirectoryName(fileName);
                 paths.GetOrAdd(directoryName, () => new List<string>()).Add(fileName);
@@ -51,6 +52,17 @@ namespace FoxTunes.Integration
 
         public static void Select(IDictionary<string, IList<string>> paths)
         {
+            const int WARN_LIMIT = 5;
+            if (paths.Keys.Count > WARN_LIMIT)
+            {
+                var userInterface = ComponentRegistry.Instance.GetComponent<IUserInterface>();
+                if (!userInterface.Confirm(string.Format(Strings.Explorer_WarnLimit, paths.Keys.Count)))
+                {
+                    //User cancelled.
+                    return;
+                }
+            }
+
             foreach (var pair in paths)
             {
                 //Fetch the desktop shell interface.
