@@ -189,6 +189,7 @@ namespace FoxTunes.ViewModel
         {
             Logger.Write(this, LogLevel.Debug, "Cleating AI context.");
             await Windows.Invoke(() => this.StatusMessage = Strings.AIArtist_Loading).ConfigureAwait(false);
+            await Windows.Invoke(() => this.Content = null);
             try
             {
                 using (var context = this.Runtime.CreateContext())

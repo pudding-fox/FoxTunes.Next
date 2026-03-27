@@ -49,6 +49,10 @@ namespace FoxTunes
                 {
                     this.WebView2.NavigateToString(viewModel.Content);
                 }
+                else
+                {
+                    this.WebView2.NavigateToString("<html></html>");
+                }
             }
         }
 
@@ -65,6 +69,7 @@ namespace FoxTunes
                 {
                     viewModel.Refresh();
                 }
+                this.WebView2.CoreWebView2.Profile.PreferredColorScheme = CoreWebView2PreferredColorScheme.Light;
                 this.WebView2.CoreWebView2.ContextMenuRequested += this.OnContextMenuRequested;
             });
         }

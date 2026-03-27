@@ -19,7 +19,7 @@
         <LocalViewModel:AIArtist x:Key="ViewModel" ContentChanged="OnContentChanged"></LocalViewModel:AIArtist>
     </Windows:ConfigurableUIComponentBase.Resources>
     <Grid>
-        <WebView2:WebView2 x:Name="WebView2" CoreWebView2InitializationCompleted="OnCoreWebView2InitializationCompleted"></WebView2:WebView2>
+        <WebView2:WebView2CompositionControl x:Name="WebView2" CoreWebView2InitializationCompleted="OnCoreWebView2InitializationCompleted"></WebView2:WebView2CompositionControl>
         <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding StatusMessage, Mode=OneWay, Source={StaticResource ViewModel}}" IsHitTestVisible="False" Foreground="Black">
             <TextBlock.Style>
                 <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource {x:Type TextBlock}}">
