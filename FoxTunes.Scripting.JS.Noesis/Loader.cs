@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 
 namespace FoxTunes
 {
-    public class Loader
+    internal class Loader
     {
         public static readonly string FolderName = Path.Combine(Path.GetDirectoryName(typeof(Loader).Assembly.Location), Environment.Is64BitProcess ? "x64" : "x86");
 

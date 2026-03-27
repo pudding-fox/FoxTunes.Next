@@ -297,6 +297,17 @@ namespace FoxTunes
             return new Package[]
             {
                 new Package(
+                    "ai",
+                    new PackageElement[]
+                    {
+                        "FoxTunes.UI.Windows.AI.dll",
+                        "Microsoft.Web.WebView2.Core.dll",
+                        "Microsoft.Web.WebView2.Wpf.dll",
+                        new PackageElement("runtimes/win-x86/native/WebView2Loader.dll", "x86"),
+                        new PackageElement("runtimes/win-x64/native/WebView2Loader.dll", "x64"),
+                    }, PackageFlags.Default
+                ),
+                new Package(
                     "archive",
                     new PackageElement[]
                     {
@@ -525,6 +536,8 @@ namespace FoxTunes
                     new PackageElement[]
                     {
                         "FoxTunes.AI.OpenAI.dll",
+                        "Microsoft.Bcl.AsyncInterfaces.dll",
+                        "Microsoft.Extensions.Logging.Abstractions.dll",
                         "OpenAI.dll",
                         "System.Buffers.dll",
                         "System.ClientModel.dll",
@@ -535,6 +548,7 @@ namespace FoxTunes
                         "System.Net.ServerSentEvents.dll",
                         "System.Numerics.Vectors.dll",
                         "System.Runtime.CompilerServices.Unsafe.dll",
+                        "System.Threading.Tasks.Extensions.dll",
                         "System.Text.Encodings.Web.dll",
                         "System.Text.Json.dll"
                     },

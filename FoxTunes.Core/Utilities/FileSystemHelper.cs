@@ -204,12 +204,28 @@ namespace FoxTunes
 
         public static string GetAbsolutePath(string path1, string path2)
         {
+            var segments1 = path1.Split(new[]
+            {
+                Path.DirectorySeparatorChar.ToString(),
+                Path.AltDirectorySeparatorChar.ToString()
+            }, StringSplitOptions.RemoveEmptyEntries);
+            var segments2 = path2.TrimStart('.').Split(new[]
+            {
+                Path.DirectorySeparatorChar.ToString(),
+                Path.AltDirectorySeparatorChar.ToString()
+            }, StringSplitOptions.RemoveEmptyEntries);
+            if (string.Equals(segments1.LastOrDefault(), segments2.FirstOrDefault(), StringComparison.OrdinalIgnoreCase))
+            {
+                //This is a bug, path is duplicated.
+                path2 = string.Join(Path.DirectorySeparatorChar.ToString(), segments2.Skip(1));
+            }
             var uri = new Uri(path2, UriKind.RelativeOrAbsolute);
             if (uri.IsAbsoluteUri)
             {
                 return path2;
             }
-            return Path.Combine(path1, path2.TrimStart('.', Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar));
+            var result = Path.Combine(path1, path2.TrimStart('.', Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar));
+            return result;
         }
 
         public class Cache

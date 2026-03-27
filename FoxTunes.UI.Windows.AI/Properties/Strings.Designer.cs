@@ -70,6 +70,15 @@ namespace FoxTunes {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to AI Artist Information.
+        /// </summary>
+        internal static string AIArtist_Name {
+            get {
+                return ResourceManager.GetString("AIArtist.Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Provide a detailed profile of the musical artist &quot;{0}&quot;. Include their genre, key musical influences, signature sound characteristics, top 5 essential songs, and a brief overview of their career impact. Return the result in HTML format..
         /// </summary>
         internal static string AIArtistConfiguration_DefaultPromptTemplate {
@@ -93,15 +102,6 @@ namespace FoxTunes {
         internal static string AIArtistConfiguration_Section {
             get {
                 return ResourceManager.GetString("AIArtistConfiguration.Section", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to AI Artist Information.
-        /// </summary>
-        internal static string Artist_Name {
-            get {
-                return ResourceManager.GetString("Artist.Name", resourceCulture);
             }
         }
     }

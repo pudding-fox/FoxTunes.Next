@@ -15,7 +15,7 @@ namespace FoxTunes
 
         public static readonly string Version = GetVersion();
 
-        public static readonly string HomePage = "https://github.com/Raimusoft/FoxTunes";
+        public static readonly string HomePage = "https://github.com/pudding-fox/FoxTunes.Next";
 
         public static string Location
         {

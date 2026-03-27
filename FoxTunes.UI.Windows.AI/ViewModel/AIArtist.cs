@@ -132,7 +132,6 @@ namespace FoxTunes.ViewModel
                     AIArtistConfiguration.SECTION,
                     AIArtistConfiguration.PROMPT_TEMPLATE
                 );
-                this.Dispatch(this.Refresh);
             }
             base.OnConfigurationChanged();
         }
@@ -152,7 +151,7 @@ namespace FoxTunes.ViewModel
             this.Dispatch(this.Refresh);
         }
 
-        protected virtual void Refresh()
+        public virtual void Refresh()
         {
             if (this.Runtime == null)
             {
@@ -234,11 +233,12 @@ namespace FoxTunes.ViewModel
                         }
                     }
                     await Windows.Invoke(() => this.Content = content);
+                    await Windows.Invoke(() => this.StatusMessage = default(string)).ConfigureAwait(false);
                 }
             }
-            finally
+            catch(Exception e)
             {
-                await Windows.Invoke(() => this.StatusMessage = default(string)).ConfigureAwait(false);
+                await Windows.Invoke(() => this.StatusMessage = e.Message).ConfigureAwait(false);
             }
         }
 
