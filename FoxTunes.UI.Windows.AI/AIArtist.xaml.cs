@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Web.WebView2.Core;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -30,6 +31,20 @@ namespace FoxTunes
             }
         }
 
+        protected virtual void OnCoreWebView2InitializationCompleted(object sender, CoreWebView2InitializationCompletedEventArgs e)
+        {
+            this.WebView2.CoreWebView2.ContextMenuRequested += this.OnContextMenuRequested;
+        }
+
+        protected virtual void OnContextMenuRequested(object sender, CoreWebView2ContextMenuRequestedEventArgs e)
+        {
+            if (this.ContextMenu != null)
+            {
+                this.ContextMenu.IsOpen = true;
+            }
+            e.Handled = true;
+        }
+
         public override IEnumerable<string> InvocationCategories
         {
             get
@@ -42,13 +57,22 @@ namespace FoxTunes
         {
             return this.ShowSettings(
                 Strings.Artist_Name,
-                ArtistConfiguration.SECTION
+                AIArtistConfiguration.SECTION
             );
         }
 
         public override IEnumerable<ConfigurationSection> GetConfigurationSections()
         {
             return AIArtistConfiguration.GetConfigurationSections();
+        }
+
+        protected override void OnDisposing()
+        {
+            if (this.WebView2 != null && this.WebView2.CoreWebView2 != null)
+            {
+                this.WebView2.CoreWebView2.ContextMenuRequested -= this.OnContextMenuRequested;
+            }
+            base.OnDisposing();
         }
     }
 }

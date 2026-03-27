@@ -18,5 +18,5 @@
     <Windows:ConfigurableUIComponentBase.Resources>
         <LocalViewModel:AIArtist x:Key="ViewModel" ContentChanged="OnContentChanged"></LocalViewModel:AIArtist>
     </Windows:ConfigurableUIComponentBase.Resources>
-    <WebView2:WebView2 x:Name="WebView2"></WebView2:WebView2>
+    <WebView2:WebView2 x:Name="WebView2" CoreWebView2InitializationCompleted="OnCoreWebView2InitializationCompleted"></WebView2:WebView2>
 </Windows:ConfigurableUIComponentBase>
