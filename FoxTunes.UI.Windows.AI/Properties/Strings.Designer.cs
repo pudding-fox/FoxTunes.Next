@@ -104,5 +104,50 @@ namespace FoxTunes {
                 return ResourceManager.GetString("AIArtistConfiguration.Section", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Loading....
+        /// </summary>
+        internal static string AITrack_Loading {
+            get {
+                return ResourceManager.GetString("AITrack.Loading", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to AI Track Information.
+        /// </summary>
+        internal static string AITrack_Name {
+            get {
+                return ResourceManager.GetString("AITrack.Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Provide detailed information of the music track &quot;{0}&quot; by the musical artist &quot;{1}&quot;. Do not include images. Return the results in HTML format..
+        /// </summary>
+        internal static string AITrackConfiguration_DefaultPromptTemplate {
+            get {
+                return ResourceManager.GetString("AITrackConfiguration.DefaultPromptTemplate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Prompt Template.
+        /// </summary>
+        internal static string AITrackConfiguration_PromptTemplate {
+            get {
+                return ResourceManager.GetString("AITrackConfiguration.PromptTemplate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to AI Track Information.
+        /// </summary>
+        internal static string AITrackConfiguration_Section {
+            get {
+                return ResourceManager.GetString("AITrackConfiguration.Section", resourceCulture);
+            }
+        }
     }
 }

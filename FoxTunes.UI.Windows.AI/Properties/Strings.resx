@@ -132,4 +132,19 @@
   <data name="AIArtistConfiguration.Section" xml:space="preserve">
     <value>AI Artist Information</value>
   </data>
+  <data name="AITrack.Loading" xml:space="preserve">
+    <value>Loading...</value>
+  </data>
+  <data name="AITrack.Name" xml:space="preserve">
+    <value>AI Track Information</value>
+  </data>
+  <data name="AITrackConfiguration.DefaultPromptTemplate" xml:space="preserve">
+    <value>Provide detailed information of the music track "{0}" by the musical artist "{1}". Do not include images. Return the results in HTML format.</value>
+  </data>
+  <data name="AITrackConfiguration.PromptTemplate" xml:space="preserve">
+    <value>Prompt Template</value>
+  </data>
+  <data name="AITrackConfiguration.Section" xml:space="preserve">
+    <value>AI Track Information</value>
+  </data>
 </root>
