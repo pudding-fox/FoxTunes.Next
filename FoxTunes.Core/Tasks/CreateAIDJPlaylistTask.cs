@@ -176,7 +176,7 @@ namespace FoxTunes
                         parameters["album"] = CommonMetaData.Album;
                         parameters["title"] = CommonMetaData.Title;
                         parameters["lastPlayed"] = CommonStatistics.LastPlayed;
-                        parameters["limit"] = this.Limit;
+                        parameters["limit"] = this.History;
                         break;
                 }
             }, transaction);
