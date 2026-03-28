@@ -314,5 +314,19 @@ namespace FoxTunes
                 );
             }
         }
+
+        public IDatabaseQuery GetListeningHistory
+        {
+            get
+            {
+                return this.Database.QueryFactory.Create(
+                    Resources.GetListeningHistory,
+                    new DatabaseQueryParameter("album", DbType.String, 0, 0, 0, ParameterDirection.Input, false, null, DatabaseQueryParameterFlags.None),
+                    new DatabaseQueryParameter("title", DbType.String, 0, 0, 0, ParameterDirection.Input, false, null, DatabaseQueryParameterFlags.None),
+                    new DatabaseQueryParameter("lastPlayed", DbType.String, 0, 0, 0, ParameterDirection.Input, false, null, DatabaseQueryParameterFlags.None),
+                    new DatabaseQueryParameter("limit", DbType.Int32, 0, 0, 0, ParameterDirection.Input, false, null, DatabaseQueryParameterFlags.None)
+                );
+            }
+        }
     }
 }

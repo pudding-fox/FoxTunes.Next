@@ -398,6 +398,14 @@
             }
         }
 
+        public static string PlaylistConfigDialog_History
+        {
+            get
+            {
+                return Strings.PlaylistConfigDialog_History;
+            }
+        }
+
         public static string PlaylistManager_Save
         {
             get

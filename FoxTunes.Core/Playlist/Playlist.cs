@@ -202,6 +202,7 @@ namespace FoxTunes
         Dynamic = 2,
         Smart = 3,
         Everything = 4,
-        AI = 5
+        AIPrompt = 5,
+        AIDJ = 6
     }
 }

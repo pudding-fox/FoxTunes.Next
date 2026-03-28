@@ -337,9 +337,25 @@
     <value>Playlist Generation Prompt Template</value>
   </data>
   <data name="AIBehaviourConfiguration.DefaultPlaylistGenerationPromptTemplate" xml:space="preserve">
-    <value>Create a playlist from my library using the prompt: "{0}". Ensure that the output is in valid CSV format containing only the file path without headers.</value>
+    <value>Create a playlist from my library using the prompt: "{0}". 
+Ensure that the output is in valid CSV format containing only the file path without headers.</value>
   </data>
   <data name="AIBehaviourConfiguration.Enabled" xml:space="preserve">
     <value>Enabled</value>
+  </data>
+  <data name="AIBehaviourConfiguration.DefaultDJPromptTemplate" xml:space="preserve">
+    <value>Here is my listening history:
+```csv
+{0}
+```
+Use my library to create a playlist containing {1} tracks.
+Prefer albums played recently.
+Avoid repeating the same artist too frequently.
+Occasionally introduce a similar artist or genre for variety.
+Respect momentum (don't jump from heavy music to soft ambient abruptly).
+Ensure that the output is in valid CSV format containing only the file path without headers.</value>
+  </data>
+  <data name="AIBehaviourConfiguration.DJPromptTemplate" xml:space="preserve">
+    <value>DJ Prompt Template</value>
   </data>
 </root>

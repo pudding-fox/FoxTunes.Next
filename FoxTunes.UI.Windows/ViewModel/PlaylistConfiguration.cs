@@ -96,7 +96,8 @@ namespace FoxTunes.ViewModel
                     {
                         case PlaylistType.Dynamic:
                         case PlaylistType.Smart:
-                        case PlaylistType.AI:
+                        case PlaylistType.AIPrompt:
+                        case PlaylistType.AIDJ:
                             this.HasData = true;
                             break;
                         default:

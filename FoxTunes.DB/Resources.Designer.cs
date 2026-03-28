@@ -19,7 +19,7 @@ namespace FoxTunes {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "18.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Resources {
@@ -157,12 +157,16 @@ namespace FoxTunes {
         ///		WHEN &quot;MetaDataItems&quot;.&quot;Name&quot; = @like THEN &apos;Like&apos; 
         ///		ELSE &quot;MetaDataItems&quot;.&quot;Name&quot; 
         ///	END AS &quot;Name&quot;, 
-        ///	&quot;MetaDataItems&quot;.&quot;Value&quot;
+        ///	CASE 
+        ///		WHEN &quot;MetaDataItems&quot;.&quot;Name&quot; = @like THEN  
+        ///			CASE WHEN &quot;MetaDataItems&quot;.&quot;Value&quot; = 0 THEN &apos;True&apos;
+        ///			ELSE &apos;False&apos;
+        ///			END
+        ///		ELSE &quot;MetaDataItems&quot;.&quot;Value&quot;
+        ///	END AS &quot;Value&quot;
         ///FROM &quot;LibraryItems&quot;
         ///	JOIN &quot;LibraryItem_MetaDataItem&quot; ON &quot;LibraryItems&quot;.&quot;Id&quot; = &quot;LibraryItem_MetaDataItem&quot;.&quot;LibraryItem_Id&quot;
-        ///	JOIN &quot;MetaDataItems&quot; ON &quot;LibraryItem_MetaDataItem&quot;.&quot;MetaDataItem_Id&quot; = &quot;MetaDataItems&quot;.&quot;Id&quot;
-        ///WHERE &quot;MetaDataItems&quot;.&quot;Name&quot; IN (@artist, @album, @title, @year, @like, @rating)
-        ///ORDER BY &quot;LibraryItems&quot;.&quot;FileName&quot;, &quot;Met [rest of string was truncated]&quot;;.
+        ///	JOIN &quot;MetaDataItems&quot; ON &quot;LibraryItem_MetaDataItem&quot;.&quot;MetaDat [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string GetEntireLibrary {
             get {
@@ -195,6 +199,23 @@ namespace FoxTunes {
         internal static string GetLibraryMetaData {
             get {
                 return ResourceManager.GetString("GetLibraryMetaData", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SELECT &quot;LibraryItems&quot;.&quot;FileName&quot;, &quot;Album&quot;.&quot;Value&quot; AS &quot;Album&quot;, &quot;Title&quot;.&quot;Value&quot; AS &quot;Title&quot;, MAX(&quot;LastPlayed&quot;.&quot;Value&quot;) AS &quot;LastPlayed&quot;
+        ///FROM &quot;LibraryItems&quot;
+        ///
+        ///INNER JOIN &quot;LibraryItem_MetaDataItem&quot; AS &quot;LibraryItem_MetaDataItem_LastPlayed_Album&quot;
+        ///    ON &quot;LibraryItems&quot;.&quot;Id&quot; = &quot;LibraryItem_MetaDataItem_LastPlayed_Album&quot;.&quot;LibraryItem_Id&quot;
+        ///INNER JOIN &quot;MetaDataItems&quot; AS &quot;Album&quot;
+        ///    ON &quot;LibraryItem_MetaDataItem_LastPlayed_Album&quot;.&quot;MetaDataItem_Id&quot; = &quot;Album&quot;.&quot;Id&quot;
+        ///	
+        ///INNER JOIN &quot;LibraryItem_MetaDataItem&quot; AS &quot;LibraryIte [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string GetListeningHistory {
+            get {
+                return ResourceManager.GetString("GetListeningHistory", resourceCulture);
             }
         }
         

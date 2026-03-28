@@ -142,6 +142,9 @@
   <data name="GetLibraryMetaData" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\GetLibraryMetaData.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
+  <data name="GetListeningHistory" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\GetListeningHistory.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
   <data name="GetOrAddMetaDataItem" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>resources\getoraddmetadataitem.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>

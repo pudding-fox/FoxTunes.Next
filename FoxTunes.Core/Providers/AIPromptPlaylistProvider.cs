@@ -6,7 +6,7 @@ namespace FoxTunes
 {
     [ComponentDependency(Slot = ComponentSlots.Database)]
     [ComponentDependency(Slot = ComponentSlots.AIRuntime)]
-    public class AIPlaylistProvider : PlaylistProvider
+    public class AIPromptPlaylistProvider : PlaylistProvider
     {
         public const string Prompt = "Prompt";
 
@@ -16,7 +16,7 @@ namespace FoxTunes
         {
             get
             {
-                return playlist => playlist.Type == PlaylistType.AI && playlist.Enabled;
+                return playlist => playlist.Type == PlaylistType.AIPrompt && playlist.Enabled;
             }
         }
 
@@ -55,7 +55,7 @@ namespace FoxTunes
                 //Only refresh when user requests.
                 return;
             }
-            using (var task = new CreateAIPlaylistTask(playlist, prompt))
+            using (var task = new CreateAIPromptPlaylistTask(playlist, prompt))
             {
                 task.InitializeComponent(this.Core);
                 await this.BackgroundTaskEmitter.Send(task).ConfigureAwait(false);

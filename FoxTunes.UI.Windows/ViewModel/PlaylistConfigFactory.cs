@@ -13,8 +13,10 @@ namespace FoxTunes.ViewModel
                     return new DynamicPlaylistConfig(playlist);
                 case PlaylistType.Smart:
                     return new SmartPlaylistConfig(playlist);
-                case PlaylistType.AI:
-                    return new AIPlaylistConfig(playlist);
+                case PlaylistType.AIPrompt:
+                    return new AIPromptPlaylistConfig(playlist);
+                case PlaylistType.AIDJ:
+                    return new AIDJPlaylistConfig(playlist);
             }
             return default(PlaylistConfigBase);
         }
@@ -209,9 +211,9 @@ namespace FoxTunes.ViewModel
         }
     }
 
-    public class AIPlaylistConfig : PlaylistConfigBase
+    public class AIPromptPlaylistConfig : PlaylistConfigBase
     {
-        public AIPlaylistConfig(Playlist playlist) : base(playlist)
+        public AIPromptPlaylistConfig(Playlist playlist) : base(playlist)
         {
 
         }
@@ -220,7 +222,7 @@ namespace FoxTunes.ViewModel
         {
             get
             {
-                return this.Config.GetValueOrDefault(nameof(Prompt), AIPlaylistProvider.DefaultPrompt);
+                return this.Config.GetValueOrDefault(nameof(Prompt), AIPromptPlaylistProvider.DefaultPrompt);
             }
             set
             {
@@ -243,7 +245,70 @@ namespace FoxTunes.ViewModel
 
         protected override Freezable CreateInstanceCore()
         {
-            return new AIPlaylistConfig(null);
+            return new AIPromptPlaylistConfig(null);
+        }
+    }
+
+    public class AIDJPlaylistConfig : PlaylistConfigBase
+    {
+        public AIDJPlaylistConfig(Playlist playlist) : base(playlist)
+        {
+
+        }
+
+        public int History
+        {
+            get
+            {
+                return Convert.ToInt32(this.Config.GetValueOrDefault(nameof(History), Convert.ToString(AIDJPlaylistProvider.DefaultHistory)));
+            }
+            set
+            {
+                this.Config[nameof(History)] = Convert.ToString(value);
+                this.OnHistoryChanged();
+            }
+        }
+
+        protected virtual void OnHistoryChanged()
+        {
+            this.Config.Save();
+            if (this.HistoryChanged != null)
+            {
+                this.HistoryChanged(this, EventArgs.Empty);
+            }
+            this.OnPropertyChanged("History");
+        }
+
+        public event EventHandler HistoryChanged;
+
+        public int Count
+        {
+            get
+            {
+                return Convert.ToInt32(this.Config.GetValueOrDefault(nameof(Count), Convert.ToString(AIDJPlaylistProvider.DefaultCount)));
+            }
+            set
+            {
+                this.Config[nameof(Count)] = Convert.ToString(value);
+                this.OnCountChanged();
+            }
+        }
+
+        protected virtual void OnCountChanged()
+        {
+            this.Config.Save();
+            if (this.CountChanged != null)
+            {
+                this.CountChanged(this, EventArgs.Empty);
+            }
+            this.OnPropertyChanged("Count");
+        }
+
+        public event EventHandler CountChanged;
+
+        protected override Freezable CreateInstanceCore()
+        {
+            return new AIPromptPlaylistConfig(null);
         }
     }
 }

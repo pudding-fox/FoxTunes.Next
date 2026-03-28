@@ -61,11 +61,39 @@ namespace FoxTunes {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Create a playlist from my library using the prompt: &quot;{0}&quot;. Ensure that the output is in valid CSV format containing only the file path without headers..
+        ///   Looks up a localized string similar to Here is my listening history:
+        ///```csv
+        ///{0}
+        ///```
+        ///Use my library to create a playlist containing {1} tracks.
+        ///Prefer albums played recently.
+        ///Avoid repeating the same artist too frequently.
+        ///Occasionally introduce a similar artist or genre for variety.
+        ///Respect momentum (don&apos;t jump from heavy music to soft ambient abruptly).
+        ///Ensure that the output is in valid CSV format containing only the file path without headers..
+        /// </summary>
+        internal static string AIBehaviourConfiguration_DefaultDJPromptTemplate {
+            get {
+                return ResourceManager.GetString("AIBehaviourConfiguration.DefaultDJPromptTemplate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Create a playlist from my library using the prompt: &quot;{0}&quot;. 
+        ///Ensure that the output is in valid CSV format containing only the file path without headers..
         /// </summary>
         internal static string AIBehaviourConfiguration_DefaultPlaylistGenerationPromptTemplate {
             get {
                 return ResourceManager.GetString("AIBehaviourConfiguration.DefaultPlaylistGenerationPromptTemplate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to DJ Prompt Template.
+        /// </summary>
+        internal static string AIBehaviourConfiguration_DJPromptTemplate {
+            get {
+                return ResourceManager.GetString("AIBehaviourConfiguration.DJPromptTemplate", resourceCulture);
             }
         }
         

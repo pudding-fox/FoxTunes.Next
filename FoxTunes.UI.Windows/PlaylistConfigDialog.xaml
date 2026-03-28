@@ -51,7 +51,7 @@
                     <Slider Grid.Column="1" Grid.Row="5" Minimum="12" Maximum="30" IsSnapToTickEnabled="True" SmallChange="1" LargeChange="5" TickFrequency="1" Value="{Binding Count}" ToolTip="{Binding Count}"></Slider>
                 </Grid>
             </DataTemplate>
-            <DataTemplate DataType="{x:Type ViewModel:AIPlaylistConfig}">
+            <DataTemplate DataType="{x:Type ViewModel:AIPromptPlaylistConfig}">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" SharedSizeGroup="Label"></ColumnDefinition>
@@ -62,6 +62,22 @@
                     </Grid.RowDefinitions>
                     <Label Grid.Column="0" Grid.Row="0" Content="{x:Static ViewModel:StringResources.PlaylistConfigDialog_Prompt}"></Label>
                     <TextBox Grid.Column="1" Grid.Row="0" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto" Text="{Binding Prompt}"></TextBox>
+                </Grid>
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type ViewModel:AIDJPlaylistConfig}">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" SharedSizeGroup="Label"></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <Label Grid.Column="0" Grid.Row="0" Content="{x:Static ViewModel:StringResources.PlaylistConfigDialog_History}"></Label>
+                    <Slider Grid.Column="1" Grid.Row="0" Minimum="1" Maximum="100" IsSnapToTickEnabled="True" SmallChange="1" LargeChange="1" TickFrequency="1" Value="{Binding History}" ToolTip="{Binding History}"></Slider>
+                    <Label Grid.Column="0" Grid.Row="1" Content="{x:Static ViewModel:StringResources.PlaylistConfigDialog_Count}"></Label>
+                    <Slider Grid.Column="1" Grid.Row="1" Minimum="1" Maximum="100" IsSnapToTickEnabled="True" SmallChange="1" LargeChange="1" TickFrequency="1" Value="{Binding Count}" ToolTip="{Binding Count}"></Slider>
                 </Grid>
             </DataTemplate>
         </ContentControl.Resources>

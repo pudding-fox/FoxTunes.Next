@@ -45,7 +45,8 @@ namespace FoxTunes.ViewModel
                 yield return PlaylistType.Everything;
                 if (this.AIEnabled != null && this.AIEnabled.Value)
                 {
-                    yield return PlaylistType.AI;
+                    yield return PlaylistType.AIPrompt;
+                    yield return PlaylistType.AIDJ;
                 }
             }
         }

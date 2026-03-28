@@ -1177,6 +1177,15 @@ namespace FoxTunes {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to History Size.
+        /// </summary>
+        internal static string PlaylistConfigDialog_History {
+            get {
+                return ResourceManager.GetString("PlaylistConfigDialog.History", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Like.
         /// </summary>
         internal static string PlaylistConfigDialog_Like {

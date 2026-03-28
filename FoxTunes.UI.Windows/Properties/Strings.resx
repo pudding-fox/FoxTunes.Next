@@ -744,4 +744,7 @@
   <data name="Explorer.WarnLimit" xml:space="preserve">
     <value>Are you sure you want to open {0} paths?</value>
   </data>
+  <data name="PlaylistConfigDialog.History" xml:space="preserve">
+    <value>History Size</value>
+  </data>
 </root>

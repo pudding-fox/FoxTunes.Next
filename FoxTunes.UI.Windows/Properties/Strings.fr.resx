@@ -580,4 +580,7 @@
   <data name="WindowsUserInterfaceConfiguration.MarqueeStep" xml:space="preserve">
     <value>Marquee Step</value>
   </data>
+  <data name="PlaylistConfigDialog.History" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
 </root>
