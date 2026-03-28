@@ -42,7 +42,7 @@ namespace FoxTunes
 
             using (var writer = new PlaylistWriter(this.Database, this.Transaction))
             {
-                foreach (var path in paths.OrderBy())
+                foreach (var path in paths)
                 {
                     if (cancellationToken.IsCancellationRequested)
                     {

@@ -44,7 +44,7 @@ namespace FoxTunes
             {
                 await this.RemoveItems(PlaylistItemStatus.None).ConfigureAwait(false);
             }
-            await this.AddPaths(this.Paths).ConfigureAwait(false);
+            await this.AddPaths(this.Paths, false).ConfigureAwait(false);
 
         }
 

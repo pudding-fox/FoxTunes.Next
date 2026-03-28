@@ -130,7 +130,7 @@ namespace FoxTunes
                         throw new TimeoutException("Timed out waiting for response.");
                     }
                 }
-                await this.AddPaths(paths).ConfigureAwait(false);
+                await this.AddPaths(paths, true).ConfigureAwait(false);
             }
         }
 

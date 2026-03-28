@@ -235,16 +235,16 @@ namespace FoxTunes
                 {
                     await this.RemoveItems(PlaylistItemStatus.None).ConfigureAwait(false);
                 }
-                await this.AddPaths(this.FileNames).ConfigureAwait(false);
+                await this.AddPaths(this.FileNames, true).ConfigureAwait(false);
             }
 
-            protected override async Task AddPaths(IEnumerable<string> paths)
+            protected override async Task AddPaths(IEnumerable<string> paths, bool maintainOrder)
             {
                 using (var task = new SingletonReentrantTask(this, ComponentSlots.Database, SingletonReentrantTask.PRIORITY_HIGH, async cancellationToken =>
                 {
                     await this.AddPlaylistItems(paths, cancellationToken).ConfigureAwait(false);
                     await this.ShiftItems(QueryOperator.GreaterOrEqual, this.Sequence, this.Offset).ConfigureAwait(false);
-                    await this.SequenceItems().ConfigureAwait(false);
+                    await this.SequenceItems(maintainOrder).ConfigureAwait(false);
                     await this.SetPlaylistItemsStatus(PlaylistItemStatus.None).ConfigureAwait(false);
                 }))
                 {

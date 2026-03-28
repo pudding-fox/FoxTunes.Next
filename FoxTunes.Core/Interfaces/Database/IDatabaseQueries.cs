@@ -42,6 +42,8 @@ namespace FoxTunes.Interfaces
 
         IDatabaseQuery RemovePlaylistItems { get; }
 
+        IDatabaseQuery SequencePlaylistItems();
+
         IDatabaseQuery SequencePlaylistItems(string sort);
 
         IDatabaseQuery UpdateLibraryHierarchyNode { get; }

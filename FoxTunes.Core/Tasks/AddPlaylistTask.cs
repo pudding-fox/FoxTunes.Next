@@ -46,7 +46,7 @@ namespace FoxTunes
             await this.AddPlaylist().ConfigureAwait(false);
             if (this.Paths != null)
             {
-                await this.AddPaths(this.Paths).ConfigureAwait(false);
+                await this.AddPaths(this.Paths, false).ConfigureAwait(false);
             }
             else if (this.LibraryHierarchyNode != null)
             {

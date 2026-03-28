@@ -230,6 +230,15 @@ namespace FoxTunes
             }
         }
 
+        public IDatabaseQuery SequencePlaylistItems()
+        {
+            return this.Database.QueryFactory.Create(
+                Resources.SequencePlaylistItems,
+                new DatabaseQueryParameter("playlistId", DbType.Int32, 0, 0, 0, ParameterDirection.Input, false, null, DatabaseQueryParameterFlags.None),
+                new DatabaseQueryParameter("status", DbType.Byte, 0, 0, 0, ParameterDirection.Input, false, null, DatabaseQueryParameterFlags.None)
+            );
+        }
+
         public abstract IDatabaseQuery SequencePlaylistItems(string sort);
 
         public IDatabaseQuery UpdateLibraryHierarchyNode

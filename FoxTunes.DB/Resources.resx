@@ -166,6 +166,9 @@
   <data name="RemovePlaylistVariousArtists" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>resources\removeplaylistvariousartists.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
+  <data name="SequencePlaylistItems" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\SequencePlaylistItems.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
   <data name="UpdateLibraryHierarchyNode" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>resources\updatelibraryhierarchynode.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>

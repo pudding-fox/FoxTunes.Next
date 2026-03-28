@@ -104,7 +104,7 @@ namespace FoxTunes
             }
         }
 
-        protected virtual async Task AddPaths(IEnumerable<string> paths)
+        protected virtual async Task AddPaths(IEnumerable<string> paths, bool maintainOrder)
         {
             using (var task = new SingletonReentrantTask(this, ComponentSlots.Database, SingletonReentrantTask.PRIORITY_HIGH, async cancellationToken =>
              {
@@ -112,7 +112,7 @@ namespace FoxTunes
                  await this.ShiftItems(QueryOperator.GreaterOrEqual, this.Sequence, this.Offset).ConfigureAwait(false);
                  await this.SignalEmitter.Send(new Signal(this, CommonSignals.PlaylistUpdated, new PlaylistUpdatedSignalState(this.Playlist, DataSignalType.Updated))).ConfigureAwait(false);
                  await this.AddOrUpdateMetaData(cancellationToken).ConfigureAwait(false);
-                 await this.SequenceItems().ConfigureAwait(false);
+                 await this.SequenceItems(maintainOrder).ConfigureAwait(false);
                  await this.SetPlaylistItemsStatus(PlaylistItemStatus.None).ConfigureAwait(false);
              }))
             {
@@ -293,12 +293,20 @@ namespace FoxTunes
             }
         }
 
-        protected virtual async Task SequenceItems()
+        protected virtual async Task SequenceItems(bool maintainOrder)
         {
             Logger.Write(this, LogLevel.Debug, "Sequencing playlist items.");
             using (var transaction = this.Database.BeginTransaction(this.Database.PreferredIsolationLevel))
             {
-                var query = this.Database.Queries.SequencePlaylistItems(this.Sort.Value);
+                var query = default(IDatabaseQuery);
+                if (maintainOrder)
+                {
+                    query = this.Database.Queries.SequencePlaylistItems();
+                }
+                else
+                {
+                    query = this.Database.Queries.SequencePlaylistItems(this.Sort.Value);
+                }
                 await this.Database.ExecuteAsync(query, (parameters, phase) =>
                 {
                     switch (phase)

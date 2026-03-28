@@ -385,6 +385,31 @@ namespace FoxTunes {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to WITH &quot;PlaylistItemsRowNumber&quot; AS (
+        ///	SELECT &quot;PlaylistItems&quot;.&quot;Id&quot;, 
+        ///		ROW_NUMBER() OVER (ORDER BY rowid) AS &quot;RowNumber&quot;
+        ///	FROM &quot;PlaylistItems&quot;
+        ///	WHERE &quot;PlaylistItems&quot;.&quot;Playlist_Id&quot; = @playlistId 
+        ///		AND &quot;PlaylistItems&quot;.&quot;Status&quot; = @status
+        ///)
+        ///
+        ///UPDATE &quot;PlaylistItems&quot;
+        ///SET &quot;Sequence&quot; = &quot;Sequence&quot; + 
+        ///(
+        ///	SELECT &quot;PlaylistItemsRowNumber&quot;.&quot;RowNumber&quot; - 1
+        ///	FROM &quot;PlaylistItemsRowNumber&quot;
+        ///	WHERE &quot;PlaylistItemsRowNumber&quot;.&quot;Id&quot; = &quot;PlaylistItems&quot;.&quot;Id&quot;
+        ///)
+        ///WHERE &quot;PlaylistItems&quot;.&quot;Playlist_Id&quot; = @playlistId 
+        ///	AND &quot;Playl [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string SequencePlaylistItems {
+            get {
+                return ResourceManager.GetString("SequencePlaylistItems", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to INSERT INTO [LibraryHierarchyItem_LibraryItem] ([LibraryHierarchyItem_Id], [LibraryItem_Id])
         ///SELECT @libraryHierarchyItemId, @libraryItemId
         ///WHERE NOT EXISTS(
