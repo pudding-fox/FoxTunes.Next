@@ -64,6 +64,10 @@ Many areas have context (right click) menus exposing additional features and set
 
 ![Settings](https://user-images.githubusercontent.com/13859177/216792034-43cbdae8-9392-46a0-b56b-69d5362a2ac4.png)
 
+## AI
+
+Recent versions include several AI features powered by OpenAI (an api key is required). Create playlists from prompts or use the AI DJ to generate a playlist based on your listening history.
+
 ## Mini Disc
 
 A mini disc plugin is included and can be activated in the settings screen.
@@ -84,6 +88,7 @@ It needs at least;
 
 ## Optional plugins
 
+* **AI** - Display artist profile and track information from an AI provider.
 * **Archive** - Tracks can be played directly from some archive formats: 7z, iso, rar, tar and zip.
 * **ASIO** - Low latency exclusive output, supports DSD direct.
 * **CD** - Play audio CDs from a physical drive.
