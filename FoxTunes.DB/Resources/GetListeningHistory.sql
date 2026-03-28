@@ -1,26 +1,33 @@
-SELECT "LibraryItems"."FileName", "Album"."Value" AS "Album", "Title"."Value" AS "Title", MAX("LastPlayed"."Value") AS "LastPlayed"
-FROM "LibraryItems"
+WITH "MetaData" AS (
+    SELECT 
+        "LibraryItems"."FileName",
+        MAX(CASE WHEN "MetaDataItems"."Name" = @artist THEN "MetaDataItems"."Value" END) AS "Artist",
+        MAX(CASE WHEN "MetaDataItems"."Name" = @album THEN "MetaDataItems"."Value" END) AS "Album",
+        MAX(CASE WHEN "MetaDataItems"."Name" = @title THEN "MetaDataItems"."Value" END) AS "Title",
+        MAX(CASE WHEN "MetaDataItems"."Name" = @lastPlayed THEN "MetaDataItems"."Value" END) AS "LastPlayed"
+    FROM "LibraryItems"
+        JOIN "LibraryItem_MetaDataItem"
+            ON "LibraryItems"."Id" = "LibraryItem_MetaDataItem"."LibraryItem_Id"
+        JOIN "MetaDataItems"
+            ON "LibraryItem_MetaDataItem"."MetaDataItem_Id" = "MetaDataItems"."Id"
+    GROUP BY "LibraryItems"."Id"
+),
 
-INNER JOIN "LibraryItem_MetaDataItem" AS "LibraryItem_MetaDataItem_LastPlayed_Album"
-    ON "LibraryItems"."Id" = "LibraryItem_MetaDataItem_LastPlayed_Album"."LibraryItem_Id"
-INNER JOIN "MetaDataItems" AS "Album"
-    ON "LibraryItem_MetaDataItem_LastPlayed_Album"."MetaDataItem_Id" = "Album"."Id"
-	
-INNER JOIN "LibraryItem_MetaDataItem" AS "LibraryItem_MetaDataItem_LastPlayed_Title"
-    ON "LibraryItems"."Id" = "LibraryItem_MetaDataItem_LastPlayed_Title"."LibraryItem_Id"
-INNER JOIN "MetaDataItems" AS "Title"
-    ON "LibraryItem_MetaDataItem_LastPlayed_Title"."MetaDataItem_Id" = "Title"."Id"
+"Ranked" AS (
+    SELECT 
+        *,
+        ROW_NUMBER() OVER (PARTITION BY "Album" ORDER BY "LastPlayed" DESC) AS "RowNumber"
+    FROM "MetaData"
+    WHERE "LastPlayed" IS NOT NULL
+)
 
-INNER JOIN "LibraryItem_MetaDataItem" AS "LibraryItem_MetaDataItem_LastPlayed"
-    ON "LibraryItems"."Id" = "LibraryItem_MetaDataItem_LastPlayed"."LibraryItem_Id"
-INNER JOIN "MetaDataItems" AS "LastPlayed"
-    ON "LibraryItem_MetaDataItem_LastPlayed"."MetaDataItem_Id" = "LastPlayed"."Id"
-	
-WHERE "Album"."Name" = @album
-	AND "Title"."Name" = @title
-	AND "LastPlayed"."Name" = @lastPlayed 
-	
-
-GROUP BY "Album"."Value"
+SELECT 
+	"FileName",
+    "Artist",
+    "Album",
+	"Title",
+   "LastPlayed"
+FROM "Ranked"
+WHERE "RowNumber" = 1
 ORDER BY "LastPlayed" DESC
 LIMIT @limit

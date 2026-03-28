@@ -137,7 +137,7 @@ namespace FoxTunes
         private async Task<string> GetListeningHistory()
         {
             var builder = new StringBuilder();
-            builder.AppendLine("\"FileName\",\"Album\",\"Title\",\"LastPlayed\"");
+            builder.AppendLine("\"FileName\",\"Artist\",\"Album\",\"Title\",\"LastPlayed\"");
             using (var transaction = this.Database.BeginTransaction(this.Database.PreferredIsolationLevel))
             {
                 using (var reader = this.GetListeningHistory(transaction))
@@ -172,6 +172,7 @@ namespace FoxTunes
                 switch (phase)
                 {
                     case DatabaseParameterPhase.Fetch:
+                        parameters["artist"] = CommonMetaData.Artist;
                         parameters["album"] = CommonMetaData.Album;
                         parameters["title"] = CommonMetaData.Title;
                         parameters["lastPlayed"] = CommonStatistics.LastPlayed;

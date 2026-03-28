@@ -152,21 +152,15 @@ namespace FoxTunes {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to SELECT &quot;LibraryItems&quot;.&quot;FileName&quot;, 
-        ///	CASE 
-        ///		WHEN &quot;MetaDataItems&quot;.&quot;Name&quot; = @like THEN &apos;Like&apos; 
-        ///		ELSE &quot;MetaDataItems&quot;.&quot;Name&quot; 
-        ///	END AS &quot;Name&quot;, 
-        ///	CASE 
-        ///		WHEN &quot;MetaDataItems&quot;.&quot;Name&quot; = @like THEN  
-        ///			CASE WHEN &quot;MetaDataItems&quot;.&quot;Value&quot; = 0 THEN &apos;True&apos;
-        ///			ELSE &apos;False&apos;
-        ///			END
-        ///		ELSE &quot;MetaDataItems&quot;.&quot;Value&quot;
-        ///	END AS &quot;Value&quot;
-        ///FROM &quot;LibraryItems&quot;
-        ///	JOIN &quot;LibraryItem_MetaDataItem&quot; ON &quot;LibraryItems&quot;.&quot;Id&quot; = &quot;LibraryItem_MetaDataItem&quot;.&quot;LibraryItem_Id&quot;
-        ///	JOIN &quot;MetaDataItems&quot; ON &quot;LibraryItem_MetaDataItem&quot;.&quot;MetaDat [rest of string was truncated]&quot;;.
+        ///   Looks up a localized string similar to WITH &quot;MetaData&quot;
+        ///AS (
+        ///    SELECT 
+        ///        &quot;LibraryItems&quot;.&quot;FileName&quot;,
+        ///        MAX(CASE WHEN &quot;MetaDataItems&quot;.&quot;Name&quot; = @artist THEN &quot;MetaDataItems&quot;.&quot;Value&quot; END) AS &quot;Artist&quot;,
+        ///        MAX(CASE WHEN &quot;MetaDataItems&quot;.&quot;Name&quot; = @album THEN &quot;MetaDataItems&quot;.&quot;Value&quot; END) AS &quot;Album&quot;,
+        ///        MAX(CASE WHEN &quot;MetaDataItems&quot;.&quot;Name&quot; = @track THEN &quot;MetaDataItems&quot;.&quot;Value&quot; END) AS &quot;Track&quot;,
+        ///        MAX(CASE WHEN &quot;MetaDataItems&quot;.&quot;Name&quot; = @title THEN &quot;MetaDataItems&quot;.&quot;Value&quot; END) AS &quot;Title&quot;,
+        ///        MAX(CASE WHEN &quot;MetaDataIte [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string GetEntireLibrary {
             get {
@@ -203,15 +197,15 @@ namespace FoxTunes {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to SELECT &quot;LibraryItems&quot;.&quot;FileName&quot;, &quot;Album&quot;.&quot;Value&quot; AS &quot;Album&quot;, &quot;Title&quot;.&quot;Value&quot; AS &quot;Title&quot;, MAX(&quot;LastPlayed&quot;.&quot;Value&quot;) AS &quot;LastPlayed&quot;
-        ///FROM &quot;LibraryItems&quot;
-        ///
-        ///INNER JOIN &quot;LibraryItem_MetaDataItem&quot; AS &quot;LibraryItem_MetaDataItem_LastPlayed_Album&quot;
-        ///    ON &quot;LibraryItems&quot;.&quot;Id&quot; = &quot;LibraryItem_MetaDataItem_LastPlayed_Album&quot;.&quot;LibraryItem_Id&quot;
-        ///INNER JOIN &quot;MetaDataItems&quot; AS &quot;Album&quot;
-        ///    ON &quot;LibraryItem_MetaDataItem_LastPlayed_Album&quot;.&quot;MetaDataItem_Id&quot; = &quot;Album&quot;.&quot;Id&quot;
-        ///	
-        ///INNER JOIN &quot;LibraryItem_MetaDataItem&quot; AS &quot;LibraryIte [rest of string was truncated]&quot;;.
+        ///   Looks up a localized string similar to WITH &quot;MetaData&quot; AS (
+        ///    SELECT 
+        ///        &quot;LibraryItems&quot;.&quot;FileName&quot;,
+        ///        MAX(CASE WHEN &quot;MetaDataItems&quot;.&quot;Name&quot; = @artist THEN &quot;MetaDataItems&quot;.&quot;Value&quot; END) AS &quot;Artist&quot;,
+        ///        MAX(CASE WHEN &quot;MetaDataItems&quot;.&quot;Name&quot; = @album THEN &quot;MetaDataItems&quot;.&quot;Value&quot; END) AS &quot;Album&quot;,
+        ///        MAX(CASE WHEN &quot;MetaDataItems&quot;.&quot;Name&quot; = @title THEN &quot;MetaDataItems&quot;.&quot;Value&quot; END) AS &quot;Title&quot;,
+        ///        MAX(CASE WHEN &quot;MetaDataItems&quot;.&quot;Name&quot; = @lastPlayed THEN &quot;MetaDataItems&quot;.&quot;Value&quot; END) AS &quot;LastPlayed&quot;
+        ///    FROM &quot;LibraryItems&quot;
+        ///  [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string GetListeningHistory {
             get {

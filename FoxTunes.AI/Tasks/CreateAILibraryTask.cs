@@ -90,11 +90,6 @@ namespace FoxTunes.AI.Tasks
                     this.Description = "Fetching library";
                     using (var stream = await this.GetEntireLibrary().ConfigureAwait(false))
                     {
-                        if (stream.Length == 0)
-                        {
-                            Logger.Write(this, LogLevel.Debug, "Library is empty, nothing to do.");
-                            return;
-                        }
                         Logger.Write(this, LogLevel.Debug, "library.txt is {0} bytes.", stream.Length);
                         Logger.Write(this, LogLevel.Debug, "Creating file store.");
                         this.Description = "Creating file store";
@@ -121,7 +116,7 @@ namespace FoxTunes.AI.Tasks
         {
             var stream = new MemoryStream();
             var writer = new StreamWriter(stream);
-            await writer.WriteLineAsync("\"FileName\",\"Name\",\"Value\"").ConfigureAwait(false);
+            await writer.WriteLineAsync("\"FileName\",\"Artist\",\"Album\",\"Track\",\"Title\",\"Genre\",\"Year\",\"Like\",\"Rating\"").ConfigureAwait(false);
             using (var database = this.DatabaseFactory.Create())
             {
                 using (var transaction = database.BeginTransaction(database.PreferredIsolationLevel))
@@ -135,10 +130,22 @@ namespace FoxTunes.AI.Tasks
                                 var row = string.Concat(
                                     "\"",
                                     sequence.Current.Get<string>("FileName"),
-                                    "\", \"",
-                                    sequence.Current.Get<string>("Name"),
-                                    "\", \"",
-                                    sequence.Current.Get<string>("Value"),
+                                    "\",\"",
+                                    sequence.Current.Get<string>("Artist"),
+                                    "\",\"",
+                                    sequence.Current.Get<string>("Album"),
+                                    "\",\"",
+                                    sequence.Current.Get<string>("Track"),
+                                    "\",\"",
+                                    sequence.Current.Get<string>("Title"),
+                                    "\",\"",
+                                    sequence.Current.Get<string>("Genre"),
+                                    "\",\"",
+                                    sequence.Current.Get<string>("Year"),
+                                    "\",\"",
+                                    sequence.Current.Get<string>("Like"),
+                                    "\",\"",
+                                    sequence.Current.Get<string>("Rating"),
                                     "\""
                                 );
                                 writer.WriteLine(row);
@@ -160,6 +167,7 @@ namespace FoxTunes.AI.Tasks
                     case DatabaseParameterPhase.Fetch:
                         parameters["artist"] = CommonMetaData.Artist;
                         parameters["album"] = CommonMetaData.Album;
+                        parameters["track"] = CommonMetaData.Track;
                         parameters["title"] = CommonMetaData.Title;
                         parameters["genre"] = CommonMetaData.Genre;
                         parameters["year"] = CommonMetaData.Year;
