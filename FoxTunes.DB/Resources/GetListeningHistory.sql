@@ -29,5 +29,6 @@ SELECT
    "LastPlayed"
 FROM "Ranked"
 WHERE "RowNumber" = 1
+    AND "LastPlayed" > '1990/01/01 00:00:00'
 ORDER BY "LastPlayed" DESC
 LIMIT @limit
