@@ -243,6 +243,31 @@ namespace FoxTunes.ViewModel
 
         public event EventHandler PromptChanged;
 
+        public int Count
+        {
+            get
+            {
+                return Convert.ToInt32(this.Config.GetValueOrDefault(nameof(Count), Convert.ToString(AIPromptPlaylistProvider.DefaultCount)));
+            }
+            set
+            {
+                this.Config[nameof(Count)] = Convert.ToString(value);
+                this.OnCountChanged();
+            }
+        }
+
+        protected virtual void OnCountChanged()
+        {
+            this.Config.Save();
+            if (this.CountChanged != null)
+            {
+                this.CountChanged(this, EventArgs.Empty);
+            }
+            this.OnPropertyChanged("Count");
+        }
+
+        public event EventHandler CountChanged;
+
         protected override Freezable CreateInstanceCore()
         {
             return new AIPromptPlaylistConfig(null);

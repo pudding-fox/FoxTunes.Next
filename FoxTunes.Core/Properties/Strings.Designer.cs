@@ -79,7 +79,8 @@ namespace FoxTunes {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Create a playlist from my library using the prompt: &quot;{0}&quot;. 
+        ///   Looks up a localized string similar to Use my library to create a playlist containing {1} tracks.
+        ///Use the prompt: &quot;{0}&quot;. 
         ///Ensure that the output is in valid CSV format containing only the file path without headers..
         /// </summary>
         internal static string AIBehaviourConfiguration_DefaultPlaylistGenerationPromptTemplate {
@@ -89,7 +90,7 @@ namespace FoxTunes {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to DJ Prompt Template.
+        ///   Looks up a localized string similar to AI DJ Prompt Template.
         /// </summary>
         internal static string AIBehaviourConfiguration_DJPromptTemplate {
             get {
@@ -116,7 +117,7 @@ namespace FoxTunes {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Playlist Generation Prompt Template.
+        ///   Looks up a localized string similar to AI Prompt Template.
         /// </summary>
         internal static string AIBehaviourConfiguration_PlaylistGenerationPromptTemplate {
             get {

@@ -11,12 +11,15 @@ namespace FoxTunes
 {
     public class CreateAIPromptPlaylistTask : PlaylistTaskBase
     {
-        public CreateAIPromptPlaylistTask(Playlist playlist, string prompt) : base(playlist, 0)
+        public CreateAIPromptPlaylistTask(Playlist playlist, string prompt, int limit) : base(playlist, 0)
         {
             this.Prompt = prompt;
+            this.Limit = limit;
         }
 
         public string Prompt { get; private set; }
+
+        public int Limit { get; private set; }
 
         public override bool Visible
         {
@@ -84,7 +87,7 @@ namespace FoxTunes
             {
                 var store = context.CreateResponseStore();
                 var attempt = 0;
-                var prompt = string.Format(this.PromptTemplate.Value, this.Prompt);
+                var prompt = string.Format(this.PromptTemplate.Value, this.Prompt, this.Limit);
             retry:
                 Logger.Write(this, LogLevel.Debug, "Sending request to AI: {0}", prompt);
                 var result = default(string);
