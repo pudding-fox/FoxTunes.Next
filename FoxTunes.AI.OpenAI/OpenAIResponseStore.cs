@@ -23,6 +23,7 @@ namespace FoxTunes
             var options = new CreateResponseOptions()
             {
                 Model = this.Context.Model,
+                Temperature = this.Context.Temperature
             };
             options.InputItems.Add(ResponseItem.CreateUserMessageItem(input));
             Logger.Write(this, LogLevel.Debug, "Getting response for prompt: {0}", input);
@@ -35,6 +36,7 @@ namespace FoxTunes
             var options = new CreateResponseOptions()
             {
                 Model = this.Context.Model,
+                Temperature = this.Context.Temperature
             };
             options.InputItems.Add(ResponseItem.CreateUserMessageItem(input));
             options.Tools.Add(ResponseTool.CreateFileSearchTool(new[]

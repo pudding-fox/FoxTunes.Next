@@ -5,12 +5,15 @@ namespace FoxTunes
 {
     public abstract class AIContext : BaseComponent, IAIContext
     {
-        protected AIContext(string model)
+        protected AIContext(string model, float temperature)
         {
             this.Model = model;
+            this.Temperature = temperature;
         }
 
         public string Model { get; private set; }
+
+        public float Temperature { get; private set; }
 
         public abstract IAIFileStore CreateFileStore();
 

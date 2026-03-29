@@ -25,6 +25,8 @@ namespace FoxTunes
 
         public TextConfigurationElement Model { get; private set; }
 
+        public DoubleConfigurationElement Temperature { get; private set; }
+
         public override void InitializeComponent(ICore core)
         {
             this.Core = core;
@@ -36,6 +38,10 @@ namespace FoxTunes
             this.Model = this.Configuration.GetElement<TextConfigurationElement>(
                 OpenAIRuntimeConfiguration.SECTION,
                 OpenAIRuntimeConfiguration.MODEL
+            );
+            this.Temperature = this.Configuration.GetElement<DoubleConfigurationElement>(
+                OpenAIRuntimeConfiguration.SECTION,
+                OpenAIRuntimeConfiguration.TEMPERATURE
             );
             base.InitializeComponent(core);
         }
@@ -58,8 +64,9 @@ namespace FoxTunes
             {
                 model = OpenAIRuntimeConfiguration.DEFAULT_MODEL;
             }
+            var temperature = Convert.ToSingle(this.Temperature.Value);
             var client = this.CreateClient();
-            return new OpenAIContext(client, model);
+            return new OpenAIContext(client, model, temperature);
         }
 
         public IEnumerable<ConfigurationSection> GetConfigurationSections()

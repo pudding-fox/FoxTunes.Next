@@ -6,6 +6,8 @@ namespace FoxTunes.Interfaces
     {
         string Model { get; }
 
+        float Temperature { get; }
+
         IAIFileStore CreateFileStore();
 
         IAIVectorStore CreateVectorStore();

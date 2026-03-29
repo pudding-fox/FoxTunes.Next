@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Collections.Specialized;
 
 namespace FoxTunes
 {
@@ -16,6 +17,14 @@ namespace FoxTunes
 
         public const string DEFAULT_MODEL = "gpt-5.4-nano";
 
+        public const string TEMPERATURE = "BBCC6CEF-3634-484A-93F4-46F2D28510C2";
+
+        public const double TEMPERATURE_MIN = 0d;
+
+        public const double TEMPERATURE_MAX = 2d;
+
+        public const double TEMPERATURE_DEFAULT = 1d;
+
         public static IEnumerable<ConfigurationSection> GetConfigurationSections()
         {
             yield return new ConfigurationSection(SECTION)
@@ -25,6 +34,10 @@ namespace FoxTunes
                     .DependsOn(SECTION, ENABLED))
                 .WithElement(new TextConfigurationElement(MODEL, Strings.OpenAIRuntimeConfiguration_Model)
                     .WithValue(DEFAULT_MODEL)
+                    .DependsOn(SECTION, ENABLED))
+                .WithElement(new DoubleConfigurationElement(TEMPERATURE, Strings.OpenAIRuntimeConfiguration_Temperature)
+                    .WithValue(TEMPERATURE_DEFAULT)
+                    .WithValidationRule(new DoubleValidationRule(TEMPERATURE_MIN, TEMPERATURE_MAX, 0.1d))
                     .DependsOn(SECTION, ENABLED)
             );
         }

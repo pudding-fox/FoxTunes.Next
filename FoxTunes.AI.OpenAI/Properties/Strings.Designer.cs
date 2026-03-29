@@ -95,5 +95,14 @@ namespace FoxTunes {
                 return ResourceManager.GetString("OpenAIRuntimeConfiguration.Model", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to OpenAI Temperature.
+        /// </summary>
+        internal static string OpenAIRuntimeConfiguration_Temperature {
+            get {
+                return ResourceManager.GetString("OpenAIRuntimeConfiguration.Temperature", resourceCulture);
+            }
+        }
     }
 }

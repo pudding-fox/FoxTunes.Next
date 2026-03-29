@@ -129,4 +129,7 @@
   <data name="OpenAIRuntimeConfiguration.Model" xml:space="preserve">
     <value>OpenAI Model</value>
   </data>
+  <data name="OpenAIRuntimeConfiguration.Temperature" xml:space="preserve">
+    <value>OpenAI Temperature</value>
+  </data>
 </root>
