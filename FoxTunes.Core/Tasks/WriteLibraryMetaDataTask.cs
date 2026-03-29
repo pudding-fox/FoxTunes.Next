@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace FoxTunes
@@ -74,7 +75,6 @@ namespace FoxTunes
         {
             if (this.Visible)
             {
-                this.Name = "Saving meta data";
                 this.Position = 0;
                 this.Count = this.LibraryItems.Count();
             }
@@ -87,36 +87,13 @@ namespace FoxTunes
 
         protected override async Task OnRun()
         {
-            var position = 0;
-            using (var task = new SingletonReentrantTask(this, ComponentSlots.Database, SingletonReentrantTask.PRIORITY_HIGH, async cancellationToken =>
+            using (var task = new SingletonReentrantTask(this, ComponentSlots.Database, SingletonReentrantTask.PRIORITY_LOW, async cancellationToken =>
             {
-                foreach (var libraryItem in this.LibraryItems)
+                await this.WriteLibraryMetaData(cancellationToken).ConfigureAwait(false);
+                if (cancellationToken.IsCancellationRequested)
                 {
-                    if (this.IsCancellationRequested)
-                    {
-                        break;
-                    }
-
-                    if (this.Visible)
-                    {
-                        this.Description = Path.GetFileName(libraryItem.FileName);
-                        this.Position = position;
-                    }
-
-                    await this.WriteLibraryMetaData(libraryItem).ConfigureAwait(false);
-
-                    libraryItem.Status = LibraryItemStatus.Import;
-                    await LibraryTaskBase.UpdateLibraryItem(this.Database, libraryItem).ConfigureAwait(false);
-
-                    if (this.Flags.HasFlag(MetaDataUpdateFlags.WriteToFiles))
-                    {
-                        if (!await this.MetaDataManager.Synchronize(new[] { libraryItem }, this.Names.ToArray()).ConfigureAwait(false))
-                        {
-                            this.AddError(libraryItem, string.Format("Failed to write meta data to file \"{0}\". We will try again later.", libraryItem.FileName));
-                        }
-                    }
-
-                    position++;
+                    this.Name = "Waiting..";
+                    this.Description = string.Empty;
                 }
             }))
             {
@@ -128,6 +105,37 @@ namespace FoxTunes
         {
             await base.OnCompleted().ConfigureAwait(false);
             await this.SignalEmitter.Send(new Signal(this, CommonSignals.MetaDataUpdated, new MetaDataUpdatedSignalState(this.LibraryItems, this.Names, this.UpdateType))).ConfigureAwait(false);
+        }
+
+        private async Task WriteLibraryMetaData(CancellationToken cancellationToken)
+        {
+            this.Name = "Saving meta data";
+            foreach (var libraryItem in this.LibraryItems)
+            {
+                if (cancellationToken.IsCancellationRequested)
+                {
+                    break;
+                }
+
+                if (this.Visible)
+                {
+                    this.Description = Path.GetFileName(libraryItem.FileName);
+                    this.Position++;
+                }
+
+                await this.WriteLibraryMetaData(libraryItem).ConfigureAwait(false);
+
+                libraryItem.Status = LibraryItemStatus.Import;
+                await LibraryTaskBase.UpdateLibraryItem(this.Database, libraryItem).ConfigureAwait(false);
+
+                if (this.Flags.HasFlag(MetaDataUpdateFlags.WriteToFiles))
+                {
+                    if (!await this.MetaDataManager.Synchronize(new[] { libraryItem }, this.Names.ToArray()).ConfigureAwait(false))
+                    {
+                        this.AddError(libraryItem, string.Format("Failed to write meta data to file \"{0}\". We will try again later.", libraryItem.FileName));
+                    }
+                }
+            }
         }
 
         private async Task WriteLibraryMetaData(LibraryItem libraryItem)

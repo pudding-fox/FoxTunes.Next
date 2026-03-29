@@ -75,7 +75,6 @@ namespace FoxTunes
         {
             if (this.Visible)
             {
-                this.Name = "Saving meta data";
                 this.Position = 0;
                 this.Count = this.PlaylistItems.Count();
             }
@@ -88,45 +87,13 @@ namespace FoxTunes
 
         protected override async Task OnRun()
         {
-            var position = 0;
-            using (var task = new SingletonReentrantTask(this, ComponentSlots.Database, SingletonReentrantTask.PRIORITY_HIGH, async cancellationToken =>
+            using (var task = new SingletonReentrantTask(this, ComponentSlots.Database, SingletonReentrantTask.PRIORITY_LOW, async cancellationToken =>
             {
-                foreach (var playlistItem in this.PlaylistItems)
+                await this.WritePlaylistMetaData(cancellationToken).ConfigureAwait(false);
+                if (cancellationToken.IsCancellationRequested)
                 {
-                    if (this.IsCancellationRequested)
-                    {
-                        break;
-                    }
-
-                    if (this.Visible)
-                    {
-                        this.Description = Path.GetFileName(playlistItem.FileName);
-                        this.Position = position;
-                    }
-
-                    if (playlistItem.LibraryItem_Id.HasValue)
-                    {
-                        await this.WriteLibraryMetaData(playlistItem).ConfigureAwait(false);
-                        await LibraryTaskBase.UpdateLibraryItem(
-                            this.Database,
-                            playlistItem.LibraryItem_Id.Value,
-                            libraryItem => libraryItem.Status = LibraryItemStatus.Import
-                        ).ConfigureAwait(false);
-                    }
-                    else
-                    {
-                        await this.WritePlaylistMetaData(playlistItem).ConfigureAwait(false);
-                    }
-
-                    if (this.Flags.HasFlag(MetaDataUpdateFlags.WriteToFiles))
-                    {
-                        if (!await this.MetaDataManager.Synchronize(new[] { playlistItem }, this.Names.ToArray()).ConfigureAwait(false))
-                        {
-                            this.AddError(playlistItem, string.Format("Failed to write meta data to file \"{0}\". We will try again later.", playlistItem.FileName));
-                        }
-                    }
-
-                    position++;
+                    this.Name = "Waiting..";
+                    this.Description = string.Empty;
                 }
             }))
             {
@@ -138,6 +105,46 @@ namespace FoxTunes
         {
             await base.OnCompleted().ConfigureAwait(false);
             await this.SignalEmitter.Send(new Signal(this, CommonSignals.MetaDataUpdated, new MetaDataUpdatedSignalState(this.PlaylistItems, this.Names, this.UpdateType))).ConfigureAwait(false);
+        }
+
+        private async Task WritePlaylistMetaData(CancellationToken cancellationToken)
+        {
+            this.Name = "Saving meta data";
+            foreach (var playlistItem in this.PlaylistItems)
+            {
+                if (cancellationToken.IsCancellationRequested)
+                {
+                    break;
+                }
+
+                if (this.Visible)
+                {
+                    this.Description = Path.GetFileName(playlistItem.FileName);
+                    this.Position++;
+                }
+
+                if (playlistItem.LibraryItem_Id.HasValue)
+                {
+                    await this.WriteLibraryMetaData(playlistItem).ConfigureAwait(false);
+                    await LibraryTaskBase.UpdateLibraryItem(
+                        this.Database,
+                        playlistItem.LibraryItem_Id.Value,
+                        libraryItem => libraryItem.Status = LibraryItemStatus.Import
+                    ).ConfigureAwait(false);
+                }
+                else
+                {
+                    await this.WritePlaylistMetaData(playlistItem).ConfigureAwait(false);
+                }
+
+                if (this.Flags.HasFlag(MetaDataUpdateFlags.WriteToFiles))
+                {
+                    if (!await this.MetaDataManager.Synchronize(new[] { playlistItem }, this.Names.ToArray()).ConfigureAwait(false))
+                    {
+                        this.AddError(playlistItem, string.Format("Failed to write meta data to file \"{0}\". We will try again later.", playlistItem.FileName));
+                    }
+                }
+            }
         }
 
         private async Task WritePlaylistMetaData(PlaylistItem playlistItem)
