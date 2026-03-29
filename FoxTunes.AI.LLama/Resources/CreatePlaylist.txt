@@ -1,2 +1,0 @@
-Create a playlist using the prompt: {0}
-Return results in CSV format including the file name.
