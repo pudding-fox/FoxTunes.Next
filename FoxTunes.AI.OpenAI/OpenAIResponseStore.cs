@@ -44,7 +44,7 @@ namespace FoxTunes
             }
         }
 
-        public override async Task<string> Create(string input, string vectorStoreId, CancellationToken cancellationToken)
+        public override async Task<string> Create(string input, string fileId, string vectorStoreId, CancellationToken cancellationToken)
         {
             var options = new CreateResponseOptions()
             {

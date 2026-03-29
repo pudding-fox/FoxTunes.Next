@@ -6,6 +6,6 @@ namespace FoxTunes.Interfaces
     {
         Task<string> Create(string input, CancellationToken cancellationToken);
 
-        Task<string> Create(string input, string vectorStoreId, CancellationToken cancellationToken);
+        Task<string> Create(string input, string fileId, string vectorStoreId, CancellationToken cancellationToken);
     }
 }

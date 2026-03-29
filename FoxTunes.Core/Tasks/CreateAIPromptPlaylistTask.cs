@@ -39,6 +39,8 @@ namespace FoxTunes
 
         public IAIRuntime Runtime { get; private set; }
 
+        public TextConfigurationElement FileId { get; private set; }
+
         public TextConfigurationElement VectorStoreId { get; private set; }
 
         public TextConfigurationElement PromptTemplate { get; private set; }
@@ -47,6 +49,10 @@ namespace FoxTunes
         {
             base.InitializeComponent(core);
             this.Runtime = core.Components.AIRuntime;
+            this.FileId = this.Configuration.GetElement<TextConfigurationElement>(
+                AIBehaviourConfiguration.SECTION,
+                AIBehaviourConfiguration.FILE_ID
+            );
             this.VectorStoreId = this.Configuration.GetElement<TextConfigurationElement>(
                 AIBehaviourConfiguration.SECTION,
                 AIBehaviourConfiguration.VECTOR_STORE_ID
@@ -59,9 +65,9 @@ namespace FoxTunes
 
         protected override async Task OnRun()
         {
-            if (string.IsNullOrEmpty(this.VectorStoreId.Value))
+            if (string.IsNullOrEmpty(this.FileId.Value) && string.IsNullOrEmpty(this.VectorStoreId.Value))
             {
-                throw new InvalidOperationException("Vector store has not been configured, please check your settings.");
+                throw new InvalidOperationException("Library is not available, please check your settings.");
             }
             await this.RemoveItems(PlaylistItemStatus.None).ConfigureAwait(false);
             await this.AddPlaylistItems().ConfigureAwait(false);
@@ -93,7 +99,7 @@ namespace FoxTunes
                 var result = default(string);
                 try
                 {
-                    result = await store.Create(prompt, this.VectorStoreId.Value, this.CancellationToken).ConfigureAwait(false);
+                    result = await store.Create(prompt, this.FileId.Value, this.VectorStoreId.Value, this.CancellationToken).ConfigureAwait(false);
                 }
                 catch (Exception e)
                 {

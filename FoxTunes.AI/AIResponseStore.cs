@@ -7,6 +7,6 @@ namespace FoxTunes
     {
         public abstract Task<string> Create(string input, CancellationToken cancellationToken);
 
-        public abstract Task<string> Create(string input, string vectorStoreId, CancellationToken cancellationToken);
+        public abstract Task<string> Create(string input, string fileId, string vectorStoreId, CancellationToken cancellationToken);
     }
 }
