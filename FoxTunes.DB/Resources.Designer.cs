@@ -203,9 +203,8 @@ namespace FoxTunes {
         ///        MAX(CASE WHEN &quot;MetaDataItems&quot;.&quot;Name&quot; = @artist THEN &quot;MetaDataItems&quot;.&quot;Value&quot; END) AS &quot;Artist&quot;,
         ///        MAX(CASE WHEN &quot;MetaDataItems&quot;.&quot;Name&quot; = @album THEN &quot;MetaDataItems&quot;.&quot;Value&quot; END) AS &quot;Album&quot;,
         ///        MAX(CASE WHEN &quot;MetaDataItems&quot;.&quot;Name&quot; = @title THEN &quot;MetaDataItems&quot;.&quot;Value&quot; END) AS &quot;Title&quot;,
-        ///        MAX(CASE WHEN &quot;MetaDataItems&quot;.&quot;Name&quot; = @lastPlayed THEN &quot;MetaDataItems&quot;.&quot;Value&quot; END) AS &quot;LastPlayed&quot;
-        ///    FROM &quot;LibraryItems&quot;
-        ///  [rest of string was truncated]&quot;;.
+        ///        MAX(CASE WHEN &quot;MetaDataItems&quot;.&quot;Name&quot; = @lastPlayed THEN &quot;MetaDataItems&quot;.&quot;Value&quot; END) AS &quot;LastPlayed&quot;,
+        ///        SUM(CASE WHEN &quot;Me [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string GetListeningHistory {
             get {

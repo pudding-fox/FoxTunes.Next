@@ -4,7 +4,8 @@ WITH "MetaData" AS (
         MAX(CASE WHEN "MetaDataItems"."Name" = @artist THEN "MetaDataItems"."Value" END) AS "Artist",
         MAX(CASE WHEN "MetaDataItems"."Name" = @album THEN "MetaDataItems"."Value" END) AS "Album",
         MAX(CASE WHEN "MetaDataItems"."Name" = @title THEN "MetaDataItems"."Value" END) AS "Title",
-        MAX(CASE WHEN "MetaDataItems"."Name" = @lastPlayed THEN "MetaDataItems"."Value" END) AS "LastPlayed"
+        MAX(CASE WHEN "MetaDataItems"."Name" = @lastPlayed THEN "MetaDataItems"."Value" END) AS "LastPlayed",
+        SUM(CASE WHEN "MetaDataItems"."Name" = @playCount THEN "MetaDataItems"."Value" END) AS "PlayCount"
     FROM "LibraryItems"
         JOIN "LibraryItem_MetaDataItem"
             ON "LibraryItems"."Id" = "LibraryItem_MetaDataItem"."LibraryItem_Id"
@@ -26,7 +27,8 @@ SELECT
     "Artist",
     "Album",
 	"Title",
-   "LastPlayed"
+   "LastPlayed",
+   "PlayCount"
 FROM "Ranked"
 WHERE "RowNumber" = 1
     AND "LastPlayed" > '1990/01/01 00:00:00'

@@ -129,23 +129,23 @@ namespace FoxTunes.AI.Tasks
                             {
                                 var row = string.Concat(
                                     "\"",
-                                    sequence.Current.Get<string>("FileName"),
+                                    this.Escape(sequence.Current.Get<string>("FileName")),
                                     "\",\"",
-                                    sequence.Current.Get<string>("Artist"),
+                                    this.Escape(sequence.Current.Get<string>("Artist")),
                                     "\",\"",
-                                    sequence.Current.Get<string>("Album"),
+                                    this.Escape(sequence.Current.Get<string>("Album")),
                                     "\",\"",
-                                    sequence.Current.Get<string>("Track"),
+                                    this.Escape(sequence.Current.Get<string>("Track")),
                                     "\",\"",
-                                    sequence.Current.Get<string>("Title"),
+                                    this.Escape(sequence.Current.Get<string>("Title")),
                                     "\",\"",
-                                    sequence.Current.Get<string>("Genre"),
+                                    this.Escape(sequence.Current.Get<string>("Genre")),
                                     "\",\"",
-                                    sequence.Current.Get<string>("Year"),
+                                    this.Escape(sequence.Current.Get<string>("Year")),
                                     "\",\"",
-                                    sequence.Current.Get<string>("Like"),
+                                    this.Escape(sequence.Current.Get<string>("Like")),
                                     "\",\"",
-                                    sequence.Current.Get<string>("Rating"),
+                                    this.Escape(sequence.Current.Get<string>("Rating")),
                                     "\""
                                 );
                                 writer.WriteLine(row);
@@ -176,6 +176,15 @@ namespace FoxTunes.AI.Tasks
                         break;
                 }
             }, transaction);
+        }
+
+        protected virtual string Escape(string value)
+        {
+            if (string.IsNullOrEmpty(value))
+            {
+                return value;
+            }
+            return value.Replace("\"", "\"\"");
         }
     }
 }

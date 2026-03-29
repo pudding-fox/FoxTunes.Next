@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Windows.Markup;
 
 namespace FoxTunes
 {
@@ -137,7 +138,7 @@ namespace FoxTunes
         private async Task<string> GetListeningHistory()
         {
             var builder = new StringBuilder();
-            builder.AppendLine("\"FileName\",\"Artist\",\"Album\",\"Title\",\"LastPlayed\"");
+            builder.AppendLine("\"FileName\",\"Artist\",\"Album\",\"Title\",\"LastPlayed\",\"PlayCount\"");
             using (var transaction = this.Database.BeginTransaction(this.Database.PreferredIsolationLevel))
             {
                 using (var reader = this.GetListeningHistory(transaction))
@@ -148,13 +149,15 @@ namespace FoxTunes
                         {
                             var row = string.Concat(
                                 "\"",
-                                sequence.Current.Get<string>("FileName"),
-                                "\", \"",
-                                sequence.Current.Get<string>("Album"),
-                                "\", \"",
-                                sequence.Current.Get<string>("Title"),
-                                "\", \"",
-                                sequence.Current.Get<string>("LastPlayed"),
+                                this.Escape(sequence.Current.Get<string>("FileName")),
+                                "\",\"",
+                                this.Escape(sequence.Current.Get<string>("Album")),
+                                "\",\"",
+                                this.Escape(sequence.Current.Get<string>("Title")),
+                                "\",\"",
+                                this.Escape(sequence.Current.Get<string>("LastPlayed")),
+                                "\",\"",
+                                this.Escape(sequence.Current.Get<string>("PlayCount")),
                                 "\""
                             );
                             builder.AppendLine(row);
@@ -176,10 +179,20 @@ namespace FoxTunes
                         parameters["album"] = CommonMetaData.Album;
                         parameters["title"] = CommonMetaData.Title;
                         parameters["lastPlayed"] = CommonStatistics.LastPlayed;
+                        parameters["playCount"] = CommonStatistics.PlayCount;
                         parameters["limit"] = this.History;
                         break;
                 }
             }, transaction);
+        }
+
+        protected virtual string Escape(string value)
+        {
+            if (string.IsNullOrEmpty(value))
+            {
+                return value;
+            }
+            return value.Replace("\"", "\"\"");
         }
 
         protected virtual async Task<IEnumerable<string>> GetPathsFromResponse(string response)

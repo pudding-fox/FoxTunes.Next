@@ -67,6 +67,7 @@ namespace FoxTunes {
         ///```
         ///Use my library to create a playlist containing {1} tracks.
         ///Prefer albums played recently.
+        ///Avoid tracks played recently.
         ///Avoid repeating the same artist too frequently.
         ///Occasionally introduce a similar artist or genre for variety.
         ///Respect momentum (don&apos;t jump from heavy music to soft ambient abruptly).
