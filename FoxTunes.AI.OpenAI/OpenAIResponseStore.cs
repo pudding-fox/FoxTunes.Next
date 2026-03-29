@@ -1,7 +1,7 @@
 ﻿#pragma warning disable OPENAI001
 using FoxTunes.Interfaces;
 using OpenAI.Responses;
-using OpenAI.VectorStores;
+using System.ClientModel;
 using System.Threading.Tasks;
 
 namespace FoxTunes
@@ -18,7 +18,7 @@ namespace FoxTunes
 
         public ResponsesClient Client { get; }
 
-        public override async Task<string> Create(string input)
+        public override async Task<string> Create(string input, CancellationToken cancellationToken)
         {
             var options = new CreateResponseOptions()
             {
@@ -27,11 +27,24 @@ namespace FoxTunes
             };
             options.InputItems.Add(ResponseItem.CreateUserMessageItem(input));
             Logger.Write(this, LogLevel.Debug, "Getting response for prompt: {0}", input);
-            var result = await this.Client.CreateResponseAsync(options).ConfigureAwait(false);
-            return result.Value.GetOutputText();
+        retry:
+            try
+            {
+                var result = await this.Client.CreateResponseAsync(options, cancellationToken.ToNative()).ConfigureAwait(false);
+                return result.Value.GetOutputText();
+            }
+            catch (ClientResultException e)
+            {
+                if (e.Message.Contains("temperature", true))
+                {
+                    options.Temperature = null;
+                    goto retry;
+                }
+                throw;
+            }
         }
 
-        public override async Task<string> Create(string input, string vectorStoreId)
+        public override async Task<string> Create(string input, string vectorStoreId, CancellationToken cancellationToken)
         {
             var options = new CreateResponseOptions()
             {
@@ -45,8 +58,21 @@ namespace FoxTunes
             }));
             Logger.Write(this, LogLevel.Debug, "Getting response for prompt: {0}", input);
             Logger.Write(this, LogLevel.Debug, "Using vector store: {0}", vectorStoreId);
-            var result = await this.Client.CreateResponseAsync(options).ConfigureAwait(false);
-            return result.Value.GetOutputText();
+        retry:
+            try
+            {
+                var result = await this.Client.CreateResponseAsync(options, cancellationToken.ToNative()).ConfigureAwait(false);
+                return result.Value.GetOutputText();
+            }
+            catch (ClientResultException e)
+            {
+                if (e.Message.Contains("temperature", true))
+                {
+                    options.Temperature = null;
+                    goto retry;
+                }
+                throw;
+            }
         }
     }
 }

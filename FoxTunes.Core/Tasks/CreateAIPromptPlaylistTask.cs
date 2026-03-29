@@ -90,7 +90,7 @@ namespace FoxTunes
                 var result = default(string);
                 try
                 {
-                    result = await store.Create(prompt, this.VectorStoreId.Value).ConfigureAwait(false);
+                    result = await store.Create(prompt, this.VectorStoreId.Value, this.CancellationToken).ConfigureAwait(false);
                 }
                 catch (Exception e)
                 {

@@ -207,7 +207,7 @@ namespace FoxTunes.ViewModel
                     var result = default(string);
                     try
                     {
-                        result = await store.Create(prompt).ConfigureAwait(false);
+                        result = await store.Create(prompt, CancellationToken.None).ConfigureAwait(false);
                     }
                     catch (Exception e)
                     {

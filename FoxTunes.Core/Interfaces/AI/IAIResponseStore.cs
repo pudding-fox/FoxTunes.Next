@@ -4,8 +4,8 @@ namespace FoxTunes.Interfaces
 {
     public interface IAIResponseStore : IBaseComponent
     {
-        Task<string> Create(string input);
+        Task<string> Create(string input, CancellationToken cancellationToken);
 
-        Task<string> Create(string input, string vectorStoreId);
+        Task<string> Create(string input, string vectorStoreId, CancellationToken cancellationToken);
     }
 }

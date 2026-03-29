@@ -17,12 +17,12 @@ namespace FoxTunes
 
         public OpenAIFileClient Client { get; private set; }
 
-        public override async Task<string> Create(Stream content, string fileName)
+        public override async Task<string> Create(Stream content, string fileName, CancellationToken cancellationToken)
         {
             var id = default(string);
             {
                 Logger.Write(this, LogLevel.Debug, "Uploading file \"{0}\", {1} bytes.", fileName, content.Length);
-                var result = await this.Client.UploadFileAsync(content, fileName, FileUploadPurpose.Assistants).ConfigureAwait(false);
+                var result = await this.Client.UploadFileAsync(content, fileName, FileUploadPurpose.Assistants, cancellationToken.ToNative()).ConfigureAwait(false);
                 id = result.Value.Id;
                 Logger.Write(this, LogLevel.Debug, "Uploaded file: {0}", id);
             }

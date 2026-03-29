@@ -408,6 +408,7 @@ namespace FoxTunes
         Secret = 8,
         Script = 16,
         FontFamily = 32,
-        ReadOnly = 64
+        ReadOnly = 64,
+        System = 128
     }
 }

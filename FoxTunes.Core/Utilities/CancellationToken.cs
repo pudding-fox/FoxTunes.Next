@@ -1,6 +1,5 @@
 ﻿using FoxTunes.Interfaces;
 using System;
-using System.Runtime;
 using System.Threading;
 
 namespace FoxTunes
@@ -29,6 +28,15 @@ namespace FoxTunes
         public void Reset()
         {
             this.IsCancellationRequested = false;
+        }
+
+        public global::System.Threading.CancellationToken ToNative()
+        {
+            var source = new CancellationTokenSource();
+            var handler = new EventHandler((sender, e) => source.Cancel());
+            this.CancellationRequested += handler;
+            GCTracker.AddCallBack(this, () => this.CancellationRequested -= handler);
+            return source.Token;
         }
 
         public static CancellationToken None

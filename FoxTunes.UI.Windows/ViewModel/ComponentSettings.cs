@@ -236,7 +236,7 @@ namespace FoxTunes.ViewModel
                 var elements = default(IEnumerable<ConfigurationElement>);
                 if (sectionMatches)
                 {
-                    elements = section.Elements.Values;
+                    elements = section.Elements.Values.Where(element => !element.Flags.HasFlag(ConfigurationElementFlags.System));
                 }
                 else if (!this.MatchesFilter(section.Elements.Values, out elements))
                 {
@@ -272,6 +272,10 @@ namespace FoxTunes.ViewModel
 
         public virtual bool MatchesFilter(global::FoxTunes.ConfigurationElement element)
         {
+            if (element.Flags.HasFlag(ConfigurationElementFlags.System))
+            {
+                return false;
+            }
             if (string.IsNullOrEmpty(this.Filter))
             {
                 return true;

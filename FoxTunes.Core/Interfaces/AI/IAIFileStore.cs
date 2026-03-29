@@ -5,7 +5,7 @@ namespace FoxTunes.Interfaces
 {
     public interface IAIFileStore : IBaseComponent
     {
-        Task<string> Create(Stream content, string fileName);
+        Task<string> Create(Stream content, string fileName, CancellationToken cancellationToken);
 
         Task Delete(string fileId);
     }

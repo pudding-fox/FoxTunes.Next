@@ -94,7 +94,7 @@ namespace FoxTunes.AI.Tasks
                         Logger.Write(this, LogLevel.Debug, "Creating file store.");
                         this.Description = "Creating file store";
                         var store = context.CreateFileStore();
-                        this.FileId = await store.Create(stream, "library.txt").ConfigureAwait(false);
+                        this.FileId = await store.Create(stream, "library.txt", this.CancellationToken).ConfigureAwait(false);
                     }
                 }
                 {
