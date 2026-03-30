@@ -66,10 +66,10 @@ namespace FoxTunes {
         ///{0}
         ///```
         ///Use my library to create a playlist containing {1} tracks.
-        ///Prefer albums played recently.
-        ///Avoid tracks played recently.
-        ///Avoid repeating the same artist too frequently.
-        ///Occasionally introduce a similar artist or genre for variety.
+        ///Ensure the playlist is unique.
+        ///Ensure only 5 unique tracks per artist.
+        ///Ensure a random order.
+        ///Do not repeat artists, albums or tracks.
         ///Respect momentum (don&apos;t jump from heavy music to soft ambient abruptly).
         ///Ensure that the output is in valid CSV format containing only the file path without headers..
         /// </summary>
