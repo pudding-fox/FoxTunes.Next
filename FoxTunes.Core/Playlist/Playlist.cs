@@ -1,5 +1,6 @@
 ﻿using FoxTunes.Interfaces;
 using System;
+using System.CodeDom;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -193,6 +194,17 @@ namespace FoxTunes
         }
 
         public static readonly Playlist Empty = new Playlist();
+
+        public static bool CanClear(Playlist playlist)
+        {
+            switch (playlist.Type)
+            {
+                case PlaylistType.None:
+                    return true;
+                default:
+                    return false;
+            }
+        }
     }
 
     public enum PlaylistType : byte

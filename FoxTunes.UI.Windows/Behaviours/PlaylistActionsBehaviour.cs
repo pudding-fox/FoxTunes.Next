@@ -114,7 +114,7 @@ namespace FoxTunes
 
         public async Task Add(Playlist playlist, IEnumerable<string> paths, bool clear)
         {
-            if (clear)
+            if (clear && Playlist.CanClear(playlist))
             {
                 await this.PlaylistManager.Clear(playlist).ConfigureAwait(false);
             }

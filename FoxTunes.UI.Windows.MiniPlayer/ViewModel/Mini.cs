@@ -240,9 +240,9 @@ namespace FoxTunes.ViewModel
             }
             var playlist = this.GetPlaylist();
             var index = this.PlaylistBrowser.GetInsertIndex(playlist);
-            if (clear)
+            if (clear && Playlist.CanClear(playlist))
             {
-                await this.PlaylistManager.Clear(playlist);
+                await this.PlaylistManager.Clear(playlist).ConfigureAwait(false);
             }
             await this.FileActionHandlerManager.RunPaths(paths, index, FileActionType.Playlist).ConfigureAwait(false);
             if (play)
