@@ -7,7 +7,7 @@ namespace FoxTunes
 {
     [ComponentDependency(Slot = ComponentSlots.Database)]
     [ComponentDependency(Slot = ComponentSlots.AIRuntime)]
-    public class AILibraryBehaviour : StandardBehaviour, IConfigurableComponent
+    public class AILibraryBehaviour : StandardBehaviour, IInvocableComponent, IConfigurableComponent
     {
         public ICore Core { get; private set; }
 
@@ -22,6 +22,8 @@ namespace FoxTunes
         public TextConfigurationElement FileId { get; private set; }
 
         public TextConfigurationElement VectorStoreId { get; private set; }
+
+        public CommandConfigurationElement Update { get; private set; }
 
         public override void InitializeComponent(ICore core)
         {
@@ -41,6 +43,10 @@ namespace FoxTunes
             this.VectorStoreId = this.Configuration.GetElement<TextConfigurationElement>(
                 AIBehaviourConfiguration.SECTION,
                 AIBehaviourConfiguration.VECTOR_STORE_ID
+            );
+            this.Update = this.Configuration.GetElement<CommandConfigurationElement>(
+                AILibraryBehaviourConfiguration.SECTION,
+                AILibraryBehaviourConfiguration.UPDATE
             );
             base.InitializeComponent(core);
         }
@@ -74,6 +80,38 @@ namespace FoxTunes
                 this.FileId.Value = task.FileId;
                 this.VectorStoreId.Value = task.VectorStoreId;
             }
+        }
+
+        public IEnumerable<string> InvocationCategories
+        {
+            get
+            {
+                yield return InvocationComponent.CATEGORY_LIBRARY;
+            }
+        }
+
+        public IEnumerable<IInvocationComponent> Invocations
+        {
+            get
+            {
+                if (this.Enabled.Value)
+                {
+                    yield return new InvocationComponent(InvocationComponent.CATEGORY_LIBRARY, this.Update.Id, this.Update.Name, path: Strings.AILibraryBehaviour_Update_Path);
+                }
+            }
+        }
+
+        public Task InvokeAsync(IInvocationComponent component)
+        {
+            if (component.Id == this.Update.Id)
+            {
+                this.Update.Invoke();
+            }
+#if NET40
+            return TaskEx.FromResult(false);
+#else
+            return Task.CompletedTask;
+#endif
         }
 
         public IEnumerable<ConfigurationSection> GetConfigurationSections()
