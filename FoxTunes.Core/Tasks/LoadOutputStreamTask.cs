@@ -94,12 +94,19 @@ namespace FoxTunes
 
         protected virtual async Task CheckPath()
         {
-            if (!string.IsNullOrEmpty(Path.GetPathRoot(this.PlaylistItem.FileName)) && !File.Exists(this.PlaylistItem.FileName))
+            try
             {
-                if (!NetworkDrive.IsRemotePath(this.PlaylistItem.FileName) || !await NetworkDrive.ConnectRemotePath(this.PlaylistItem.FileName).ConfigureAwait(false))
+                if (!string.IsNullOrEmpty(Path.GetPathRoot(this.PlaylistItem.FileName)) && !File.Exists(this.PlaylistItem.FileName))
                 {
-                    throw new FileNotFoundException(string.Format("File not found: {0}", this.PlaylistItem.FileName), this.PlaylistItem.FileName);
+                    if (!NetworkDrive.IsRemotePath(this.PlaylistItem.FileName) || !await NetworkDrive.ConnectRemotePath(this.PlaylistItem.FileName).ConfigureAwait(false))
+                    {
+                        throw new FileNotFoundException(string.Format("File not found: {0}", this.PlaylistItem.FileName), this.PlaylistItem.FileName);
+                    }
                 }
+            }
+            catch (Exception e)
+            {
+                Logger.Write(this, LogLevel.Warn, "Failed to check path: {0}", e.Message);
             }
         }
     }

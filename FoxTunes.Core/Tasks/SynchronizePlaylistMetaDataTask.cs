@@ -87,22 +87,20 @@ namespace FoxTunes
             if (!FileSystemHelper.IsLocalPath(playlistItem.FileName))
             {
                 Logger.Write(this, LogLevel.Debug, "File \"{0}\" is not a local file: Cannot update.", playlistItem.FileName);
-                return;
             }
-
-            if (!File.Exists(playlistItem.FileName))
+            else if (!File.Exists(playlistItem.FileName))
             {
                 Logger.Write(this, LogLevel.Debug, "File \"{0}\" no longer exists: Cannot update.", playlistItem.FileName);
-                return;
             }
-
-            var metaDataSource = this.MetaDataSourceFactory.Create();
-            await metaDataSource.SetMetaData(
-                playlistItem.FileName,
-                playlistItem.MetaDatas,
-                metaDataItem => this.Names == null || !this.Names.Any() || this.Names.Contains(metaDataItem.Name, StringComparer.OrdinalIgnoreCase)
-            ).ConfigureAwait(false);
-
+            else
+            {
+                var metaDataSource = this.MetaDataSourceFactory.Create();
+                await metaDataSource.SetMetaData(
+                    playlistItem.FileName,
+                    playlistItem.MetaDatas,
+                    metaDataItem => this.Names == null || !this.Names.Any() || this.Names.Contains(metaDataItem.Name, StringComparer.OrdinalIgnoreCase)
+                ).ConfigureAwait(false);
+            }
             await this.Deschedule(playlistItem).ConfigureAwait(false);
         }
 

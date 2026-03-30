@@ -198,13 +198,13 @@ namespace FoxTunes
 
         public static bool GetAbsolutePath(this string fileName, out string absolutePath)
         {
-            if (!fileName.HasDirectory() || !string.IsNullOrEmpty(Path.GetPathRoot(fileName)))
-            {
-                absolutePath = fileName;
-                return true;
-            }
             try
             {
+                if (!fileName.HasDirectory() || !string.IsNullOrEmpty(Path.GetPathRoot(fileName)))
+                {
+                    absolutePath = fileName;
+                    return true;
+                }
                 var url = new Uri(fileName);
                 absolutePath = Uri.UnescapeDataString(
                     url.AbsolutePath
@@ -213,10 +213,10 @@ namespace FoxTunes
             }
             catch
             {
-                //Nothing can be done.
+                Logger.Write(typeof(Extensions), LogLevel.Warn, "Failed to determine absolute path for file: {0}", fileName);
             }
-            absolutePath = null;
-            return false;
+            absolutePath = fileName;
+            return true;
         }
 
         public static bool HasDirectory(this string fileName)

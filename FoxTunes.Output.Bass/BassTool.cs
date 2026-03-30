@@ -50,13 +50,20 @@ namespace FoxTunes
 
         protected virtual bool CheckInput(string fileName)
         {
-            if (!string.IsNullOrEmpty(Path.GetPathRoot(fileName)) && !File.Exists(fileName))
+            try
             {
-                //TODO: Bad .Result
-                if (!NetworkDrive.IsRemotePath(fileName) || !NetworkDrive.ConnectRemotePath(fileName).Result)
+                if (!string.IsNullOrEmpty(Path.GetPathRoot(fileName)) && !File.Exists(fileName))
                 {
-                    throw new FileNotFoundException(string.Format("File not found: {0}", fileName), fileName);
+                    //TODO: Bad .Result
+                    if (!NetworkDrive.IsRemotePath(fileName) || !NetworkDrive.ConnectRemotePath(fileName).Result)
+                    {
+                        throw new FileNotFoundException(string.Format("File not found: {0}", fileName), fileName);
+                    }
                 }
+            }
+            catch(Exception e)
+            {
+                Logger.Write(this, LogLevel.Warn, "Failed to check input file: {0}", fileName);
             }
             return true;
         }

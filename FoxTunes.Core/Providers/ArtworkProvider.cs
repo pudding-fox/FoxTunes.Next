@@ -176,7 +176,16 @@ namespace FoxTunes
             {
                 return string.Empty;
             }
-            var root = Path.GetDirectoryName(absolutePath);
+            var root = default(string);
+            try
+            {
+                root = Path.GetDirectoryName(absolutePath);
+            }
+            catch (Exception e)
+            {
+                Logger.Write(this, LogLevel.Warn, "Failed to determine directory name for path \"{0}\": {1}", path, e.Message);
+                return null;
+            }
             return this.Store.GetOrAdd(root, type, () =>
             {
                 var names = default(string[]);

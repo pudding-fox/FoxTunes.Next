@@ -74,9 +74,19 @@ namespace FoxTunes
                 {
                     return null;
                 }
+                var directoryName = default(string);
+                try
+                {
+                    directoryName = Path.GetDirectoryName(fileName);
+                }
+                catch
+                {
+                    //Likely some abstraction. Not sure if this will cause any problems.
+                    directoryName = fileName;
+                }
                 var playlistItem = new PlaylistItem()
                 {
-                    DirectoryName = Path.GetDirectoryName(fileName),
+                    DirectoryName = directoryName,
                     FileName = fileName
                 };
                 playlistItem.MetaDatas = new List<MetaDataItem>()
