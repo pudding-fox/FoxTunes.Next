@@ -27,6 +27,8 @@ namespace FoxTunes
 
         public DoubleConfigurationElement Temperature { get; private set; }
 
+        public SelectionConfigurationElement ReasoningLevel { get; private set; }
+
         public override void InitializeComponent(ICore core)
         {
             this.Core = core;
@@ -42,6 +44,10 @@ namespace FoxTunes
             this.Temperature = this.Configuration.GetElement<DoubleConfigurationElement>(
                 OpenAIRuntimeConfiguration.SECTION,
                 OpenAIRuntimeConfiguration.TEMPERATURE
+            );
+            this.ReasoningLevel = this.Configuration.GetElement<SelectionConfigurationElement>(
+                OpenAIRuntimeConfiguration.SECTION,
+                OpenAIRuntimeConfiguration.REASONING_LEVEL
             );
             base.InitializeComponent(core);
         }
@@ -65,8 +71,9 @@ namespace FoxTunes
                 model = OpenAIRuntimeConfiguration.DEFAULT_MODEL;
             }
             var temperature = Convert.ToSingle(this.Temperature.Value);
+            var reasoningLevel = OpenAIRuntimeConfiguration.GetReasoningLevel(this.ReasoningLevel.Value);
             var client = this.CreateClient();
-            return new OpenAIContext(client, model, temperature);
+            return new OpenAIContext(client, model, temperature, reasoningLevel);
         }
 
         public IEnumerable<ConfigurationSection> GetConfigurationSections()

@@ -5,15 +5,18 @@ namespace FoxTunes
 {
     public abstract class AIContext : BaseComponent, IAIContext
     {
-        protected AIContext(string model, float temperature)
+        protected AIContext(string model, float temperature, ReasoningLevel reasoningLevel)
         {
             this.Model = model;
             this.Temperature = temperature;
+            this.ReasoningLevel = reasoningLevel;
         }
 
         public string Model { get; private set; }
 
         public float Temperature { get; private set; }
+
+        public ReasoningLevel ReasoningLevel { get; private set; }
 
         public abstract IAIFileStore CreateFileStore();
 

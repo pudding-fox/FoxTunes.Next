@@ -1,5 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using FoxTunes.Interfaces;
+using System;
+using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Drawing.Printing;
 
 namespace FoxTunes
 {
@@ -25,6 +28,18 @@ namespace FoxTunes
 
         public const double TEMPERATURE_DEFAULT = 1d;
 
+        public const string REASONING_LEVEL = "BCCCE875-EB27-41C7-8FF4-0879837030E5";
+
+        public const string REASONING_LEVEL_NONE = "AAAAFE8F-C940-44B1-82AE-CE8840E0D641";
+
+        public const string REASONING_LEVEL_MINIMAL = "BBBB06C0-7819-4267-9C2B-C13CD5C13574";
+
+        public const string REASONING_LEVEL_LOW = "CCCCD036-7FC4-4E8B-B72E-802B8DC3903B";
+
+        public const string REASONING_LEVEL_MEDIUM = "DDDD9439-05EC-439B-BC2E-16BFF0BBAFB5";
+
+        public const string REASONING_LEVEL_HIGH = "EEEE2823-BE5B-464E-B617-E8A88995F8B4";
+
         public static IEnumerable<ConfigurationSection> GetConfigurationSections()
         {
             yield return new ConfigurationSection(SECTION)
@@ -38,8 +53,38 @@ namespace FoxTunes
                 .WithElement(new DoubleConfigurationElement(TEMPERATURE, Strings.OpenAIRuntimeConfiguration_Temperature)
                     .WithValue(TEMPERATURE_DEFAULT)
                     .WithValidationRule(new DoubleValidationRule(TEMPERATURE_MIN, TEMPERATURE_MAX, 0.1d))
+                    .DependsOn(SECTION, ENABLED))
+                .WithElement(new SelectionConfigurationElement(REASONING_LEVEL, Strings.OpenAIRuntimeConfiguration_ReasoningLevel)
+                    .WithOptions(GetReasoningLevels())
                     .DependsOn(SECTION, ENABLED)
             );
+        }
+
+        private static IEnumerable<SelectionConfigurationOption> GetReasoningLevels()
+        {
+            yield return new SelectionConfigurationOption(REASONING_LEVEL_NONE, Strings.OpenAIRuntimeConfiguration_ReasoningLevel_None);
+            yield return new SelectionConfigurationOption(REASONING_LEVEL_MINIMAL, Strings.OpenAIRuntimeConfiguration_ReasoningLevel_Minimal);
+            yield return new SelectionConfigurationOption(REASONING_LEVEL_LOW, Strings.OpenAIRuntimeConfiguration_ReasoningLevel_Low);
+            yield return new SelectionConfigurationOption(REASONING_LEVEL_MEDIUM, Strings.OpenAIRuntimeConfiguration_ReasoningLevel_Medium).Default();
+            yield return new SelectionConfigurationOption(REASONING_LEVEL_HIGH, Strings.OpenAIRuntimeConfiguration_ReasoningLevel_High);
+        }
+
+        public static ReasoningLevel GetReasoningLevel(SelectionConfigurationOption option)
+        {
+            switch (option.Id)
+            {
+                case REASONING_LEVEL_NONE:
+                    return ReasoningLevel.None;
+                case REASONING_LEVEL_MINIMAL:
+                    return ReasoningLevel.Minimal;
+                case REASONING_LEVEL_LOW:
+                    return ReasoningLevel.Low;
+                default:
+                case REASONING_LEVEL_MEDIUM:
+                    return ReasoningLevel.Minimal;
+                case REASONING_LEVEL_HIGH:
+                    return ReasoningLevel.High;
+            }
         }
     }
 }

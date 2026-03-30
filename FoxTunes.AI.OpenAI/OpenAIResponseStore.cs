@@ -23,7 +23,11 @@ namespace FoxTunes
             var options = new CreateResponseOptions()
             {
                 Model = this.Context.Model,
-                Temperature = this.Context.Temperature
+                Temperature = this.Context.Temperature,
+                ReasoningOptions = new ResponseReasoningOptions()
+                {
+                    ReasoningEffortLevel = GetReasoningEffortLevel(this.Context.ReasoningLevel)
+                }
             };
             options.InputItems.Add(ResponseItem.CreateUserMessageItem(input));
             Logger.Write(this, LogLevel.Debug, "Getting response for prompt: {0}", input);
@@ -49,7 +53,11 @@ namespace FoxTunes
             var options = new CreateResponseOptions()
             {
                 Model = this.Context.Model,
-                Temperature = this.Context.Temperature
+                Temperature = this.Context.Temperature,
+                ReasoningOptions = new ResponseReasoningOptions()
+                {
+                    ReasoningEffortLevel = GetReasoningEffortLevel(this.Context.ReasoningLevel)
+                }
             };
             options.InputItems.Add(ResponseItem.CreateUserMessageItem(input));
             options.Tools.Add(ResponseTool.CreateFileSearchTool(new[]
@@ -72,6 +80,24 @@ namespace FoxTunes
                     goto retry;
                 }
                 throw;
+            }
+        }
+
+        private ResponseReasoningEffortLevel GetReasoningEffortLevel(ReasoningLevel reasoningLevel)
+        {
+            switch (reasoningLevel)
+            {
+                case ReasoningLevel.None:
+                    return ResponseReasoningEffortLevel.None;
+                case ReasoningLevel.Minimal:
+                    return ResponseReasoningEffortLevel.Minimal;
+                case ReasoningLevel.Low:
+                    return ResponseReasoningEffortLevel.Low;
+                default:
+                case ReasoningLevel.Medium:
+                    return ResponseReasoningEffortLevel.Medium;
+                case ReasoningLevel.High:
+                    return ResponseReasoningEffortLevel.High;
             }
         }
     }

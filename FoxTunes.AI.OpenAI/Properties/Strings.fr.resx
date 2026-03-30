@@ -118,10 +118,28 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="OpenAIRuntimeConfiguration.Temperature" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
   <data name="AllTracks.txt" type="System.Resources.ResXNullRef, System.Windows.Forms">
     <value />
   </data>
-  <data name="OpenAIRuntimeConfiguration.Temperature" type="System.Resources.ResXNullRef, System.Windows.Forms">
+  <data name="OpenAIRuntimeConfiguration.ReasoningLevel" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="OpenAIRuntimeConfiguration.ReasoningLevel.None" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="OpenAIRuntimeConfiguration.ReasoningLevel.Minimal" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="OpenAIRuntimeConfiguration.ReasoningLevel.Low" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="OpenAIRuntimeConfiguration.ReasoningLevel.Medium" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="OpenAIRuntimeConfiguration.ReasoningLevel.High" type="System.Resources.ResXNullRef, System.Windows.Forms">
     <value />
   </data>
 </root>

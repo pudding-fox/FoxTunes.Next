@@ -121,4 +121,22 @@
   <data name="OpenAIRuntimeConfiguration.Temperature" type="System.Resources.ResXNullRef, System.Windows.Forms">
     <value />
   </data>
+  <data name="OpenAIRuntimeConfiguration.ReasoningLevel" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="OpenAIRuntimeConfiguration.ReasoningLevel.None" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="OpenAIRuntimeConfiguration.ReasoningLevel.Minimal" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="OpenAIRuntimeConfiguration.ReasoningLevel.Low" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="OpenAIRuntimeConfiguration.ReasoningLevel.Medium" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
+  <data name="OpenAIRuntimeConfiguration.ReasoningLevel.High" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
+  </data>
 </root>

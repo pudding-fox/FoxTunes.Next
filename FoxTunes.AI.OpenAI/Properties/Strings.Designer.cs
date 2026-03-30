@@ -97,6 +97,60 @@ namespace FoxTunes {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Reasoning Level.
+        /// </summary>
+        internal static string OpenAIRuntimeConfiguration_ReasoningLevel {
+            get {
+                return ResourceManager.GetString("OpenAIRuntimeConfiguration.ReasoningLevel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to High.
+        /// </summary>
+        internal static string OpenAIRuntimeConfiguration_ReasoningLevel_High {
+            get {
+                return ResourceManager.GetString("OpenAIRuntimeConfiguration.ReasoningLevel.High", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Low.
+        /// </summary>
+        internal static string OpenAIRuntimeConfiguration_ReasoningLevel_Low {
+            get {
+                return ResourceManager.GetString("OpenAIRuntimeConfiguration.ReasoningLevel.Low", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Medium.
+        /// </summary>
+        internal static string OpenAIRuntimeConfiguration_ReasoningLevel_Medium {
+            get {
+                return ResourceManager.GetString("OpenAIRuntimeConfiguration.ReasoningLevel.Medium", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Minimal.
+        /// </summary>
+        internal static string OpenAIRuntimeConfiguration_ReasoningLevel_Minimal {
+            get {
+                return ResourceManager.GetString("OpenAIRuntimeConfiguration.ReasoningLevel.Minimal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to None.
+        /// </summary>
+        internal static string OpenAIRuntimeConfiguration_ReasoningLevel_None {
+            get {
+                return ResourceManager.GetString("OpenAIRuntimeConfiguration.ReasoningLevel.None", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to OpenAI Temperature.
         /// </summary>
         internal static string OpenAIRuntimeConfiguration_Temperature {

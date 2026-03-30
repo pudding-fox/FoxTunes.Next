@@ -6,7 +6,7 @@ namespace FoxTunes
 {
     public class OpenAIContext : AIContext
     {
-        public OpenAIContext(OpenAIClient client, string model, float temperature) : base(model, temperature)
+        public OpenAIContext(OpenAIClient client, string model, float temperature, ReasoningLevel reasoningLevel) : base(model, temperature, reasoningLevel)
         {
             this.Client = client;
         }

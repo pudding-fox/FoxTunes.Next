@@ -8,10 +8,21 @@ namespace FoxTunes.Interfaces
 
         float Temperature { get; }
 
+        ReasoningLevel ReasoningLevel { get; }
+
         IAIFileStore CreateFileStore();
 
         IAIVectorStore CreateVectorStore();
 
         IAIResponseStore CreateResponseStore();
+    }
+
+    public enum ReasoningLevel : byte
+    {
+        None,
+        Minimal,
+        Low,
+        Medium,
+        High
     }
 }
