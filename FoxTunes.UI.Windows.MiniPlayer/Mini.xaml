@@ -72,7 +72,7 @@
                 <RowDefinition></RowDefinition>
             </Grid.RowDefinitions>
             <LocalWindows:MiniPlaylist x:Name="MiniPlaylist" Style="{StaticResource PlaylistStyle}"></LocalWindows:MiniPlaylist>
-            <Windows:Artwork x:Name="Artwork" Grid.Row="1" Style="{StaticResource ArtworkStyle}" Margin="0,0,0,2" SizeMode="ToWidth"></Windows:Artwork>
+            <Windows:Artwork x:Name="Artwork" Grid.Row="1" Style="{StaticResource ArtworkStyle}" Margin="0,0,0,2" SizeMode="ToWidth" PreviewMouseRightButtonDown="OnPreviewMouseRightButtonDown"></Windows:Artwork>
             <Windows:StreamPosition x:Name="StreamPosition" Grid.Row="2" Margin="0,0,0,2"></Windows:StreamPosition>
             <StackPanel x:Name="StackPanel" Grid.Row="3" Orientation="Horizontal">
                 <Windows:Playback Margin="0,0,2,0"></Windows:Playback>

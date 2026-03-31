@@ -1,4 +1,5 @@
 ﻿using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace FoxTunes
 {
@@ -10,6 +11,12 @@ namespace FoxTunes
         public Mini()
         {
             this.InitializeComponent();
+        }
+
+        protected virtual void OnPreviewMouseRightButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            this.ContextMenu.IsOpen = true;
+            e.Handled = true;
         }
     }
 }
