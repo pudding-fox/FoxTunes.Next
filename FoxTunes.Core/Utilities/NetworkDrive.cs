@@ -52,17 +52,20 @@ namespace FoxTunes
             Logger.Write(typeof(NetworkDrive), LogLevel.Debug, "Attempting to connect remote path: {0}", path);
 
             var letter = Path.GetPathRoot(path);
-            var info = new DriveInfo(letter);
-
-            if (info.IsReady)
             {
-                Logger.Write(typeof(NetworkDrive), LogLevel.Debug, "Drive is ready: {0}.", letter);
-                return true;
+                var info = new DriveInfo(letter);
+                if (info.IsReady)
+                {
+                    Logger.Write(typeof(NetworkDrive), LogLevel.Debug, "Drive is ready: {0}.", letter);
+                    return true;
+                }
             }
+
+            var process = default(Process);
 
             try
             {
-                Process.Start(new ProcessStartInfo
+                process = Process.Start(new ProcessStartInfo
                 {
                     FileName = "explorer",
                     Arguments = letter,
@@ -77,6 +80,7 @@ namespace FoxTunes
 
             for (var a = 0; a < 10; a++)
             {
+                var info = new DriveInfo(letter);
                 if (info.IsReady)
                 {
                     break;
@@ -89,29 +93,25 @@ namespace FoxTunes
             }
             try
             {
-                foreach (var process in Process.GetProcessesByName("explorer"))
-                {
-                    if (!string.IsNullOrEmpty(process.MainWindowTitle) && process.MainWindowTitle.EndsWith(string.Format("({0}:)", letter[0])))
-                    {
-                        process.Kill();
-                        break;
-                    }
-                }
+                process.Kill();
             }
             catch (Exception e)
             {
                 Logger.Write(typeof(NetworkDrive), LogLevel.Warn, "Failed to stop explorer: {0}", e.Message);
             }
 
-            if (info.IsReady)
             {
-                Logger.Write(typeof(NetworkDrive), LogLevel.Debug, "Drive is ready: {0}.", letter);
-                return true;
-            }
-            else
-            {
-                Logger.Write(typeof(NetworkDrive), LogLevel.Debug, "Drive is not ready: {0}.", letter);
-                return false;
+                var info = new DriveInfo(letter);
+                if (info.IsReady)
+                {
+                    Logger.Write(typeof(NetworkDrive), LogLevel.Debug, "Drive is ready: {0}.", letter);
+                    return true;
+                }
+                else
+                {
+                    Logger.Write(typeof(NetworkDrive), LogLevel.Debug, "Drive is not ready: {0}.", letter);
+                    return false;
+                }
             }
         }
     }

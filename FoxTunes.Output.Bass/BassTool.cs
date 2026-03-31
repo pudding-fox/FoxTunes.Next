@@ -61,9 +61,9 @@ namespace FoxTunes
                     }
                 }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
-                Logger.Write(this, LogLevel.Warn, "Failed to check input file: {0}", fileName);
+                Logger.Write(this, LogLevel.Warn, "Failed to check input file \"{0}\": {1}", fileName, e.Message);
             }
             return true;
         }
