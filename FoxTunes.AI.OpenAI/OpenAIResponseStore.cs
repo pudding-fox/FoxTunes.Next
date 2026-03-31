@@ -44,6 +44,11 @@ namespace FoxTunes
                     options.Temperature = null;
                     goto retry;
                 }
+                else if (e.Message.Contains("reasoning", true))
+                {
+                    options.ReasoningOptions = null;
+                    goto retry;
+                }
                 throw;
             }
         }
@@ -77,6 +82,11 @@ namespace FoxTunes
                 if (e.Message.Contains("temperature", true))
                 {
                     options.Temperature = null;
+                    goto retry;
+                }
+                else if (e.Message.Contains("reasoning", true))
+                {
+                    options.ReasoningOptions = null;
                     goto retry;
                 }
                 throw;
