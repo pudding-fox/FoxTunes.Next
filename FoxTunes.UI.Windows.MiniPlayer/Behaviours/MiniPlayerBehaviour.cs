@@ -15,6 +15,8 @@ namespace FoxTunes
 
         public const string SHOW_PLAYLIST = "CCCC";
 
+        public const string SETTINGS = "DDDD";
+
         public const string QUIT = "ZZZZ";
 
         static MiniPlayerBehaviour()
@@ -27,6 +29,8 @@ namespace FoxTunes
         public IKeyBindingsBehaviour KeyBindingsBehaviour { get; private set; }
 
         public ICore Core { get; private set; }
+
+        public IUserInterface UserInterface { get; private set; }
 
         public IConfiguration Configuration { get; private set; }
 
@@ -91,6 +95,7 @@ namespace FoxTunes
             this.ThemeLoader = ComponentRegistry.Instance.GetComponent<ThemeLoader>();
             this.KeyBindingsBehaviour = ComponentRegistry.Instance.GetComponent<IKeyBindingsBehaviour>();
             this.Core = core;
+            this.UserInterface = core.Components.UserInterface;
             this.Configuration = core.Components.Configuration;
             this.Topmost = this.Configuration.GetElement<BooleanConfigurationElement>(
                 MiniPlayerBehaviourConfiguration.SECTION,
@@ -122,6 +127,7 @@ namespace FoxTunes
                 yield return new InvocationComponent(InvocationComponent.CATEGORY_MINI_PLAYER, TOPMOST, this.Topmost.Name, attributes: this.Topmost.Value ? InvocationComponent.ATTRIBUTE_SELECTED : InvocationComponent.ATTRIBUTE_NONE);
                 yield return new InvocationComponent(InvocationComponent.CATEGORY_MINI_PLAYER, SHOW_ARTWORK, this.ShowArtwork.Name, attributes: this.ShowArtwork.Value ? InvocationComponent.ATTRIBUTE_SELECTED : InvocationComponent.ATTRIBUTE_NONE);
                 yield return new InvocationComponent(InvocationComponent.CATEGORY_MINI_PLAYER, SHOW_PLAYLIST, this.ShowPlaylist.Name, attributes: this.ShowPlaylist.Value ? InvocationComponent.ATTRIBUTE_SELECTED : InvocationComponent.ATTRIBUTE_NONE);
+                yield return new InvocationComponent(InvocationComponent.CATEGORY_MINI_PLAYER, SETTINGS, Strings.MiniPlayerBehaviour_Settings);
                 yield return new InvocationComponent(InvocationComponent.CATEGORY_MINI_PLAYER, QUIT, Strings.MiniPlayerBehaviour_Quit, attributes: InvocationComponent.ATTRIBUTE_SEPARATOR);
             }
         }
@@ -139,6 +145,8 @@ namespace FoxTunes
                 case SHOW_PLAYLIST:
                     this.ShowPlaylist.Toggle();
                     break;
+                case SETTINGS:
+                    return this.ShowSettings();
                 case QUIT:
                     return Windows.Shutdown();
             }
@@ -147,6 +155,18 @@ namespace FoxTunes
 #else
             return Task.CompletedTask;
 #endif
+        }
+
+        protected virtual Task ShowSettings()
+        {
+            return this.UserInterface.ShowSettings(
+                Strings.MiniPlayerBehaviourConfiguration_Section,
+                this.Configuration,
+                new[]
+                {
+                    MiniPlayerBehaviourConfiguration.SECTION
+                }
+            );
         }
 
         public IEnumerable<ConfigurationSection> GetConfigurationSections()

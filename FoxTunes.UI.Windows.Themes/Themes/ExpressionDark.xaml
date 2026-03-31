@@ -540,7 +540,7 @@
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type ListBox}">
                     <Border x:Name="Border" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="2" Background="{TemplateBinding Background}">
-                        <ScrollViewer x:Name="ScrollViewer" Style="{DynamicResource NuclearScrollViewer}" Focusable="False" Padding="4" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" CanContentScroll="False" Foreground="{DynamicResource TextBrush}">
+                        <ScrollViewer x:Name="ScrollViewer" Style="{DynamicResource NuclearScrollViewer}" Focusable="False" Padding="0,1,0,0" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" CanContentScroll="False" Foreground="{DynamicResource TextBrush}">
                             <ItemsPresenter />
                         </ScrollViewer>
                     </Border>
@@ -610,7 +610,7 @@
                         <Rectangle x:Name="Background" IsHitTestVisible="True" Fill="Transparent" RadiusX="1" RadiusY="1"/>
                         <Rectangle x:Name="HoverRectangle" IsHitTestVisible="False" Opacity="0" Fill="{DynamicResource ControlBrush}" RadiusX="1" RadiusY="1"/>
                         <Rectangle x:Name="SelectedRectangle" IsHitTestVisible="False" Opacity="0" Fill="{DynamicResource SelectedBackgroundBrush}" RadiusX="1" RadiusY="1"/>
-                        <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" Margin="5,2,0,2" x:Name="contentPresenter" />
+                        <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" Margin="2,2,0,2" x:Name="contentPresenter" />
                         <Rectangle x:Name="FocusVisualElement" Stroke="{DynamicResource HoverShineBrush}" StrokeThickness="1" RadiusX="1" RadiusY="1" Opacity="0"/>
                     </Grid>
                     <ControlTemplate.Triggers>

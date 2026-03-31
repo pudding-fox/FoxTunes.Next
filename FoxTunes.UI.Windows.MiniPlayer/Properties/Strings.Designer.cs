@@ -19,7 +19,7 @@ namespace FoxTunes {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "18.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Strings {
@@ -79,6 +79,15 @@ namespace FoxTunes {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Settings.
+        /// </summary>
+        internal static string MiniPlayerBehaviour_Settings {
+            get {
+                return ResourceManager.GetString("MiniPlayerBehaviour.Settings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Advanced.
         /// </summary>
         internal static string MiniPlayerBehaviourConfiguration_Advanced {
@@ -120,6 +129,15 @@ namespace FoxTunes {
         internal static string MiniPlayerBehaviourConfiguration_NowPlayingScript {
             get {
                 return ResourceManager.GetString("MiniPlayerBehaviourConfiguration.NowPlayingScript", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Playlist Artwork.
+        /// </summary>
+        internal static string MiniPlayerBehaviourConfiguration_PlaylistArtwork {
+            get {
+                return ResourceManager.GetString("MiniPlayerBehaviourConfiguration.PlaylistArtwork", resourceCulture);
             }
         }
         

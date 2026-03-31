@@ -17,6 +17,8 @@ namespace FoxTunes
 
         public const string PLAYLIST_SCRIPT_ELEMENT = "HHHHD917-2172-421D-9E22-F549B17CE0C8";
 
+        public const string PLAYLIST_ARTWORK_ELEMENT = "HHIIE00C-16A8-4994-830C-1B7264B55BAC";
+
         public const string DROP_COMMIT_ELEMENT = "IIIIF490-CE3D-481A-8924-B698BD443D88";
 
         public const string MARQUEE_INTERVAL_ELEMENT = "JJJJ685A-4D15-4AE1-B7AD-3E5786CB8EDB";
@@ -34,6 +36,8 @@ namespace FoxTunes
                     new TextConfigurationElement(PLAYLIST_SCRIPT_ELEMENT, Strings.MiniPlayerBehaviourConfiguration_PlaylistScript, path: Strings.MiniPlayerBehaviourConfiguration_Advanced)
                     .WithValue(Resources.Playlist)
                     .WithFlags(ConfigurationElementFlags.MultiLine | ConfigurationElementFlags.Script))
+                .WithElement(
+                    new BooleanConfigurationElement(PLAYLIST_ARTWORK_ELEMENT, Strings.MiniPlayerBehaviourConfiguration_PlaylistArtwork).WithValue(false))
                 .WithElement(
                     new BooleanConfigurationElement(TOPMOST_ELEMENT, Strings.MiniPlayerBehaviourConfiguration_Topmost).WithValue(false))
                 .WithElement(

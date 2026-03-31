@@ -79,6 +79,33 @@ namespace FoxTunes.ViewModel
 
         public event EventHandler ScriptChanged;
 
+        private bool _ShowArtwork { get; set; }
+
+        public bool ShowArtwork
+        {
+            get
+            {
+                return this._ShowArtwork;
+            }
+            set
+            {
+                this._ShowArtwork = value;
+                this.OnShowArtworkChanged();
+            }
+        }
+
+        protected virtual void OnShowArtworkChanged()
+        {
+            var task = this.RefreshItems();
+            if (this.ShowArtworkChanged != null)
+            {
+                this.ShowArtworkChanged(this, EventArgs.Empty);
+            }
+            this.OnPropertyChanged("ShowArtwork");
+        }
+
+        public event EventHandler ShowArtworkChanged;
+
         protected override Playlist GetPlaylist()
         {
             var playlist = this.PlaylistManager.CurrentPlaylist ?? this.PlaylistManager.SelectedPlaylist;
@@ -97,6 +124,10 @@ namespace FoxTunes.ViewModel
                 MiniPlayerBehaviourConfiguration.SECTION,
                 MiniPlayerBehaviourConfiguration.PLAYLIST_SCRIPT_ELEMENT
             ).ConnectValue(async value => await this.SetScript(value).ConfigureAwait(false));
+            this.Configuration.GetElement<BooleanConfigurationElement>(
+                MiniPlayerBehaviourConfiguration.SECTION,
+                MiniPlayerBehaviourConfiguration.PLAYLIST_ARTWORK_ELEMENT
+            ).ConnectValue(value => { var task = Windows.Invoke(() => this.ShowArtwork = value); });
         }
 
         protected virtual void OnCurrentPlaylistChanged(object sender, EventArgs e)

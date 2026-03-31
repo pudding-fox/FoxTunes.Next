@@ -123,6 +123,9 @@
   <data name="MiniPlayerBehaviour.Quit" xml:space="preserve">
     <value>Quit</value>
   </data>
+  <data name="MiniPlayerBehaviour.Settings" xml:space="preserve">
+    <value>Settings</value>
+  </data>
   <data name="MiniPlayerBehaviourConfiguration.Advanced" xml:space="preserve">
     <value>Advanced</value>
   </data>
@@ -137,6 +140,9 @@
   </data>
   <data name="MiniPlayerBehaviourConfiguration.NowPlayingScript" xml:space="preserve">
     <value>Playing Script</value>
+  </data>
+  <data name="MiniPlayerBehaviourConfiguration.PlaylistArtwork" xml:space="preserve">
+    <value>Playlist Artwork</value>
   </data>
   <data name="MiniPlayerBehaviourConfiguration.PlaylistScript" xml:space="preserve">
     <value>Playlist Script</value>

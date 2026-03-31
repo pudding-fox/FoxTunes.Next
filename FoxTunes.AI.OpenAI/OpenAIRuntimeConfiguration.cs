@@ -81,7 +81,7 @@ namespace FoxTunes
                     return ReasoningLevel.Low;
                 default:
                 case REASONING_LEVEL_MEDIUM:
-                    return ReasoningLevel.Minimal;
+                    return ReasoningLevel.Medium;
                 case REASONING_LEVEL_HIGH:
                     return ReasoningLevel.High;
             }

@@ -13,6 +13,8 @@
              d:DesignHeight="300" d:DesignWidth="300" AllowDrop="True">
     <UserControl.Resources>
         <LocalViewModel:MiniPlaylist x:Key="ViewModel"/>
+        <ViewModel:ArtworkImageConverter x:Key="ArtworkImageConverter" Width="50" Height="50"></ViewModel:ArtworkImageConverter>
+        <SolidColorBrush x:Key="Transparent" Color="Transparent"></SolidColorBrush>
     </UserControl.Resources>
     <Interactivity:Interaction.Triggers>
         <Interactivity:EventTrigger EventName="PreviewDragEnter">
@@ -47,11 +49,29 @@
                 <ListBox.ContextMenu>
                     <Windows:Menu Category="{Binding Source={x:Static Core:InvocationComponent.CATEGORY_PLAYLIST}}"></Windows:Menu>
                 </ListBox.ContextMenu>
-                <ListBox.ItemTemplate>
-                    <DataTemplate DataType="{x:Type Core:PlaylistItem}">
-                        <TextBlock Foreground="{DynamicResource TextBrush}" Text="{Binding Converter={StaticResource ViewModel}}" TextTrimming="CharacterEllipsis"></TextBlock>
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
+                <ListBox.ItemTemplateSelector>
+                    <LocalWindows:MiniPlaylistTemplateSelector>
+                        <LocalWindows:MiniPlaylistTemplateSelector.DefaultTemplate>
+                            <DataTemplate DataType="{x:Type Core:PlaylistItem}">
+                                <TextBlock Foreground="{DynamicResource TextBrush}" Text="{Binding Converter={StaticResource ViewModel}}" TextTrimming="CharacterEllipsis"></TextBlock>
+                            </DataTemplate>
+                        </LocalWindows:MiniPlaylistTemplateSelector.DefaultTemplate>
+                        <LocalWindows:MiniPlaylistTemplateSelector.ArtworkTemplate>
+                            <DataTemplate DataType="{x:Type Core:PlaylistItem}">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"></ColumnDefinition>
+                                        <ColumnDefinition></ColumnDefinition>
+                                    </Grid.ColumnDefinitions>
+                                    <Border Grid.Column="0" Background="{DynamicResource ControlBrush}" BorderBrush="{DynamicResource ControlBorderBrush}" BorderThickness="1">
+                                        <Rectangle DataContext="{Binding Converter={StaticResource ArtworkImageConverter}}" Width="50" Height="50" Fill="{Binding Value, FallbackValue={StaticResource Transparent}}"></Rectangle>
+                                    </Border>
+                                    <TextBlock Grid.Column="1" VerticalAlignment="Center" Margin="4,0,0,0" Foreground="{DynamicResource TextBrush}" Text="{Binding Converter={StaticResource ViewModel}}" TextTrimming="CharacterEllipsis"></TextBlock>
+                                </Grid>
+                            </DataTemplate>
+                        </LocalWindows:MiniPlaylistTemplateSelector.ArtworkTemplate>
+                    </LocalWindows:MiniPlaylistTemplateSelector>
+                </ListBox.ItemTemplateSelector>
             </ListBox>
         </Border>
         <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding StatusMessage, Mode=OneWay, Source={StaticResource ViewModel}}" IsHitTestVisible="False" Foreground="{DynamicResource TextBrush}">
