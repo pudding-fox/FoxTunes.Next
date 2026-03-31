@@ -1,4 +1,6 @@
-﻿using FoxDb;
+﻿#pragma warning disable 612, 618
+using FoxDb;
+using FoxDb.Interfaces;
 using FoxTunes.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -8,6 +10,8 @@ namespace FoxTunes
 {
     public class PlaylistItem : PersistableComponent, IFileData
     {
+        public static readonly IDatabaseFactory DatabaseFactory = ComponentRegistry.Instance.GetComponent<IDatabaseFactory>();
+
         public PlaylistItem()
         {
 
@@ -27,8 +31,22 @@ namespace FoxTunes
 
         public PlaylistItemFlags Flags { get; set; }
 
+        private IList<MetaDataItem> _MetaDatas { get; set; }
+
         [Relation(Flags = RelationFlags.AutoExpression | RelationFlags.EagerFetch | RelationFlags.ManyToMany)]
-        public IList<MetaDataItem> MetaDatas { get; set; }
+        public IList<MetaDataItem> MetaDatas
+        {
+            get
+            {
+                this.EnsureMetaData();
+                return this._MetaDatas;
+            }
+            set
+            {
+                this._MetaDatas = value;
+                this.OnMetaDatasChanged();
+            }
+        }
 
         protected virtual void OnMetaDatasChanged()
         {
@@ -40,6 +58,22 @@ namespace FoxTunes
         }
 
         public event EventHandler MetaDatasChanged;
+
+        public void EnsureMetaData()
+        {
+            if (this._MetaDatas == null)
+            {
+                this._MetaDatas = this.GetMetaData();
+            }
+        }
+
+        public void EnsureMetaData(IDatabaseComponent database, ITransactionSource transaction)
+        {
+            if (this._MetaDatas == null)
+            {
+                this._MetaDatas = this.GetMetaData(database, transaction);
+            }
+        }
 
         public override int GetHashCode()
         {
@@ -55,6 +89,36 @@ namespace FoxTunes
                 return base.Equals(other) && string.Equals(this.FileName, (other as PlaylistItem).FileName, StringComparison.OrdinalIgnoreCase);
             }
             return base.Equals(other);
+        }
+
+        public IList<MetaDataItem> GetMetaData()
+        {
+            using (var database = DatabaseFactory.Create())
+            {
+                using (var transaction = database.BeginTransaction(database.PreferredIsolationLevel))
+                {
+                    return this.GetMetaData(database, transaction);
+                }
+            }
+        }
+
+        public IList<MetaDataItem> GetMetaData(IDatabaseComponent database, ITransactionSource transaction)
+        {
+            var sequence = database.ExecuteEnumerator<MetaDataItem>(
+                database.Queries.GetPlaylistItemMetaData,
+                (parameters, phase) =>
+                {
+                    switch (phase)
+                    {
+                        case DatabaseParameterPhase.Fetch:
+                            parameters["playlistItemId"] = this.Id;
+                            parameters["libraryItemId"] = this.LibraryItem_Id;
+                            break;
+                    }
+                },
+                transaction
+            );
+            return sequence.ToList();
         }
 
         public static IEnumerable<PlaylistItem> Clone(IEnumerable<PlaylistItem> playlistItems)

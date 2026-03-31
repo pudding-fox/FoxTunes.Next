@@ -148,6 +148,12 @@
   <data name="GetOrAddMetaDataItem" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>resources\getoraddmetadataitem.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
+  <data name="GetPlaylistItemMetaData" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\GetPlaylistItemMetaData.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="GetPlaylistItems" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>Resources\GetPlaylistItems.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
   <data name="RemoveCancelledLibraryItems" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>resources\removecancelledlibraryitems.sql;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>

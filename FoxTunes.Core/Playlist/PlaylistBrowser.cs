@@ -1,9 +1,12 @@
-﻿using FoxDb;
+﻿#pragma warning disable 612, 618
+using FoxDb;
 using FoxDb.Interfaces;
 using FoxTunes.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace FoxTunes
 {
@@ -133,12 +136,37 @@ namespace FoxTunes
                 {
                     using (var transaction = database.BeginTransaction(database.PreferredIsolationLevel))
                     {
-                        var sequence = database.AsQueryable<PlaylistItem>(transaction)
-                            .Where(playlistItem => playlistItem.Playlist_Id == playlist.Id)
-                            .OrderBy(playlistItem => playlistItem.Sequence);
-                        foreach (var element in sequence)
+                        using (var reader = database.ExecuteReader(database.Queries.GetPlaylistItems(), (parameters, phase) =>
                         {
-                            yield return this.CreateItem(playlist, element);
+                            switch (phase)
+                            {
+                                case DatabaseParameterPhase.Fetch:
+                                    parameters["playlistId"] = playlist.Id;
+                                    break;
+                            }
+                        }, transaction))
+                        {
+                            using (var sequence = reader.GetEnumerator())
+                            {
+                                var playlistItems = new List<PlaylistItem>();
+                                while (sequence.MoveNext())
+                                {
+                                    var playlistItem = new PlaylistItem()
+                                    {
+                                        Id = sequence.Current.Get<int>("Id"),
+                                        Playlist_Id = sequence.Current.Get<int>("Playlist_Id"),
+                                        LibraryItem_Id = sequence.Current.Get<int?>("LibraryItem_Id"),
+                                        Sequence = sequence.Current.Get<int>("Sequence"),
+                                        DirectoryName = sequence.Current.Get<string>("DirectoryName"),
+                                        FileName = sequence.Current.Get<string>("FileName"),
+                                        Status = sequence.Current.Get<PlaylistItemStatus>("Status"),
+                                        Flags = sequence.Current.Get<PlaylistItemFlags>("Flags")
+                                    };
+                                    playlistItems.Add(this.CreateItem(playlist, playlistItem));
+                                }
+                                this.Dispatch(() => this.EnsureMetaData(playlistItems));
+                                return playlistItems;
+                            }
                         }
                     }
                 }
@@ -147,6 +175,26 @@ namespace FoxTunes
             {
                 this.State &= ~PlaylistBrowserState.Loading;
             }
+        }
+
+        protected virtual void EnsureMetaData(IEnumerable<PlaylistItem> playlistItems)
+        {
+            var databases = new ThreadLocal<IDatabaseComponent>(() => this.DatabaseFactory.Create(), true);
+            var transactions = new ThreadLocal<ITransactionSource>(() => databases.Value.BeginTransaction(databases.Value.PreferredIsolationLevel), true);
+            Parallel.ForEach(
+                playlistItems,
+                playlistItem => playlistItem.EnsureMetaData(databases.Value, transactions.Value)
+            );
+            foreach (var transaction in transactions.Values)
+            {
+                transaction.Dispose();
+            }
+            transactions.Dispose();
+            foreach (var database in databases.Values)
+            {
+                database.Dispose();
+            }
+            databases.Dispose();
         }
 
         public PlaylistItem[] GetItems(Playlist playlist, string filter)

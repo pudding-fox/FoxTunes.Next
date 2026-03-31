@@ -28,6 +28,8 @@ namespace FoxTunes.Interfaces
 
         IDatabaseQuery GetLibraryItems(string filter);
 
+        IDatabaseQuery GetPlaylistItems();
+
         IDatabaseQuery GetPlaylistItems(string filter);
 
         IDatabaseQuery GetOrAddMetaDataItem { get; }
@@ -59,5 +61,7 @@ namespace FoxTunes.Interfaces
         IDatabaseQuery GetEntireLibrary { get; }
 
         IDatabaseQuery GetListeningHistory { get; }
+
+        IDatabaseQuery GetPlaylistItemMetaData { get; }
     }
 }

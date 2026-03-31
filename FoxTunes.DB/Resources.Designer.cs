@@ -19,7 +19,7 @@ namespace FoxTunes {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "18.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Resources {
@@ -204,7 +204,7 @@ namespace FoxTunes {
         ///        MAX(CASE WHEN &quot;MetaDataItems&quot;.&quot;Name&quot; = @album THEN &quot;MetaDataItems&quot;.&quot;Value&quot; END) AS &quot;Album&quot;,
         ///        MAX(CASE WHEN &quot;MetaDataItems&quot;.&quot;Name&quot; = @title THEN &quot;MetaDataItems&quot;.&quot;Value&quot; END) AS &quot;Title&quot;,
         ///        MAX(CASE WHEN &quot;MetaDataItems&quot;.&quot;Name&quot; = @lastPlayed THEN &quot;MetaDataItems&quot;.&quot;Value&quot; END) AS &quot;LastPlayed&quot;,
-        ///        SUM(CASE WHEN &quot;Me [rest of string was truncated]&quot;;.
+        ///        SUM(CASE WHEN &quot;MetaDataI [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string GetListeningHistory {
             get {
@@ -228,6 +228,37 @@ namespace FoxTunes {
         internal static string GetOrAddMetaDataItem {
             get {
                 return ResourceManager.GetString("GetOrAddMetaDataItem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SELECT &quot;MetaDataItems&quot;.*
+        ///FROM &quot;MetaDataItems&quot;
+        ///INNER JOIN &quot;PlaylistItem_MetaDataItem&quot;
+        ///    ON &quot;MetaDataItems&quot;.&quot;Id&quot; = &quot;PlaylistItem_MetaDataItem&quot;.&quot;MetaDataItem_Id&quot;
+        ///WHERE &quot;PlaylistItem_MetaDataItem&quot;.&quot;PlaylistItem_Id&quot; = @playlistItemId
+        ///UNION  
+        ///SELECT &quot;MetaDataItems&quot;.*
+        ///FROM &quot;MetaDataItems&quot;
+        ///INNER JOIN &quot;LibraryItem_MetaDataItem&quot;
+        ///    ON &quot;MetaDataItems&quot;.&quot;Id&quot; = &quot;LibraryItem_MetaDataItem&quot;.&quot;MetaDataItem_Id&quot;
+        ///WHERE &quot;LibraryItem_MetaDataItem&quot;.&quot;LibraryItem_Id&quot; = @libraryItemId.
+        /// </summary>
+        internal static string GetPlaylistItemMetaData {
+            get {
+                return ResourceManager.GetString("GetPlaylistItemMetaData", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SELECT *
+        ///FROM &quot;PlaylistItems&quot;
+        ///WHERE &quot;Playlist_Id&quot; = @playlistId
+        ///ORDER BY &quot;Sequence&quot;.
+        /// </summary>
+        internal static string GetPlaylistItems {
+            get {
+                return ResourceManager.GetString("GetPlaylistItems", resourceCulture);
             }
         }
         
@@ -394,7 +425,7 @@ namespace FoxTunes {
         ///	WHERE &quot;PlaylistItemsRowNumber&quot;.&quot;Id&quot; = &quot;PlaylistItems&quot;.&quot;Id&quot;
         ///)
         ///WHERE &quot;PlaylistItems&quot;.&quot;Playlist_Id&quot; = @playlistId 
-        ///	AND &quot;Playl [rest of string was truncated]&quot;;.
+        ///	AND &quot;PlaylistItems&quot;.&quot;Statu [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string SequencePlaylistItems {
             get {

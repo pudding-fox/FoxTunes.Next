@@ -155,6 +155,15 @@ namespace FoxTunes
                 new DatabaseQueryParameter("metaDataType", DbType.Byte, 0, 0, 0, ParameterDirection.Input, false, null, DatabaseQueryParameterFlags.None)
             );
         }
+
+        public IDatabaseQuery GetPlaylistItems()
+        {
+            return this.Database.QueryFactory.Create(
+                Resources.GetPlaylistItems,
+                new DatabaseQueryParameter("playlistId", DbType.Int32, 0, 0, 0, ParameterDirection.Input, false, null, DatabaseQueryParameterFlags.None)
+            );
+        }
+
         public IDatabaseQuery GetPlaylistItems(string filter)
         {
             var result = default(IFilterParserResult);
@@ -337,6 +346,18 @@ namespace FoxTunes
                     new DatabaseQueryParameter("lastPlayed", DbType.String, 0, 0, 0, ParameterDirection.Input, false, null, DatabaseQueryParameterFlags.None),
                     new DatabaseQueryParameter("playCount", DbType.String, 0, 0, 0, ParameterDirection.Input, false, null, DatabaseQueryParameterFlags.None),
                     new DatabaseQueryParameter("limit", DbType.Int32, 0, 0, 0, ParameterDirection.Input, false, null, DatabaseQueryParameterFlags.None)
+                );
+            }
+        }
+
+        public IDatabaseQuery GetPlaylistItemMetaData
+        {
+            get
+            {
+                return this.Database.QueryFactory.Create(
+                    Resources.GetPlaylistItemMetaData,
+                    new DatabaseQueryParameter("playlistItemId", DbType.Int32, 0, 0, 0, ParameterDirection.Input, false, null, DatabaseQueryParameterFlags.None),
+                    new DatabaseQueryParameter("libraryItemId", DbType.Int32, 0, 0, 0, ParameterDirection.Input, false, null, DatabaseQueryParameterFlags.None)
                 );
             }
         }

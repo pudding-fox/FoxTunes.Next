@@ -19,6 +19,7 @@ namespace FoxTunes
         protected ScriptBinding()
         {
             this.Converter = this;
+            this.IsAsync = true;
         }
 
         private IScriptingContext _ScriptingContext { get; set; }
