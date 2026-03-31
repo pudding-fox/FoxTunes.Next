@@ -21,7 +21,7 @@
             <RowDefinition></RowDefinition>
             <RowDefinition Height="Auto"></RowDefinition>
         </Grid.RowDefinitions>
-        <ListBox Grid.Row="0" Grid.Column="0" SelectionMode="Multiple" ItemsSource="{Binding Names, Source={StaticResource ViewModel}}" Windows:ListBoxExtensions.SelectedItems="{Binding SelectedGenres, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Windows:Genres}}, Converter={StaticResource MultiSelectStringConverter}}"/>
-        <Windows:SearchBox Grid.Row="1" Grid.Column="0" SearchText="{Binding Filter, Source={StaticResource ViewModel}}"></Windows:SearchBox>
+        <Windows:MultiSelectFilterableListBox Grid.Row="0" Grid.Column="0" ItemsSource="{Binding Names, Source={StaticResource ViewModel}}" SelectedItems="{Binding SelectedGenres, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Windows:Genres}}, Converter={StaticResource MultiSelectStringConverter}}" Filter="{Binding SearchText, ElementName=SearchBox}"/>
+        <Windows:SearchBox x:Name="SearchBox" Grid.Row="1" Grid.Column="0" SearchText="{Binding Filter, Source={StaticResource ViewModel}}"></Windows:SearchBox>
     </Grid>
 </UserControl>

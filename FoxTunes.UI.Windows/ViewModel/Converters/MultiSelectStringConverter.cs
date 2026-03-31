@@ -14,7 +14,7 @@ namespace FoxTunes.ViewModel
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value is string text && typeof(IList).IsAssignableFrom(targetType))
+            if (value is string text && typeof(IEnumerable).IsAssignableFrom(targetType))
             {
                 if (string.IsNullOrEmpty(text))
                 {
@@ -27,27 +27,24 @@ namespace FoxTunes.ViewModel
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value is IList list && typeof(string).IsAssignableFrom(targetType))
+            if (value is IEnumerable enumerable && typeof(string).IsAssignableFrom(targetType))
             {
-                if (list.Count == 0)
-                {
-                    return string.Empty;
-                }
-                return ToString(list);
+                return ToString(enumerable);
             }
             return value;
         }
 
-        protected virtual string ToString(IList list)
+        protected virtual string ToString(IEnumerable enumerable)
         {
             var builder = new StringBuilder();
-            foreach (var element in list)
+            var enumerator = enumerable.GetEnumerator();
+            while (enumerator.MoveNext())
             {
                 if (builder.Length > 0)
                 {
                     builder.Append(DELIMITER);
                 }
-                builder.Append(element);
+                builder.Append(enumerator.Current);
             }
             return builder.ToString();
         }

@@ -11,37 +11,6 @@ namespace FoxTunes.ViewModel
     {
         public IDatabaseFactory DatabaseFactory { get; private set; }
 
-        private string _Filter { get; set; }
-
-        public string Filter
-        {
-            get
-            {
-                return this._Filter;
-            }
-            set
-            {
-                if (string.Equals(this._Filter, value, StringComparison.OrdinalIgnoreCase))
-                {
-                    return;
-                }
-                this._Filter = value;
-                this.OnFilterChanged();
-            }
-        }
-
-        protected virtual void OnFilterChanged()
-        {
-            var task = this.Refresh();
-            if (this.FilterChanged != null)
-            {
-                this.FilterChanged(this, EventArgs.Empty);
-            }
-            this.OnPropertyChanged("Filter");
-        }
-
-        public event EventHandler FilterChanged;
-
         private IEnumerable<string> _Names { get; set; }
 
         public IEnumerable<string> Names
@@ -104,10 +73,6 @@ namespace FoxTunes.ViewModel
                             while (await sequence.MoveNextAsync().ConfigureAwait(false))
                             {
                                 var name = sequence.Current.Get<string>("value");
-                                if (!string.IsNullOrEmpty(this.Filter) && !name.Contains(this.Filter, true))
-                                {
-                                    continue;
-                                }
                                 names.Add(name);
                             }
                             return names;
