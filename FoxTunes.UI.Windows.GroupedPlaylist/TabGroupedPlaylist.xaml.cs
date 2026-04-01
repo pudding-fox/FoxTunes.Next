@@ -109,19 +109,6 @@ namespace FoxTunes
             var task = viewModel.Sort(column.PlaylistColumn);
         }
 
-        protected virtual void OnSelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (this.ListView.SelectedItem != null)
-            {
-                if (this.ListView.SelectedItems != null && this.ListView.SelectedItems.Count > 0)
-                {
-                    //When multi-selecting don't mess with the scroll position.
-                    return;
-                }
-                this.ListView.ScrollIntoView(this.ListView.SelectedItem);
-            }
-        }
-
         protected virtual void OnGroupHeaderMouseDown(object sender, MouseButtonEventArgs e)
         {
             var element = sender as FrameworkElement;
@@ -139,6 +126,17 @@ namespace FoxTunes
             {
                 this.ListView.SelectedItems.Add(item);
             }
+        }
+
+        protected virtual void OnValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            var mainScrollViewer = this.ListView.FindChild<ScrollViewer>();
+            var headerScrollViewer = this.ListView.FindChild<ScrollViewer>("PART_ScrollViewer");
+            if (mainScrollViewer == null || headerScrollViewer == null)
+            {
+                return;
+            }
+            headerScrollViewer.ScrollToHorizontalOffset(mainScrollViewer.HorizontalOffset);
         }
 
         protected virtual void OnPropertyChanged(string propertyName)
