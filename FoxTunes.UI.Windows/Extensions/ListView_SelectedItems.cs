@@ -1,9 +1,9 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
 
 namespace FoxTunes
 {
@@ -86,7 +86,16 @@ namespace FoxTunes
 
             protected virtual void OnSelectionChanged(object sender, SelectionChangedEventArgs e)
             {
-                SetSelectedItems(this.ListView, this.ListView.SelectedItems);
+                //Awful hack.
+                //Prevent selection from being list when the ItemsSource is changed.
+                if (Environment.StackTrace.Contains("OnItemsChanged", true))
+                {
+                    SetSelectedItems(this.ListView, GetSelectedItems(this.ListView));
+                }
+                else
+                {
+                    SetSelectedItems(this.ListView, this.ListView.SelectedItems);
+                }
             }
 
             protected override void OnDisposing()

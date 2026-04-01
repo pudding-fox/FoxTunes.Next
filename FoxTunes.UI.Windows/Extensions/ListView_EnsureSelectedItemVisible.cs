@@ -1,7 +1,8 @@
-﻿using System.Runtime.CompilerServices;
+﻿using System;
+using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
+using System.Windows.Controls.Primitives;
 
 namespace FoxTunes
 {
@@ -58,25 +59,31 @@ namespace FoxTunes
             {
                 this.ListView = listView;
                 this.ListView.SelectionChanged += this.OnSelectionChanged;
+                BindingHelper.AddHandler(
+                    this.ListView,
+                    global::System.Windows.Controls.ListView.ItemsSourceProperty,
+                    typeof(global::System.Windows.Controls.ListView),
+                    this.OnItemsSourceChanged
+                );
             }
 
             public ListView ListView { get; private set; }
 
-            protected virtual void EnsureVisible(object value)
+            protected virtual bool EnsureVisible(object value)
             {
                 if (value == null)
                 {
-                    return;
+                    return false;
                 }
                 var index = this.ListView.Items.IndexOf(value);
                 if (index < 0)
                 {
-                    return;
+                    return false;
                 }
                 var item = this.ListView.ItemContainerGenerator.ContainerFromItem(value) as ListViewItem;
                 if (item != null)
                 {
-                    return;
+                    return true;
                 }
                 else
                 {
@@ -87,9 +94,14 @@ namespace FoxTunes
                         {
                             this.ListView.UpdateLayout();
                             item = this.ListView.ItemContainerGenerator.ContainerFromItem(value) as ListViewItem;
+                            if (item != null)
+                            {
+                                return true;
+                            }
                         }
                     }
                 }
+                return false;
             }
 
             protected virtual void OnSelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -97,11 +109,46 @@ namespace FoxTunes
                 this.EnsureVisible(this.ListView.SelectedItem);
             }
 
+            protected virtual void OnItemsSourceChanged(object sender, EventArgs e)
+            {
+                var selectedItems = GetSelectedItems(this.ListView);
+                if (selectedItems == null || selectedItems.Count == 0)
+                {
+                    return;
+                }
+                if (this.EnsureVisible(selectedItems[0]))
+                {
+                    return;
+                }
+                this.ListView.ItemContainerGenerator.StatusChanged += this.OnStatusChanged;
+            }
+
+            protected virtual void OnStatusChanged(object sender, EventArgs e)
+            {
+                if (this.ListView.ItemContainerGenerator.Status != GeneratorStatus.ContainersGenerated)
+                {
+                    return;
+                }
+                this.ListView.ItemContainerGenerator.StatusChanged -= this.OnStatusChanged;
+                var selectedItems = GetSelectedItems(this.ListView);
+                if (selectedItems == null || selectedItems.Count == 0)
+                {
+                    return;
+                }
+                this.EnsureVisible(selectedItems[0]);
+            }
+
             protected override void OnDisposing()
             {
                 if (this.ListView != null)
                 {
                     this.ListView.SelectionChanged -= this.OnSelectionChanged;
+                    BindingHelper.RemoveHandler(
+                        this.ListView,
+                        global::System.Windows.Controls.ListView.ItemsSourceProperty,
+                        typeof(global::System.Windows.Controls.ListView),
+                        this.OnItemsSourceChanged
+                    );
                 }
                 base.OnDisposing();
             }
