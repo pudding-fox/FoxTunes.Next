@@ -11,5 +11,18 @@ FROM "LibraryHierarchyItems"
 WHERE "LibraryHierarchy_Id" = @libraryHierarchyId
 	AND ((@libraryHierarchyItemId IS NULL AND "LibraryHierarchyItems"."Parent_Id" IS NULL) 
 		OR "LibraryHierarchyItems"."Parent_Id" = @libraryHierarchyItemId)
-<#= new LibraryHierarchyFilterBuilder(this.Database, this.Filter, LibraryHierarchyFilterSource.LibraryHierarchyItem).TransformText()  #>
+<#
+	if (this.Filter != null && this.Filter.Groups.Any())
+	{
+#>
+	AND EXISTS
+	(
+		SELECT 1
+		FROM "LibraryItem_MetaDataItem"
+			JOIN "MetaDataItems" ON "MetaDataItems"."Id" = "LibraryItem_MetaDataItem"."MetaDataItem_Id"
+			JOIN "LibraryHierarchyItem_LibraryItem" ON "LibraryHierarchyItem_LibraryItem"."LibraryHierarchyItem_Id" = "LibraryHierarchyItems"."Id"
+		WHERE "LibraryItem_MetaDataItem"."LibraryItem_Id" = "LibraryHierarchyItem_LibraryItem"."LibraryItem_Id"
+<#= new LibraryHierarchyFilterBuilder(this.Database, this.Filter).TransformText()  #>
+	)
+<# } #>
 ORDER BY "Value"

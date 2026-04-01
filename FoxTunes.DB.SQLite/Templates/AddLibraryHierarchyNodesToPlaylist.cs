@@ -20,9 +20,9 @@ namespace FoxTunes.Templates
     /// Class to produce the template output
     /// </summary>
     
-    #line 1 "C:\sourcecode\source\personal\FoxTunes.Next\FoxTunes.DB\Templates\LibraryHierarchyFilterBuilder.tt"
+    #line 1 "C:\sourcecode\source\personal\FoxTunes.Next\FoxTunes.DB.SQLite\Templates\AddLibraryHierarchyNodesToPlaylist.tt"
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.TextTemplating", "18.0.0.0")]
-    public partial class LibraryHierarchyFilterBuilder : LibraryHierarchyFilterBuilderBase
+    public partial class AddLibraryHierarchyNodesToPlaylist : AddLibraryHierarchyNodesToPlaylistBase
     {
 #line hidden
         /// <summary>
@@ -30,205 +30,55 @@ namespace FoxTunes.Templates
         /// </summary>
         public virtual string TransformText()
         {
-            this.Write("\r\n");
+            this.Write(@"
+WITH ""VerticalMetaData""
+AS
+(
+	SELECT ""LibraryItems"".""Id"", ""LibraryItems"".""FileName"", ""LibraryItems"".""DirectoryName"", ""MetaDataItems"".""Name"", ""MetaDataItems"".""Value""
+	FROM ""LibraryHierarchyItems""
+		JOIN ""LibraryHierarchyItem_LibraryItem"" 
+			ON ""LibraryHierarchyItems"".""Id"" = ""LibraryHierarchyItem_LibraryItem"".""LibraryHierarchyItem_Id""
+		JOIN ""LibraryItems""
+			ON ""LibraryItems"".""Id"" = ""LibraryHierarchyItem_LibraryItem"".""LibraryItem_Id""
+		JOIN ""LibraryItem_MetaDataItem""
+			ON ""LibraryItem_MetaDataItem"".""LibraryItem_Id"" = ""LibraryItems"".""Id"" 
+		JOIN ""MetaDataItems"" 
+			ON ""MetaDataItems"".""Id"" = ""LibraryItem_MetaDataItem"".""MetaDataItem_Id""
+	WHERE ""LibraryHierarchyItems"".""LibraryHierarchy_Id"" = @libraryHierarchyId
+		AND ""LibraryHierarchyItems"".""IsLeaf"" = 1
+");
             
-            #line 9 "C:\sourcecode\source\personal\FoxTunes.Next\FoxTunes.DB\Templates\LibraryHierarchyFilterBuilder.tt"
-
-if (this.Filter != null)
-{
-	foreach (var group in this.Filter.Groups)
-	{
-
-            
-            #line default
-            #line hidden
-            this.Write("\t\r\nAND (\r\n");
-            
-            #line 16 "C:\sourcecode\source\personal\FoxTunes.Next\FoxTunes.DB\Templates\LibraryHierarchyFilterBuilder.tt"
-
-		var first = true;
-		foreach (var entry in group.Entries)
-		{
-			if (first)
-			{
-				first = false;
-			}
-			else
-			{
-
+            #line 24 "C:\sourcecode\source\personal\FoxTunes.Next\FoxTunes.DB.SQLite\Templates\AddLibraryHierarchyNodesToPlaylist.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(new LibraryHierarchyFilterBuilder(this.Database, this.Filter).TransformText()));
             
             #line default
             #line hidden
-            this.Write(" OR ");
+            this.Write("\r\n)\r\n,\r\n\"HorizontalMetaData\"\r\nAS\r\n(\r\n");
             
-            #line 26 "C:\sourcecode\source\personal\FoxTunes.Next\FoxTunes.DB\Templates\LibraryHierarchyFilterBuilder.tt"
-
-			}
-			var numeric = default(int);
-			var isNumeric = NumericOperators.Contains(entry.Operator) && int.TryParse(entry.Value, out numeric);
-
-            
-            #line default
-            #line hidden
-            this.Write("(\"MetaDataItems\".\"Name\" = ");
-            
-            #line 30 "C:\sourcecode\source\personal\FoxTunes.Next\FoxTunes.DB\Templates\LibraryHierarchyFilterBuilder.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(this.Database.QueryFactory.Dialect.String(entry.Name)));
+            #line 30 "C:\sourcecode\source\personal\FoxTunes.Next\FoxTunes.DB.SQLite\Templates\AddLibraryHierarchyNodesToPlaylist.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(new PivotViewBuilder(
+		this.Database,
+		"VerticalMetaData", 
+		new[] { "Id", "FileName", "DirectoryName" }, 
+		new[] { "Name" }, 
+		new[] { "Value" }, 
+		this.Names
+	).TransformText()));
             
             #line default
             #line hidden
-            this.Write(" AND ");
+            this.Write("\r\n)\r\n\r\nINSERT INTO \"PlaylistItems\" (\"Playlist_Id\", \"LibraryItem_Id\", \"Sequence\", " +
+                    "\"FileName\", \"DirectoryName\", \"Status\", \"Flags\") \r\nSELECT @playlistId, \"Id\", @seq" +
+                    "uence + ROW_NUMBER() OVER\r\n(\r\n\tORDER BY\r\n");
             
-            #line 30 "C:\sourcecode\source\personal\FoxTunes.Next\FoxTunes.DB\Templates\LibraryHierarchyFilterBuilder.tt"
-
-			if (isNumeric)
-			{
-
-            
-            #line default
-            #line hidden
-            this.Write("CAST(\"MetaDataItems\".\"Value\" AS int)");
-            
-            #line 33 "C:\sourcecode\source\personal\FoxTunes.Next\FoxTunes.DB\Templates\LibraryHierarchyFilterBuilder.tt"
-
-			}
-			else
-			{
-
+            #line 46 "C:\sourcecode\source\personal\FoxTunes.Next\FoxTunes.DB.SQLite\Templates\AddLibraryHierarchyNodesToPlaylist.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(new PlaylistSortBuilder(this.Database, this.Sort).TransformText()));
             
             #line default
             #line hidden
-            this.Write("\"MetaDataItems\".\"Value\"");
-            
-            #line 37 "C:\sourcecode\source\personal\FoxTunes.Next\FoxTunes.DB\Templates\LibraryHierarchyFilterBuilder.tt"
-
-			}
-			switch (entry.Operator)
-			{
-				default:
-				case FilterParserEntryOperator.Equal:
-
-            
-            #line default
-            #line hidden
-            this.Write(" = ");
-            
-            #line 43 "C:\sourcecode\source\personal\FoxTunes.Next\FoxTunes.DB\Templates\LibraryHierarchyFilterBuilder.tt"
-
-					break;
-				case FilterParserEntryOperator.Greater:
-
-            
-            #line default
-            #line hidden
-            this.Write(" > ");
-            
-            #line 46 "C:\sourcecode\source\personal\FoxTunes.Next\FoxTunes.DB\Templates\LibraryHierarchyFilterBuilder.tt"
-					
-					break;
-				case FilterParserEntryOperator.GreaterEqual:
-
-            
-            #line default
-            #line hidden
-            this.Write(" >= ");
-            
-            #line 49 "C:\sourcecode\source\personal\FoxTunes.Next\FoxTunes.DB\Templates\LibraryHierarchyFilterBuilder.tt"
-					
-					break;
-				case FilterParserEntryOperator.Less:
-
-            
-            #line default
-            #line hidden
-            this.Write(" < ");
-            
-            #line 52 "C:\sourcecode\source\personal\FoxTunes.Next\FoxTunes.DB\Templates\LibraryHierarchyFilterBuilder.tt"
-					
-					break;
-				case FilterParserEntryOperator.LessEqual:
-
-            
-            #line default
-            #line hidden
-            this.Write(" <= ");
-            
-            #line 55 "C:\sourcecode\source\personal\FoxTunes.Next\FoxTunes.DB\Templates\LibraryHierarchyFilterBuilder.tt"
-					
-					break;
-				case FilterParserEntryOperator.Match:
-
-            
-            #line default
-            #line hidden
-            this.Write(" LIKE ");
-            
-            #line 58 "C:\sourcecode\source\personal\FoxTunes.Next\FoxTunes.DB\Templates\LibraryHierarchyFilterBuilder.tt"
-					
-					break;
-			}
-
-            
-            #line default
-            #line hidden
-            
-            #line 62 "C:\sourcecode\source\personal\FoxTunes.Next\FoxTunes.DB\Templates\LibraryHierarchyFilterBuilder.tt"
- 
-			if (isNumeric)
-			{
-
-            
-            #line default
-            #line hidden
-            
-            #line 65 "C:\sourcecode\source\personal\FoxTunes.Next\FoxTunes.DB\Templates\LibraryHierarchyFilterBuilder.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(numeric));
-            
-            #line default
-            #line hidden
-            
-            #line 65 "C:\sourcecode\source\personal\FoxTunes.Next\FoxTunes.DB\Templates\LibraryHierarchyFilterBuilder.tt"
-
-			}
-			else
-			{
-
-            
-            #line default
-            #line hidden
-            
-            #line 69 "C:\sourcecode\source\personal\FoxTunes.Next\FoxTunes.DB\Templates\LibraryHierarchyFilterBuilder.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(this.Database.QueryFactory.Dialect.String(entry.Value.Replace(FilterParserResultEntry.BOUNDED_WILDCARD, "_").Replace(FilterParserResultEntry.UNBOUNDED_WILDCARD, "%"))));
-            
-            #line default
-            #line hidden
-            
-            #line 69 "C:\sourcecode\source\personal\FoxTunes.Next\FoxTunes.DB\Templates\LibraryHierarchyFilterBuilder.tt"
-
-			}
-
-            
-            #line default
-            #line hidden
-            this.Write(")");
-            
-            #line 72 "C:\sourcecode\source\personal\FoxTunes.Next\FoxTunes.DB\Templates\LibraryHierarchyFilterBuilder.tt"
-
-		}
-
-            
-            #line default
-            #line hidden
-            this.Write(")");
-            
-            #line 74 "C:\sourcecode\source\personal\FoxTunes.Next\FoxTunes.DB\Templates\LibraryHierarchyFilterBuilder.tt"
-		
-	}
-}
-
-            
-            #line default
-            #line hidden
+            this.Write("\r\n) - 1, \"FileName\", \"DirectoryName\", @status, 0\r\nFROM \"HorizontalMetaData\";\r\n\r\nS" +
+                    "ELECT COUNT(*)\r\nFROM \"PlaylistItems\"\r\nWHERE \"Playlist_Id\" = @playlistId\r\n\tAND \"S" +
+                    "tatus\" = @status");
             return this.GenerationEnvironment.ToString();
         }
     }
@@ -240,7 +90,7 @@ if (this.Filter != null)
     /// Base class for this transformation
     /// </summary>
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.TextTemplating", "18.0.0.0")]
-    public class LibraryHierarchyFilterBuilderBase
+    public class AddLibraryHierarchyNodesToPlaylistBase
     {
         #region Fields
         private global::System.Text.StringBuilder generationEnvironmentField;

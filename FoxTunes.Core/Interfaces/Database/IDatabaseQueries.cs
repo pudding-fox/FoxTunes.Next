@@ -8,6 +8,8 @@ namespace FoxTunes.Interfaces
 
         IDatabaseQuery AddLibraryHierarchyNodeToPlaylist(string filter, string sort);
 
+        IDatabaseQuery AddLibraryHierarchyNodesToPlaylist(string filter, string sort);
+
         IDatabaseQuery AddLibraryMetaDataItem { get; }
 
         IDatabaseQuery AddPlaylistMetaDataItem { get; }

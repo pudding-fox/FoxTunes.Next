@@ -54,8 +54,7 @@ namespace FoxTunes
         public override async Task Refresh(Playlist playlist, bool force)
         {
             var libraryHierarchy = this.LibraryManager.SelectedHierarchy;
-            var libraryHierarchyNodes = this.LibraryHierarchyBrowser.GetNodes(libraryHierarchy);
-            using (var task = new AddLibraryHierarchyNodesToPlaylistTask(playlist, 0, libraryHierarchyNodes, this.LibraryHierarchyBrowser.Filter, true))
+            using (var task = new AddLibraryHierarchyNodesToPlaylistTask(playlist, 0, libraryHierarchy, this.LibraryHierarchyBrowser.Filter, true))
             {
                 task.InitializeComponent(this.Core);
                 await task.Run().ConfigureAwait(false);

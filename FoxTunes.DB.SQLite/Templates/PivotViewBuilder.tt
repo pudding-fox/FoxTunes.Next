@@ -29,7 +29,7 @@ SELECT
         {
             foreach (var valueColumn in this.ValueColumns) 
             { 
-#>, GROUP_CONCAT
+#>, MAX
 (
     CASE WHEN <#= this.Database.QueryFactory.Dialect.Identifier(this.Table, nameColumn) #> = <#= this.Database.QueryFactory.Dialect.String(value) #> 
         THEN <#= this.Database.QueryFactory.Dialect.Identifier(this.Table, valueColumn) #> 

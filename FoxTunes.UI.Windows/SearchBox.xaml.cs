@@ -232,6 +232,7 @@ namespace FoxTunes
             {
                 case Key.Return:
                     this.IsCommitting = true;
+                    this.OnTextChanged();
                     break;
             }
         }

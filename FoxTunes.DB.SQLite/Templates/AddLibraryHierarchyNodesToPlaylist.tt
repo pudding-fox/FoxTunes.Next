@@ -20,7 +20,7 @@ AS
 		JOIN "MetaDataItems" 
 			ON "MetaDataItems"."Id" = "LibraryItem_MetaDataItem"."MetaDataItem_Id"
 	WHERE "LibraryHierarchyItems"."LibraryHierarchy_Id" = @libraryHierarchyId
-		AND "LibraryHierarchyItems"."Id" = @libraryHierarchyItemId
+		AND "LibraryHierarchyItems"."IsLeaf" = 1
 <#= new LibraryHierarchyFilterBuilder(this.Database, this.Filter).TransformText() #>
 )
 ,

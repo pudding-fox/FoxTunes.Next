@@ -153,7 +153,7 @@ namespace FoxTunes.ViewModel
             }
             return this.PlaylistManager.Add(
                 this.PlaylistManager.SelectedPlaylist,
-                this.LibraryHierarchyBrowser.GetNodes(libraryHierarchy),
+                this.LibraryManager.SelectedHierarchy,
                 clear
             );
         }

@@ -9,27 +9,10 @@
 <#
 if (this.Filter != null)
 {
-	switch (this.Source)
-	{
-		case LibraryHierarchyFilterSource.LibraryHierarchyItem:
-#>
-AND EXISTS
-(
-	SELECT * 
-	FROM "LibraryHierarchyItem_LibraryItem"
-	WHERE "LibraryHierarchyItem_LibraryItem"."LibraryHierarchyItem_Id" = "LibraryHierarchyItems"."Id"
-<#
-			break;
-	}
 	foreach (var group in this.Filter.Groups)
 	{
 #>	
-AND EXISTS
-(
-	SELECT * 
-	FROM "LibraryItem_MetaDataItem"
-		JOIN "MetaDataItems" ON "MetaDataItems"."Id" = "LibraryItem_MetaDataItem"."MetaDataItem_Id"
-	WHERE "LibraryItem_MetaDataItem"."LibraryItem_Id" = "LibraryHierarchyItem_LibraryItem"."LibraryItem_Id" AND (
+AND (
 <#
 		var first = true;
 		foreach (var entry in group.Entries)
@@ -88,13 +71,7 @@ AND EXISTS
 #>
 )<#
 		}
-#>))<#		
-	}
-	switch (this.Source)
-	{
-		case LibraryHierarchyFilterSource.LibraryHierarchyItem:
 #>)<#		
-			break;
 	}
 }
 #>

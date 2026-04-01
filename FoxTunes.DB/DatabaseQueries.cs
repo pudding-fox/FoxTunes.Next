@@ -46,6 +46,8 @@ namespace FoxTunes
 
         public abstract IDatabaseQuery AddLibraryHierarchyNodeToPlaylist(string filter, string sort);
 
+        public abstract IDatabaseQuery AddLibraryHierarchyNodesToPlaylist(string filter, string sort);
+
         public IDatabaseQuery AddLibraryMetaDataItem
         {
             get

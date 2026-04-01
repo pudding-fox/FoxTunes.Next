@@ -30,5 +30,5 @@ FROM "LibraryHierarchyItems"
 			AND (@metaDataType & "MetaDataItems"."Type") =  "MetaDataItems"."Type"
 WHERE "LibraryHierarchyItems"."LibraryHierarchy_Id" = @libraryHierarchyId
 	AND "LibraryHierarchyItems"."Id" = @libraryHierarchyItemId
-<#= new LibraryHierarchyFilterBuilder(this.Database, this.Filter, LibraryHierarchyFilterSource.LibraryItem).TransformText() #>
+<#= new LibraryHierarchyFilterBuilder(this.Database, this.Filter).TransformText() #>
 ORDER BY "LibraryItems"."FileName"

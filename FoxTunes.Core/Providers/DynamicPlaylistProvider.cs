@@ -105,23 +105,10 @@ namespace FoxTunes
             {
                 return;
             }
-            var libraryHierarchyNodes = this.LibraryHierarchyBrowser.GetNodes(libraryHierarchy, expression);
-            if (!libraryHierarchyNodes.Any())
+            using (var task = new AddLibraryHierarchyNodesToPlaylistTask(playlist, 0, libraryHierarchy, expression, true, false))
             {
-                Logger.Write(this, LogLevel.Debug, "Library search returned no results: {0}", expression);
-                using (var task = new ClearPlaylistTask(playlist))
-                {
-                    task.InitializeComponent(this.Core);
-                    await task.Run().ConfigureAwait(false);
-                }
-            }
-            else
-            {
-                using (var task = new AddLibraryHierarchyNodesToPlaylistTask(playlist, 0, libraryHierarchyNodes, expression, true, false))
-                {
-                    task.InitializeComponent(this.Core);
-                    await task.Run().ConfigureAwait(false);
-                }
+                task.InitializeComponent(this.Core);
+                await task.Run().ConfigureAwait(false);
             }
         }
     }

@@ -27,9 +27,9 @@ namespace FoxTunes.Interfaces
 
         Task Insert(Playlist playlist, int index, LibraryHierarchyNode libraryHierarchyNode, bool clear);
 
-        Task Add(Playlist playlist, IEnumerable<LibraryHierarchyNode> libraryHierarchyNodes, bool clear);
+        Task Add(Playlist playlist, LibraryHierarchy libraryHierarchy, bool clear);
 
-        Task Insert(Playlist playlist, int index, IEnumerable<LibraryHierarchyNode> libraryHierarchyNodes, bool clear);
+        Task Insert(Playlist playlist, int index, LibraryHierarchy libraryHierarchy, bool clear);
 
         Task Add(Playlist playlist, IEnumerable<PlaylistItem> playlistItems, bool clear);
 
