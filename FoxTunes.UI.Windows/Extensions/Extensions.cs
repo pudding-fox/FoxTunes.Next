@@ -310,26 +310,12 @@ namespace FoxTunes
             return BindingOperations.GetBindingExpression(element, property) != null;
         }
 
-        public static bool ScrollToItemOffset<T>(this ScrollViewer scrollViewer, int offset, RoutedEventHandler callback) where T : FrameworkElement
+        public static bool ScrollToItemOffset<T>(this ScrollViewer scrollViewer, int offset) where T : FrameworkElement
         {
             var item = scrollViewer.FindChild<T>();
             if (item == null)
             {
                 return false;
-            }
-            if (double.IsNaN(item.ActualHeight) || item.ActualHeight == 0)
-            {
-                if (callback != null)
-                {
-                    var wrapper = default(RoutedEventHandler);
-                    wrapper = (sender, e) =>
-                    {
-                        callback(sender, e);
-                        item.Loaded -= wrapper;
-                    };
-                    item.Loaded += wrapper;
-                    return false;
-                }
             }
             if (scrollViewer.CanContentScroll)
             {
@@ -337,7 +323,9 @@ namespace FoxTunes
             }
             else
             {
-                scrollViewer.ScrollToVerticalOffset(offset * item.ActualHeight);
+                scrollViewer.ScrollToVerticalOffset(
+                    offset * (item.ActualHeight + item.Margin.Top + item.Margin.Bottom)
+                );
             }
             return true;
         }

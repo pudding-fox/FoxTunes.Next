@@ -3,6 +3,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 
 namespace FoxTunes
 {
@@ -62,9 +63,21 @@ namespace FoxTunes
                     return;
                 }
                 listView.SelectedItems.Clear();
-                foreach (var item in items)
+                var collectionView = (CollectionView)CollectionViewSource.GetDefaultView(listView.ItemsSource);
+                if (collectionView != null)
                 {
-                    listView.SelectedItems.Add(item);
+                    foreach (var item in items)
+                    {
+                        collectionView.MoveCurrentTo(item);
+                        listView.SelectedItems.Add(item);
+                    }
+                }
+                else
+                {
+                    foreach (var item in items)
+                    {
+                        listView.SelectedItems.Add(item);
+                    }
                 }
             }
             finally

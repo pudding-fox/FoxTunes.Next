@@ -1,6 +1,7 @@
 ﻿using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 
 namespace FoxTunes
 {
@@ -67,38 +68,28 @@ namespace FoxTunes
                 {
                     return;
                 }
-                if (this.ListView.IsGrouping)
-                {
-                    //If grouping there's no (simple) way to locate the item. 
-                    return;
-                }
                 var index = this.ListView.Items.IndexOf(value);
                 if (index < 0)
                 {
                     return;
                 }
-                var item = this.ListView.ItemContainerGenerator.ContainerFromItem(value) as ListBoxItem;
+                var item = this.ListView.ItemContainerGenerator.ContainerFromItem(value) as ListViewItem;
                 if (item != null)
                 {
-                    item.BringIntoView();
+                    return;
                 }
                 else
                 {
                     var scrollViewer = this.ListView.FindChild<ScrollViewer>();
                     if (scrollViewer != null)
                     {
-                        if (scrollViewer.ScrollToItemOffset<ListBoxItem>(index, this.OnItemLoaded))
+                        if (scrollViewer.ScrollToItemOffset<ListViewItem>(index))
                         {
                             this.ListView.UpdateLayout();
-                            item = this.ListView.ItemContainerGenerator.ContainerFromItem(value) as ListBoxItem;
+                            item = this.ListView.ItemContainerGenerator.ContainerFromItem(value) as ListViewItem;
                         }
                     }
                 }
-            }
-
-            protected virtual void OnItemLoaded(object sender, RoutedEventArgs e)
-            {
-                this.EnsureVisible(this.ListView.SelectedItem);
             }
 
             protected virtual void OnSelectionChanged(object sender, SelectionChangedEventArgs e)

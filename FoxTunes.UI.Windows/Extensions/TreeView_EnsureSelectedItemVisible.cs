@@ -147,7 +147,7 @@ namespace FoxTunes
                 }
                 else if (scrollViewer != null)
                 {
-                    if (scrollViewer.ScrollToItemOffset<TreeViewItem>(offset + index, this.OnItemLoaded))
+                    if (scrollViewer.ScrollToItemOffset<TreeViewItem>(offset + index))
                     {
                         items.UpdateLayout();
                         item = items.ItemContainerGenerator.ContainerFromItem(value) as TreeViewItem;
@@ -155,15 +155,6 @@ namespace FoxTunes
                     }
                 }
                 return item;
-            }
-
-            protected virtual void OnItemLoaded(object sender, RoutedEventArgs e)
-            {
-                var value = GetSelectedItem(this.TreeView);
-                if (value != null)
-                {
-                    this.EnsureVisible(value);
-                }
             }
 
             protected virtual void OnItemsSourceChanged(object sender, EventArgs e)

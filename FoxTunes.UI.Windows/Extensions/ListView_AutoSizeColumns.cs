@@ -95,30 +95,34 @@ namespace FoxTunes
                         {
                             continue;
                         }
-                        this.UpdateColumn(gridView, gridViewColumn, a);
+                        if (!this.UpdateColumn(gridView, gridViewColumn, a))
+                        {
+                            return;
+                        }
                     }
                 }
             }
 
-            protected virtual void UpdateColumn(GridView gridView, GridViewColumn gridViewColumn, int row)
+            protected virtual bool UpdateColumn(GridView gridView, GridViewColumn gridViewColumn, int row)
             {
                 var item = this.ListView.ItemContainerGenerator.ContainerFromIndex(row);
                 if (item == null)
                 {
-                    return;
+                    return false;
                 }
                 var rowPresenter = item.FindChild<GridViewRowPresenter>();
                 if (rowPresenter == null)
                 {
-                    return;
+                    return false;
                 }
                 //TODO: Only use this logic for TextBlock as other types of content are likely to have a static width.
                 var content = VisualTreeHelper.GetChild(rowPresenter, gridView.Columns.IndexOf(gridViewColumn)) as TextBlock;
                 if (content == null)
                 {
-                    return;
+                    return false;
                 }
                 this.UpdateColumn(gridViewColumn, content);
+                return true;
             }
 
             protected virtual void UpdateColumn(GridViewColumn gridViewColumn, FrameworkElement content)

@@ -6,14 +6,6 @@ namespace FoxTunes.ViewModel
 {
     public class TabGroupedPlaylist : TabPlaylist
     {
-        protected override int MaxItems
-        {
-            get
-            {
-                return 1000;
-            }
-        }
-
         private string _GroupingScript { get; set; }
 
         public string GroupingScript

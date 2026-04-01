@@ -82,18 +82,13 @@ namespace FoxTunes
                     var scrollViewer = this.ListBox.FindChild<ScrollViewer>();
                     if (scrollViewer != null)
                     {
-                        if (scrollViewer.ScrollToItemOffset<ListBoxItem>(index, this.OnItemLoaded))
+                        if (scrollViewer.ScrollToItemOffset<ListBoxItem>(index))
                         {
                             this.ListBox.UpdateLayout();
                             item = this.ListBox.ItemContainerGenerator.ContainerFromItem(value) as ListBoxItem;
                         }
                     }
                 }
-            }
-
-            protected virtual void OnItemLoaded(object sender, RoutedEventArgs e)
-            {
-                this.EnsureVisible(this.ListBox.SelectedItem);
             }
 
             protected virtual void OnSelectionChanged(object sender, SelectionChangedEventArgs e)
