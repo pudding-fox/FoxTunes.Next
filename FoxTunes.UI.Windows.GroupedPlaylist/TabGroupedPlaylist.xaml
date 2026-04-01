@@ -34,6 +34,9 @@
                   Grid.IsSharedSizeScope="True"
                   ItemsSource="{Binding Items, Source={StaticResource ViewModel}, IsAsync=True}"
                   Windows:ListViewExtensions.SelectedItems="{Binding SelectedItems, Source={StaticResource ViewModel}}"
+                  Windows:ListViewExtensions.DropInsert="True"
+                  Windows:ListViewExtensions.DropInsertActive="{Binding InsertActive, Source={StaticResource ViewModel}}"
+                  Windows:ListViewExtensions.DropInsertValue="{Binding InsertItem, Source={StaticResource ViewModel}}"            
                   Windows:ListViewExtensions.DragSource="True"
                   Windows:ListViewExtensions.DragSourceInitialized="DragSourceInitialized"
                   Windows:ListViewExtensions.GroupStyle="True"
@@ -82,6 +85,9 @@
             <ListView.InputBindings>
                 <KeyBinding Key="Delete" Command="{Binding RemovePlaylistItemsCommand, Source={StaticResource ViewModel}}"></KeyBinding>
             </ListView.InputBindings>
+            <Windows:ListViewExtensions.DropInsertPen>
+                <Pen Brush="{DynamicResource TextBrush}" Thickness="3"/>
+            </Windows:ListViewExtensions.DropInsertPen>
             <Interactivity:Interaction.Triggers>
                 <Windows:FilteredEventTrigger EventName="MouseDoubleClick" SourceType="{x:Type ListViewItem}">
                     <Interactivity:InvokeCommandAction Command="{Binding PlaySelectedItemCommand, Source={StaticResource ViewModel}}"/>
