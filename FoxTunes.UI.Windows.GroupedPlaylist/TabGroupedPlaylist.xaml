@@ -15,7 +15,7 @@
     <UserControl.Resources>
         <LocalViewModel:TabGroupedPlaylist x:Key="ViewModel" Playlist="{Binding Playlist, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type LocalWindows:TabGroupedPlaylist}}}"></LocalViewModel:TabGroupedPlaylist>
         <LocalViewModel:GroupItemConverter x:Key="GroupItemConverter"></LocalViewModel:GroupItemConverter>
-        <ViewModel:HasFlagConverter x:Key="HasFlagConverter"></ViewModel:HasFlagConverter>
+        <ViewModel:PlaylistGroupDescriptionConverter x:Key="PlaylistGroupDescriptionConverter"></ViewModel:PlaylistGroupDescriptionConverter>
     </UserControl.Resources>
     <Interactivity:Interaction.Triggers>
         <Interactivity:EventTrigger EventName="DragEnter">
@@ -106,7 +106,7 @@
                             <ColumnDefinition Width="Auto"></ColumnDefinition>
                             <ColumnDefinition></ColumnDefinition>
                         </Grid.ColumnDefinitions>
-                        <TextBlock Grid.Column="0" Text="{Binding Name}" Foreground="{DynamicResource TextBrush}" FontSize="16" Margin="0,-2,10,0"></TextBlock>
+                        <TextBlock Grid.Column="0" Text="{Binding Name, Converter={StaticResource PlaylistGroupDescriptionConverter}}" Foreground="{DynamicResource TextBrush}" FontSize="16" Margin="0,-2,10,0"></TextBlock>
                         <Separator Grid.Column="1"></Separator>
                     </Grid>
                 </DataTemplate>

@@ -327,6 +327,10 @@ namespace FoxTunes
 
                 public string Script { get; private set; }
 
+                public string PreviousValue { get; private set; }
+
+                public int CurrentIndex { get; private set; }
+
                 public override object GroupNameFromItem(object item, int level, CultureInfo culture)
                 {
                     var playlistItem = item as PlaylistItem;
@@ -334,9 +338,19 @@ namespace FoxTunes
                     {
                         var runner = new PlaylistItemScriptRunner(this.ScriptingContext, playlistItem, this.Script);
                         runner.Prepare();
-                        return runner.Run();
+                        return this.Index(Convert.ToString(runner.Run()));
                     }
                     return item;
+                }
+
+                protected virtual string Index(string value)
+                {
+                    if (!string.Equals(this.PreviousValue, value))
+                    {
+                        this.PreviousValue = value;
+                        this.CurrentIndex++;
+                    }
+                    return string.Format("{0}\t{1}", this.CurrentIndex, value);
                 }
             }
         }
