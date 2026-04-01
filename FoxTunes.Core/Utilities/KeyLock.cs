@@ -8,8 +8,6 @@ namespace FoxTunes
 {
     public class KeyLock<T>
     {
-        const int TIMEOUT = 5000;
-
         public KeyLock()
         {
             this.Counters = new Dictionary<T, Counter>();
@@ -61,10 +59,7 @@ namespace FoxTunes
 
         public IDisposable Lock(T key)
         {
-            if (!this.CreateOrIncrement(key).Wait(TIMEOUT))
-            {
-                throw new TimeoutException("Timed out waiting to establish lock.");
-            }
+            this.CreateOrIncrement(key).Wait();
             return new Releaser(this, key);
         }
 
@@ -72,10 +67,7 @@ namespace FoxTunes
 
         public Task<IDisposable> LockAsync(T key)
         {
-            if (!this.CreateOrIncrement(key).Wait(TIMEOUT))
-            {
-                throw new TimeoutException("Timed out waiting to establish lock.");
-            }
+            this.CreateOrIncrement(key).Wait();
             return TaskEx.FromResult<IDisposable>(new Releaser(this, key));
         }
 
@@ -83,10 +75,7 @@ namespace FoxTunes
 
         public async Task<IDisposable> LockAsync(T key)
         {
-            if(!await this.CreateOrIncrement(key).WaitAsync(TIMEOUT).ConfigureAwait(false))
-            {
-                throw new TimeoutException("Timed out waiting to establish lock.");
-            }
+            await this.CreateOrIncrement(key).WaitAsync().ConfigureAwait(false);
             return new Releaser(this, key);
         }
 

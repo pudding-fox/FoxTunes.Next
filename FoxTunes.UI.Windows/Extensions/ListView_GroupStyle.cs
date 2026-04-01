@@ -1,8 +1,13 @@
 ﻿using FoxTunes.Interfaces;
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
+using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -193,7 +198,6 @@ namespace FoxTunes
             public GroupStyleBehaviour(ListView listView)
             {
                 this.ListView = listView;
-                this.ScriptingContext = ScriptingRuntime.CreateContext();
                 BindingHelper.AddHandler(
                     this.ListView,
                     ItemsControl.ItemsSourceProperty,
@@ -203,8 +207,6 @@ namespace FoxTunes
             }
 
             public ListView ListView { get; private set; }
-
-            public IScriptingContext ScriptingContext { get; private set; }
 
             public string Script
             {
@@ -252,21 +254,63 @@ namespace FoxTunes
                 {
                     return;
                 }
-                this.CollectionView.GroupDescriptions.Add(
-                    new PlaylistGroupDescription(
-                        this.ListView,
-                        this.ScriptingContext,
-                        this.Script
-                    )
-                );
-                this.ListView.GroupStyle.Add(
-                    new GroupStyle()
+                var items = this.ListView.ItemsSource;
+                if (!(items is PlaylistItem[]))
+                {
+                    return;
+                }
+                var playlistItems = (PlaylistItem[])items;
+                var script = this.Script;
+                var values = new string[playlistItems.Length];
+                var groups = new Dictionary<PlaylistItem, string>();
+                this.Dispatch(() =>
+                {
+                    var scriptingContexts = new ThreadLocal<IScriptingContext>(ScriptingRuntime.CreateContext, true);
+                    Parallel.For(0, playlistItems.Length, index =>
                     {
-                        HeaderTemplate = this.HeaderTemplate,
-                        ContainerStyle = this.ContainerStyle,
-                        Panel = this.PanelTemplate
+                        var playlistItem = playlistItems[index];
+                        var scriptingContext = scriptingContexts.Value;
+                        var runner = new PlaylistItemScriptRunner(scriptingContext, playlistItem, script);
+                        runner.Prepare();
+                        var value = runner.Run();
+                        values[index] = Convert.ToString(value);
+                    });
+                    {
+                        var previousValue = default(string);
+                        var index = 0;
+                        for (var a = 0; a < values.Length; a++)
+                        {
+                            var value = values[a];
+                            if (!string.Equals(previousValue, value))
+                            {
+                                previousValue = value;
+                                index++;
+                            }
+                            groups.Add(playlistItems[a], string.Format("{0}\t{1}", index, value));
+                        }
                     }
-                );
+                    foreach (var scriptingContext in scriptingContexts.Values)
+                    {
+                        scriptingContext.Dispose();
+                    }
+                    scriptingContexts.Dispose();
+                    return Windows.Invoke(() =>
+                    {
+                        this.CollectionView.GroupDescriptions.Add(
+                            new PlaylistGroupDescription(
+                                groups
+                            )
+                        );
+                        this.ListView.GroupStyle.Add(
+                            new GroupStyle()
+                            {
+                                HeaderTemplate = this.HeaderTemplate,
+                                ContainerStyle = this.ContainerStyle,
+                                Panel = this.PanelTemplate
+                            }
+                        );
+                    });
+                });
             }
 
             public virtual void Disable()
@@ -304,53 +348,25 @@ namespace FoxTunes
                         this.OnItemsSourceChanged
                     );
                 }
-                if (this.ScriptingContext != null)
-                {
-                    this.ScriptingContext.Dispose();
-                    this.ScriptingContext = null;
-                }
                 base.Dispose(disposing);
             }
 
             private class PlaylistGroupDescription : GroupDescription
             {
-                public PlaylistGroupDescription(ListView listView, IScriptingContext scriptingContext, string script)
+                public PlaylistGroupDescription(IDictionary<PlaylistItem, string> groups)
                 {
-                    this.ListView = listView;
-                    this.ScriptingContext = scriptingContext;
-                    this.Script = script;
+                    this.Groups = groups;
                 }
 
-                public ListView ListView { get; private set; }
-
-                public IScriptingContext ScriptingContext { get; private set; }
-
-                public string Script { get; private set; }
-
-                public string PreviousValue { get; private set; }
-
-                public int CurrentIndex { get; private set; }
+                public IDictionary<PlaylistItem, string> Groups { get; private set; }
 
                 public override object GroupNameFromItem(object item, int level, CultureInfo culture)
                 {
-                    var playlistItem = item as PlaylistItem;
-                    if (playlistItem != null)
+                    if (item is PlaylistItem playlistItem)
                     {
-                        var runner = new PlaylistItemScriptRunner(this.ScriptingContext, playlistItem, this.Script);
-                        runner.Prepare();
-                        return this.Index(Convert.ToString(runner.Run()));
+                        return this.Groups[playlistItem];
                     }
                     return item;
-                }
-
-                protected virtual string Index(string value)
-                {
-                    if (!string.Equals(this.PreviousValue, value))
-                    {
-                        this.PreviousValue = value;
-                        this.CurrentIndex++;
-                    }
-                    return string.Format("{0}\t{1}", this.CurrentIndex, value);
                 }
             }
         }
