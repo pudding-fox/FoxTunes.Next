@@ -2,6 +2,7 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 
 namespace FoxTunes.ViewModel
 {
@@ -246,7 +247,7 @@ namespace FoxTunes.ViewModel
             {
                 return;
             }
-            var items = this.PlaylistBrowser.GetItems(playlist);
+            var items = this.GetItems(playlist);
             if (this.MaxItems > 0 && items.Length > this.MaxItems)
             {
                 Logger.Write(this, LogLevel.Warn, "Max items for playlist type {0} exceeded, results will be limited.", this.GetType().Name);
@@ -254,6 +255,11 @@ namespace FoxTunes.ViewModel
             }
             await Windows.Invoke(() => this.Items = items).ConfigureAwait(false);
             await this.RefreshStatus().ConfigureAwait(false);
+        }
+
+        protected virtual PlaylistItem[] GetItems(Playlist playlist)
+        {
+            return this.PlaylistBrowser.GetItems(playlist);
         }
 
         protected override void OnDisposing()

@@ -254,6 +254,7 @@ namespace FoxTunes
                 }
                 this.CollectionView.GroupDescriptions.Add(
                     new PlaylistGroupDescription(
+                        this.ListView,
                         this.ScriptingContext,
                         this.Script
                     )
@@ -313,11 +314,14 @@ namespace FoxTunes
 
             private class PlaylistGroupDescription : GroupDescription
             {
-                public PlaylistGroupDescription(IScriptingContext scriptingContext, string script)
+                public PlaylistGroupDescription(ListView listView, IScriptingContext scriptingContext, string script)
                 {
+                    this.ListView = listView;
                     this.ScriptingContext = scriptingContext;
                     this.Script = script;
                 }
+
+                public ListView ListView { get; private set; }
 
                 public IScriptingContext ScriptingContext { get; private set; }
 

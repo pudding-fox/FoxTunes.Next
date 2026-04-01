@@ -63,21 +63,9 @@ namespace FoxTunes
                     return;
                 }
                 listView.SelectedItems.Clear();
-                var collectionView = (CollectionView)CollectionViewSource.GetDefaultView(listView.ItemsSource);
-                if (collectionView != null)
+                foreach (var item in items)
                 {
-                    foreach (var item in items)
-                    {
-                        collectionView.MoveCurrentTo(item);
-                        listView.SelectedItems.Add(item);
-                    }
-                }
-                else
-                {
-                    foreach (var item in items)
-                    {
-                        listView.SelectedItems.Add(item);
-                    }
+                    listView.SelectedItems.Add(item);
                 }
             }
             finally

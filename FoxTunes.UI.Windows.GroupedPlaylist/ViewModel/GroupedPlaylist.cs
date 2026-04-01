@@ -44,6 +44,14 @@ namespace FoxTunes.ViewModel
             ).ConnectValue(value => this.GroupingScript = value);
         }
 
+        protected override PlaylistItem[] GetItems(Playlist playlist)
+        {
+            var source = base.GetItems(playlist);
+            var destination = new PlaylistItem[source.Length];
+            Array.Copy(source, destination, source.Length);
+            return destination;
+        }
+
         protected override Freezable CreateInstanceCore()
         {
             return new GroupedPlaylist();
