@@ -154,6 +154,38 @@ namespace FoxTunes
             behaviour.Refresh();
         }
 
+        public static readonly DependencyProperty PanelTemplateProperty = DependencyProperty.RegisterAttached(
+           "PanelTemplate",
+           typeof(ItemsPanelTemplate),
+           typeof(ListViewExtensions),
+           new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, new PropertyChangedCallback(OnPanelTemplatePropertyChanged))
+       );
+
+        public static ItemsPanelTemplate GetPanelTemplate(ListView source)
+        {
+            return (ItemsPanelTemplate)source.GetValue(PanelTemplateProperty);
+        }
+
+        public static void SetPanelTemplate(ListView source, ItemsPanelTemplate value)
+        {
+            source.SetValue(PanelTemplateProperty, value);
+        }
+
+        private static void OnPanelTemplatePropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
+        {
+            var listView = sender as ListView;
+            if (listView == null)
+            {
+                return;
+            }
+            var behaviour = default(GroupStyleBehaviour);
+            if (!GroupStyleBehaviours.TryGetValue(listView, out behaviour))
+            {
+                return;
+            }
+            behaviour.Refresh();
+        }
+
         private class GroupStyleBehaviour : UIBehaviour
         {
             public static IScriptingRuntime ScriptingRuntime = ComponentRegistry.Instance.GetComponent<IScriptingRuntime>();
@@ -198,6 +230,14 @@ namespace FoxTunes
                 }
             }
 
+            public ItemsPanelTemplate PanelTemplate
+            {
+                get
+                {
+                    return GetPanelTemplate(this.ListView);
+                }
+            }
+
             public CollectionView CollectionView
             {
                 get
@@ -222,7 +262,8 @@ namespace FoxTunes
                     new GroupStyle()
                     {
                         HeaderTemplate = this.HeaderTemplate,
-                        ContainerStyle = this.ContainerStyle
+                        ContainerStyle = this.ContainerStyle,
+                        Panel = this.PanelTemplate
                     }
                 );
             }
@@ -238,6 +279,10 @@ namespace FoxTunes
 
             public void Refresh()
             {
+                if (this.HeaderTemplate == null || this.ContainerStyle == null || this.PanelTemplate == null)
+                {
+                    return;
+                }
                 this.Disable();
                 this.Enable();
             }

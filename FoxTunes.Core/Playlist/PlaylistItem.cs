@@ -143,6 +143,10 @@ namespace FoxTunes
                 //TODO: Synchronization.
                 result.MetaDatas = new List<MetaDataItem>(playlistItem.MetaDatas);
             }
+            else
+            {
+                result.MetaDatas = new List<MetaDataItem>();
+            }
             return result;
         }
     }

@@ -22,6 +22,7 @@ namespace FoxTunes
 
 #else
             VirtualizingPanel.SetIsVirtualizing(this.ListView, true);
+            VirtualizingPanel.SetVirtualizationMode(this.ListView, VirtualizationMode.Recycling);
             VirtualizingPanel.SetIsVirtualizingWhenGrouping(this.ListView, true);
 #endif
         }
