@@ -128,6 +128,15 @@ namespace FoxTunes
             }
         }
 
+        private double RestoreHorizontalOffset = -1d;
+
+        protected virtual void OnRequestBringIntoView(object sender, RequestBringIntoViewEventArgs e)
+        {
+            var mainScrollViewer = this.ListView.FindChild<ScrollViewer>();
+            this.RestoreHorizontalOffset = mainScrollViewer.HorizontalOffset;
+            e.Handled = true;
+        }
+
         protected virtual void OnValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             var mainScrollViewer = this.ListView.FindChild<ScrollViewer>();
@@ -136,7 +145,15 @@ namespace FoxTunes
             {
                 return;
             }
-            headerScrollViewer.ScrollToHorizontalOffset(mainScrollViewer.HorizontalOffset);
+            if (this.RestoreHorizontalOffset >= 0)
+            {
+                mainScrollViewer.ScrollToHorizontalOffset(this.RestoreHorizontalOffset);
+                this.RestoreHorizontalOffset = -1d;
+            }
+            else
+            {
+                headerScrollViewer.ScrollToHorizontalOffset(mainScrollViewer.HorizontalOffset);
+            }
         }
 
         protected virtual void OnPropertyChanged(string propertyName)

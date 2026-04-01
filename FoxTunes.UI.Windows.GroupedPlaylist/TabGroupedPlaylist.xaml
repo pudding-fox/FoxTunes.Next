@@ -41,6 +41,7 @@
                   Windows:ListViewExtensions.AutoSizeColumns="True"
                   ScrollViewer.CanContentScroll="True"
                   GridViewColumnHeader.Click="OnHeaderClick"
+                  RequestBringIntoView="OnRequestBringIntoView"
                   Background="{DynamicResource ControlBackgroundBrush}">
             <ListView.Resources>
                 <Windows:Menu x:Key="ColumnHeaderMenu" Category="{Binding Source={x:Static Core:InvocationComponent.CATEGORY_PLAYLIST_HEADER}}"></Windows:Menu>
