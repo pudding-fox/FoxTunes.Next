@@ -742,7 +742,7 @@
                 <Setter Property="Foreground" Value="{DynamicResource DisabledForegroundBrush}" />
             </Trigger>
             <Trigger Property="IsGrouping" Value="true">
-                <Setter Property="ScrollViewer.CanContentScroll" Value="True" />
+                <Setter Property="ScrollViewer.CanContentScroll" Value="False" />
             </Trigger>
         </ControlTemplate.Triggers>
     </ControlTemplate>
