@@ -74,7 +74,7 @@ namespace FoxTunes
             this.ClearCache();
         }
 
-        public ImageSource CreateImageSource(LibraryHierarchyNode libraryHierarchyNode, Func<MetaDataItem[]> metaDataItems, int width, int height, LibraryBrowserImageMode mode, bool cache)
+        public Task<ImageSource> CreateImageSource(LibraryHierarchyNode libraryHierarchyNode, Func<Task<MetaDataItem[]>> metaDataItems, int width, int height, LibraryBrowserImageMode mode, bool cache)
         {
             //We only support caching for compound images.
             if (mode != LibraryBrowserImageMode.Compound)
@@ -88,7 +88,12 @@ namespace FoxTunes
                     var fileName = default(string);
                     if (this.ReadFromCache(libraryHierarchyNode, width, height, out fileName))
                     {
-                        return this.ImageLoader.Load(fileName, 0, 0, false, true);
+                        var imageSource = this.ImageLoader.Load(fileName, 0, 0, false, true);
+#if NET40
+                        return TaskEx.FromResult(imageSource);
+#else
+                        return Task.FromResult(imageSource);
+#endif
                     }
                 }
                 return this.CreateImageSourceCore(libraryHierarchyNode, metaDataItems, width, height, mode, cache);
@@ -100,9 +105,10 @@ namespace FoxTunes
             }
         }
 
-        private ImageSource CreateImageSourceCore(LibraryHierarchyNode libraryHierarchyNode, Func<MetaDataItem[]> metaDataItems, int width, int height, LibraryBrowserImageMode mode, bool cache)
+        private async Task<ImageSource> CreateImageSourceCore(LibraryHierarchyNode libraryHierarchyNode, Func<Task<MetaDataItem[]>> metaDataItems, int width, int height, LibraryBrowserImageMode mode, bool cache)
         {
-            var fileNames = metaDataItems().Where(
+            var metaData = await metaDataItems().ConfigureAwait(false);
+            var fileNames = metaData.Where(
                 metaDataItem => string.Equals(metaDataItem.Name, CommonImageTypes.FrontCover, StringComparison.OrdinalIgnoreCase) && metaDataItem.Type == MetaDataItemType.Image && File.Exists(metaDataItem.Value)
             ).Select(
                 metaDataItem => metaDataItem.Value

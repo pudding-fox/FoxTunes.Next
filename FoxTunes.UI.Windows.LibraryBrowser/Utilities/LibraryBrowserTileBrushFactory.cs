@@ -94,40 +94,41 @@ namespace FoxTunes
                 return AsyncResult<ImageBrush>.FromValue(placeholder);
             }
             var cache = string.IsNullOrEmpty(this.LibraryHierarchyBrowser.Filter);
-            var factory = new Func<ImageBrush>(() =>
+            var factory = new Func<Task<ImageBrush>>(() =>
             {
-                //TODO: Bad .Result
-                var metaDataItems = new Func<MetaDataItem[]>(
-                    () => LibraryHierarchyNodeConverter.Instance.Convert(libraryHierarchyNode).Result.MetaDatas.ToArray()
-                );
+                var metaDataItems = new Func<Task<MetaDataItem[]>>(async () =>
+                {
+                    var fileData = await LibraryHierarchyNodeConverter.Instance.Convert(libraryHierarchyNode);
+                    return fileData.MetaDatas.ToArray();
+                });
                 return this.Create(libraryHierarchyNode, metaDataItems, libraryBrowserTile.Width, libraryBrowserTile.Height, libraryBrowserTile.Mode, cache);
             });
             if (cache)
             {
-                var value = new Func<Task<ImageBrush>>(() => this.Factory.StartNew(
+                var value = new Func<Task<ImageBrush>>(
                     () => this.Store.GetOrAdd(new Tuple<LibraryHierarchyNode, LibraryBrowserImageMode>(libraryHierarchyNode, libraryBrowserTile.Mode), libraryBrowserTile.Width, libraryBrowserTile.Height, false, factory)
-                ));
-                var brush = default(ImageBrush);
+                );
+                var brush = default(Task<ImageBrush>);
                 if (this.Store.TryGetValue(new Tuple<LibraryHierarchyNode, LibraryBrowserImageMode>(libraryHierarchyNode, libraryBrowserTile.Mode), libraryBrowserTile.Width, libraryBrowserTile.Height, false, out brush))
                 {
                     return new MonitoringAsyncResult<ImageBrush>(libraryHierarchyNode, brush, value);
                 }
                 return new MonitoringAsyncResult<ImageBrush>(libraryHierarchyNode, placeholder, value);
             }
-            return new MonitoringAsyncResult<ImageBrush>(libraryHierarchyNode, placeholder, () => this.Factory.StartNew(factory));
+            return new MonitoringAsyncResult<ImageBrush>(libraryHierarchyNode, placeholder, factory);
         }
 
-        protected virtual ImageBrush Create(LibraryHierarchyNode libraryHierarchyNode, Func<MetaDataItem[]> metaDataItems, int width, int height, LibraryBrowserImageMode mode, bool cache)
+        protected virtual async Task<ImageBrush> Create(LibraryHierarchyNode libraryHierarchyNode, Func<Task<MetaDataItem[]>> metaDataItems, int width, int height, LibraryBrowserImageMode mode, bool cache)
         {
             Logger.Write(this, LogLevel.Debug, "Creating brush: {0}x{1}", width, height);
-            var source = this.LibraryBrowserTileProvider.CreateImageSource(
+            var source = await this.LibraryBrowserTileProvider.CreateImageSource(
                 libraryHierarchyNode,
                 metaDataItems,
                 width,
                 height,
                 mode,
                 cache
-            );
+            ).ConfigureAwait(false);
             if (source == null)
             {
                 return this.PlaceholderBrushFactory.Create(width, height);

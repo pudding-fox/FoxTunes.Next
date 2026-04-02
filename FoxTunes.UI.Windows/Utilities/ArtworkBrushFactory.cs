@@ -88,22 +88,28 @@ namespace FoxTunes
             {
                 return AsyncResult<ImageBrush>.FromValue(placeholder);
             }
-            var brush = default(ImageBrush);
+            var brush = default(Task<ImageBrush>);
             if (this.Store.TryGetValue(fileName, width, height, preserveAspectRatio, out brush))
             {
                 if (brush != null)
                 {
-                    return AsyncResult<ImageBrush>.FromValue(brush);
+                    return new AsyncResult<ImageBrush>(brush);
                 }
                 else
                 {
                     return AsyncResult<ImageBrush>.FromValue(placeholder);
                 }
             }
-            return new AsyncResult<ImageBrush>(placeholder, this.Factory.StartNew(() =>
-            {
-                return this.Store.GetOrAdd(fileName, width, height, preserveAspectRatio, () => this.Create(fileName, width, height, preserveAspectRatio, true));
-            }));
+            return new AsyncResult<ImageBrush>(
+                placeholder, 
+                this.Store.GetOrAdd(fileName, width, height, preserveAspectRatio, () =>
+#if NET40
+                    TaskEx.FromResult(this.Create(fileName, width, height, preserveAspectRatio, true))
+#else
+                    Task.FromResult(this.Create(fileName, width, height, preserveAspectRatio, true))
+#endif
+                )
+            );
         }
 
         protected virtual ImageBrush Create(string fileName, int width, int height, bool preserveAspectRatio, bool cache)

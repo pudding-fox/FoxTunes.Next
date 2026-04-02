@@ -30,6 +30,16 @@ namespace FoxTunes.ViewModel
             this.Dispatch(this.Run);
         }
 
+        public MonitoringAsyncResult(IObservable source, Task<T> value, Func<Task<T>> factory) : this()
+        {
+            this.Source = source;
+            PropertyChangedEventManager.AddListener(source, this, string.Empty);
+            //TODO: Bad .Result
+            this.Value = value.Result;
+            this.Factory = factory;
+            this.Dispatch(this.Run);
+        }
+
         public IObservable Source { get; private set; }
 
         public Func<Task<T>> Factory { get; private set; }
