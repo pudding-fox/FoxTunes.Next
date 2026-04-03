@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Data;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
@@ -36,12 +37,14 @@ namespace FoxTunes
         {
             switch (signal.Name)
             {
+                case CommonSignals.HierarchiesUpdated:
+                    this.OnHierarchiesUpdated();
+                    break;
                 case CommonSignals.MetaDataUpdated:
                     this.OnMetaDataUpdated(signal.State as MetaDataUpdatedSignalState);
                     break;
                 case CommonSignals.ImagesUpdated:
-                    Logger.Write(this, LogLevel.Debug, "Images were updated, resetting cache.");
-                    this.ClearCache();
+                    this.OnImagesUpdated();
                     break;
             }
 #if NET40
@@ -49,6 +52,12 @@ namespace FoxTunes
 #else
             return Task.CompletedTask;
 #endif
+        }
+
+        protected virtual void OnHierarchiesUpdated()
+        {
+            Logger.Write(this, LogLevel.Debug, "Hierarchies were updated, resetting cache.");
+            this.ClearCache();
         }
 
         protected virtual void OnMetaDataUpdated(MetaDataUpdatedSignalState state)
@@ -71,6 +80,12 @@ namespace FoxTunes
                 return;
             }
             Logger.Write(this, LogLevel.Debug, "Meta data was updated, resetting cache.");
+            this.ClearCache();
+        }
+
+        protected virtual void OnImagesUpdated()
+        {
+            Logger.Write(this, LogLevel.Debug, "Images were updated, resetting cache.");
             this.ClearCache();
         }
 

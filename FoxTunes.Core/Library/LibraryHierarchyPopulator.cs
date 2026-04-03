@@ -1,6 +1,7 @@
 ﻿using FoxDb;
 using FoxDb.Interfaces;
 using FoxTunes.Interfaces;
+using Microsoft.SqlServer.Server;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -53,18 +54,10 @@ namespace FoxTunes
             base.InitializeComponent(core);
         }
 
-        public async Task Populate(LibraryItemStatus? status, CancellationToken cancellationToken)
+        public async Task<IEnumerable<LibraryHierarchyNode>> Populate(IEnumerable<LibraryItem> libraryItems, CancellationToken cancellationToken)
         {
             var libraryHierarchies = this.GetHierarchies(this.Transaction);
-
-            if (libraryHierarchies.Length == 0)
-            {
-                Logger.Write(this, LogLevel.Warn, "No library hierarchies are defined (or enabled).");
-                return;
-            }
-
             var libraryHierarchyLevels = this.GetLevels(libraryHierarchies);
-            var libraryItems = this.GetItems(status, this.Transaction);
 
             if (this.ReportProgress)
             {
@@ -86,11 +79,13 @@ namespace FoxTunes
                 this.Timer.Start();
             }
 
+            var libraryHierarchyNodes = new Dictionary<int, LibraryHierarchyNode>();
+
             await AsyncParallel.ForEach(libraryItems, async libraryItem =>
             {
                 foreach (var libraryHierarchy in libraryHierarchies)
                 {
-                    await this.Populate(libraryItem, libraryHierarchy, libraryHierarchyLevels[libraryHierarchy]).ConfigureAwait(false);
+                    await this.Populate(libraryHierarchyNodes, libraryItem, libraryHierarchy, libraryHierarchyLevels[libraryHierarchy]).ConfigureAwait(false);
                 }
 
                 if (this.ReportProgress)
@@ -99,9 +94,11 @@ namespace FoxTunes
                     Interlocked.Increment(ref this.position);
                 }
             }, cancellationToken, this.ParallelOptions).ConfigureAwait(false);
+
+            return libraryHierarchyNodes.Values;
         }
 
-        private async Task Populate(LibraryItem libraryItem, LibraryHierarchy libraryHierarchy, LibraryHierarchyLevel[] libraryHierarchyLevels)
+        private async Task Populate(IDictionary<int, LibraryHierarchyNode> libraryHierarchyNodes, LibraryItem libraryItem, LibraryHierarchy libraryHierarchy, LibraryHierarchyLevel[] libraryHierarchyLevels)
         {
             var parentId = default(int?);
             switch (libraryHierarchy.Type)
@@ -109,20 +106,20 @@ namespace FoxTunes
                 case LibraryHierarchyType.Script:
                     for (int a = 0, b = libraryHierarchyLevels.Length - 1; a <= b; a++)
                     {
-                        parentId = await this.Populate(libraryItem, libraryHierarchy, libraryHierarchyLevels[a], parentId, a == b);
+                        parentId = await this.Populate(libraryHierarchyNodes, libraryItem, libraryHierarchy, libraryHierarchyLevels[a], parentId, a == b);
                     }
                     break;
                 case LibraryHierarchyType.FileSystem:
                     var pathSegments = this.GetPathSegments(libraryItem.FileName);
                     for (int a = 0, b = pathSegments.Length - 1; a <= b; a++)
                     {
-                        parentId = await this.Populate(libraryItem, libraryHierarchy, pathSegments[a], parentId, a == b);
+                        parentId = await this.Populate(libraryHierarchyNodes, libraryItem, libraryHierarchy, pathSegments[a], parentId, a == b);
                     }
                     break;
             }
         }
 
-        private Task<int> Populate(LibraryItem libraryItem, LibraryHierarchy libraryHierarchy, LibraryHierarchyLevel libraryHierarchyLevel, int? parentId, bool isLeaf)
+        private Task<int> Populate(IDictionary<int, LibraryHierarchyNode> libraryHierarchyNodes, LibraryItem libraryItem, LibraryHierarchy libraryHierarchy, LibraryHierarchyLevel libraryHierarchyLevel, int? parentId, bool isLeaf)
         {
             var runner = new LibraryItemScriptRunner(
                 this.GetOrAddContext(),
@@ -131,10 +128,10 @@ namespace FoxTunes
             );
             runner.Prepare();
             var value = Convert.ToString(runner.Run());
-            return this.Populate(libraryItem, libraryHierarchy, value, parentId, isLeaf);
+            return this.Populate(libraryHierarchyNodes, libraryItem, libraryHierarchy, value, parentId, isLeaf);
         }
 
-        private async Task<int> Populate(LibraryItem libraryItem, LibraryHierarchy libraryHierarchy, string value, int? parentId, bool isLeaf)
+        private async Task<int> Populate(IDictionary<int, LibraryHierarchyNode> libraryHierarchyNodes, LibraryItem libraryItem, LibraryHierarchy libraryHierarchy, string value, int? parentId, bool isLeaf)
         {
 #if NET40
             this.Semaphore.Wait();
@@ -143,7 +140,20 @@ namespace FoxTunes
 #endif
             try
             {
-                return await this.Writer.Write(libraryHierarchy, libraryItem.Id, parentId, value, isLeaf).ConfigureAwait(false);
+                var id = await this.Writer.Write(libraryHierarchy, libraryItem.Id, parentId, value, isLeaf).ConfigureAwait(false);
+                var parent = default(LibraryHierarchyNode);
+                if (parentId.HasValue)
+                {
+                    parent = libraryHierarchyNodes[parentId.Value];
+                }
+                libraryHierarchyNodes.GetOrAdd(id, () => new LibraryHierarchyNode()
+                {
+                    Id = id,
+                    Parent = parent,
+                    Value = value,
+                    IsLeaf = isLeaf
+                });
+                return id;
             }
             finally
             {

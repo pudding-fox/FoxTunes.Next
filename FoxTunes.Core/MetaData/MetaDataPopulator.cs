@@ -67,7 +67,12 @@ namespace FoxTunes
             base.InitializeComponent(core);
         }
 
-        public async Task Populate<T>(IEnumerable<T> fileDatas, CancellationToken cancellationToken) where T : IFileData
+        public Task<IEnumerable<T>> Populate<T>(IEnumerable<T> fileDatas, CancellationToken cancellationToken) where T : IFileData
+        {
+            return this.Populate(fileDatas, 0, cancellationToken);
+        }
+
+        public async Task<IEnumerable<T>> Populate<T>(IEnumerable<T> fileDatas, int batchSize, CancellationToken cancellationToken) where T : IFileData
         {
             Logger.Write(this, LogLevel.Debug, "Begin populating meta data.");
 
@@ -92,6 +97,7 @@ namespace FoxTunes
             }
 
             var metaDataSource = this.MetaDataSourceFactory.Create();
+            var result = new List<T>();
 
             await AsyncParallel.ForEach(fileDatas, async fileData =>
             {
@@ -118,12 +124,18 @@ namespace FoxTunes
                             try
                             {
                                 await this.Writer.Write(fileData.Id, metaDataItem).ConfigureAwait(false);
+                                fileData.MetaDatas.Add(metaDataItem);
                             }
                             catch (Exception e)
                             {
                                 Logger.Write(this, LogLevel.Debug, "Failed to write meta data entry from file \"{0}\" with name \"{1}\": {2}", fileData.FileName, metaDataItem.Name, e.Message);
                                 this.AddWarning(fileData, e.Message);
                             }
+                        }
+                        result.Add(fileData);
+                        if (batchSize > 0 && result.Count >= batchSize)
+                        {
+                            cancellationToken.Yield();
                         }
                     }
                     finally
@@ -143,6 +155,7 @@ namespace FoxTunes
                     this.AddWarning(fileData, e.Message);
                 }
             }, cancellationToken, this.ParallelOptions).ConfigureAwait(false);
+            return result;
         }
 
         protected override void OnElapsed(object sender, ElapsedEventArgs e)

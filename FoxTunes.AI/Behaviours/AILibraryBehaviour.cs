@@ -1,6 +1,8 @@
 ﻿using FoxTunes.AI.Tasks;
 using FoxTunes.Interfaces;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace FoxTunes
@@ -56,13 +58,33 @@ namespace FoxTunes
             switch (signal.Name)
             {
                 case CommonSignals.LibraryUpdated:
-                    return this.Refresh();
+                    if (signal.State is LibraryUpdatedSignalState libraryUpdatedSignalState)
+                    {
+                        return this.Refresh(libraryUpdatedSignalState);
+                    }
+                    else
+                    {
+                        return this.Refresh();
+                    }
             }
 #if NET40
             return TaskEx.FromResult(false);
 #else
             return Task.CompletedTask;
 #endif
+        }
+
+        public Task Refresh(LibraryUpdatedSignalState state)
+        {
+            if (state != null && state.LibraryItems != null && state.LibraryItems.Any())
+            {
+#if NET40
+                return TaskEx.FromResult(false);
+#else
+                return Task.CompletedTask;
+#endif
+            }
+            return this.Refresh();
         }
 
         public async Task Refresh()

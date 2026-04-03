@@ -47,13 +47,26 @@ namespace FoxTunes
             base.InitializeComponent(core);
         }
 
-        public async Task Build(LibraryItemStatus? status)
+        public async Task Build()
         {
-            if (this.LibraryManager.State.HasFlag(LibraryManagerState.Updating))
+            using (var database = this.DatabaseFactory.Create())
             {
-                return;
+                using (var transaction = database.BeginTransaction(database.PreferredIsolationLevel))
+                {
+                    var set = database.Set<LibraryItem>(transaction);
+                    using (var task = new BuildLibraryHierarchiesTask(set))
+                    {
+                        task.InitializeComponent(this.Core);
+                        await this.BackgroundTaskEmitter.Send(task).ConfigureAwait(false);
+                        await task.Run().ConfigureAwait(false);
+                    }
+                }
             }
-            using (var task = new BuildLibraryHierarchiesTask(status))
+        }
+
+        public async Task Build(IEnumerable<LibraryItem> libraryItems)
+        {
+            using (var task = new BuildLibraryHierarchiesTask(libraryItems))
             {
                 task.InitializeComponent(this.Core);
                 await this.BackgroundTaskEmitter.Send(task).ConfigureAwait(false);
@@ -61,92 +74,14 @@ namespace FoxTunes
             }
         }
 
-        public async Task Clear(LibraryItemStatus? status, bool signal)
+        public async Task Clear()
         {
-            if (this.LibraryManager.State.HasFlag(LibraryManagerState.Updating))
-            {
-                return;
-            }
-            using (var task = new ClearLibraryHierarchiesTask(status, signal))
+            using (var task = new ClearLibraryHierarchiesTask())
             {
                 task.InitializeComponent(this.Core);
                 await this.BackgroundTaskEmitter.Send(task).ConfigureAwait(false);
                 await task.Run().ConfigureAwait(false);
             }
-        }
-
-        public Task<bool> Refresh(IEnumerable<IFileData> fileDatas, IEnumerable<string> names)
-        {
-            if (!this.RefreshRequired(fileDatas))
-            {
-#if NET40
-                return TaskEx.FromResult(false);
-#else
-                return Task.FromResult(false);
-#endif
-            }
-            return this.Refresh(names);
-        }
-
-        protected virtual bool RefreshRequired(IEnumerable<IFileData> fileDatas)
-        {
-            foreach (var fileData in fileDatas)
-            {
-                if (fileData is LibraryItem)
-                {
-                    return true;
-                }
-                if (fileData is PlaylistItem playlistItem)
-                {
-                    if (playlistItem.LibraryItem_Id.HasValue)
-                    {
-                        return true;
-                    }
-                }
-            }
-            return false;
-        }
-
-        public async Task<bool> Refresh(IEnumerable<string> names)
-        {
-            if (!this.RefreshRequired(names))
-            {
-                return false;
-            }
-            await this.Clear(LibraryItemStatus.Import, false).ConfigureAwait(false);
-            await this.Build(LibraryItemStatus.Import).ConfigureAwait(false);
-            await this.LibraryManager.SetStatus(LibraryItemStatus.None).ConfigureAwait(false);
-            return true;
-        }
-
-        protected virtual bool RefreshRequired(IEnumerable<string> names)
-        {
-            if (names == null || !names.Any())
-            {
-                //We don't know what has changed so assume the worst.
-                return true;
-            }
-            foreach (var libraryHierarchy in this.LibraryHierarchyBrowser.GetHierarchies())
-            {
-                if (!libraryHierarchy.Enabled || libraryHierarchy.Type != LibraryHierarchyType.Script)
-                {
-                    //No need to refresh disabled hierarchies, not sure about non script types though. We should ask their plugin.
-                    continue;
-                }
-                foreach (var libraryHierarchyLevel in libraryHierarchy.Levels)
-                {
-                    if (string.IsNullOrEmpty(libraryHierarchyLevel.Script))
-                    {
-                        continue;
-                    }
-                    //Very naive check whether the script references the meta data that has changed.
-                    if (names.Any(name => libraryHierarchyLevel.Script.Contains(name, true)))
-                    {
-                        return true;
-                    }
-                }
-            }
-            return false;
         }
 
         public string Checksum

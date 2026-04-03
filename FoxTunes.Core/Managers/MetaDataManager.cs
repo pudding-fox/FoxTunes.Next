@@ -12,8 +12,6 @@ namespace FoxTunes
     {
         public ICore Core { get; private set; }
 
-        public IHierarchyManager HierarchyManager { get; private set; }
-
         public ILibraryHierarchyBrowser LibraryHierarchyBrowser { get; private set; }
 
         public IBackgroundTaskEmitter BackgroundTaskEmitter { get; private set; }
@@ -23,7 +21,6 @@ namespace FoxTunes
         public override void InitializeComponent(ICore core)
         {
             this.Core = core;
-            this.HierarchyManager = core.Managers.Hierarchy;
             this.LibraryHierarchyBrowser = core.Components.LibraryHierarchyBrowser;
             this.BackgroundTaskEmitter = core.Components.BackgroundTaskEmitter;
             this.ReportEmitter = core.Components.ReportEmitter;
@@ -51,10 +48,6 @@ namespace FoxTunes
                     await this.BackgroundTaskEmitter.Send(task).ConfigureAwait(false);
                     await task.Run().ConfigureAwait(false);
                 }
-            }
-            if (flags.HasFlag(MetaDataUpdateFlags.RefreshHierarchies))
-            {
-                await this.HierarchyManager.Refresh(fileDatas, Enumerable.Empty<string>()).ConfigureAwait(false);
             }
         }
 
@@ -87,10 +80,6 @@ namespace FoxTunes
                         this.OnReport(playlistItems, task.Errors);
                     }
                 }
-            }
-            if (flags.HasFlag(MetaDataUpdateFlags.RefreshHierarchies))
-            {
-                await this.HierarchyManager.Refresh(fileDatas, names).ConfigureAwait(false);
             }
         }
 

@@ -431,15 +431,17 @@ namespace FoxTunes
                 await this.WithSubTask(this.Factory, async () => libraryItems = await this.Factory.Create(paths).ConfigureAwait(false)).ConfigureAwait(false);
                 using (var task = new SingletonReentrantTask(this, ComponentSlots.Database, SingletonReentrantTask.PRIORITY_HIGH, async cancellationToken =>
                 {
-                    await this.RemoveLibraryItems().ConfigureAwait(false);
                     await this.AddLibraryItems(libraryItems).ConfigureAwait(false);
-                }))
+                    if (cancellationToken.IsCancellationRequested)
+                    {
+                        this.Name = "Waiting..";
+                        this.Description = string.Empty;
+                    }
+                },
+                () => this.SignalEmitter.Send(new Signal(this, CommonSignals.LibraryUpdated, new LibraryUpdatedSignalState(libraryItems, DataSignalType.Updated)))))
                 {
                     await task.Run().ConfigureAwait(false);
                 }
-                await this.BuildHierarchies(LibraryItemStatus.Import).ConfigureAwait(false);
-                await RemoveCancelledLibraryItems(this.Database).ConfigureAwait(false);
-                await SetLibraryItemsStatus(this.Database, LibraryItemStatus.None).ConfigureAwait(false);
             }
 
             private async Task RemoveLibraryItems()
@@ -499,7 +501,6 @@ namespace FoxTunes
             {
                 await base.OnCompleted().ConfigureAwait(false);
                 await this.SignalEmitter.Send(new Signal(this, CommonSignals.LibraryUpdated)).ConfigureAwait(false);
-                await this.SignalEmitter.Send(new Signal(this, CommonSignals.HierarchiesUpdated)).ConfigureAwait(false);
             }
         }
     }

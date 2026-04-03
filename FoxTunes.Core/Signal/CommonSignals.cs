@@ -29,6 +29,66 @@ namespace FoxTunes
         public const string PluginInvocation = "PluginInvocation";
     }
 
+    public class HierarchiesUpdatedSignalState : SignalState
+    {
+        public HierarchiesUpdatedSignalState()
+        {
+            this.LibraryHierarchyNodes = new LibraryHierarchyNode[] { };
+        }
+
+        public HierarchiesUpdatedSignalState(LibraryHierarchyNode libraryHierarchyNode, DataSignalType type) : this()
+        {
+            if (libraryHierarchyNode != null)
+            {
+                this.LibraryHierarchyNodes = new[] { libraryHierarchyNode };
+            }
+            this.Type = type;
+        }
+
+        public HierarchiesUpdatedSignalState(IEnumerable<LibraryHierarchyNode> libraryHierarchyNodes, DataSignalType type) : this()
+        {
+            if (libraryHierarchyNodes != null)
+            {
+                this.LibraryHierarchyNodes = libraryHierarchyNodes.ToArray();
+            }
+            this.Type = type;
+        }
+
+        public LibraryHierarchyNode[] LibraryHierarchyNodes { get; private set; }
+
+        public DataSignalType Type { get; private set; }
+    }
+
+    public class LibraryUpdatedSignalState : SignalState
+    {
+        public LibraryUpdatedSignalState()
+        {
+            this.LibraryItems = new LibraryItem[] { };
+        }
+
+        public LibraryUpdatedSignalState(LibraryItem libraryItem, DataSignalType type) : this()
+        {
+            if (libraryItem != null)
+            {
+                this.LibraryItems = new[] { libraryItem };
+            }
+            this.Type = type;
+        }
+
+        public LibraryUpdatedSignalState(IEnumerable<LibraryItem> libraryItems, DataSignalType type) : this()
+        {
+            if (libraryItems != null)
+            {
+                this.LibraryItems = libraryItems.ToArray();
+            }
+            this.Type = type;
+        }
+
+        public LibraryItem[] LibraryItems { get; private set; }
+
+        public DataSignalType Type { get; private set; }
+    }
+
     public class PlaylistUpdatedSignalState : SignalState
     {
         public PlaylistUpdatedSignalState()

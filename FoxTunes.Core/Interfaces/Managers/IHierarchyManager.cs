@@ -8,13 +8,11 @@ namespace FoxTunes.Interfaces
     {
         HierarchyManagerState State { get; }
 
-        Task Build(LibraryItemStatus? status);
+        Task Build();
 
-        Task Clear(LibraryItemStatus? status, bool signal);
+        Task Build(IEnumerable<LibraryItem> libraryItems);
 
-        Task<bool> Refresh(IEnumerable<string> names);
-
-        Task<bool> Refresh(IEnumerable<IFileData> fileDatas, IEnumerable<string> names);
+        Task Clear();
     }
 
     [Flags]

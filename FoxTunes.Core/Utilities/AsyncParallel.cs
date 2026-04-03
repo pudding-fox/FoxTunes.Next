@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace FoxTunes
@@ -12,71 +14,60 @@ namespace FoxTunes
             return ForEach<int>(Enumerable.Range(start, count), factory, cancellationToken, options);
         }
 
-        public static async Task ForEach<T>(IEnumerable<T> sequence, Func<T, Task> factory, CancellationToken cancellationToken, ParallelOptions options)
+        public static async Task ForEach<T>(IEnumerable<T> source, Func<T, Task> body, CancellationToken cancellationToken, ParallelOptions options)
         {
-            var exceptions = new List<Exception>();
-            var tasks = new List<Task>(options.MaxDegreeOfParallelism);
+            var exceptions = new ConcurrentBag<Exception>();
+            var tasks = new ConcurrentBag<Task>();
+            if (cancellationToken.IsYieldRequested)
+            {
+                return;
+            }
             if (cancellationToken.IsCancellationRequested)
             {
                 return;
             }
-            foreach (var element in sequence)
+            using (var semaphore = new SemaphoreSlim(options.MaxDegreeOfParallelism))
             {
-                if (cancellationToken.IsCancellationRequested)
+                foreach (var item in source)
                 {
-                    break;
-                }
-#if NET40
-                tasks.Add(TaskEx.Run(async () =>
-                {
-                    try
+                    if (cancellationToken.IsYieldRequested)
                     {
-                        await factory(element).ConfigureAwait(false);
+                        break;
                     }
-                    catch (Exception e)
+                    if (cancellationToken.IsCancellationRequested)
                     {
-                        exceptions.Add(e);
+                        break;
                     }
-                }));
-#else
-                tasks.Add(Task.Run(async () =>
-                {
-                    try
+                    await semaphore.WaitAsync().ConfigureAwait(false);
+                    var task = Task.Run(async () =>
                     {
-                        await factory(element).ConfigureAwait(false);
-                    }
-                    catch (Exception e)
+                        try
+                        {
+                            await body(item).ConfigureAwait(false);
+                        }
+                        catch (Exception e)
+                        {
+                            exceptions.Add(e);
+                        }
+                        finally
+                        {
+                            semaphore.Release();
+                        }
+                    });
+                    tasks.Add(task);
+                }
+                await Task.WhenAll(tasks).ConfigureAwait(false);
+                if (!exceptions.IsEmpty)
+                {
+                    if (exceptions.Count == 1)
                     {
-                        exceptions.Add(e);
+                        throw exceptions.First();
                     }
-                }));
-#endif
-                if (exceptions.Count > 0)
-                {
-                    break;
+                    else
+                    {
+                        throw new AggregateException(exceptions);
+                    }
                 }
-                if (tasks.Count == tasks.Capacity)
-                {
-#if NET40
-                    await TaskEx.WhenAny(tasks).ConfigureAwait(false);
-#else
-                    await Task.WhenAny(tasks).ConfigureAwait(false);
-#endif
-                    tasks.RemoveAll(task => task.IsCompleted);
-                }
-            }
-#if NET40
-            await TaskEx.WhenAll(tasks).ConfigureAwait(false);
-#else
-            await Task.WhenAll(tasks).ConfigureAwait(false);
-#endif
-            if (exceptions.Any())
-            {
-                if (exceptions.Count == 1)
-                {
-                    throw exceptions.First();
-                }
-                throw new AggregateException(exceptions);
             }
         }
     }

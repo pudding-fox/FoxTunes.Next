@@ -159,8 +159,8 @@ namespace FoxTunes
 
         protected virtual async Task Rebuild()
         {
-            await this.HierarchyManager.Clear(null, true).ConfigureAwait(false);
-            await this.HierarchyManager.Build(null).ConfigureAwait(false);
+            await this.HierarchyManager.Clear().ConfigureAwait(false);
+            await this.HierarchyManager.Build().ConfigureAwait(false);
         }
 
         protected virtual Task Rescan()
