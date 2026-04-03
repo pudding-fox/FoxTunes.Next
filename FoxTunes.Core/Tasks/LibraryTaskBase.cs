@@ -124,12 +124,13 @@ namespace FoxTunes
             }
             using (var task = new SingletonReentrantTask(this, ComponentSlots.Database, SingletonReentrantTask.PRIORITY_LOW, async cancellationToken =>
             {
-                await this.AddOrUpdateMetaData(cancellationToken).ConfigureAwait(false);
+                var libraryItems = await this.AddOrUpdateMetaData(cancellationToken).ConfigureAwait(false);
                 if (cancellationToken.IsCancellationRequested)
                 {
                     this.Name = "Waiting..";
                     this.Description = string.Empty;
                 }
+                await this.SignalEmitter.Send(new Signal(this, CommonSignals.LibraryUpdated, new LibraryUpdatedSignalState(libraryItems, DataSignalType.Updated))).ConfigureAwait(false);
             }))
             {
                 await task.Run().ConfigureAwait(false);
@@ -160,15 +161,16 @@ namespace FoxTunes
             }
         }
 
-        protected virtual async Task AddOrUpdateMetaData(CancellationToken cancellationToken)
+        protected virtual async Task<IEnumerable<LibraryItem>> AddOrUpdateMetaData(CancellationToken cancellationToken)
         {
+            var libraryItems = default(IEnumerable<LibraryItem>);
             using (var transaction = this.Database.BeginTransaction(this.Database.PreferredIsolationLevel))
             {
                 using (var metaDataPopulator = new LibraryMetaDataPopulator(this.Database, this.Visible, transaction))
                 {
                     metaDataPopulator.InitializeComponent(this.Core);
                     await this.WithSubTask(metaDataPopulator,
-                        () => metaDataPopulator.Populate(LibraryItemStatus.Import, cancellationToken)
+                        async () => libraryItems = await metaDataPopulator.Populate(LibraryItemStatus.Import, cancellationToken).ConfigureAwait(false)
                     ).ConfigureAwait(false);
                     foreach (var pair in metaDataPopulator.Warnings)
                     {
@@ -180,6 +182,7 @@ namespace FoxTunes
                 }
                 transaction.Commit();
             }
+            return libraryItems;
         }
 
         protected virtual async Task BuildHierarchies(LibraryItemStatus? status)

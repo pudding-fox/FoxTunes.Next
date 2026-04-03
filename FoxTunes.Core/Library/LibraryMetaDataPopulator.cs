@@ -1,6 +1,7 @@
 ﻿using FoxDb;
 using FoxDb.Interfaces;
 using FoxTunes.Interfaces;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -24,12 +25,13 @@ namespace FoxTunes
             );
         }
 
-        public async Task Populate(LibraryItemStatus libraryItemStatus, CancellationToken cancellationToken)
+        public async Task<IEnumerable<LibraryItem>> Populate(LibraryItemStatus libraryItemStatus, CancellationToken cancellationToken)
         {
+            const int BATCH_SIZE = 128;
             var query = this.Database
                 .AsQueryable<LibraryItem>(this.Database.Source(new DatabaseQueryComposer<LibraryItem>(this.Database), this.Transaction))
                 .Where(libraryItem => libraryItem.Status == libraryItemStatus && !libraryItem.MetaDatas.Any());
-            await this.Populate(query, cancellationToken).ConfigureAwait(false);
+            var libraryItems = await this.Populate(query, BATCH_SIZE, cancellationToken).ConfigureAwait(false);
             var populator = new LibraryVariousArtistsPopulator(this.Database);
             if (this.DetectCompilations.Value)
             {
@@ -39,6 +41,7 @@ namespace FoxTunes
             {
                 await populator.Clear(libraryItemStatus, this.Transaction).ConfigureAwait(false);
             }
+            return libraryItems;
         }
     }
 }

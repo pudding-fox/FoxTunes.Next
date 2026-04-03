@@ -90,6 +90,11 @@ namespace FoxTunes
                     }
                     this.Instance.CancellationToken.Reset();
                     await this.Factory(this.Instance.CancellationToken).ConfigureAwait(false);
+                    if (this.Instance.CancellationToken.IsYieldRequested)
+                    {
+                        Logger.Write(this, LogLevel.Trace, "Yielding to other tasks.");
+                        success = false;
+                    }
                     if (this.Instance.CancellationToken.IsCancellationRequested)
                     {
                         Logger.Write(this, LogLevel.Trace, "Task was cancelled.");

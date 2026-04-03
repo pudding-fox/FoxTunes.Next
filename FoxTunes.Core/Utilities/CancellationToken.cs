@@ -6,6 +6,13 @@ namespace FoxTunes
 {
     public class CancellationToken : ICancellable
     {
+        public bool IsYieldRequested { get; private set; }
+
+        public void Yield()
+        {
+            this.IsYieldRequested = true;
+        }
+
         public bool IsCancellationRequested { get; private set; }
 
         protected virtual void OnCancellationRequested()
@@ -27,6 +34,7 @@ namespace FoxTunes
 
         public void Reset()
         {
+            this.IsYieldRequested = false;
             this.IsCancellationRequested = false;
         }
 
