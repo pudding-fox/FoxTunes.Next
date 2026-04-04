@@ -1,16 +1,19 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace FoxTunes
 {
     public class BuildLibraryHierarchiesTask : LibraryTaskBase
     {
-        public BuildLibraryHierarchiesTask(LibraryItemStatus? status)
-            : base()
+        public const string ID = "8C8CCEFC-A83E-438A-A365-9383DA23E08E";
+
+        public BuildLibraryHierarchiesTask(IEnumerable<LibraryItem> libraryItems)
+            : base(ID)
         {
-            this.Status = status;
+            this.LibraryItems = libraryItems;
         }
 
-        public LibraryItemStatus? Status { get; private set; }
+        public IEnumerable<LibraryItem> LibraryItems { get; private set; }
 
         public override bool Visible
         {
@@ -37,7 +40,7 @@ namespace FoxTunes
 
         protected override async Task OnRun()
         {
-            await this.BuildHierarchies(this.Status).ConfigureAwait(false);
+            await this.BuildHierarchies(this.LibraryItems).ConfigureAwait(false);
         }
 
         protected override async Task OnCompleted()

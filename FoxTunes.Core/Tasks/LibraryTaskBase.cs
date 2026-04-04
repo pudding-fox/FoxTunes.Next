@@ -12,8 +12,12 @@ namespace FoxTunes
     {
         public const string ID = "B6AF297E-F334-481D-8D60-BD5BE5935BD9";
 
-        protected LibraryTaskBase()
-            : base(ID)
+        protected LibraryTaskBase() : this(ID)
+        {
+        }
+
+        protected LibraryTaskBase(string id)
+            : base(id)
         {
             this.Warnings = new Dictionary<LibraryItem, IList<string>>();
         }
@@ -122,28 +126,20 @@ namespace FoxTunes
                 //Cancelling again will still work.
                 this.IsCancellationRequested = false;
             }
+            var libraryItems = default(IEnumerable<LibraryItem>);
             using (var task = new SingletonReentrantTask(this, ComponentSlots.Database, SingletonReentrantTask.PRIORITY_LOW, async cancellationToken =>
             {
-                var libraryItems = await this.AddOrUpdateMetaData(cancellationToken).ConfigureAwait(false);
+                libraryItems = await this.AddOrUpdateMetaData(cancellationToken).ConfigureAwait(false);
                 if (cancellationToken.IsCancellationRequested)
                 {
                     this.Name = "Waiting..";
                     this.Description = string.Empty;
                 }
-                await this.SignalEmitter.Send(new Signal(this, CommonSignals.LibraryUpdated, new LibraryUpdatedSignalState(libraryItems, DataSignalType.Updated))).ConfigureAwait(false);
-            }))
+            },
+            () => this.SignalEmitter.Send(new Signal(this, CommonSignals.LibraryUpdated, new LibraryUpdatedSignalState(libraryItems, DataSignalType.Updated)))))
             {
                 await task.Run().ConfigureAwait(false);
             }
-            if (this.IsCancellationRequested)
-            {
-                //Reset cancellation as the next phases should finish quickly.
-                //Cancelling again will still work.
-                this.IsCancellationRequested = false;
-            }
-            await this.BuildHierarchies(LibraryItemStatus.Import).ConfigureAwait(false);
-            await RemoveCancelledLibraryItems(this.Database).ConfigureAwait(false);
-            await SetLibraryItemsStatus(this.Database, LibraryItemStatus.None).ConfigureAwait(false);
         }
 
         protected virtual async Task AddLibraryItems(IEnumerable<string> paths, CancellationToken cancellationToken)
@@ -176,22 +172,26 @@ namespace FoxTunes
                     {
                         if (pair.Key is LibraryItem libraryItem)
                         {
-                            this.Warnings.GetOrAdd(libraryItem, _libraryItem => new List<string>()).AddRange(pair.Value);
+                            this.Warnings.GetOrAdd(libraryItem, key => new List<string>()).AddRange(pair.Value);
                         }
                     }
+                }
+                foreach (var libraryItem in libraryItems)
+                {
+                    await SetLibraryItemsStatus(this.Database, libraryItem.Id, LibraryItemStatus.None).ConfigureAwait(false);
                 }
                 transaction.Commit();
             }
             return libraryItems;
         }
 
-        protected virtual async Task BuildHierarchies(LibraryItemStatus? status)
+        protected virtual async Task BuildHierarchies(IEnumerable<LibraryItem> libraryItems)
         {
             using (var task = new SingletonReentrantTask(this, ComponentSlots.Database, SingletonReentrantTask.PRIORITY_LOW, async cancellationToken =>
             {
                 using (var transaction = this.Database.BeginTransaction(this.Database.PreferredIsolationLevel))
                 {
-                    await this.AddHiearchies(status, cancellationToken, transaction).ConfigureAwait(false);
+                    await this.AddHiearchies(libraryItems, cancellationToken, transaction).ConfigureAwait(false);
                     if (cancellationToken.IsCancellationRequested)
                     {
                         this.Name = "Waiting..";
@@ -211,13 +211,13 @@ namespace FoxTunes
             }
         }
 
-        private async Task AddHiearchies(LibraryItemStatus? status, CancellationToken cancellationToken, ITransactionSource transaction)
+        private async Task AddHiearchies(IEnumerable<LibraryItem> libraryItems, CancellationToken cancellationToken, ITransactionSource transaction)
         {
             using (var libraryHierarchyPopulator = new LibraryHierarchyPopulator(this.Database, this.Visible, transaction))
             {
                 libraryHierarchyPopulator.InitializeComponent(this.Core);
                 await this.WithSubTask(libraryHierarchyPopulator,
-                    () => libraryHierarchyPopulator.Populate(status, cancellationToken)
+                    () => libraryHierarchyPopulator.Populate(libraryItems, cancellationToken)
                 ).ConfigureAwait(false);
             }
         }
@@ -324,6 +324,28 @@ namespace FoxTunes
                     switch (phase)
                     {
                         case DatabaseParameterPhase.Fetch:
+                            parameters["status"] = status;
+                            break;
+                    }
+                }, transaction).ConfigureAwait(false);
+                transaction.Commit();
+            }
+        }
+
+        public static async Task SetLibraryItemsStatus(IDatabaseComponent database, int id, LibraryItemStatus status)
+        {
+            var query = database.QueryFactory.Build();
+            query.Update.SetTable(database.Tables.LibraryItem);
+            query.Update.AddColumn(database.Tables.LibraryItem.Column("Status"));
+            query.Filter.AddColumn(database.Tables.LibraryItem.PrimaryKey);
+            using (var transaction = database.BeginTransaction(database.PreferredIsolationLevel))
+            {
+                await database.ExecuteAsync(query, (parameters, phase) =>
+                {
+                    switch (phase)
+                    {
+                        case DatabaseParameterPhase.Fetch:
+                            parameters["id"] = id;
                             parameters["status"] = status;
                             break;
                     }

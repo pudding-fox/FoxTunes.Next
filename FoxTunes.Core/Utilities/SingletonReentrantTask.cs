@@ -34,16 +34,17 @@ namespace FoxTunes
             });
         }
 
-        public SingletonReentrantTask(ICancellable cancellable, string id, byte priority, Func<CancellationToken, Task> factory) : this(cancellable, id, TIMEOUT, priority, factory)
+        public SingletonReentrantTask(ICancellable cancellable, string id, byte priority, Func<CancellationToken, Task> factory, Func<Task> @finally = null) : this(cancellable, id, TIMEOUT, priority, factory, @finally)
         {
 
         }
 
-        public SingletonReentrantTask(ICancellable cancellable, string id, int timeout, byte priority, Func<CancellationToken, Task> factory) : this(cancellable, id)
+        public SingletonReentrantTask(ICancellable cancellable, string id, int timeout, byte priority, Func<CancellationToken, Task> factory, Func<Task> @finally = null) : this(cancellable, id)
         {
             this.Timeout = timeout;
             this.Priority = priority;
             this.Factory = factory;
+            this.Finally = @finally;
         }
 
         public ICancellable Cancellable { get; private set; }
@@ -55,6 +56,8 @@ namespace FoxTunes
         public byte Priority { get; private set; }
 
         public Func<CancellationToken, Task> Factory { get; private set; }
+
+        public Func<Task> Finally { get; private set; }
 
         public virtual async Task Run()
         {
@@ -105,6 +108,10 @@ namespace FoxTunes
                 {
                     Logger.Write(this, LogLevel.Trace, "Releasing lock.");
                     this.Instance.Semaphore.Release();
+                }
+                if (this.Finally != null)
+                {
+                    await this.Finally().ConfigureAwait(false);
                 }
                 if (success)
                 {

@@ -53,7 +53,7 @@ namespace FoxTunes
             base.InitializeComponent(core);
         }
 
-        public async Task Populate(LibraryItemStatus? status, CancellationToken cancellationToken)
+        public async Task Populate(IEnumerable<LibraryItem> libraryItems, CancellationToken cancellationToken)
         {
             var libraryHierarchies = this.GetHierarchies(this.Transaction);
 
@@ -64,7 +64,6 @@ namespace FoxTunes
             }
 
             var libraryHierarchyLevels = this.GetLevels(libraryHierarchies);
-            var libraryItems = this.GetItems(status, this.Transaction);
 
             if (this.ReportProgress)
             {

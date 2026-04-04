@@ -124,6 +124,7 @@ namespace FoxTunes
                             try
                             {
                                 await this.Writer.Write(fileData.Id, metaDataItem).ConfigureAwait(false);
+                                fileData.MetaDatas.Add(metaDataItem);
                             }
                             catch (Exception e)
                             {

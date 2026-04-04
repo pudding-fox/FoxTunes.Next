@@ -437,7 +437,6 @@ namespace FoxTunes
                 {
                     await task.Run().ConfigureAwait(false);
                 }
-                await this.BuildHierarchies(LibraryItemStatus.Import).ConfigureAwait(false);
                 await RemoveCancelledLibraryItems(this.Database).ConfigureAwait(false);
                 await SetLibraryItemsStatus(this.Database, LibraryItemStatus.None).ConfigureAwait(false);
             }
