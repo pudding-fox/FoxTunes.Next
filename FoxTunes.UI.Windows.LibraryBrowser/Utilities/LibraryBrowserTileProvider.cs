@@ -38,7 +38,7 @@ namespace FoxTunes
             switch (signal.Name)
             {
                 case CommonSignals.HierarchiesUpdated:
-                    this.OnHierarchiesUpdated();
+                    this.OnHierarchiesUpdated(signal.State as HierarchiesUpdatedSignalState);
                     break;
                 case CommonSignals.MetaDataUpdated:
                     this.OnMetaDataUpdated(signal.State as MetaDataUpdatedSignalState);
@@ -54,10 +54,21 @@ namespace FoxTunes
 #endif
         }
 
-        protected virtual void OnHierarchiesUpdated()
+        protected virtual void OnHierarchiesUpdated(HierarchiesUpdatedSignalState state)
         {
-            Logger.Write(this, LogLevel.Debug, "Hierarchies were updated, resetting cache.");
-            this.ClearCache();
+            if (state != null && state.LibraryHierarchyNodes != null && state.LibraryHierarchyNodes.Any())
+            {
+                foreach (var libraryHierarchyNode in state.LibraryHierarchyNodes)
+                {
+                    Logger.Write(this, LogLevel.Debug, "Item {0} was updated, resetting cache.", libraryHierarchyNode.Id);
+                    this.ClearCache(libraryHierarchyNode);
+                }
+            }
+            else
+            {
+                Logger.Write(this, LogLevel.Debug, "Hierarchies were updated, resetting cache.");
+                this.ClearCache();
+            }
         }
 
         protected virtual void OnMetaDataUpdated(MetaDataUpdatedSignalState state)
