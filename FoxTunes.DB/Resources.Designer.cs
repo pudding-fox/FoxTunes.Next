@@ -19,7 +19,7 @@ namespace FoxTunes {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "18.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Resources {
@@ -204,7 +204,7 @@ namespace FoxTunes {
         ///        MAX(CASE WHEN &quot;MetaDataItems&quot;.&quot;Name&quot; = @album THEN &quot;MetaDataItems&quot;.&quot;Value&quot; END) AS &quot;Album&quot;,
         ///        MAX(CASE WHEN &quot;MetaDataItems&quot;.&quot;Name&quot; = @title THEN &quot;MetaDataItems&quot;.&quot;Value&quot; END) AS &quot;Title&quot;,
         ///        MAX(CASE WHEN &quot;MetaDataItems&quot;.&quot;Name&quot; = @lastPlayed THEN &quot;MetaDataItems&quot;.&quot;Value&quot; END) AS &quot;LastPlayed&quot;,
-        ///        SUM(CASE WHEN &quot;MetaDataI [rest of string was truncated]&quot;;.
+        ///        SUM(CASE WHEN &quot;Me [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string GetListeningHistory {
             get {
@@ -346,14 +346,14 @@ namespace FoxTunes {
         ///			ON &quot;LibraryItems&quot;.&quot;Id&quot; =  &quot;LibraryItem_MetaDataItem&quot;.&quot;LibraryItem_Id&quot;
         ///	WHERE &quot;MetaDataItems&quot;.&quot;Name&quot; = @name 
         ///		AND  &quot;MetaDataItems&quot;.&quot;Type&quot; = @type
-        ///		AND &quot;LibraryItems&quot;.&quot;Status&quot; = @status
         ///)
         ///	
         ///DELETE FROM &quot;LibraryItem_MetaDataItem&quot;
         ///WHERE &quot;MetaDataItem_Id&quot; IN
         ///(
         ///	SELECT &quot;Id&quot;
-        ///	FROM &quot;MetaData&quot; [rest of string was truncated]&quot;;.
+        ///	FROM &quot;MetaData&quot;
+        ///).
         /// </summary>
         internal static string RemoveLibraryVariousArtists {
             get {
@@ -425,7 +425,7 @@ namespace FoxTunes {
         ///	WHERE &quot;PlaylistItemsRowNumber&quot;.&quot;Id&quot; = &quot;PlaylistItems&quot;.&quot;Id&quot;
         ///)
         ///WHERE &quot;PlaylistItems&quot;.&quot;Playlist_Id&quot; = @playlistId 
-        ///	AND &quot;PlaylistItems&quot;.&quot;Statu [rest of string was truncated]&quot;;.
+        ///	AND &quot;Playl [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string SequencePlaylistItems {
             get {
@@ -446,62 +446,6 @@ namespace FoxTunes {
         internal static string UpdateLibraryHierarchyNode {
             get {
                 return ResourceManager.GetString("UpdateLibraryHierarchyNode", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to INSERT INTO &quot;MetaDataItems&quot; (&quot;Name&quot;, &quot;Type&quot;, &quot;Value&quot;)
-        ///SELECT @name, @type, @value
-        ///WHERE NOT EXISTS(SELECT * FROM &quot;MetaDataItems&quot; WHERE &quot;Name&quot; = @name AND &quot;Type&quot; = @type AND &quot;Value&quot; = @value);
-        ///
-        ///WITH &quot;MetaData&quot;
-        ///AS
-        ///(
-        ///	SELECT 
-        ///		&quot;LibraryItem_MetaDataItem&quot;.&quot;LibraryItem_Id&quot; AS &quot;Id&quot;,
-        ///		&quot;MetaDataItems&quot;.&quot;Name&quot;,
-        ///		&quot;MetaDataItems&quot;.&quot;Value&quot;
-        ///	FROM &quot;LibraryItem_MetaDataItem&quot; 
-        ///		JOIN &quot;MetaDataItems&quot; 
-        ///			ON &quot;MetaDataItems&quot;.&quot;Id&quot; = &quot;LibraryItem_MetaDataItem&quot;.&quot;MetaDataItem_Id&quot;
-        ///),
-        ///
-        ///&quot;Artist&quot;
-        ///AS
-        ///(
-        ///	SELECT &quot;Arti [rest of string was truncated]&quot;;.
-        /// </summary>
-        internal static string UpdateLibraryVariousArtists {
-            get {
-                return ResourceManager.GetString("UpdateLibraryVariousArtists", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to INSERT INTO &quot;MetaDataItems&quot; (&quot;Name&quot;, &quot;Type&quot;, &quot;Value&quot;)
-        ///SELECT @name, @type, @value
-        ///WHERE NOT EXISTS(SELECT * FROM &quot;MetaDataItems&quot; WHERE &quot;Name&quot; = @name AND &quot;Type&quot; = @type AND &quot;Value&quot; = @value);
-        ///
-        ///WITH &quot;MetaData&quot;
-        ///AS
-        ///(
-        ///	SELECT 
-        ///		&quot;PlaylistItem_MetaDataItem&quot;.&quot;PlaylistItem_Id&quot; AS &quot;Id&quot;,
-        ///		&quot;MetaDataItems&quot;.&quot;Name&quot;,
-        ///		&quot;MetaDataItems&quot;.&quot;Value&quot;
-        ///	FROM &quot;PlaylistItem_MetaDataItem&quot; 
-        ///		JOIN &quot;MetaDataItems&quot; 
-        ///			ON &quot;MetaDataItems&quot;.&quot;Id&quot; = &quot;PlaylistItem_MetaDataItem&quot;.&quot;MetaDataItem_Id&quot;
-        ///),
-        ///
-        ///&quot;Artist&quot;
-        ///AS
-        ///(
-        ///	SELECT &quot; [rest of string was truncated]&quot;;.
-        /// </summary>
-        internal static string UpdatePlaylistVariousArtists {
-            get {
-                return ResourceManager.GetString("UpdatePlaylistVariousArtists", resourceCulture);
             }
         }
     }

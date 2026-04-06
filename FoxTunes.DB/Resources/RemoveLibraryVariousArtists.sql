@@ -9,7 +9,6 @@ AS
 			ON "LibraryItems"."Id" =  "LibraryItem_MetaDataItem"."LibraryItem_Id"
 	WHERE "MetaDataItems"."Name" = @name 
 		AND  "MetaDataItems"."Type" = @type
-		AND "LibraryItems"."Status" = @status
 )
 	
 DELETE FROM "LibraryItem_MetaDataItem"

@@ -52,11 +52,7 @@ namespace FoxTunes.Interfaces
 
         IDatabaseQuery UpdateLibraryHierarchyNode { get; }
 
-        IDatabaseQuery UpdateLibraryVariousArtists { get; }
-
         IDatabaseQuery RemoveLibraryVariousArtists { get; }
-
-        IDatabaseQuery UpdatePlaylistVariousArtists { get; }
 
         IDatabaseQuery RemovePlaylistVariousArtists { get; }
 

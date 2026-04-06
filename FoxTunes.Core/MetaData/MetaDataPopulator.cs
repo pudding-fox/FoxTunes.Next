@@ -33,6 +33,8 @@ namespace FoxTunes
 
         public IConfiguration Configuration { get; private set; }
 
+        public BooleanConfigurationElement DetectCompilations { get; private set; }
+
         public IntegerConfigurationElement Threads { get; private set; }
 
         public IMetaDataSourceFactory MetaDataSourceFactory { get; private set; }
@@ -59,6 +61,10 @@ namespace FoxTunes
         public override void InitializeComponent(ICore core)
         {
             this.Configuration = core.Components.Configuration;
+            this.DetectCompilations = this.Configuration.GetElement<BooleanConfigurationElement>(
+                MetaDataBehaviourConfiguration.SECTION,
+                MetaDataBehaviourConfiguration.DETECT_COMPILATIONS
+            );
             this.Threads = this.Configuration.GetElement<IntegerConfigurationElement>(
                 MetaDataBehaviourConfiguration.SECTION,
                 MetaDataBehaviourConfiguration.THREADS_ELEMENT
@@ -67,12 +73,12 @@ namespace FoxTunes
             base.InitializeComponent(core);
         }
 
-        public Task<IEnumerable<T>> Populate<T>(IEnumerable<T> fileDatas, CancellationToken cancellationToken) where T : IFileData
+        public Task<IEnumerable<T>> Populate<T>(IEnumerable<IGrouping<string, T>> groups, CancellationToken cancellationToken) where T : IFileData
         {
-            return this.Populate(fileDatas, 0, cancellationToken);
+            return this.Populate(groups, 0, cancellationToken);
         }
 
-        public async Task<IEnumerable<T>> Populate<T>(IEnumerable<T> fileDatas, int batchSize, CancellationToken cancellationToken) where T : IFileData
+        public async Task<IEnumerable<T>> Populate<T>(IEnumerable<IGrouping<string, T>> groups, int batchSize, CancellationToken cancellationToken) where T : IFileData
         {
             Logger.Write(this, LogLevel.Debug, "Begin populating meta data.");
 
@@ -80,7 +86,7 @@ namespace FoxTunes
             {
                 this.Name = "Populating meta data";
                 this.Position = 0;
-                this.Count = fileDatas.Count();
+                this.Count = groups.Count();
                 if (this.Count <= 100)
                 {
                     this.Timer.Interval = FAST_INTERVAL;
@@ -99,60 +105,139 @@ namespace FoxTunes
             var metaDataSource = this.MetaDataSourceFactory.Create();
             var result = new List<T>();
 
-            await AsyncParallel.ForEach(fileDatas, async fileData =>
+            await AsyncParallel.ForEach(groups, async group =>
             {
-                Logger.Write(this, LogLevel.Debug, "Reading meta data from file \"{0}\".", fileData.FileName);
-                try
+                await AsyncParallel.ForEach(group, async fileData =>
                 {
-                    var metaData = await metaDataSource.GetMetaData(fileData.FileName).ConfigureAwait(false);
-
-                    foreach (var warning in metaDataSource.GetWarnings(fileData.FileName))
-                    {
-                        this.AddWarning(fileData, warning);
-                    }
-
-#if NET40
-                    this.Semaphore.Wait();
-#else
-                    await this.Semaphore.WaitAsync().ConfigureAwait(false);
-#endif
-
+                    Logger.Write(this, LogLevel.Debug, "Reading meta data from file \"{0}\".", fileData.FileName);
                     try
                     {
-                        foreach (var metaDataItem in metaData)
-                        {
-                            try
-                            {
-                                await this.Writer.Write(fileData.Id, metaDataItem).ConfigureAwait(false);
-                                fileData.MetaDatas.Add(metaDataItem);
-                            }
-                            catch (Exception e)
-                            {
-                                Logger.Write(this, LogLevel.Debug, "Failed to write meta data entry from file \"{0}\" with name \"{1}\": {2}", fileData.FileName, metaDataItem.Name, e.Message);
-                                this.AddWarning(fileData, e.Message);
-                            }
-                        }
-                        result.Add(fileData);
-                        if (batchSize > 0 && result.Count >= batchSize)
-                        {
-                            cancellationToken.Yield();
-                        }
-                    }
-                    finally
-                    {
-                        this.Semaphore.Release();
-                    }
+                        var metaData = await metaDataSource.GetMetaData(fileData.FileName).ConfigureAwait(false);
 
-                    if (this.ReportProgress)
+                        foreach (var warning in metaDataSource.GetWarnings(fileData.FileName))
+                        {
+                            this.AddWarning(fileData, warning);
+                        }
+
+#if NET40
+                        this.Semaphore.Wait();
+#else
+                        await this.Semaphore.WaitAsync().ConfigureAwait(false);
+#endif
+
+                        try
+                        {
+                            foreach (var metaDataItem in metaData)
+                            {
+                                try
+                                {
+                                    await this.Writer.Write(fileData.Id, metaDataItem).ConfigureAwait(false);
+                                    fileData.MetaDatas.Add(metaDataItem);
+                                }
+                                catch (Exception e)
+                                {
+                                    Logger.Write(this, LogLevel.Debug, "Failed to write meta data entry from file \"{0}\" with name \"{1}\": {2}", fileData.FileName, metaDataItem.Name, e.Message);
+                                    this.AddWarning(fileData, e.Message);
+                                }
+                            }
+                        }
+                        finally
+                        {
+                            this.Semaphore.Release();
+                        }
+
+                        if (this.ReportProgress)
+                        {
+                            this.Current = fileData;
+                            Interlocked.Increment(ref this.position);
+                        }
+                    }
+                    catch (Exception e)
                     {
-                        this.Current = fileData;
-                        Interlocked.Increment(ref this.position);
+                        Logger.Write(this, LogLevel.Debug, "Failed to read meta data from file \"{0}\": {1}", fileData.FileName, e.Message);
+                        this.AddWarning(fileData, e.Message);
+                    }
+                },
+                CancellationToken.None, this.ParallelOptions).ConfigureAwait(false);
+
+
+                if (this.DetectCompilations.Value)
+                {
+                    var artists = group.GroupBy(fileData =>
+                    {
+                        lock (fileData.MetaDatas)
+                        {
+                            var metaDataItem = fileData.MetaDatas.FirstOrDefault(
+                                _metaDataItem => string.Equals(_metaDataItem.Name, CommonMetaData.Artist, StringComparison.OrdinalIgnoreCase) && _metaDataItem.Type == MetaDataItemType.Tag
+                            );
+                            if (metaDataItem != null)
+                            {
+                                return metaDataItem.Value;
+                            }
+                            return null;
+                        }
+                    }, StringComparer.OrdinalIgnoreCase);
+
+                    if (artists.Count() > 1)
+                    {
+                        Logger.Write(this, LogLevel.Debug, "Detected compilation for folder {0}.", group.Key);
+                        foreach (var fileData in group)
+                        {
+                            var metaDataItem = default(MetaDataItem);
+                            lock (fileData.MetaDatas)
+                            {
+                                metaDataItem = fileData.MetaDatas.FirstOrDefault(
+                                    _metaDataItem => string.Equals(_metaDataItem.Name, CustomMetaData.VariousArtists, StringComparison.OrdinalIgnoreCase) && _metaDataItem.Type == MetaDataItemType.Tag
+                                );
+                            }
+
+                            if (metaDataItem == null)
+                            {
+#if NET40
+                                this.Semaphore.Wait();
+#else
+                                await this.Semaphore.WaitAsync().ConfigureAwait(false);
+#endif
+                                try
+                                {
+                                    metaDataItem = new MetaDataItem(CustomMetaData.VariousArtists, MetaDataItemType.Tag)
+                                    {
+                                        Value = bool.TrueString
+                                    };
+
+                                    await this.Writer.Write(fileData.Id, metaDataItem).ConfigureAwait(false);
+
+                                    lock (fileData.MetaDatas)
+                                    {
+                                        fileData.MetaDatas.Add(metaDataItem);
+                                    }
+                                }
+                                finally
+                                {
+                                    this.Semaphore.Release();
+                                }
+                            }
+                        }
                     }
                 }
-                catch (Exception e)
+
+#if NET40
+                this.Semaphore.Wait();
+#else
+                await this.Semaphore.WaitAsync().ConfigureAwait(false);
+#endif
+
+                try
                 {
-                    Logger.Write(this, LogLevel.Debug, "Failed to read meta data from file \"{0}\": {1}", fileData.FileName, e.Message);
-                    this.AddWarning(fileData, e.Message);
+                    result.AddRange(group);
+                    if (batchSize > 0 && result.Count >= batchSize)
+                    {
+                        cancellationToken.Yield();
+                    }
+                }
+                finally
+                {
+                    this.Semaphore.Release();
                 }
             }, cancellationToken, this.ParallelOptions).ConfigureAwait(false);
             return result;
