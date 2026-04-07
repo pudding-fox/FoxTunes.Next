@@ -26,6 +26,14 @@ namespace FoxTunes
             return this.Store.GetOrAdd(key, factory);
         }
 
+        public bool TryRemove(T value)
+        {
+            foreach(var pair in this.Store)
+            {
+
+            }
+        }
+
         public void Clear()
         {
             this.Store.Clear();

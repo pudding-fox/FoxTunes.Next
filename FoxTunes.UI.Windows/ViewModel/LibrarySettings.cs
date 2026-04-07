@@ -229,7 +229,7 @@ namespace FoxTunes.ViewModel
                 }
             }
             await this.Refresh().ConfigureAwait(false);
-            await this.HierarchyManager.Build(null).ConfigureAwait(false);
+            await this.HierarchyManager.Build().ConfigureAwait(false);
         }
 
         public ICommand HelpCommand

@@ -60,7 +60,7 @@ namespace FoxTunes
                     this.OnMetaDataUpdated(signal.State as MetaDataUpdatedSignalState);
                     break;
                 case CommonSignals.HierarchiesUpdated:
-                    this.Reset();
+                    this.OnHierarchiesUpdated(signal.State as HierarchiesUpdatedSignalState);
                     break;
                 case CommonSignals.ImagesUpdated:
                     Logger.Write(this, LogLevel.Debug, "Images were updated, resetting cache.");
@@ -76,13 +76,25 @@ namespace FoxTunes
 
         protected virtual void OnMetaDataUpdated(MetaDataUpdatedSignalState state)
         {
-            if (state != null && state.Names != null)
+            if (state != null && state.Names != null && state.Names.Any())
             {
                 this.Reset(state.Names);
             }
             else
             {
-                this.Reset(Enumerable.Empty<string>());
+                this.Reset();
+            }
+        }
+
+        protected virtual void OnHierarchiesUpdated(HierarchiesUpdatedSignalState state)
+        {
+            if (state != null && state.LibraryHierarchyNodes != null && state.LibraryHierarchyNodes.Any())
+            {
+                this.Reset(state.LibraryHierarchyNodes);
+            }
+            else
+            {
+                this.Reset();
             }
         }
 
@@ -159,14 +171,19 @@ namespace FoxTunes
             this.Store = new ImageBrushCache<Tuple<LibraryHierarchyNode, LibraryBrowserImageMode>>(capacity);
         }
 
+        protected virtual void Reset(IEnumerable<LibraryHierarchyNode> libraryHierarchyNodes)
+        {
+            foreach (var libraryHierarchyNode in libraryHierarchyNodes)
+            {
+                this.Store.TryRemove(libraryHierarchyNode);
+            }
+        }
+
         protected virtual void Reset(IEnumerable<string> names)
         {
-            if (names != null && names.Any())
+            if (!names.Contains(CommonImageTypes.FrontCover, StringComparer.OrdinalIgnoreCase))
             {
-                if (!names.Contains(CommonImageTypes.FrontCover, StringComparer.OrdinalIgnoreCase))
-                {
-                    return;
-                }
+                return;
             }
             Logger.Write(this, LogLevel.Debug, "Meta data was updated, resetting cache.");
             this.Reset();

@@ -90,6 +90,11 @@ namespace FoxTunes.AI.Tasks
                     this.Description = "Fetching library";
                     using (var stream = await this.GetEntireLibrary().ConfigureAwait(false))
                     {
+                        if (stream.Length <= 1024)
+                        {
+                            Logger.Write(this, LogLevel.Warn, "Library doesn't have enough tracks to be useful.");
+                            return;
+                        }
                         Logger.Write(this, LogLevel.Debug, "library.txt is {0} bytes.", stream.Length);
                         Logger.Write(this, LogLevel.Debug, "Creating file store.");
                         this.Description = "Creating file store";
@@ -154,6 +159,7 @@ namespace FoxTunes.AI.Tasks
                     }
                 }
             }
+            await writer.FlushAsync().ConfigureAwait(false);
             stream.Seek(0, SeekOrigin.Begin);
             return stream;
         }

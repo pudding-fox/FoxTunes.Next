@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace FoxTunes
@@ -19,7 +20,7 @@ namespace FoxTunes
         {
             get
             {
-                return true;
+                return this.LibraryItems.Count() > 512;
             }
         }
 

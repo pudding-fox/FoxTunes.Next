@@ -31,12 +31,23 @@ namespace FoxTunes
             {
                 await this.RemoveItems(PlaylistItemStatus.None).ConfigureAwait(false);
             }
-            await this.AddPlaylistItems(this.LibraryHierarchyNode, this.LibraryHierarchyBrowser.Filter).ConfigureAwait(false);
-            if (!this.Clear)
+            await this.AddNode(this.LibraryHierarchyNode).ConfigureAwait(false);
+        }
+
+        protected virtual async Task AddNode(LibraryHierarchyNode libraryHierarchyNode)
+        {
+            using (var task = new SingletonReentrantTask(this, ComponentSlots.Database, SingletonReentrantTask.PRIORITY_HIGH, async cancellationToken =>
             {
-                await this.ShiftItems(QueryOperator.GreaterOrEqual, this.Sequence, this.Offset).ConfigureAwait(false);
+                await this.AddPlaylistItems(this.LibraryHierarchyNode, this.LibraryHierarchyBrowser.Filter).ConfigureAwait(false);
+                if (!this.Clear)
+                {
+                    await this.ShiftItems(QueryOperator.GreaterOrEqual, this.Sequence, this.Offset).ConfigureAwait(false);
+                }
+                await this.SetPlaylistItemsStatus(PlaylistItemStatus.None).ConfigureAwait(false);
+            }))
+            {
+                await task.Run().ConfigureAwait(false);
             }
-            await this.SetPlaylistItemsStatus(PlaylistItemStatus.None).ConfigureAwait(false);
         }
 
         protected override async Task OnCompleted()

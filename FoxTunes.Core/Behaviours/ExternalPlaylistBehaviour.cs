@@ -243,7 +243,10 @@ namespace FoxTunes
                 using (var task = new SingletonReentrantTask(this, ComponentSlots.Database, SingletonReentrantTask.PRIORITY_HIGH, async cancellationToken =>
                 {
                     await this.AddPlaylistItems(paths, cancellationToken).ConfigureAwait(false);
-                    await this.ShiftItems(QueryOperator.GreaterOrEqual, this.Sequence, this.Offset).ConfigureAwait(false);
+                    if (!this.Clear)
+                    {
+                        await this.ShiftItems(QueryOperator.GreaterOrEqual, this.Sequence, this.Offset).ConfigureAwait(false);
+                    }
                     await this.SequenceItems(maintainOrder).ConfigureAwait(false);
                     await this.SetPlaylistItemsStatus(PlaylistItemStatus.None).ConfigureAwait(false);
                 }))

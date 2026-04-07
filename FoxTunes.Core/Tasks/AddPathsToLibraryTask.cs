@@ -62,5 +62,11 @@ namespace FoxTunes
             await this.AddRoots(this.Roots).ConfigureAwait(false);
             await this.AddPaths(this.Paths).ConfigureAwait(false);
         }
+
+        protected override async Task OnCompleted()
+        {
+            await this.SignalEmitter.Send(new Signal(this, CommonSignals.LibraryUpdated)).ConfigureAwait(false);
+            await base.OnCompleted().ConfigureAwait(false);
+        }
     }
 }

@@ -14,34 +14,14 @@ namespace FoxTunes
 
         }
 
-        public BooleanConfigurationElement DetectCompilations { get; private set; }
-
-        public override void InitializeComponent(ICore core)
-        {
-            base.InitializeComponent(core);
-            this.DetectCompilations = this.Configuration.GetElement<BooleanConfigurationElement>(
-                MetaDataBehaviourConfiguration.SECTION,
-                MetaDataBehaviourConfiguration.DETECT_COMPILATIONS
-            );
-        }
-
-        public async Task<IEnumerable<LibraryItem>> Populate(LibraryItemStatus libraryItemStatus, CancellationToken cancellationToken)
+        public Task<IEnumerable<LibraryItem>> Populate(LibraryItemStatus libraryItemStatus, CancellationToken cancellationToken)
         {
             const int BATCH_SIZE = 128;
             var query = this.Database
                 .AsQueryable<LibraryItem>(this.Database.Source(new DatabaseQueryComposer<LibraryItem>(this.Database), this.Transaction))
-                .Where(libraryItem => libraryItem.Status == libraryItemStatus && !libraryItem.MetaDatas.Any());
-            var libraryItems = await this.Populate(query, BATCH_SIZE, cancellationToken).ConfigureAwait(false);
-            var populator = new LibraryVariousArtistsPopulator(this.Database);
-            if (this.DetectCompilations.Value)
-            {
-                await populator.Populate(libraryItemStatus, this.Transaction).ConfigureAwait(false);
-            }
-            else
-            {
-                await populator.Clear(libraryItemStatus, this.Transaction).ConfigureAwait(false);
-            }
-            return libraryItems;
+                .Where(libraryItem => libraryItem.Status == libraryItemStatus && !libraryItem.MetaDatas.Any())
+                .Take(BATCH_SIZE + 1);
+            return this.Populate(query, BATCH_SIZE, cancellationToken);
         }
     }
 }

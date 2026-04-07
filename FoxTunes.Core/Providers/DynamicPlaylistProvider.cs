@@ -105,7 +105,7 @@ namespace FoxTunes
             {
                 return;
             }
-            using (var task = new AddLibraryHierarchyNodesToPlaylistTask(playlist, 0, libraryHierarchy, expression, true, false))
+            using (var task = new AddLibraryHierarchyNodesToPlaylistTask(playlist, 0, libraryHierarchy, expression, true))
             {
                 task.InitializeComponent(this.Core);
                 await task.Run().ConfigureAwait(false);

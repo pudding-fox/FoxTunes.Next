@@ -4,6 +4,7 @@ using FoxDb.Interfaces;
 using FoxTunes.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace FoxTunes
@@ -129,6 +130,13 @@ namespace FoxTunes
             var libraryItems = default(IEnumerable<LibraryItem>);
             using (var task = new SingletonReentrantTask(this, ComponentSlots.Database, SingletonReentrantTask.PRIORITY_LOW, async cancellationToken =>
             {
+                using (var transaction = this.Database.BeginTransaction(this.Database.PreferredIsolationLevel))
+                {
+                    this.Count = this.Database
+                        .AsQueryable<LibraryItem>(this.Database.Source(new DatabaseQueryComposer<LibraryItem>(this.Database), transaction))
+                        .Where(libraryItem => libraryItem.Status == LibraryItemStatus.Import && !libraryItem.MetaDatas.Any())
+                        .Count();
+                }
                 libraryItems = await this.AddOrUpdateMetaData(cancellationToken).ConfigureAwait(false);
                 if (cancellationToken.IsCancellationRequested)
                 {

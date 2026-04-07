@@ -1,10 +1,11 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 
 namespace FoxTunes
 {
-    public class CappedDictionary<TKey, TValue>
+    public class CappedDictionary<TKey, TValue> : IEnumerable<KeyValuePair<TKey, Lazy<TValue>>>
     {
         public readonly object SyncRoot = new object();
 
@@ -123,6 +124,16 @@ namespace FoxTunes
             {
                 this.Keys.Clear();
             }
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return this.GetEnumerator();
+        }
+
+        public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator()
+        {
+            return this.Store;
         }
 
         public class Queue
