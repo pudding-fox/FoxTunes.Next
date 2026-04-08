@@ -178,7 +178,7 @@ namespace FoxTunes
                         }
                     }
                     var eta = this.GetEta(count);
-                    this.Name = string.Format("Populating meta data: {0} remaining @ {1} items/s", eta, count);
+                    this.Name = this.GetName(count, eta);
                     if (this.Current != null)
                     {
                         this.Description = Path.GetFileName(this.Current.FileName);
@@ -191,6 +191,11 @@ namespace FoxTunes
             {
                 //Nothing can be done, never throw on background thread.
             }
+        }
+
+        protected virtual string GetName(int count, string eta)
+        {
+            return string.Format("Populating meta data: {0} remaining @ {1} items/s", eta, count);
         }
 
         protected virtual void AddWarning<T>(T fileData, string warning) where T : IFileData

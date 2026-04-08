@@ -24,5 +24,10 @@ namespace FoxTunes
                 .Take(BATCH_SIZE + 1);
             return this.Populate(query, BATCH_SIZE, cancellationToken);
         }
+
+        protected override string GetName(int count, string eta)
+        {
+            return string.Format("Populating meta data: {0} items/s", count);
+        }
     }
 }
