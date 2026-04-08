@@ -1,11 +1,12 @@
-﻿using System;
+﻿using FoxTunes.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
 
 namespace FoxTunes
 {
-    public class ObservableCollection<T> : global::System.Collections.ObjectModel.ObservableCollection<T>
+    public class ObservableCollection<T> : global::System.Collections.ObjectModel.ObservableCollection<T> 
     {
         private const string COUNT = "Count";
 
@@ -23,9 +24,9 @@ namespace FoxTunes
 
         }
 
-        public bool IsSuspended { get; private set; }
+        public bool IsSuspended { get; protected set; }
 
-        public Action Reset(IEnumerable<T> sequence)
+        public virtual Action Reset(IEnumerable<T> sequence)
         {
             lock (this.SyncRoot)
             {

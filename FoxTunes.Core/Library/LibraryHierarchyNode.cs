@@ -143,6 +143,16 @@ namespace FoxTunes
             }
         }
 
+        public void Update(LibraryHierarchyNode libraryHierarchyNode)
+        {
+            this.LibraryHierarchyId = libraryHierarchyNode.LibraryHierarchyId;
+            this.Value = libraryHierarchyNode.Value;
+            this.IsLeaf = libraryHierarchyNode.IsLeaf;
+            this.Parent = libraryHierarchyNode.Parent;
+            this._Children = libraryHierarchyNode._Children;
+            this._IsExpanded = libraryHierarchyNode._IsExpanded;
+        }
+
         public override int GetHashCode()
         {
             //We need a hash code for this type for performance reasons.

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Windows;
 
 namespace FoxTunes.ViewModel
@@ -10,7 +11,7 @@ namespace FoxTunes.ViewModel
 
         }
 
-        public LibraryBrowserFrame(LibraryHierarchyNode itemsSource, LibraryHierarchyNode[] items) : this()
+        public LibraryBrowserFrame(LibraryHierarchyNode itemsSource, LibraryHierarchyNodeCollection items) : this()
         {
             this.ItemsSource = itemsSource;
             this.Items = items;
@@ -20,9 +21,10 @@ namespace FoxTunes.ViewModel
             }
             else
             {
-                this.AllItems = new LibraryHierarchyNode[this.Items.Length + 1];
-                this.AllItems[0] = LibraryHierarchyNode.Empty;
-                Array.Copy(this.Items, 0, this.AllItems, 1, this.Items.Length);
+                this.AllItems = new LibraryHierarchyNodeCollection(new[]
+                {
+                    LibraryHierarchyNode.Empty
+                }.Concat(this.Items));
             }
             if (this.CanFreeze)
             {
@@ -32,9 +34,9 @@ namespace FoxTunes.ViewModel
 
         public LibraryHierarchyNode ItemsSource { get; private set; }
 
-        public LibraryHierarchyNode[] Items { get; private set; }
+        public LibraryHierarchyNodeCollection Items { get; private set; }
 
-        public LibraryHierarchyNode[] AllItems { get; private set; }
+        public LibraryHierarchyNodeCollection AllItems { get; private set; }
 
         protected override Freezable CreateInstanceCore()
         {

@@ -370,7 +370,7 @@ namespace FoxTunes.ViewModel
             }
             var frame = new LibraryBrowserFrame(
                 libraryHierarchyNode,
-                libraryHierarchyNodes
+                new LibraryHierarchyNodeCollection(libraryHierarchyNodes)
             );
             frames.Add(frame);
         }
