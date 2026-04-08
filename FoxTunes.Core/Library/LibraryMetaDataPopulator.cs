@@ -9,7 +9,7 @@ namespace FoxTunes
 {
     public class LibraryMetaDataPopulator : MetaDataPopulator
     {
-        public int BATCH_SIZE = 128;
+        public int BATCH_SIZE = 512;
 
         public LibraryMetaDataPopulator(IDatabaseComponent database, bool reportProgress, ITransactionSource transaction) : base(database, database.Queries.AddLibraryMetaDataItem, reportProgress, transaction)
         {
