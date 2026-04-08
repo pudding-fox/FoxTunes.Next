@@ -22,24 +22,16 @@ namespace FoxTunes
 
         }
 
-        public IntegerConfigurationElement Opacity { get; private set; }
-
         public override void InitializeComponent(ICore core)
         {
             base.InitializeComponent(core);
-            this.Opacity = this.Configuration.GetElement<IntegerConfigurationElement>(
+            this.Configuration.GetElement<IntegerConfigurationElement>(
                 TransparentThemeConfiguration.SECTION,
                 TransparentThemeConfiguration.OPACITY
-            );
-            this.Opacity.ValueChanged += this.OnValueChanged;
+            ).ConnectValue(value => this.Opacity = (float)value / 100);
         }
 
-        protected virtual void OnValueChanged(object sender, EventArgs e)
-        {
-            this.SetOpacity();
-        }
-
-        protected virtual void SetOpacity()
+        protected override void OnOpacityChanged()
         {
             if (!this.ResourceDictionary.IsValueCreated)
             {
@@ -56,13 +48,12 @@ namespace FoxTunes
                 "ControlBackgroundBrush",
                 "ControlBorderBrush"
             };
-            var opacity = (float)this.Opacity.Value / 100;
             foreach (var name in names)
             {
                 if (resourceDictionary[name] is SolidColorBrush solidColorBrush)
                 {
                     resourceDictionary[name] = new SolidColorBrush(solidColorBrush.Color).With(
-                        brush => brush.Opacity = opacity
+                        brush => brush.Opacity = this.Opacity
                     );
                 }
             }

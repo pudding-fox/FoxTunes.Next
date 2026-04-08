@@ -17,6 +17,8 @@ namespace FoxTunes
 
         IEnumerable<IColorPalette> ColorPalettes { get; }
 
+        float Opacity { get; }
+
         ThemeFlags Flags { get; }
 
         void Enable();

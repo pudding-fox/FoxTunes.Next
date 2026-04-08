@@ -12,35 +12,19 @@ namespace FoxTunes
     {
         public const string SELECT_COLOR_PALETTE_AUTO = "ZZZZ";
 
-        private Lazy<ITheme> _Theme { get; set; }
-
-        public ITheme Theme
-        {
-            get
-            {
-                if (this._Theme.Value == null)
-                {
-                    return null;
-                }
-                return this._Theme.Value;
-            }
-        }
+        public ITheme Theme { get; private set; }
 
         protected virtual void SetTheme(Func<ITheme> factory)
         {
             this.OnBeginSetTheme();
             try
             {
-                if (this._Theme != null && this._Theme.IsValueCreated)
+                if (this.Theme != null)
                 {
-                    this._Theme.Value.Disable();
+                    this.Theme.Disable();
                 }
-                this._Theme = new Lazy<ITheme>(() =>
-                {
-                    var theme = factory();
-                    theme.Enable();
-                    return theme;
-                });
+                this.Theme = factory();
+                this.Theme.Enable();
             }
             finally
             {

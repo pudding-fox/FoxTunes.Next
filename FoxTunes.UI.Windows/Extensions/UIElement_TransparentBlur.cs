@@ -47,6 +47,8 @@ namespace FoxTunes
 
         private class TransparentBlurBehaviour : UIBehaviour
         {
+            public static readonly ThemeLoader ThemeLoader = ComponentRegistry.Instance.GetComponent<ThemeLoader>();
+
             private TransparentBlurBehaviour()
             {
                 this.Configuration = ComponentRegistry.Instance.GetComponent<IConfiguration>();
@@ -62,7 +64,7 @@ namespace FoxTunes
                         WindowsUserInterfaceConfiguration.TRANSPARENCY
                     ).ConnectValue(value =>
                     {
-                        if (value)
+                        if (value && ThemeLoader.Theme != null && ThemeLoader.Theme.Opacity < 1.0f)
                         {
                             this.Element.Effect = new BlurEffect()
                             {

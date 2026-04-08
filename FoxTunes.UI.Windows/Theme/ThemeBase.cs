@@ -20,6 +20,7 @@ namespace FoxTunes
             this.Name = name;
             this.Description = description;
             this.ColorPalettes = colorPalettes;
+            this.Opacity = 1.0f;
         }
 
         public Lazy<ResourceDictionary> ResourceDictionary { get; private set; }
@@ -39,6 +40,32 @@ namespace FoxTunes
         public abstract Stream GetArtworkPlaceholder();
 
         public IEnumerable<IColorPalette> ColorPalettes { get; private set; }
+
+        private float _Opacity { get; set; }
+
+        public float Opacity
+        {
+            get
+            {
+                return this._Opacity;
+            }
+            set
+            {
+                this._Opacity = value;
+                this.OnOpacityChanged();
+            }
+        }
+
+        protected virtual void OnOpacityChanged()
+        {
+            if (this.OpacityChanged != null)
+            {
+                this.OpacityChanged(this, EventArgs.Empty);
+            }
+            this.OnPropertyChanged("Opacity");
+        }
+
+        public event EventHandler OpacityChanged;
 
         public virtual ThemeFlags Flags
         {
