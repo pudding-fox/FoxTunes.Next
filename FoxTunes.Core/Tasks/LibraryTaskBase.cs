@@ -128,16 +128,19 @@ namespace FoxTunes
                 this.IsCancellationRequested = false;
             }
             var libraryItems = default(IEnumerable<LibraryItem>);
+            var count = default(int);
+            var offset = 0;
+            using (var transaction = this.Database.BeginTransaction(this.Database.PreferredIsolationLevel))
+            {
+                count = this.Database
+                    .AsQueryable<LibraryItem>(this.Database.Source(new DatabaseQueryComposer<LibraryItem>(this.Database), transaction))
+                    .Where(libraryItem => libraryItem.Status == LibraryItemStatus.Import && !libraryItem.MetaDatas.Any())
+                    .Count();
+            }
             using (var task = new SingletonReentrantTask(this, ComponentSlots.Database, SingletonReentrantTask.PRIORITY_LOW, async cancellationToken =>
             {
-                using (var transaction = this.Database.BeginTransaction(this.Database.PreferredIsolationLevel))
-                {
-                    this.Count = this.Database
-                        .AsQueryable<LibraryItem>(this.Database.Source(new DatabaseQueryComposer<LibraryItem>(this.Database), transaction))
-                        .Where(libraryItem => libraryItem.Status == LibraryItemStatus.Import && !libraryItem.MetaDatas.Any())
-                        .Count();
-                }
-                libraryItems = await this.AddOrUpdateMetaData(cancellationToken).ConfigureAwait(false);
+                libraryItems = await this.AddOrUpdateMetaData(offset, count, cancellationToken).ConfigureAwait(false);
+                offset += libraryItems.Count();
                 if (cancellationToken.IsCancellationRequested)
                 {
                     this.Name = "Waiting..";
@@ -165,7 +168,7 @@ namespace FoxTunes
             }
         }
 
-        protected virtual async Task<IEnumerable<LibraryItem>> AddOrUpdateMetaData(CancellationToken cancellationToken)
+        protected virtual async Task<IEnumerable<LibraryItem>> AddOrUpdateMetaData(int offset, int count, CancellationToken cancellationToken)
         {
             var libraryItems = default(IEnumerable<LibraryItem>);
             using (var transaction = this.Database.BeginTransaction(this.Database.PreferredIsolationLevel))
@@ -174,8 +177,8 @@ namespace FoxTunes
                 {
                     metaDataPopulator.InitializeComponent(this.Core);
                     await this.WithSubTask(metaDataPopulator,
-                        async () => libraryItems = await metaDataPopulator.Populate(LibraryItemStatus.Import, cancellationToken).ConfigureAwait(false)
-                    ).ConfigureAwait(false);
+                        async () => libraryItems = await metaDataPopulator.Populate(LibraryItemStatus.Import, cancellationToken).ConfigureAwait(false),
+                    offset, count).ConfigureAwait(false);
                     foreach (var pair in metaDataPopulator.Warnings)
                     {
                         if (pair.Key is LibraryItem libraryItem)

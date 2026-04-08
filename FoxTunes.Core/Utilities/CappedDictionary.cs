@@ -128,12 +128,12 @@ namespace FoxTunes
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return this.GetEnumerator();
+            return this.Store.GetEnumerator();
         }
 
-        public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator()
+        public IEnumerator<KeyValuePair<TKey, Lazy<TValue>>> GetEnumerator()
         {
-            return this.Store;
+            return this.Store.GetEnumerator();
         }
 
         public class Queue

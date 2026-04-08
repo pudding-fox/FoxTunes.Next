@@ -34,8 +34,10 @@ namespace FoxTunes.ViewModel
         {
             this.Source = source;
             PropertyChangedEventManager.AddListener(source, this, string.Empty);
-            //TODO: Bad .Result
-            this.Value = value.Result;
+            var task = value.ContinueWith(result =>
+            {
+                return Windows.Invoke(() => this.Value = result.Result);
+            });
             this.Factory = factory;
             this.Dispatch(this.Run);
         }

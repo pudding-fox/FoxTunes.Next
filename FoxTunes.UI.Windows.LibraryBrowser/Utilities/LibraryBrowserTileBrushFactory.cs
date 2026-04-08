@@ -175,7 +175,8 @@ namespace FoxTunes
         {
             foreach (var libraryHierarchyNode in libraryHierarchyNodes)
             {
-                this.Store.TryRemove(libraryHierarchyNode);
+                this.Store.TryRemove(new Tuple<LibraryHierarchyNode, LibraryBrowserImageMode>(libraryHierarchyNode, LibraryBrowserImageMode.First));
+                this.Store.TryRemove(new Tuple<LibraryHierarchyNode, LibraryBrowserImageMode>(libraryHierarchyNode, LibraryBrowserImageMode.Compound));
             }
         }
 

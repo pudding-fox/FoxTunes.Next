@@ -28,10 +28,15 @@ namespace FoxTunes
 
         public bool TryRemove(T value)
         {
-            foreach(var pair in this.Store)
+            var result = default(bool);
+            foreach (var pair in this.Store)
             {
-
+                if (object.Equals(pair.Key.Value, value))
+                {
+                    result |= this.Store.TryRemove(pair.Key);
+                }
             }
+            return result;
         }
 
         public void Clear()

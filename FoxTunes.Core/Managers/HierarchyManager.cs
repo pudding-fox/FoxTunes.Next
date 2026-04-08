@@ -54,7 +54,7 @@ namespace FoxTunes
                 using (var transaction = database.BeginTransaction(database.PreferredIsolationLevel))
                 {
                     var set = database.Set<LibraryItem>(transaction);
-                    using (var task = new BuildLibraryHierarchiesTask(set))
+                    using (var task = new BuildLibraryHierarchiesTask(set.ToArray()))
                     {
                         task.InitializeComponent(this.Core);
                         await this.BackgroundTaskEmitter.Send(task).ConfigureAwait(false);

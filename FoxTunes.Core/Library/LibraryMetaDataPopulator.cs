@@ -9,6 +9,8 @@ namespace FoxTunes
 {
     public class LibraryMetaDataPopulator : MetaDataPopulator
     {
+        public int BATCH_SIZE = 128;
+
         public LibraryMetaDataPopulator(IDatabaseComponent database, bool reportProgress, ITransactionSource transaction) : base(database, database.Queries.AddLibraryMetaDataItem, reportProgress, transaction)
         {
 
@@ -16,7 +18,6 @@ namespace FoxTunes
 
         public Task<IEnumerable<LibraryItem>> Populate(LibraryItemStatus libraryItemStatus, CancellationToken cancellationToken)
         {
-            const int BATCH_SIZE = 128;
             var query = this.Database
                 .AsQueryable<LibraryItem>(this.Database.Source(new DatabaseQueryComposer<LibraryItem>(this.Database), this.Transaction))
                 .Where(libraryItem => libraryItem.Status == libraryItemStatus && !libraryItem.MetaDatas.Any())

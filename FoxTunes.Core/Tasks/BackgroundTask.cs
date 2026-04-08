@@ -211,7 +211,7 @@ namespace FoxTunes
             await this.OnStarted().ConfigureAwait(false);
             try
             {
-                using (KeyLock.Lock(this.Id))
+                using (await KeyLock.LockAsync(this.Id).ConfigureAwait(false))
                 {
                     await this.OnRun().ConfigureAwait(false);
                 }
@@ -329,18 +329,10 @@ namespace FoxTunes
 
         protected virtual async Task WithSubTask(IReportsProgress task, Func<Task> func)
         {
-            var position = this.Position;
             var nameChanged = new EventHandler((sender, e) => this.Name = task.Name);
             var descriptionChanged = new EventHandler((sender, e) => this.Description = task.Description);
-            var positionChanged = new EventHandler((sender, e) => this.Position = position + task.Position);
-            var countChanged = new EventHandler((sender, e) =>
-            {
-                if (this.Count != 0)
-                {
-                    return;
-                }
-                this.Count = task.Count;
-            });
+            var positionChanged = new EventHandler((sender, e) => this.Position = task.Position);
+            var countChanged = new EventHandler((sender, e) => this.Count = task.Count);
             task.NameChanged += nameChanged;
             task.DescriptionChanged += descriptionChanged;
             task.PositionChanged += positionChanged;
@@ -348,7 +340,29 @@ namespace FoxTunes
             try
             {
                 await func().ConfigureAwait(false);
-                this.Position = position + task.Position;
+            }
+            finally
+            {
+                task.NameChanged -= nameChanged;
+                task.DescriptionChanged -= descriptionChanged;
+                task.PositionChanged -= positionChanged;
+                task.CountChanged -= countChanged;
+            }
+        }
+
+        protected virtual async Task WithSubTask(IReportsProgress task, Func<Task> func, int offset, int count)
+        {
+            var nameChanged = new EventHandler((sender, e) => this.Name = task.Name);
+            var descriptionChanged = new EventHandler((sender, e) => this.Description = task.Description);
+            var positionChanged = new EventHandler((sender, e) => this.Position = offset + task.Position);
+            var countChanged = new EventHandler((sender, e) => this.Count = count);
+            task.NameChanged += nameChanged;
+            task.DescriptionChanged += descriptionChanged;
+            task.PositionChanged += positionChanged;
+            task.CountChanged += countChanged;
+            try
+            {
+                await func().ConfigureAwait(false);
             }
             finally
             {
