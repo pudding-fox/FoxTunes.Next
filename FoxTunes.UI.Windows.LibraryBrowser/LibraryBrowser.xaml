@@ -76,7 +76,7 @@
                             <LocalWindows:LibraryBrowserTemplateSelector>
                                 <LocalWindows:LibraryBrowserTemplateSelector.UpTemplate>
                                     <DataTemplate DataType="{x:Type Core:LibraryHierarchyNode}">
-                                        <StackPanel Width="{Binding TileSize, Source={StaticResource ViewModel}}" Orientation="Vertical" Margin="0,3,5,0">
+                                        <StackPanel Width="{Binding TileSize, Source={StaticResource ViewModel}}" Orientation="Vertical" Margin="3,3,5,0">
                                             <Border Width="{Binding TileSize, Source={StaticResource ViewModel}}" Height="{Binding TileSize, Source={StaticResource ViewModel}}" BorderBrush="{DynamicResource TextBrush}" BorderThickness="1" Opacity=".50">
                                                 <Viewbox Stretch="Uniform">
                                                     <Canvas Width="48" Height="48">
@@ -99,7 +99,7 @@
                                 </LocalWindows:LibraryBrowserTemplateSelector.UpTemplate>
                                 <LocalWindows:LibraryBrowserTemplateSelector.DefaultTemplate>
                                     <DataTemplate DataType="{x:Type Core:LibraryHierarchyNode}">
-                                        <StackPanel Width="{Binding TileSize, Source={StaticResource ViewModel}}" Orientation="Vertical" Margin="0,3,0,0">
+                                        <StackPanel Width="{Binding TileSize, Source={StaticResource ViewModel}}" Orientation="Vertical" Margin="3,3,5,0">
                                             <Windows:AsyncImage DataContext="{Binding Converter={StaticResource LibraryBrowserImageConverter}, Mode=OneWay}" Width="{Binding TileSize, Source={StaticResource ViewModel}}" Height="{Binding TileSize, Source={StaticResource ViewModel}}" Source="{Binding Value, FallbackValue={StaticResource Transparent}}"></Windows:AsyncImage>
                                             <TextBlock HorizontalAlignment="Center" Text="{Binding Value}" TextTrimming="CharacterEllipsis" Foreground="{DynamicResource TextBrush}"></TextBlock>
                                         </StackPanel>
