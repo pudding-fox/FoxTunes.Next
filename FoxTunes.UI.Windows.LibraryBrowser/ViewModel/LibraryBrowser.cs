@@ -429,19 +429,38 @@ namespace FoxTunes.ViewModel
 
         private bool IsSynchronized(IList<LibraryBrowserFrame> frames, IList<LibraryHierarchyNode> path)
         {
+            if (!object.ReferenceEquals(this.Frames, frames))
+            {
+                return false;
+            }
             if (frames.Count != path.Count)
             {
                 return false;
             }
-            for (var position = 0; position < path.Count; position++)
+            for (var a = 0; a < path.Count; a++)
             {
-                if (!object.ReferenceEquals(frames[position].ItemsSource, path[position]))
+                var frame = frames[a];
+                var libraryHierarchyNode = path[a];
+                if (!object.ReferenceEquals(frames[a].ItemsSource, libraryHierarchyNode))
                 {
                     return false;
                 }
+                if (a > 0)
+                {
+                    //TODO: Can't quickly validate items, an extra item exists.
+                }
+                else
+                {
+                    if (!object.ReferenceEquals(frames[a].Items, this.Items))
+                    {
+                        return false;
+                    }
+                }
             }
             return true;
+
         }
+
 
         protected override Freezable CreateInstanceCore()
         {
