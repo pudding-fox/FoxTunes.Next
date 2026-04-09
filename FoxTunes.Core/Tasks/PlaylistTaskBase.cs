@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace FoxTunes
@@ -104,36 +105,40 @@ namespace FoxTunes
             }
         }
 
-        protected virtual async Task AddPaths(IEnumerable<string> paths, bool maintainOrder)
+        protected virtual async Task<int> AddPaths(IEnumerable<string> paths, bool maintainOrder)
         {
+            var count = default(int);
             using (var task = new SingletonReentrantTask(this, ComponentSlots.Database, SingletonReentrantTask.PRIORITY_HIGH, async cancellationToken =>
-             {
-                 await this.AddPlaylistItems(paths, cancellationToken).ConfigureAwait(false);
-                 await this.ShiftItems(QueryOperator.GreaterOrEqual, this.Sequence, this.Offset).ConfigureAwait(false);
-                 await this.SignalEmitter.Send(new Signal(this, CommonSignals.PlaylistUpdated, new PlaylistUpdatedSignalState(this.Playlist, DataSignalType.Updated))).ConfigureAwait(false);
-                 await this.AddOrUpdateMetaData(cancellationToken).ConfigureAwait(false);
-                 await this.SequenceItems(maintainOrder).ConfigureAwait(false);
-                 await this.SetPlaylistItemsStatus(PlaylistItemStatus.None).ConfigureAwait(false);
-             }))
+            {
+                count = await this.AddPlaylistItems(paths, cancellationToken).ConfigureAwait(false);
+                await this.ShiftItems(QueryOperator.GreaterOrEqual, this.Sequence, this.Offset).ConfigureAwait(false);
+                await this.SignalEmitter.Send(new Signal(this, CommonSignals.PlaylistUpdated, new PlaylistUpdatedSignalState(this.Playlist, DataSignalType.Updated))).ConfigureAwait(false);
+                await this.AddOrUpdateMetaData(cancellationToken).ConfigureAwait(false);
+                await this.SequenceItems(maintainOrder).ConfigureAwait(false);
+                await this.SetPlaylistItemsStatus(PlaylistItemStatus.None).ConfigureAwait(false);
+            }))
             {
                 await task.Run().ConfigureAwait(false);
             }
+            return count;
         }
 
-        protected virtual async Task AddPlaylistItems(IEnumerable<string> paths, CancellationToken cancellationToken)
+        protected virtual async Task<int> AddPlaylistItems(IEnumerable<string> paths, CancellationToken cancellationToken)
         {
+            var count = default(int);
             using (var transaction = this.Database.BeginTransaction(this.Database.PreferredIsolationLevel))
             {
                 using (var playlistPopulator = new PlaylistPopulator(this.Database, this.PlaybackManager, this.Sequence, this.Offset, this.Visible, transaction))
                 {
                     playlistPopulator.InitializeComponent(this.Core);
                     await this.WithSubTask(playlistPopulator,
-                        () => playlistPopulator.Populate(this.Playlist, paths, cancellationToken)
+                        async () => count = await playlistPopulator.Populate(this.Playlist, paths, cancellationToken)
                     ).ConfigureAwait(false);
                     this.Offset = playlistPopulator.Offset;
                 }
                 transaction.Commit();
             }
+            return count;
         }
 
         protected virtual async Task AddPlaylistItems(LibraryHierarchyNode libraryHierarchyNode, string filter)

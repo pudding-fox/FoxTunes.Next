@@ -32,7 +32,7 @@ namespace FoxTunes
 
         public string Current { get; private set; }
 
-        public async Task Populate(Playlist playlist, IEnumerable<string> paths, CancellationToken cancellationToken)
+        public async Task<int> Populate(Playlist playlist, IEnumerable<string> paths, CancellationToken cancellationToken)
         {
             if (this.ReportProgress)
             {
@@ -40,13 +40,15 @@ namespace FoxTunes
                 this.Timer.Start();
             }
 
+            var count = 0;
+
             using (var writer = new PlaylistWriter(this.Database, this.Transaction))
             {
                 foreach (var path in paths)
                 {
                     if (cancellationToken.IsCancellationRequested)
                     {
-                        return;
+                        return count;
                     }
                     if (Directory.Exists(path))
                     {
@@ -59,13 +61,17 @@ namespace FoxTunes
                         {
                             if (cancellationToken.IsCancellationRequested)
                             {
-                                return;
+                                return count;
                             }
                             Logger.Write(this, LogLevel.Debug, "Adding file to playlist: {0}", fileName);
                             var success = await this.AddPlaylistItem(playlist, writer, fileName).ConfigureAwait(false);
-                            if (success && this.ReportProgress)
+                            if (success)
                             {
-                                this.Current = fileName;
+                                if (this.ReportProgress)
+                                {
+                                    this.Current = fileName;
+                                }
+                                count++;
                             }
                         }
                     }
@@ -73,13 +79,18 @@ namespace FoxTunes
                     {
                         Logger.Write(this, LogLevel.Debug, "Adding file to playlist: {0}", path);
                         var success = await this.AddPlaylistItem(playlist, writer, path).ConfigureAwait(false);
-                        if (success && this.ReportProgress)
+                        if (success)
                         {
-                            this.Current = path;
+                            if (this.ReportProgress)
+                            {
+                                this.Current = path;
+                            }
+                            count++;
                         }
                     }
                 }
             }
+            return count;
         }
 
         protected virtual async Task<bool> AddPlaylistItem(Playlist playlist, PlaylistWriter writer, string fileName)

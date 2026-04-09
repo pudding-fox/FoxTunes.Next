@@ -238,11 +238,12 @@ namespace FoxTunes
                 await this.AddPaths(this.FileNames, true).ConfigureAwait(false);
             }
 
-            protected override async Task AddPaths(IEnumerable<string> paths, bool maintainOrder)
+            protected override async Task<int> AddPaths(IEnumerable<string> paths, bool maintainOrder)
             {
+                var count = 0;
                 using (var task = new SingletonReentrantTask(this, ComponentSlots.Database, SingletonReentrantTask.PRIORITY_HIGH, async cancellationToken =>
                 {
-                    await this.AddPlaylistItems(paths, cancellationToken).ConfigureAwait(false);
+                    count = await this.AddPlaylistItems(paths, cancellationToken).ConfigureAwait(false);
                     if (!this.Clear)
                     {
                         await this.ShiftItems(QueryOperator.GreaterOrEqual, this.Sequence, this.Offset).ConfigureAwait(false);
@@ -253,10 +254,12 @@ namespace FoxTunes
                 {
                     await task.Run().ConfigureAwait(false);
                 }
+                return count;
             }
 
-            protected override async Task AddPlaylistItems(IEnumerable<string> paths, CancellationToken cancellationToken)
+            protected override async Task<int> AddPlaylistItems(IEnumerable<string> paths, CancellationToken cancellationToken)
             {
+                var count = 0;
                 var playlistItems = await this.Factory.Create(paths).ConfigureAwait(false);
                 using (var transaction = this.Database.BeginTransaction(this.Database.PreferredIsolationLevel))
                 {
@@ -268,6 +271,7 @@ namespace FoxTunes
                         playlistItem.Sequence = this.Sequence;
                         playlistItem.Status = PlaylistItemStatus.Import;
                         await set.AddAsync(playlistItem).ConfigureAwait(false);
+                        count++;
                         this.Offset++;
                     }
                     if (transaction.HasTransaction)
@@ -275,6 +279,7 @@ namespace FoxTunes
                         transaction.Commit();
                     }
                 }
+                return count;
             }
 
             protected override Task OnCompleted()

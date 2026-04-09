@@ -330,11 +330,12 @@ namespace FoxTunes
                 await this.AddPaths(this.Paths, false).ConfigureAwait(false);
             }
 
-            protected override async Task AddPaths(IEnumerable<string> paths, bool maintainOrder)
+            protected override async Task<int> AddPaths(IEnumerable<string> paths, bool maintainOrder)
             {
+                var count = default(int);
                 using (var task = new SingletonReentrantTask(this, ComponentSlots.Database, SingletonReentrantTask.PRIORITY_HIGH, async cancellationToken =>
                 {
-                    await this.AddPlaylistItems(paths, cancellationToken).ConfigureAwait(false);
+                    count = await this.AddPlaylistItems(paths, cancellationToken).ConfigureAwait(false);
                     await this.ShiftItems(QueryOperator.GreaterOrEqual, this.Sequence, this.Offset).ConfigureAwait(false);
                     await this.SequenceItems(maintainOrder).ConfigureAwait(false);
                     await this.SetPlaylistItemsStatus(PlaylistItemStatus.None).ConfigureAwait(false);
@@ -342,10 +343,12 @@ namespace FoxTunes
                 {
                     await task.Run().ConfigureAwait(false);
                 }
+                return count;
             }
 
-            protected override async Task AddPlaylistItems(IEnumerable<string> paths, CancellationToken cancellationToken)
+            protected override async Task<int> AddPlaylistItems(IEnumerable<string> paths, CancellationToken cancellationToken)
             {
+                var count = default(int);
                 var playlistItems = default(PlaylistItem[]);
                 await this.WithSubTask(this.Factory, async () => playlistItems = await this.Factory.Create(paths).ConfigureAwait(false)).ConfigureAwait(false);
                 using (var transaction = this.Database.BeginTransaction(this.Database.PreferredIsolationLevel))
@@ -358,6 +361,7 @@ namespace FoxTunes
                         playlistItem.Sequence = this.Sequence;
                         playlistItem.Status = PlaylistItemStatus.Import;
                         await set.AddAsync(playlistItem).ConfigureAwait(false);
+                        count++;
                         this.Offset++;
                     }
                     if (transaction.HasTransaction)
@@ -365,6 +369,7 @@ namespace FoxTunes
                         transaction.Commit();
                     }
                 }
+                return count;
             }
 
             protected override Task OnCompleted()

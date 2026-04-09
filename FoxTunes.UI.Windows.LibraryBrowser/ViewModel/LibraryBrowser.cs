@@ -407,28 +407,18 @@ namespace FoxTunes.ViewModel
             {
                 return;
             }
-            for (var a = 0; a < path.Count; a++)
+            var position = 0;
+            while (position < frames.Count && position < path.Count && object.ReferenceEquals(frames[position].ItemsSource, path[position]))
             {
-                var libraryHierarchyNode = path[a];
-                if (frames.Count > a)
-                {
-                    while (!object.ReferenceEquals(frames[a].ItemsSource, libraryHierarchyNode))
-                    {
-                        while (frames.Count > a)
-                        {
-                            this.Up(frames);
-                        }
-                        this.Down(libraryHierarchyNode, frames);
-                    }
-                }
-                else
-                {
-                    this.Down(libraryHierarchyNode, frames);
-                }
+                position++;
             }
-            while (frames.Count > path.Count)
+            while (frames.Count > position)
             {
                 this.Up(frames);
+            }
+            for (; position < path.Count; position++)
+            {
+                this.Down(path[position], frames);
             }
             if (!object.ReferenceEquals(this.Frames, frames))
             {
@@ -439,32 +429,15 @@ namespace FoxTunes.ViewModel
 
         private bool IsSynchronized(IList<LibraryBrowserFrame> frames, IList<LibraryHierarchyNode> path)
         {
-            if (!object.ReferenceEquals(this.Frames, frames))
-            {
-                return false;
-            }
             if (frames.Count != path.Count)
             {
                 return false;
             }
-            for (var a = 0; a < path.Count; a++)
+            for (var position = 0; position < path.Count; position++)
             {
-                var frame = frames[a];
-                var libraryHierarchyNode = path[a];
-                if (!object.ReferenceEquals(frames[a].ItemsSource, libraryHierarchyNode))
+                if (!object.ReferenceEquals(frames[position].ItemsSource, path[position]))
                 {
                     return false;
-                }
-                if (a > 0)
-                {
-                    //TODO: Can't quickly validate items, an extra item exists.
-                }
-                else
-                {
-                    if (!object.ReferenceEquals(frames[a].Items, this.Items))
-                    {
-                        return false;
-                    }
                 }
             }
             return true;
