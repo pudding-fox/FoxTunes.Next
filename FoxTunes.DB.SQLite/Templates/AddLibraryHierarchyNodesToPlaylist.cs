@@ -46,23 +46,36 @@ AS
 			ON ""MetaDataItems"".""Id"" = ""LibraryItem_MetaDataItem"".""MetaDataItem_Id""
 	WHERE ""LibraryHierarchyItems"".""LibraryHierarchy_Id"" = @libraryHierarchyId
 		AND ""LibraryHierarchyItems"".""IsLeaf"" = 1
-		AND EXISTS
-		(
-			SELECT 1
-			FROM ""LibraryItem_MetaDataItem""
-				JOIN ""MetaDataItems"" 
-					ON ""MetaDataItems"".""Id"" = ""LibraryItem_MetaDataItem"".""MetaDataItem_Id""
-			WHERE ""LibraryItem_MetaDataItem"".""LibraryItem_Id"" = ""LibraryItems"".""Id""
 ");
             
-            #line 31 "C:\sourcecode\source\personal\FoxTunes.Next\FoxTunes.DB.SQLite\Templates\AddLibraryHierarchyNodesToPlaylist.tt"
+            #line 24 "C:\sourcecode\source\personal\FoxTunes.Next\FoxTunes.DB.SQLite\Templates\AddLibraryHierarchyNodesToPlaylist.tt"
+
+	if (this.Filter != null && this.Filter.Groups.Any())
+	{
+
+            
+            #line default
+            #line hidden
+            this.Write("\t\tAND EXISTS\r\n\t\t(\r\n\t\t\tSELECT 1\r\n\t\t\tFROM \"LibraryItem_MetaDataItem\"\r\n\t\t\t\tJOIN \"Met" +
+                    "aDataItems\" \r\n\t\t\t\t\tON \"MetaDataItems\".\"Id\" = \"LibraryItem_MetaDataItem\".\"MetaDat" +
+                    "aItem_Id\"\r\n\t\t\tWHERE \"LibraryItem_MetaDataItem\".\"LibraryItem_Id\" = \"LibraryItems\"" +
+                    ".\"Id\"\r\n");
+            
+            #line 35 "C:\sourcecode\source\personal\FoxTunes.Next\FoxTunes.DB.SQLite\Templates\AddLibraryHierarchyNodesToPlaylist.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(new LibraryHierarchyFilterBuilder(this.Database, this.Filter).TransformText()));
             
             #line default
             #line hidden
-            this.Write("\r\n\t\t)\r\n)\r\n,\r\n\"HorizontalMetaData\"\r\nAS\r\n(\r\n");
+            this.Write("\r\n\t\t)\r\n");
             
-            #line 38 "C:\sourcecode\source\personal\FoxTunes.Next\FoxTunes.DB.SQLite\Templates\AddLibraryHierarchyNodesToPlaylist.tt"
+            #line 37 "C:\sourcecode\source\personal\FoxTunes.Next\FoxTunes.DB.SQLite\Templates\AddLibraryHierarchyNodesToPlaylist.tt"
+ } 
+            
+            #line default
+            #line hidden
+            this.Write(")\r\n,\r\n\"HorizontalMetaData\"\r\nAS\r\n(\r\n");
+            
+            #line 43 "C:\sourcecode\source\personal\FoxTunes.Next\FoxTunes.DB.SQLite\Templates\AddLibraryHierarchyNodesToPlaylist.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(new PivotViewBuilder(
 		this.Database,
 		"VerticalMetaData", 
@@ -78,7 +91,7 @@ AS
                     "\"FileName\", \"DirectoryName\", \"Status\", \"Flags\") \r\nSELECT @playlistId, \"Id\", @seq" +
                     "uence + ROW_NUMBER() OVER\r\n(\r\n\tORDER BY\r\n");
             
-            #line 54 "C:\sourcecode\source\personal\FoxTunes.Next\FoxTunes.DB.SQLite\Templates\AddLibraryHierarchyNodesToPlaylist.tt"
+            #line 59 "C:\sourcecode\source\personal\FoxTunes.Next\FoxTunes.DB.SQLite\Templates\AddLibraryHierarchyNodesToPlaylist.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(new PlaylistSortBuilder(this.Database, this.Sort).TransformText()));
             
             #line default

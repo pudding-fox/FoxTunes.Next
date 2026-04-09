@@ -19,6 +19,14 @@ namespace FoxTunes
 
         public bool Clear { get; private set; }
 
+        public override bool Visible
+        {
+            get
+            {
+                return !string.IsNullOrEmpty(this.Filter);
+            }
+        }
+
         protected override async Task OnRun()
         {
             if (this.Clear)
@@ -52,6 +60,11 @@ namespace FoxTunes
 
         private async Task AddPlaylistItems()
         {
+            if (this.Visible)
+            {
+                this.Name = "Creating playlist";
+                this.Description = "Searching";
+            }
             using (var transaction = this.Database.BeginTransaction(this.Database.PreferredIsolationLevel))
             {
                 await this.AddPlaylistItems(this.Database.Queries.AddLibraryHierarchyNodesToPlaylist(this.Filter, this.Sort.Value), transaction).ConfigureAwait(false);

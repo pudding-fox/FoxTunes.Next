@@ -21,6 +21,10 @@ AS
 			ON "MetaDataItems"."Id" = "LibraryItem_MetaDataItem"."MetaDataItem_Id"
 	WHERE "LibraryHierarchyItems"."LibraryHierarchy_Id" = @libraryHierarchyId
 		AND "LibraryHierarchyItems"."Id" = @libraryHierarchyItemId
+<#
+	if (this.Filter != null && this.Filter.Groups.Any())
+	{
+#>
 		AND EXISTS
 		(
 			SELECT 1
@@ -30,6 +34,7 @@ AS
 			WHERE "LibraryItem_MetaDataItem"."LibraryItem_Id" = "LibraryItems"."Id"
 <#= new LibraryHierarchyFilterBuilder(this.Database, this.Filter).TransformText() #>
 		)
+<# } #>
 )
 ,
 "HorizontalMetaData"
