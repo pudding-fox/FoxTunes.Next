@@ -312,17 +312,17 @@ namespace FoxTunes
 
         public static bool ScrollToItemOffset<T>(this ScrollViewer scrollViewer, int offset) where T : FrameworkElement
         {
-            var item = scrollViewer.FindChild<T>();
-            if (item == null)
-            {
-                return false;
-            }
             if (scrollViewer.CanContentScroll)
             {
                 scrollViewer.ScrollToVerticalOffset(offset);
             }
             else
             {
+                var item = scrollViewer.FindChild<T>();
+                if (item == null)
+                {
+                    return false;
+                }
                 scrollViewer.ScrollToVerticalOffset(
                     offset * (item.ActualHeight + item.Margin.Top + item.Margin.Bottom)
                 );

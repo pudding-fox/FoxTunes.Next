@@ -1,8 +1,10 @@
 ﻿using FoxTunes.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 
 namespace FoxTunes
 {
@@ -45,12 +47,16 @@ namespace FoxTunes
             behaviour.SelectedItem = e.NewValue;
         }
 
-        private class SelectedItemBehaviour : EnsureSelectedItemVisibleBehaviour
+        private class SelectedItemBehaviour : UIBehaviour<TreeView>
         {
             public SelectedItemBehaviour(TreeView treeView) : base(treeView)
             {
+                this.TreeView = treeView;
                 this.TreeView.SelectedItemChanged += this.OnSelectedItemChanged;
+                this.SelectedItem = GetSelectedItem(this.TreeView);
             }
+
+            public TreeView TreeView { get; private set; }
 
             public object SelectedItem
             {
@@ -60,30 +66,91 @@ namespace FoxTunes
                 }
                 set
                 {
-                    if (value != null)
+                    if (object.Equals(this.SelectedItem, value))
                     {
-                        this.EnsureVisible(value);
+                        return;
                     }
+                    this.WithItem(this.SelectedItem, item => item.IsSelected = false);
+                    this.WithItem(value, item =>
+                    {
+                        item.BringIntoView();
+                        item.IsSelected = true;
+                    });
                 }
             }
 
-            protected override TreeViewItem EnsureVisible(Stack<IHierarchical> stack)
+            protected virtual void WithItem(object value, Action<TreeViewItem> action)
             {
-                var item = base.EnsureVisible(stack);
-                if (item != null && !item.IsSelected)
+                if (value == null)
                 {
-                    item.IsSelected = true;
+                    return;
                 }
-                return item;
+                var scrollViewer = this.TreeView.FindChild<ScrollViewer>();
+                if (scrollViewer == null)
+                {
+                    var onStatusChanged = default(EventHandler);
+                    onStatusChanged = (sender, e) =>
+                    {
+                        if (this.TreeView.ItemContainerGenerator.Status != GeneratorStatus.ContainersGenerated)
+                        {
+                            return;
+                        }
+                        this.TreeView.ItemContainerGenerator.StatusChanged -= onStatusChanged;
+                        this.SelectedItem = value;
+                    };
+                    this.TreeView.ItemContainerGenerator.StatusChanged += onStatusChanged;
+                    return;
+                }
+                if (value is IHierarchical hierarchical)
+                {
+                    var path = new Stack<IHierarchical>();
+                    path.Push(hierarchical);
+                    while (hierarchical.Parent != null)
+                    {
+                        path.Push(hierarchical.Parent);
+                        hierarchical = hierarchical.Parent;
+                    }
+                    this.WithItem(scrollViewer, this.TreeView, path, 0, action);
+                }
+            }
+
+            protected virtual void WithItem(ScrollViewer scrollViewer, ItemsControl items, Stack<IHierarchical> path, int offset, Action<TreeViewItem> action)
+            {
+                var item = path.Peek();
+                var container = items.ItemContainerGenerator.ContainerFromItem(item) as TreeViewItem;
+                if (container != null)
+                {
+                    if (path.Count > 1)
+                    {
+                        container.IsExpanded = true;
+                        path.Pop();
+                        this.WithItem(scrollViewer, container, path, offset + items.Items.IndexOf(item), action);
+                    }
+                    else
+                    {
+                        action(container);
+                    }
+                }
+                else
+                {
+                    var onStatusChanged = default(EventHandler);
+                    onStatusChanged = (sender, e) =>
+                    {
+                        if (items.ItemContainerGenerator.Status != GeneratorStatus.ContainersGenerated)
+                        {
+                            return;
+                        }
+                        items.ItemContainerGenerator.StatusChanged -= onStatusChanged;
+                        this.WithItem(scrollViewer, items, path, offset, action);
+                    };
+                    items.ItemContainerGenerator.StatusChanged += onStatusChanged;
+                    scrollViewer.ScrollToItemOffset<TreeViewItem>(offset);
+                }
             }
 
             protected virtual void OnSelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
             {
-                if (e.NewValue == null || object.ReferenceEquals(GetSelectedItem(this.TreeView), e.NewValue))
-                {
-                    return;
-                }
-                SetSelectedItem(this.TreeView, e.NewValue);
+                SetSelectedItem(this.TreeView, this.TreeView.SelectedItem);
             }
 
             protected override void OnDisposing()
