@@ -2,6 +2,7 @@
 using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Threading;
 
 namespace FoxTunes
 {
@@ -68,28 +69,20 @@ namespace FoxTunes
                 {
                     return;
                 }
-                var index = this.ListBox.Items.IndexOf(value);
-                if (index < 0)
+                var action = new Action(() =>
                 {
-                    return;
-                }
-                var item = this.ListBox.ItemContainerGenerator.ContainerFromItem(value) as ListBoxItem;
-                if (item != null)
-                {
-                    item.BringIntoView();
-                }
-                else
-                {
-                    var scrollViewer = this.ListBox.FindChild<ScrollViewer>();
-                    if (scrollViewer != null)
+                    this.ListBox.ScrollIntoView(value);
+                    this.ListBox.UpdateLayout();
+                    var container = this.ListBox.ItemContainerGenerator.ContainerFromItem(value) as ListViewItem;
+                    if (container != null)
                     {
-                        if (scrollViewer.ScrollToItemOffset<ListBoxItem>(index))
-                        {
-                            this.ListBox.UpdateLayout();
-                            item = this.ListBox.ItemContainerGenerator.ContainerFromItem(value) as ListBoxItem;
-                        }
+                        container.BringIntoView();
                     }
-                }
+                });
+                this.ListBox.Dispatcher.BeginInvoke(
+                    action,
+                    DispatcherPriority.Loaded
+                );
             }
 
             protected virtual void OnSelectionChanged(object sender, SelectionChangedEventArgs e)

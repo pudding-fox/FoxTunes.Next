@@ -42,7 +42,7 @@
                   Windows:ListViewExtensions.GroupStyle="True"
                   Windows:ListViewExtensions.GroupScript="{Binding GroupingScript, Source={StaticResource ViewModel}}"
                   Windows:ListViewExtensions.AutoSizeColumns="True"
-                  ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                  Windows:ListViewExtensions.EnsureSelectedItemVisible="True"
                   ScrollViewer.CanContentScroll="True"
                   GridViewColumnHeader.Click="OnHeaderClick"
                   RequestBringIntoView="OnRequestBringIntoView"

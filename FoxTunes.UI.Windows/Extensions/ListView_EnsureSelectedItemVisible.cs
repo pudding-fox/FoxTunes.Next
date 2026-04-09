@@ -1,8 +1,12 @@
 ﻿using System;
+using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
+using System.Windows.Data;
+using System.Windows.Threading;
 
 namespace FoxTunes
 {
@@ -69,39 +73,47 @@ namespace FoxTunes
 
             public ListView ListView { get; private set; }
 
-            protected virtual bool EnsureVisible(object value)
+            protected virtual void EnsureVisible(object value)
             {
                 if (value == null)
                 {
-                    return false;
+                    return;
                 }
-                var index = this.ListView.Items.IndexOf(value);
-                if (index < 0)
+                var group = this.GetGroup(value);
+                var action = new Action(() =>
                 {
-                    return false;
-                }
-                var item = this.ListView.ItemContainerGenerator.ContainerFromItem(value) as ListViewItem;
-                if (item != null)
-                {
-                    return true;
-                }
-                else
-                {
-                    var scrollViewer = this.ListView.FindChild<ScrollViewer>();
-                    if (scrollViewer != null)
+                    if (group != null)
                     {
-                        if (scrollViewer.ScrollToItemOffset<ListViewItem>(index))
+                        this.ListView.ScrollIntoView(group);
+                        this.ListView.UpdateLayout();
+                    }
+                    this.ListView.ScrollIntoView(value);
+                    this.ListView.UpdateLayout();
+                    var container = this.ListView.ItemContainerGenerator.ContainerFromItem(value) as ListViewItem;
+                    if (container != null)
+                    {
+                        container.BringIntoView();
+                    }
+                });
+                this.ListView.Dispatcher.BeginInvoke(
+                    action,
+                    DispatcherPriority.Loaded
+                );
+            }
+
+            private object GetGroup(object value)
+            {
+                if (this.ListView.IsGrouping)
+                {
+                    foreach (var group in this.ListView.Items.Groups.OfType<CollectionViewGroup>())
+                    {
+                        if (group.Items.Contains(value))
                         {
-                            this.ListView.UpdateLayout();
-                            item = this.ListView.ItemContainerGenerator.ContainerFromItem(value) as ListViewItem;
-                            if (item != null)
-                            {
-                                return true;
-                            }
+                            return group;
                         }
                     }
                 }
-                return false;
+                return null;
             }
 
             protected virtual void OnSelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -116,26 +128,7 @@ namespace FoxTunes
                 {
                     return;
                 }
-                if (this.EnsureVisible(selectedItems[0]))
-                {
-                    return;
-                }
-                this.ListView.ItemContainerGenerator.StatusChanged += this.OnStatusChanged;
-            }
-
-            protected virtual void OnStatusChanged(object sender, EventArgs e)
-            {
-                if (this.ListView.ItemContainerGenerator.Status != GeneratorStatus.ContainersGenerated)
-                {
-                    return;
-                }
-                this.ListView.ItemContainerGenerator.StatusChanged -= this.OnStatusChanged;
-                var selectedItems = GetSelectedItems(this.ListView);
-                if (selectedItems == null || selectedItems.Count == 0)
-                {
-                    return;
-                }
-                this.EnsureVisible(selectedItems[0]);
+                this.EnsureVisible(this.ListView.SelectedItem);
             }
 
             protected override void OnDisposing()
