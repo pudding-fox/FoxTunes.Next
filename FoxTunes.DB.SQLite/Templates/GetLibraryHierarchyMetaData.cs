@@ -54,25 +54,24 @@ WHERE ""LibraryHierarchyItems"".""Id"" = @libraryHierarchyItemId
 		SELECT 1
 		FROM ""LibraryItem_MetaDataItem""
 			JOIN ""MetaDataItems"" ON ""MetaDataItems"".""Id"" = ""LibraryItem_MetaDataItem"".""MetaDataItem_Id""
-			JOIN ""LibraryHierarchyItem_LibraryItem"" ON ""LibraryHierarchyItem_LibraryItem"".""LibraryHierarchyItem_Id"" = ""LibraryHierarchyItems"".""Id""
 		WHERE ""LibraryItem_MetaDataItem"".""LibraryItem_Id"" = ""LibraryHierarchyItem_LibraryItem"".""LibraryItem_Id""
 ");
             
-            #line 28 "C:\sourcecode\source\personal\FoxTunes.Next\FoxTunes.DB.SQLite\Templates\GetLibraryHierarchyMetaData.tt"
+            #line 27 "C:\sourcecode\source\personal\FoxTunes.Next\FoxTunes.DB.SQLite\Templates\GetLibraryHierarchyMetaData.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(new LibraryHierarchyFilterBuilder(this.Database, this.Filter).TransformText()));
             
             #line default
             #line hidden
             this.Write("\r\n\t)\r\n");
             
-            #line 30 "C:\sourcecode\source\personal\FoxTunes.Next\FoxTunes.DB.SQLite\Templates\GetLibraryHierarchyMetaData.tt"
+            #line 29 "C:\sourcecode\source\personal\FoxTunes.Next\FoxTunes.DB.SQLite\Templates\GetLibraryHierarchyMetaData.tt"
  } 
             
             #line default
             #line hidden
             this.Write("GROUP BY \"MetaDataItems\".\"Value\"\r\nLIMIT ");
             
-            #line 32 "C:\sourcecode\source\personal\FoxTunes.Next\FoxTunes.DB.SQLite\Templates\GetLibraryHierarchyMetaData.tt"
+            #line 31 "C:\sourcecode\source\personal\FoxTunes.Next\FoxTunes.DB.SQLite\Templates\GetLibraryHierarchyMetaData.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(this.Limit));
             
             #line default
