@@ -21,7 +21,15 @@ AS
 			ON "MetaDataItems"."Id" = "LibraryItem_MetaDataItem"."MetaDataItem_Id"
 	WHERE "LibraryHierarchyItems"."LibraryHierarchy_Id" = @libraryHierarchyId
 		AND "LibraryHierarchyItems"."IsLeaf" = 1
+		AND EXISTS
+		(
+			SELECT 1
+			FROM "LibraryItem_MetaDataItem"
+				JOIN "MetaDataItems" 
+					ON "MetaDataItems"."Id" = "LibraryItem_MetaDataItem"."MetaDataItem_Id"
+			WHERE "LibraryItem_MetaDataItem"."LibraryItem_Id" = "LibraryItems"."Id"
 <#= new LibraryHierarchyFilterBuilder(this.Database, this.Filter).TransformText() #>
+		)
 )
 ,
 "HorizontalMetaData"
