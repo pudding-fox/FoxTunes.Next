@@ -264,7 +264,7 @@ namespace FoxTunes.ViewModel
                 }
                 if (!foundHeader)
                 {
-                    return default(string);
+                    return response;
                 }
                 var builder = new StringBuilder();
                 var foundFooter = default(bool);
@@ -279,7 +279,7 @@ namespace FoxTunes.ViewModel
                 }
                 if (!foundFooter)
                 {
-                    return default(string);
+                    return response;
                 }
                 return builder.ToString();
             }

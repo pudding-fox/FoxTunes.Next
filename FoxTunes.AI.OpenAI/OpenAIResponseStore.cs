@@ -2,6 +2,7 @@
 using FoxTunes.Interfaces;
 using OpenAI.Responses;
 using System.ClientModel;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace FoxTunes
@@ -27,15 +28,15 @@ namespace FoxTunes
                 ReasoningOptions = new ResponseReasoningOptions()
                 {
                     ReasoningEffortLevel = GetReasoningEffortLevel(this.Context.ReasoningLevel)
-                }
+                },
+                StreamingEnabled = true
             };
             options.InputItems.Add(ResponseItem.CreateUserMessageItem(input));
             Logger.Write(this, LogLevel.Debug, "Getting response for prompt: {0}", input);
         retry:
             try
             {
-                var result = await this.Client.CreateResponseAsync(options, cancellationToken.ToNative()).ConfigureAwait(false);
-                return result.Value.GetOutputText();
+                return await this.GetResponseText(this.Client.CreateResponseStreamingAsync(options, cancellationToken.ToNative()));
             }
             catch (ClientResultException e)
             {
@@ -62,7 +63,8 @@ namespace FoxTunes
                 ReasoningOptions = new ResponseReasoningOptions()
                 {
                     ReasoningEffortLevel = GetReasoningEffortLevel(this.Context.ReasoningLevel)
-                }
+                },
+                StreamingEnabled = true
             };
             options.InputItems.Add(ResponseItem.CreateUserMessageItem(input));
             options.Tools.Add(ResponseTool.CreateFileSearchTool(new[]
@@ -74,8 +76,7 @@ namespace FoxTunes
         retry:
             try
             {
-                var result = await this.Client.CreateResponseAsync(options, cancellationToken.ToNative()).ConfigureAwait(false);
-                return result.Value.GetOutputText();
+                return await this.GetResponseText(this.Client.CreateResponseStreamingAsync(options, cancellationToken.ToNative()));
             }
             catch (ClientResultException e)
             {
@@ -109,6 +110,24 @@ namespace FoxTunes
                 case ReasoningLevel.High:
                     return ResponseReasoningEffortLevel.High;
             }
+        }
+
+        protected virtual async Task<string> GetResponseText(AsyncCollectionResult<StreamingResponseUpdate> result)
+        {
+            var builder = new StringBuilder();
+            await foreach (var update in result)
+            {
+                switch (update)
+                {
+                    case StreamingResponseReasoningTextDeltaUpdate reasoning:
+                        this.OnReasoning(reasoning.Delta);
+                        break;
+                    case StreamingResponseOutputTextDeltaUpdate output:
+                        builder.Append(output.Delta);
+                        break;
+                }
+            }
+            return builder.ToString();
         }
     }
 }

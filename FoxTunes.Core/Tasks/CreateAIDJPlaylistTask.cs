@@ -93,52 +93,65 @@ namespace FoxTunes
             using (var context = this.Runtime.CreateContext())
             {
                 var store = context.CreateResponseStore();
-                var history = await this.GetListeningHistory().ConfigureAwait(false);
-                var prompt = string.Format(this.PromptTemplate.Value, history, this.Limit);
-                for (var attempt = 0; attempt < 5; attempt++)
+                store.Reasoning += this.OnReasoning;
+                try
                 {
-                    if (this.IsCancellationRequested)
+                    var history = await this.GetListeningHistory().ConfigureAwait(false);
+                    var prompt = string.Format(this.PromptTemplate.Value, history, this.Limit);
+                    for (var attempt = 0; attempt < 5; attempt++)
                     {
-                        return;
-                    }
-                    Logger.Write(this, LogLevel.Debug, "Sending request to AI: {0}", prompt);
-                    var result = default(string);
-                    try
-                    {
-                        result = await store.Create(prompt, this.FileId.Value, this.VectorStoreId.Value, this.CancellationToken).ConfigureAwait(false);
-                    }
-                    catch (Exception e)
-                    {
-                        Logger.Write(this, LogLevel.Warn, "Failed to get response from AI: {0}", e.Message);
-                        throw;
-                    }
-                    Logger.Write(this, LogLevel.Debug, "Response from AI: {0}", result);
-                    var paths = Enumerable.Empty<string>();
-                    try
-                    {
-                        paths = await this.GetPathsFromResponse(result).ConfigureAwait(false);
-                    }
-                    catch (Exception e)
-                    {
-                        Logger.Write(this, LogLevel.Warn, "Failed to extract tracks: {0}", e.Message);
-                    }
-                    if (!paths.Any())
-                    {
-                        Logger.Write(this, LogLevel.Debug, "No paths found. Retrying...");
+                        if (this.IsCancellationRequested)
+                        {
+                            return;
+                        }
+                        Logger.Write(this, LogLevel.Debug, "Sending request to AI: {0}", prompt);
+                        var result = default(string);
+                        try
+                        {
+                            result = await store.Create(prompt, this.FileId.Value, this.VectorStoreId.Value, this.CancellationToken).ConfigureAwait(false);
+                        }
+                        catch (Exception e)
+                        {
+                            Logger.Write(this, LogLevel.Warn, "Failed to get response from AI: {0}", e.Message);
+                            throw;
+                        }
+                        Logger.Write(this, LogLevel.Debug, "Response from AI: {0}", result);
+                        var paths = Enumerable.Empty<string>();
+                        try
+                        {
+                            paths = await this.GetPathsFromResponse(result).ConfigureAwait(false);
+                        }
+                        catch (Exception e)
+                        {
+                            Logger.Write(this, LogLevel.Warn, "Failed to extract tracks: {0}", e.Message);
+                        }
+                        if (!paths.Any())
+                        {
+                            Logger.Write(this, LogLevel.Debug, "No paths found. Retrying...");
+                            await Task.Delay(1000).ConfigureAwait(false);
+                            continue;
+                        }
+                        var count = await this.AddPaths(paths, true).ConfigureAwait(false);
+                        if (count > 0)
+                        {
+                            return;
+                        }
+                        Logger.Write(this, LogLevel.Debug, "No tracks added. Retrying...");
                         await Task.Delay(1000).ConfigureAwait(false);
-                        continue;
                     }
-                    var count = await this.AddPaths(paths, true).ConfigureAwait(false);
-                    if (count > 0)
-                    {
-                        return;
-                    }
-                    Logger.Write(this, LogLevel.Debug, "No tracks added. Retrying...");
-                    await Task.Delay(1000).ConfigureAwait(false);
+                    Logger.Write(this, LogLevel.Debug, "Timed out.");
+                    throw new TimeoutException("Timed out waiting for response.");
                 }
-                Logger.Write(this, LogLevel.Debug, "Timed out.");
-                throw new TimeoutException("Timed out waiting for response.");
+                finally
+                {
+                    store.Reasoning -= this.OnReasoning;
+                }
             }
+        }
+
+        protected virtual void OnReasoning(object sender, AIResponseStoreReasoningEventArgs e)
+        {
+
         }
 
         private async Task<string> GetListeningHistory()
@@ -219,7 +232,7 @@ namespace FoxTunes
                     }
                 }
             }
-            return paths;
+            return paths.Distinct();
         }
     }
 }
