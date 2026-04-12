@@ -245,12 +245,8 @@ namespace FoxTunes
                     return false;
                 }
                 this.DragStartPosition = default(Point);
-                this.ListView.SelectedItems.Clear();
                 this.ListView.RaiseEvent(new DragSourceInitializedEventArgs(DragSourceInitializedEvent, draggingItems));
-                foreach (var selectedItem in draggingItems)
-                {
-                    this.ListView.SelectedItems.Add(selectedItem);
-                }
+                this.ListView.SetSelectedItems(draggingItems);
                 draggingItems.Clear();
                 return true;
             }

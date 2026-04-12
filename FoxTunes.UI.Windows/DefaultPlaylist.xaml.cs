@@ -51,18 +51,5 @@ namespace FoxTunes
             }
             var task = viewModel.Sort(column.PlaylistColumn);
         }
-
-        protected virtual void OnSelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (this.ListView.SelectedItem != null)
-            {
-                if (this.ListView.SelectedItems != null && this.ListView.SelectedItems.Count > 0)
-                {
-                    //When multi-selecting don't mess with the scroll position.
-                    return;
-                }
-                this.ListView.ScrollIntoView(this.ListView.SelectedItem);
-            }
-        }
     }
 }

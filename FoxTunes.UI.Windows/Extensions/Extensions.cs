@@ -1,7 +1,9 @@
 ﻿using FoxDb;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -365,6 +367,35 @@ namespace FoxTunes
             foreach (var element in elements)
             {
                 UIDisposer.Dispose(element, flags);
+            }
+        }
+
+        public static void SetSelectedItems(this ListView listView, IEnumerable items)
+        {
+            if (Enumerable.SequenceEqual(listView.SelectedItems.Cast<object>(), items.Cast<object>()))
+            {
+                return;
+            }
+            var beginUpdateSelectedItems = listView.SelectedItems.GetType().GetMethod("BeginUpdateSelectedItems", BindingFlags.Instance | BindingFlags.NonPublic);
+            var endUpdateSelectedItems = listView.SelectedItems.GetType().GetMethod("EndUpdateSelectedItems", BindingFlags.Instance | BindingFlags.NonPublic);
+            if (beginUpdateSelectedItems != null && endUpdateSelectedItems != null)
+            {
+                beginUpdateSelectedItems.Invoke(listView.SelectedItems, new object[] { });
+            }
+            try
+            {
+                listView.SelectedItems.Clear();
+                foreach (var item in items)
+                {
+                    listView.SelectedItems.Add(item);
+                }
+            }
+            finally
+            {
+                if (beginUpdateSelectedItems != null && endUpdateSelectedItems != null)
+                {
+                    endUpdateSelectedItems.Invoke(listView.SelectedItems, new object[] { });
+                }
             }
         }
     }

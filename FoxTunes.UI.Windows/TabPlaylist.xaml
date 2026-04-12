@@ -40,8 +40,7 @@
                   Windows:ListViewExtensions.Search="True"
                   VirtualizingStackPanel.IsVirtualizing="True"
                   VirtualizingStackPanel.VirtualizationMode="Recycling"
-                  GridViewColumnHeader.Click="OnHeaderClick"
-                  SelectionChanged="OnSelectionChanged">
+                  GridViewColumnHeader.Click="OnHeaderClick">
             <ListView.Resources>
                 <Windows:Menu x:Key="ColumnHeaderMenu" Category="{Binding Source={x:Static Core:InvocationComponent.CATEGORY_PLAYLIST_HEADER}}"></Windows:Menu>
             </ListView.Resources>

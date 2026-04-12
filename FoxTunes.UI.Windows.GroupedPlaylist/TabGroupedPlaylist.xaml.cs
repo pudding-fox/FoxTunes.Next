@@ -121,11 +121,7 @@ namespace FoxTunes
             {
                 return;
             }
-            this.ListView.SelectedItems.Clear();
-            foreach (var item in group.Items)
-            {
-                this.ListView.SelectedItems.Add(item);
-            }
+            this.ListView.SetSelectedItems(group.Items);
         }
 
         private double RestoreHorizontalOffset = -1d;

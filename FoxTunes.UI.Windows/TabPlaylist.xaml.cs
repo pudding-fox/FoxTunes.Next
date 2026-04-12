@@ -4,8 +4,6 @@ using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Input;
 
 namespace FoxTunes
 {
@@ -100,38 +98,6 @@ namespace FoxTunes
                 return;
             }
             var task = viewModel.Sort(column.PlaylistColumn);
-        }
-
-        protected virtual void OnSelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (this.ListView.SelectedItem != null)
-            {
-                if (this.ListView.SelectedItems != null && this.ListView.SelectedItems.Count > 0)
-                {
-                    //When multi-selecting don't mess with the scroll position.
-                    return;
-                }
-                this.ListView.ScrollIntoView(this.ListView.SelectedItem);
-            }
-        }
-
-        protected virtual void OnGroupHeaderMouseDown(object sender, MouseButtonEventArgs e)
-        {
-            var element = sender as FrameworkElement;
-            if (element == null)
-            {
-                return;
-            }
-            var group = element.DataContext as CollectionViewGroup;
-            if (group == null)
-            {
-                return;
-            }
-            this.ListView.SelectedItems.Clear();
-            foreach (var item in group.Items)
-            {
-                this.ListView.SelectedItems.Add(item);
-            }
         }
 
         protected virtual void OnPropertyChanged(string propertyName)

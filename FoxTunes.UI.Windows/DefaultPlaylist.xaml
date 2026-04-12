@@ -41,7 +41,6 @@
                   VirtualizingStackPanel.IsVirtualizing="True"
                   VirtualizingStackPanel.VirtualizationMode="Recycling"
                   GridViewColumnHeader.Click="OnHeaderClick"
-                  SelectionChanged="OnSelectionChanged"
                   Background="{DynamicResource ControlBackgroundBrush}">
             <ListView.Resources>
                 <Windows:Menu x:Key="ColumnHeaderMenu" Category="{Binding Source={x:Static Core:InvocationComponent.CATEGORY_PLAYLIST_HEADER}}"></Windows:Menu>

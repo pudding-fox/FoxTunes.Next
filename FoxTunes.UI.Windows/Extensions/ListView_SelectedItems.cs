@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
@@ -58,15 +59,7 @@ namespace FoxTunes
                 {
                     return;
                 }
-                if (Enumerable.SequenceEqual(listView.SelectedItems.Cast<object>(), items.Cast<object>()))
-                {
-                    return;
-                }
-                listView.SelectedItems.Clear();
-                foreach (var item in items)
-                {
-                    listView.SelectedItems.Add(item);
-                }
+                listView.SetSelectedItems(items);
             }
             finally
             {
