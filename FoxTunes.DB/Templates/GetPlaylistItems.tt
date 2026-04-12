@@ -6,19 +6,29 @@
 <#@ import namespace="System.Text" #>
 <#@ import namespace="System.Collections.Generic" #>
 
-SELECT "PlaylistItems"."Id"
-FROM
-(
-	SELECT "PlaylistItems"."Id", "PlaylistItems"."Sequence"
-	FROM  "PlaylistItems" 
-		LEFT JOIN "PlaylistItem_MetaDataItem" ON "PlaylistItems"."Id" = "PlaylistItem_MetaDataItem"."PlaylistItem_Id" 
-		LEFT JOIN "LibraryItem_MetaDataItem" ON "PlaylistItems"."LibraryItem_Id" = "LibraryItem_MetaDataItem"."LibraryItem_Id"
-		JOIN "MetaDataItems" ON "PlaylistItem_MetaDataItem"."MetaDataItem_Id" = "MetaDataItems"."Id" OR
-				"LibraryItem_MetaDataItem"."MetaDataItem_Id" = "MetaDataItems"."Id"
-	WHERE "PlaylistItems"."Playlist_Id" = @playlistId AND
+SELECT DISTINCT "PlaylistItems"."Id"
+FROM (
+    SELECT "PlaylistItems"."Id", "PlaylistItems"."Sequence"
+    FROM "PlaylistItems"
+    JOIN "PlaylistItem_MetaDataItem"
+        ON "PlaylistItems"."Id" = "PlaylistItem_MetaDataItem"."PlaylistItem_Id"
+    JOIN "MetaDataItems"
+        ON "PlaylistItem_MetaDataItem"."MetaDataItem_Id" = "MetaDataItems"."Id"
+    WHERE "PlaylistItems"."Playlist_Id" = @playlistId AND
 	(
 	<#= new PlaylistFilterBuilder(this.Database, this.Filter).TransformText() #>
 	)
-	GROUP BY "PlaylistItems"."Id", "PlaylistItems"."Sequence"
-) "PlaylistItems"
-ORDER BY "PlaylistItems"."Sequence"
+    UNION ALL
+    SELECT "PlaylistItems"."Id", "PlaylistItems"."Sequence"
+    FROM "PlaylistItems"
+    JOIN "LibraryItem_MetaDataItem"
+        ON "PlaylistItems"."LibraryItem_Id" = "LibraryItem_MetaDataItem"."LibraryItem_Id"
+    JOIN "MetaDataItems"
+        ON "LibraryItem_MetaDataItem"."MetaDataItem_Id" = "MetaDataItems"."Id"
+    WHERE "PlaylistItems"."Playlist_Id" = @playlistId AND
+	(
+	<#= new PlaylistFilterBuilder(this.Database, this.Filter).TransformText() #>
+	)
+)  "PlaylistItems"
+GROUP BY "PlaylistItems"."Id"
+ORDER BY "PlaylistItems"."Sequence";
