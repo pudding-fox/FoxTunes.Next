@@ -86,6 +86,7 @@
             <MetaDataEntry Name="Alignment" Value="Stretch" />
             <MetaDataEntry Name="Configuration_BBBBE8CC-88E9-4B66-B2FB-3577CD32D8C7" Value="2000" />
             <MetaDataEntry Name="Configuration_AABBF71F-72AD-46F6-964F-A4D30539C87E" Value="500" />
+            <MetaDataEntry Name="Configuration_FFFF5F0C-6574-472A-B9EB-2BDBC1F3C438" Value="5" />
           </UIComponentConfiguration>
           <UIComponentConfiguration Component="9AB8D410-B94D-492E-BF00-022A3E77762D">
             <MetaDataEntry Name="Alignment" Value="Stretch" />
