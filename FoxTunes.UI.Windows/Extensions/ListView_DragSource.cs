@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
@@ -285,7 +286,7 @@ namespace FoxTunes
 
             public void Update()
             {
-                var selectedItems = GetSelectedItems(this.ListView);
+                var selectedItems = new HashSet<object>(GetSelectedItems(this.ListView).OfType<object>());
                 if (selectedItems != null)
                 {
                     foreach (var selectedItem in selectedItems)
