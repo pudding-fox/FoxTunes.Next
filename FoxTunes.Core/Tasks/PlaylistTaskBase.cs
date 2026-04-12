@@ -164,22 +164,27 @@ namespace FoxTunes
 
         protected virtual async Task AddPlaylistItems(IEnumerable<PlaylistItem> playlistItems)
         {
+            if (this.Visible)
+            {
+                this.Position = 0;
+                this.Count = playlistItems.Count();
+                this.Name = "Creating playlist";
+            }
             using (var task = new SingletonReentrantTask(this, ComponentSlots.Database, SingletonReentrantTask.PRIORITY_HIGH, async cancellationToken =>
             {
                 using (var transaction = this.Database.BeginTransaction(this.Database.PreferredIsolationLevel))
                 {
                     var set = this.Database.Set<PlaylistItem>(transaction);
-                    var position = 0;
                     foreach (var playlistItem in PlaylistItem.Clone(playlistItems))
                     {
                         Logger.Write(this, LogLevel.Debug, "Adding file to playlist: {0}", playlistItem.FileName);
                         playlistItem.Playlist_Id = this.Playlist.Id;
-                        playlistItem.Sequence = this.Sequence + position;
+                        playlistItem.Sequence = this.Sequence + this.Position;
                         playlistItem.Status = PlaylistItemStatus.Import;
                         await set.AddAsync(playlistItem).ConfigureAwait(false);
-                        position++;
+                        this.Position++;
                     }
-                    this.Offset += position;
+                    this.Offset += this.Position;
                     if (transaction.HasTransaction)
                     {
                         transaction.Commit();
@@ -429,6 +434,12 @@ namespace FoxTunes
 
         protected virtual async Task SetPlaylistItemsStatus(IEnumerable<PlaylistItem> playlistItems, PlaylistItemStatus status)
         {
+            if (this.Visible)
+            {
+                this.Position = 0;
+                this.Count = playlistItems.Count();
+                this.Name = "Updating playlist";
+            }
             var query = this.Database.QueryFactory.Build();
             query.Update.SetTable(this.Database.Tables.PlaylistItem);
             query.Update.AddColumn(this.Database.Tables.PlaylistItem.Column("Status"));
@@ -448,6 +459,7 @@ namespace FoxTunes
                         }
                     }, transaction).ConfigureAwait(false);
                     playlistItem.Status = status;
+                    this.Position++;
                 }
                 if (transaction.HasTransaction)
                 {

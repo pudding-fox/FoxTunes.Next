@@ -17,6 +17,14 @@ namespace FoxTunes
 
         public bool Clear { get; private set; }
 
+        public override bool Visible
+        {
+            get
+            {
+                return true;
+            }
+        }
+
         protected override async Task OnRun()
         {
             if (this.Clear)

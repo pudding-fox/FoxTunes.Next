@@ -27,6 +27,14 @@ namespace FoxTunes
             this.PlaylistItems = playlistItems;
         }
 
+        public override bool Visible
+        {
+            get
+            {
+                return true;
+            }
+        }
+
         public IEnumerable<string> Paths { get; private set; }
 
         public LibraryHierarchyNode LibraryHierarchyNode { get; private set; }

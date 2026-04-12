@@ -167,7 +167,8 @@ namespace FoxTunes
                             attributes: this.GetLibraryLike(this.LibraryManager.SelectedItem).Result ? InvocationComponent.ATTRIBUTE_SELECTED : InvocationComponent.ATTRIBUTE_NONE
                         );
                     }
-                    if (this.PlaylistManager.SelectedItems != null && this.PlaylistManager.SelectedItems.Any())
+                    const int MAX_ITEMS = 1000;
+                    if (this.PlaylistManager.SelectedItems != null && this.PlaylistManager.SelectedItems.Any() && this.PlaylistManager.SelectedItems.Length < MAX_ITEMS)
                     {
                         yield return new InvocationComponent(
                             InvocationComponent.CATEGORY_PLAYLIST,
