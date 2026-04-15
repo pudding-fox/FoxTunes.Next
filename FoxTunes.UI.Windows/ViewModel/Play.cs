@@ -5,19 +5,11 @@ using System.Windows.Input;
 
 namespace FoxTunes.ViewModel
 {
-    public class Playback : ViewModelBase
+    public class Play : ViewModelBase
     {
-        public Playback(bool monitor)
+        public Play()
         {
-            if (monitor)
-            {
-                PlaybackStateNotifier.Notify += this.OnNotify;
-            }
-        }
-
-        public Playback() : this(true)
-        {
-
+            PlaybackStateNotifier.Notify += this.OnNotify;
         }
 
         public IPlaylistManager PlaylistManager { get; private set; }
@@ -50,7 +42,7 @@ namespace FoxTunes.ViewModel
 
         public event EventHandler IsPlayingChanged;
 
-        public ICommand PlayCommand
+        public ICommand Command
         {
             get
             {
@@ -78,34 +70,11 @@ namespace FoxTunes.ViewModel
             }
         }
 
-        public ICommand StopOutputCommand
+        protected override void InitializeComponent(ICore core)
         {
-            get
-            {
-                return CommandFactory.Instance.CreateCommand(
-                    () => this.PlaybackManager.Stop()
-                );
-            }
-        }
-
-        public ICommand PreviousCommand
-        {
-            get
-            {
-                return CommandFactory.Instance.CreateCommand(
-                    () => this.PlaylistManager.Previous()
-                );
-            }
-        }
-
-        public ICommand NextCommand
-        {
-            get
-            {
-                return CommandFactory.Instance.CreateCommand(
-                    () => this.PlaylistManager.Next()
-                );
-            }
+            this.PlaylistManager = core.Managers.Playlist;
+            this.PlaybackManager = core.Managers.Playback;
+            base.InitializeComponent(core);
         }
 
         protected virtual void OnNotify(object sender, EventArgs e)
@@ -125,22 +94,15 @@ namespace FoxTunes.ViewModel
             }
         }
 
-        protected override void InitializeComponent(ICore core)
+        protected override Freezable CreateInstanceCore()
         {
-            this.PlaylistManager = core.Managers.Playlist;
-            this.PlaybackManager = core.Managers.Playback;
-            base.InitializeComponent(core);
+            return new Play();
         }
 
         protected override void OnDisposing()
         {
             PlaybackStateNotifier.Notify -= this.OnNotify;
             base.OnDisposing();
-        }
-
-        protected override Freezable CreateInstanceCore()
-        {
-            return new Playback();
         }
     }
 }

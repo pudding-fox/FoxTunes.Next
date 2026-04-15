@@ -7,8 +7,6 @@ namespace FoxTunes
 {
     public static class PlaybackStateNotifier
     {
-        private static readonly TimeSpan UPDATE_INTERVAL = TimeSpan.FromMilliseconds(500);
-
         public static readonly IOutput Output;
 
         public static readonly IPlaybackManager PlaybackManager;

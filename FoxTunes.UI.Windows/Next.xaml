@@ -1,0 +1,25 @@
+﻿<Windows:UIComponentBase x:Class="FoxTunes.Next"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:Core="clr-namespace:FoxTunes;assembly=FoxTunes.Core" 
+             xmlns:Windows="clr-namespace:FoxTunes" 
+             xmlns:ViewModel="clr-namespace:FoxTunes.ViewModel"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300" d:DataContext="{d:DesignInstance Core:Core, IsDesignTimeCreatable=False}">
+    <Windows:UIComponentBase.Resources>
+        <ViewModel:Next x:Key="ViewModel"></ViewModel:Next>
+    </Windows:UIComponentBase.Resources>
+    <Button Command="{Binding Command, Mode=OneWay, Source={StaticResource ViewModel}}">
+        <Viewbox xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" Width="22" Height="22">
+            <Canvas Width="512" Height="512">
+                <Path Fill="{DynamicResource TextBrush}">
+                    <Path.Data>
+                        <PathGeometry Figures="M0,381.4l237.7-118.9L0,143.6V381.4z M237.7,262.5v118.9l237.7-118.9L237.7,143.6V262.5z M475.4,143.6v118.9v118.9H512V143.6H475.4z" />
+                    </Path.Data>
+                </Path>
+            </Canvas>
+        </Viewbox>
+    </Button>
+</Windows:UIComponentBase>
