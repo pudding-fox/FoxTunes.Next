@@ -169,6 +169,33 @@ namespace FoxTunes {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Add.
+        /// </summary>
+        internal static string UIComponentCanvasContainer_Add {
+            get {
+                return ResourceManager.GetString("UIComponentCanvasContainer.Add", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Canvas.
+        /// </summary>
+        internal static string UIComponentCanvasContainer_Name {
+            get {
+                return ResourceManager.GetString("UIComponentCanvasContainer.Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Remove.
+        /// </summary>
+        internal static string UIComponentCanvasContainer_Remove {
+            get {
+                return ResourceManager.GetString("UIComponentCanvasContainer.Remove", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Clear.
         /// </summary>
         internal static string UIComponentContainer_Clear {
