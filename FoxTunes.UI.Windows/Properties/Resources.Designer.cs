@@ -191,12 +191,7 @@ namespace FoxTunes {
         ///    xmlns=&quot;http://schemas.microsoft.com/winfx/2006/xaml/presentation&quot;
         ///    xmlns:x=&quot;http://schemas.microsoft.com/winfx/2006/xaml&quot;
         ///    TargetType=&quot;{x:Type Window}&quot;&gt;
-        ///    &lt;Grid Background=&quot;{DynamicResource ControlBrush}&quot;&gt;
-        ///        &lt;AdornerDecorator Margin=&quot;4&quot;&gt;
-        ///            &lt;ContentPresenter&gt;&lt;/ContentPresenter&gt;
-        ///        &lt;/AdornerDecorator&gt;
-        ///        &lt;Rectangle Grid.RowSpan=&quot;2&quot;  Stroke=&quot;{DynamicResource ControlBorderBrush}&quot; StrokeThickness=&quot;1&quot;&gt;&lt;/Rectangle&gt;
-        ///    &lt;/Grid&gt;
+        ///    &lt;ContentPresenter&gt;&lt;/ContentPresenter&gt;
         ///&lt;/ControlTemplate&gt;.
         /// </summary>
         internal static string WindowBaseMinimal {
