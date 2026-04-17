@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 
@@ -55,12 +56,12 @@ namespace FoxTunes
             this.Dispatch(this.Refresh);
         }
 
-        protected override async void OnRefresh()
+        protected override async void OnEnabled()
         {
             var outputStream = this.PlaybackManager.CurrentStream;
             if (outputStream == null)
             {
-                await this.OnRefresh(WindowExtensions.DefaultAccentColor).ConfigureAwait(false);
+                await this.OnEnabled(WindowExtensions.DefaultAccentColor).ConfigureAwait(false);
                 return;
             }
             var fileData = default(IFileData);
@@ -82,14 +83,18 @@ namespace FoxTunes
                 return;
             }
             var color = this.GetAccentColor(fileName);
-            await this.OnRefresh(color).ConfigureAwait(false);
+            await this.OnEnabled(color).ConfigureAwait(false);
         }
 
-        protected virtual async Task OnRefresh(Color color)
+        protected virtual async Task OnEnabled(Color color)
         {
             var windows = new HashSet<IntPtr>();
             foreach (var window in WindowBase.Active)
             {
+                if (!this.IsTemplateApplied(window.Handle))
+                {
+                    continue;
+                }
                 windows.Add(window.Handle);
                 var currentColor = default(Color);
                 if (this.AccentColors.TryGetValue(window.Handle, out currentColor) && !this.IsTransparencyEnabled)
@@ -127,6 +132,16 @@ namespace FoxTunes
             }
         }
 
+        protected override void OnDisabled()
+        {
+            foreach (var window in WindowBase.Active)
+            {
+                WindowExtensions.DisableAcrylicBlur(
+                    window.Handle
+                );
+            }
+        }
+
         protected virtual Color GetAccentColor(string fileName)
         {
             var color = this.ImageResizer.GetMainColor(fileName);
@@ -136,12 +151,6 @@ namespace FoxTunes
                 color.G,
                 color.B
             );
-        }
-
-        protected override void OnDisabled()
-        {
-            this.AccentColors.Clear();
-            base.OnDisabled();
         }
 
         public override IEnumerable<ConfigurationSection> GetConfigurationSections()

@@ -2,6 +2,8 @@
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
+using System.Windows;
+using System.Windows.Interop;
 
 namespace FoxTunes
 {
@@ -62,17 +64,23 @@ namespace FoxTunes
             var enabled = this.Transparency.Value && string.Equals(this.Provider.Value.Id, this.Id, StringComparison.OrdinalIgnoreCase);
             if (!enabled)
             {
-                this.OnDisabled();
                 return;
             }
-            this.OnRefresh();
+            this.OnEnabled();
         }
 
-        protected abstract void OnRefresh();
+        protected abstract void OnEnabled();
 
-        protected virtual void OnDisabled()
+        protected abstract void OnDisabled();
+
+        protected virtual bool IsTemplateApplied(IntPtr handle)
         {
-            //Nothing to do.
+            var window = HwndSource.FromHwnd(handle).RootVisual as WindowBase;
+            if (window == null)
+            {
+                return false;
+            }
+            return WindowBase.GetApplyTemplate(window);
         }
 
         public abstract IEnumerable<ConfigurationSection> GetConfigurationSections();

@@ -19,11 +19,23 @@ namespace FoxTunes
             }
         }
 
-        protected override void OnRefresh()
+        protected override void OnEnabled()
         {
             foreach (var window in WindowBase.Active)
             {
+                if (!this.IsTemplateApplied(window.Handle))
+                {
+                    continue;
+                }
                 WindowExtensions.EnableBlur(window.Handle);
+            }
+        }
+
+        protected override void OnDisabled()
+        {
+            foreach (var window in WindowBase.Active)
+            {
+                WindowExtensions.DisableBlur(window.Handle);
             }
         }
 

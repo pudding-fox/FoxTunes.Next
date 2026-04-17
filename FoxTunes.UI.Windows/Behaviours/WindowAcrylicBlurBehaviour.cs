@@ -2,6 +2,7 @@
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
+using System.Windows.Interop;
 using System.Windows.Media;
 
 namespace FoxTunes
@@ -45,15 +46,27 @@ namespace FoxTunes
             this.Refresh();
         }
 
-        protected override void OnRefresh()
+        protected override void OnEnabled()
         {
-            var windows = new HashSet<IntPtr>();
             foreach (var window in WindowBase.Active)
             {
-                windows.Add(window.Handle);
+                if (!this.IsTemplateApplied(window.Handle))
+                {
+                    continue;
+                }
                 WindowExtensions.EnableAcrylicBlur(
                     window.Handle,
                     this.GetAccentColor()
+                );
+            }
+        }
+
+        protected override void OnDisabled()
+        {
+            foreach (var window in WindowBase.Active)
+            {
+                WindowExtensions.DisableAcrylicBlur(
+                    window.Handle
                 );
             }
         }

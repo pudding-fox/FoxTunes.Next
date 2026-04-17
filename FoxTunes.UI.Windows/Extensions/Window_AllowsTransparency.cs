@@ -144,12 +144,58 @@ namespace FoxTunes
             }
         }
 
+        public static void DisableBlur(IntPtr handle)
+        {
+            var accent = new AccentPolicy()
+            {
+                AccentState = AccentState.ACCENT_DISABLED
+            };
+            var accentStructSize = Marshal.SizeOf(accent);
+            var accentPtr = Marshal.AllocHGlobal(accentStructSize);
+            try
+            {
+                Marshal.StructureToPtr(accent, accentPtr, false);
+                var data = new WindowCompositionAttributeData();
+                data.Attribute = WindowCompositionAttribute.WCA_ACCENT_POLICY;
+                data.SizeOfData = accentStructSize;
+                data.Data = accentPtr;
+                SetWindowCompositionAttribute(handle, ref data);
+            }
+            finally
+            {
+                Marshal.FreeHGlobal(accentPtr);
+            }
+        }
+
         public static void EnableAcrylicBlur(IntPtr handle, Color color)
         {
             var accent = new AccentPolicy()
             {
                 AccentState = AccentState.ACCENT_ENABLE_ACRYLICBLURBEHIND,
                 GradientColor = (color.A << 24) + (color.B << 16) + (color.G << 8) + color.R
+            };
+            var accentStructSize = Marshal.SizeOf(accent);
+            var accentPtr = Marshal.AllocHGlobal(accentStructSize);
+            try
+            {
+                Marshal.StructureToPtr(accent, accentPtr, false);
+                var data = new WindowCompositionAttributeData();
+                data.Attribute = WindowCompositionAttribute.WCA_ACCENT_POLICY;
+                data.SizeOfData = accentStructSize;
+                data.Data = accentPtr;
+                SetWindowCompositionAttribute(handle, ref data);
+            }
+            finally
+            {
+                Marshal.FreeHGlobal(accentPtr);
+            }
+        }
+
+        public static void DisableAcrylicBlur(IntPtr handle)
+        {
+            var accent = new AccentPolicy()
+            {
+                AccentState = AccentState.ACCENT_DISABLED,
             };
             var accentStructSize = Marshal.SizeOf(accent);
             var accentPtr = Marshal.AllocHGlobal(accentStructSize);
