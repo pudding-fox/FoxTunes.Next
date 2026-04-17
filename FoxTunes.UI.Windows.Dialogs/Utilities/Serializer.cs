@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Windows;
 using System.Xml;
 
 namespace FoxTunes
@@ -40,6 +41,9 @@ namespace FoxTunes
                     writer.WriteAttributeString(nameof(ToolWindowConfiguration.ShowWithMainWindow), Convert.ToString(config.ShowWithMainWindow));
                     writer.WriteAttributeString(nameof(ToolWindowConfiguration.ShowWithMiniWindow), Convert.ToString(config.ShowWithMiniWindow));
                     writer.WriteAttributeString(nameof(ToolWindowConfiguration.AlwaysOnTop), Convert.ToString(config.AlwaysOnTop));
+                    writer.WriteAttributeString(nameof(ToolWindowConfiguration.ApplyTemplate), Convert.ToString(config.ApplyTemplate));
+                    writer.WriteAttributeString(nameof(ToolWindowConfiguration.ApplyWindowChrome), Convert.ToString(config.ApplyWindowChrome));
+                    writer.WriteAttributeString(nameof(ToolWindowConfiguration.SizeToContent), Convert.ToString(config.SizeToContent));
                     SaveComponent(writer, config.Component);
                     writer.WriteEndElement();
                 }
@@ -113,14 +117,17 @@ namespace FoxTunes
                 reader.ReadStartElement(Publication.Product);
                 while (reader.IsStartElement(nameof(ToolWindowConfiguration)))
                 {
-                    var title = reader.GetAttribute(nameof(ToolWindowConfiguration.Title));
-                    var left = reader.GetAttribute(nameof(ToolWindowConfiguration.Left));
-                    var top = reader.GetAttribute(nameof(ToolWindowConfiguration.Top));
-                    var width = reader.GetAttribute(nameof(ToolWindowConfiguration.Width));
-                    var height = reader.GetAttribute(nameof(ToolWindowConfiguration.Height));
-                    var showWithMainWindow = reader.GetAttribute(nameof(ToolWindowConfiguration.ShowWithMainWindow));
-                    var showWithMiniWindow = reader.GetAttribute(nameof(ToolWindowConfiguration.ShowWithMiniWindow));
-                    var alwaysOnTop = reader.GetAttribute(nameof(ToolWindowConfiguration.AlwaysOnTop));
+                    var title = reader.GetAttribute(nameof(ToolWindowConfiguration.Title)) ?? string.Empty;
+                    var left = reader.GetAttribute(nameof(ToolWindowConfiguration.Left)) ?? "0";
+                    var top = reader.GetAttribute(nameof(ToolWindowConfiguration.Top)) ?? "0";
+                    var width = reader.GetAttribute(nameof(ToolWindowConfiguration.Width)) ?? "0";
+                    var height = reader.GetAttribute(nameof(ToolWindowConfiguration.Height)) ?? "0";
+                    var showWithMainWindow = reader.GetAttribute(nameof(ToolWindowConfiguration.ShowWithMainWindow)) ?? bool.TrueString;
+                    var showWithMiniWindow = reader.GetAttribute(nameof(ToolWindowConfiguration.ShowWithMiniWindow)) ?? bool.FalseString;
+                    var alwaysOnTop = reader.GetAttribute(nameof(ToolWindowConfiguration.AlwaysOnTop)) ?? bool.FalseString;
+                    var applyTemplate = reader.GetAttribute(nameof(ToolWindowConfiguration.ApplyTemplate)) ?? bool.TrueString;
+                    var applyWindowChome = reader.GetAttribute(nameof(ToolWindowConfiguration.ApplyWindowChrome)) ?? bool.TrueString;
+                    var sizeToContent = reader.GetAttribute(nameof(ToolWindowConfiguration.SizeToContent)) ?? Enum.GetName(typeof(SizeToContent), SizeToContent.Manual);
                     reader.ReadStartElement(nameof(ToolWindowConfiguration));
                     yield return new ToolWindowConfiguration()
                     {
@@ -132,6 +139,9 @@ namespace FoxTunes
                         ShowWithMainWindow = Convert.ToBoolean(showWithMainWindow),
                         ShowWithMiniWindow = Convert.ToBoolean(showWithMiniWindow),
                         AlwaysOnTop = Convert.ToBoolean(alwaysOnTop),
+                        ApplyTemplate = Convert.ToBoolean(applyTemplate),
+                        ApplyWindowChrome = Convert.ToBoolean(applyWindowChome),
+                        SizeToContent = (SizeToContent)Enum.Parse(typeof(SizeToContent), sizeToContent),
                         Component = LoadComponent(reader)
                     };
                     if (reader.NodeType == XmlNodeType.EndElement && string.Equals(reader.Name, nameof(ToolWindowConfiguration)))

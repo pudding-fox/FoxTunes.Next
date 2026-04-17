@@ -9,8 +9,7 @@
         x:Class="FoxTunes.InputBox"
         mc:Ignorable="d" SizeToContent="WidthAndHeight" WindowStartupLocation="CenterOwner" d:DataContext="{d:DesignInstance Core:Core, IsDesignTimeCreatable=False}" 
         Title="Fox Tunes"
-        Topmost="True"
-        Loaded="OnLoaded">
+        Topmost="True">
     <Windows:WindowBase.Resources>
         <ViewModel:InputBox x:Key="ViewModel"></ViewModel:InputBox>
     </Windows:WindowBase.Resources>

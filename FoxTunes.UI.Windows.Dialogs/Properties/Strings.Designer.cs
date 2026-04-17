@@ -115,6 +115,24 @@ namespace FoxTunes {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Apply Template.
+        /// </summary>
+        internal static string ToolWindowManager_ApplyTemplate {
+            get {
+                return ResourceManager.GetString("ToolWindowManager.ApplyTemplate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Apply Window Chrome.
+        /// </summary>
+        internal static string ToolWindowManager_ApplyWindowChrome {
+            get {
+                return ResourceManager.GetString("ToolWindowManager.ApplyWindowChrome", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Component.
         /// </summary>
         internal static string ToolWindowManager_Component {
@@ -156,6 +174,15 @@ namespace FoxTunes {
         internal static string ToolWindowManager_MiniWindow {
             get {
                 return ResourceManager.GetString("ToolWindowManager.MiniWindow", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Size To Content.
+        /// </summary>
+        internal static string ToolWindowManager_SizeToContent {
+            get {
+                return ResourceManager.GetString("ToolWindowManager.SizeToContent", resourceCulture);
             }
         }
         

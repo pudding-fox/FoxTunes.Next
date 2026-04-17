@@ -135,6 +135,12 @@
   <data name="ToolWindowManager.AlwaysOnTop" xml:space="preserve">
     <value>Always On Top</value>
   </data>
+  <data name="ToolWindowManager.ApplyTemplate" xml:space="preserve">
+    <value>Apply Template</value>
+  </data>
+  <data name="ToolWindowManager.ApplyWindowChrome" xml:space="preserve">
+    <value>Apply Window Chrome</value>
+  </data>
   <data name="ToolWindowManager.Component" xml:space="preserve">
     <value>Component</value>
   </data>
@@ -149,6 +155,9 @@
   </data>
   <data name="ToolWindowManager.MiniWindow" xml:space="preserve">
     <value>Show With Mini Window</value>
+  </data>
+  <data name="ToolWindowManager.SizeToContent" xml:space="preserve">
+    <value>Size To Content</value>
   </data>
   <data name="ToolWindowManager.Title" xml:space="preserve">
     <value>Title</value>

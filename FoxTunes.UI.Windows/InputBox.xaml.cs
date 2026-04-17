@@ -25,13 +25,14 @@ namespace FoxTunes
             }
         }
 
-        protected virtual void OnLoaded(object sender, RoutedEventArgs e)
+        protected override void OnLoaded(object sender, RoutedEventArgs e)
         {
             var children = this.Result.FindChildren<Control>();
             foreach (var child in children)
             {
                 child.Focus();
             }
+            base.OnLoaded(sender, e);
         }
 
         protected override void OnPreviewKeyDown(KeyEventArgs e)

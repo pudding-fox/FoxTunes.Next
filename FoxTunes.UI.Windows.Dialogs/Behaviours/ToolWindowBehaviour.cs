@@ -433,6 +433,9 @@ namespace FoxTunes
                 Height = 250,
                 ShowWithMainWindow = true,
                 ShowWithMiniWindow = false,
+                ApplyTemplate = true,
+                ApplyWindowChrome = true,
+                SizeToContent = SizeToContent.Manual,
                 Component = new UIComponentConfiguration()
             };
             var window = await this.Load(config).ConfigureAwait(false);
@@ -777,6 +780,84 @@ namespace FoxTunes
         }
 
         public event EventHandler AlwaysOnTopChanged;
+
+        private bool _ApplyTemplate { get; set; }
+
+        public bool ApplyTemplate
+        {
+            get
+            {
+                return this._ApplyTemplate;
+            }
+            set
+            {
+                this._ApplyTemplate = value;
+                this.OnApplyTemplateChanged();
+            }
+        }
+
+        protected virtual void OnApplyTemplateChanged()
+        {
+            if (this.ApplyTemplateChanged != null)
+            {
+                this.ApplyTemplateChanged(this, EventArgs.Empty);
+            }
+            this.OnPropertyChanged("ApplyTemplate");
+        }
+
+        public event EventHandler ApplyTemplateChanged;
+
+        private bool _ApplyWindowChrome { get; set; }
+
+        public bool ApplyWindowChrome
+        {
+            get
+            {
+                return this._ApplyWindowChrome;
+            }
+            set
+            {
+                this._ApplyWindowChrome = value;
+                this.OnApplyWindowChromeChanged();
+            }
+        }
+
+        protected virtual void OnApplyWindowChromeChanged()
+        {
+            if (this.ApplyWindowChromeChanged != null)
+            {
+                this.ApplyWindowChromeChanged(this, EventArgs.Empty);
+            }
+            this.OnPropertyChanged("ApplyWindowChrome");
+        }
+
+        public event EventHandler ApplyWindowChromeChanged;
+
+        private SizeToContent _SizeToContent { get; set; }
+
+        public SizeToContent SizeToContent
+        {
+            get
+            {
+                return this._SizeToContent;
+            }
+            set
+            {
+                this._SizeToContent = value;
+                this.OnSizeToContentChanged();
+            }
+        }
+
+        protected virtual void OnSizeToContentChanged()
+        {
+            if (this.SizeToContentChanged != null)
+            {
+                this.SizeToContentChanged(this, EventArgs.Empty);
+            }
+            this.OnPropertyChanged("SizeToContent");
+        }
+
+        public event EventHandler SizeToContentChanged;
 
         protected virtual void OnPropertyChanged(string propertyName)
         {

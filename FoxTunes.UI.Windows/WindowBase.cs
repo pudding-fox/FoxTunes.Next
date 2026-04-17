@@ -8,7 +8,6 @@ using System.Windows.Markup;
 using System.Windows.Media;
 using System.Linq;
 using FoxTunes.Interfaces;
-using FoxDb;
 
 #if NET40
 using Microsoft.Windows.Shell;
@@ -21,6 +20,61 @@ namespace FoxTunes
 {
     public abstract class WindowBase : Window, IUserInterfaceWindow
     {
+        public static readonly DependencyProperty ApplyTemplateProperty = DependencyProperty.Register(
+            "ApplyTemplate",
+            typeof(bool),
+            typeof(WindowBase),
+            new PropertyMetadata(true, new PropertyChangedCallback(OnApplyTemplateChanged))
+        );
+
+        public static bool GetApplyTemplate(WindowBase source)
+        {
+            return (bool)source.GetValue(ApplyTemplateProperty);
+        }
+
+        public static void SetApplyTemplate(WindowBase source, bool value)
+        {
+            source.SetValue(ApplyTemplateProperty, value);
+        }
+
+        public static void OnApplyTemplateChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
+        {
+            var windowBase = sender as WindowBase;
+            if (windowBase == null)
+            {
+                return;
+            }
+            windowBase.OnApplyTemplateChanged();
+        }
+
+
+        public static readonly DependencyProperty ApplyWindowChromeProperty = DependencyProperty.Register(
+            "ApplyWindowChrome",
+            typeof(bool),
+            typeof(WindowBase),
+            new PropertyMetadata(true, new PropertyChangedCallback(OnApplyWindowChromeChanged))
+        );
+
+        public static bool GetApplyWindowChrome(WindowBase source)
+        {
+            return (bool)source.GetValue(ApplyWindowChromeProperty);
+        }
+
+        public static void SetApplyWindowChrome(WindowBase source, bool value)
+        {
+            source.SetValue(ApplyWindowChromeProperty, value);
+        }
+
+        public static void OnApplyWindowChromeChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
+        {
+            var windowBase = sender as WindowBase;
+            if (windowBase == null)
+            {
+                return;
+            }
+            windowBase.OnApplyWindowChromeChanged();
+        }
+
         protected static ILogger Logger
         {
             get
@@ -64,23 +118,88 @@ namespace FoxTunes
         public WindowBase()
         {
             this.InitializeComponent();
+            this.Loaded += this.OnLoaded;
         }
 
-        new protected virtual bool ApplyTemplate
+        protected virtual void OnLoaded(object sender, RoutedEventArgs e)
         {
-            get
+            if (this.ApplyTemplate)
             {
-                return true;
+                this.ShowTemplate();
+            }
+            else
+            {
+                this.HideTemplate();
+            }
+            if (this.ApplyWindowChrome)
+            {
+                this.ShowWindowChrome();
+            }
+            else
+            {
+                this.HideWindowChrome();
             }
         }
 
-        protected virtual bool ApplyWindowChrome
+        new public bool ApplyTemplate
         {
             get
             {
-                return true;
+                return GetApplyTemplate(this);
+            }
+            set
+            {
+                SetApplyTemplate(this, value);
             }
         }
+
+        protected virtual void OnApplyTemplateChanged()
+        {
+            if (this.ApplyTemplate)
+            {
+                this.ShowTemplate();
+            }
+            else
+            {
+                this.HideTemplate();
+            }
+            if (this.ApplyTemplateChanged != null)
+            {
+                this.ApplyTemplateChanged(this, EventArgs.Empty);
+            }
+        }
+
+        public event EventHandler ApplyTemplateChanged;
+
+        public bool ApplyWindowChrome
+        {
+            get
+            {
+                return GetApplyWindowChrome(this);
+            }
+            set
+            {
+                SetApplyWindowChrome(this, value);
+            }
+        }
+
+        protected virtual void OnApplyWindowChromeChanged()
+        {
+            if (this.ApplyWindowChrome)
+            {
+                this.ShowWindowChrome();
+            }
+            else
+            {
+                this.HideWindowChrome();
+            }
+            if (this.ApplyWindowChromeChanged != null)
+            {
+                this.ApplyWindowChromeChanged(this, EventArgs.Empty);
+            }
+        }
+
+        public event EventHandler ApplyWindowChromeChanged;
 
         private void InitializeComponent()
         {
@@ -89,14 +208,6 @@ namespace FoxTunes
             WindowExtensions.SetAllowsTransparency(this, true);
             WindowExtensions.SetFontFamily(this, true);
             WindowExtensions.SetFontSize(this, true);
-            if (this.ApplyTemplate)
-            {
-                this.ShowTemplate();
-            }
-            if (this.ApplyWindowChrome)
-            {
-                this.ShowWindowChrome();
-            }
         }
 
         public virtual void ShowTemplate()

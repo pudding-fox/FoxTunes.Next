@@ -65,5 +65,29 @@
                 return Strings.ToolWindowManagerWindow_Title;
             }
         }
+
+        public static string ToolWindowManager_ApplyTemplate
+        {
+            get
+            {
+                return Strings.ToolWindowManager_ApplyTemplate;
+            }
+        }
+
+        public static string ToolWindowManager_ApplyWindowChrome
+        {
+            get
+            {
+                return Strings.ToolWindowManager_ApplyWindowChrome;
+            }
+        }
+
+        public static string ToolWindowManager_SizeToContent
+        {
+            get
+            {
+                return Strings.ToolWindowManager_SizeToContent;
+            }
+        }
     }
 }

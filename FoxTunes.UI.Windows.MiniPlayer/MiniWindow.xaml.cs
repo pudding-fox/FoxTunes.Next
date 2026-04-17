@@ -42,14 +42,6 @@ namespace FoxTunes
             }
         }
 
-        protected override bool ApplyTemplate
-        {
-            get
-            {
-                return false;
-            }
-        }
-
         protected override void OnMouseDown(MouseButtonEventArgs e)
         {
             if (e.ChangedButton == MouseButton.Left)

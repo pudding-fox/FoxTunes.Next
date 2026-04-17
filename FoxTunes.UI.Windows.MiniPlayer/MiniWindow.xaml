@@ -12,7 +12,9 @@
         mc:Ignorable="d" d:DesignHeight="300" d:DesignWidth="300" d:DataContext="{d:DesignInstance Core:Core, IsDesignTimeCreatable=False}" 
         Title="Fox Tunes"
         SizeToContent="WidthAndHeight"
-        ResizeMode="CanMinimize">
+        ResizeMode="CanMinimize"
+        ApplyTemplate="False"
+        ApplyWindowChrome="False">
     <Window.Resources>
         <LocalViewModel:Mini x:Key="ViewModel"></LocalViewModel:Mini>
     </Window.Resources>

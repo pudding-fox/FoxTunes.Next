@@ -192,6 +192,99 @@ namespace FoxTunes.ViewModel
 
         public event EventHandler AlwaysOnTopChanged;
 
+        public bool ApplyTemplate
+        {
+            get
+            {
+                if (this.Configuration == null)
+                {
+                    return true;
+                }
+                return this.Configuration.ApplyTemplate;
+            }
+            set
+            {
+                if (this.Configuration == null || this.Configuration.ApplyTemplate == value)
+                {
+                    return;
+                }
+                this.Configuration.ApplyTemplate = value;
+            }
+        }
+
+        protected virtual void OnApplyTemplateChanged(object sender, EventArgs e)
+        {
+            if (this.ApplyTemplateChanged != null)
+            {
+                this.ApplyTemplateChanged(this, EventArgs.Empty);
+            }
+            this.OnPropertyChanged("ApplyTemplate");
+        }
+
+        public event EventHandler ApplyTemplateChanged;
+
+        public bool ApplyWindowChrome
+        {
+            get
+            {
+                if (this.Configuration == null)
+                {
+                    return true;
+                }
+                return this.Configuration.ApplyWindowChrome;
+            }
+            set
+            {
+                if (this.Configuration == null || this.Configuration.ApplyWindowChrome == value)
+                {
+                    return;
+                }
+                this.Configuration.ApplyWindowChrome = value;
+            }
+        }
+
+        protected virtual void OnApplyWindowChromeChanged(object sender, EventArgs e)
+        {
+            if (this.ApplyWindowChromeChanged != null)
+            {
+                this.ApplyWindowChromeChanged(this, EventArgs.Empty);
+            }
+            this.OnPropertyChanged("ApplyWindowChrome");
+        }
+
+        public event EventHandler ApplyWindowChromeChanged;
+
+        public SizeToContent SizeToContent
+        {
+            get
+            {
+                if (this.Configuration == null)
+                {
+                    return SizeToContent.Manual;
+                }
+                return this.Configuration.SizeToContent;
+            }
+            set
+            {
+                if (this.Configuration == null || this.Configuration.SizeToContent == value)
+                {
+                    return;
+                }
+                this.Configuration.SizeToContent = value;
+            }
+        }
+
+        protected virtual void OnSizeToContentChanged(object sender, EventArgs e)
+        {
+            if (this.SizeToContentChanged != null)
+            {
+                this.SizeToContentChanged(this, EventArgs.Empty);
+            }
+            this.OnPropertyChanged("SizeToContent");
+        }
+
+        public event EventHandler SizeToContentChanged;
+
         private ToolWindowConfiguration _Configuration { get; set; }
 
         public ToolWindowConfiguration Configuration
@@ -220,6 +313,9 @@ namespace FoxTunes.ViewModel
                 this.Configuration.ShowWithMainWindowChanged += this.OnShowWithMainWindowChanged;
                 this.Configuration.ShowWithMiniWindowChanged += this.OnShowWithMiniWindowChanged;
                 this.Configuration.AlwaysOnTopChanged += this.OnAlwaysOnTopChanged;
+                this.Configuration.ApplyTemplateChanged += this.OnApplyTemplateChanged;
+                this.Configuration.ApplyWindowChromeChanged += this.OnApplyWindowChromeChanged;
+                this.Configuration.SizeToContentChanged += this.OnSizeToContentChanged;
 
                 this.OnTitleChanged(this, EventArgs.Empty);
                 this.OnBoundsChanged(this, EventArgs.Empty);
@@ -227,6 +323,9 @@ namespace FoxTunes.ViewModel
                 this.OnShowWithMainWindowChanged(this, EventArgs.Empty);
                 this.OnShowWithMiniWindowChanged(this, EventArgs.Empty);
                 this.OnAlwaysOnTopChanged(this, EventArgs.Empty);
+                this.OnApplyTemplateChanged(this, EventArgs.Empty);
+                this.OnApplyWindowChromeChanged(this, EventArgs.Empty);
+                this.OnSizeToContentChanged(this, EventArgs.Empty);
             }
             if (this.ConfigurationChanged != null)
             {
@@ -251,6 +350,9 @@ namespace FoxTunes.ViewModel
                 this.Configuration.ShowWithMainWindowChanged -= this.OnShowWithMainWindowChanged;
                 this.Configuration.ShowWithMiniWindowChanged -= this.OnShowWithMiniWindowChanged;
                 this.Configuration.AlwaysOnTopChanged -= this.OnAlwaysOnTopChanged;
+                this.Configuration.ApplyTemplateChanged -= this.OnApplyTemplateChanged;
+                this.Configuration.ApplyWindowChromeChanged -= this.OnApplyWindowChromeChanged;
+                this.Configuration.SizeToContentChanged -= this.OnSizeToContentChanged;
             }
             base.OnDisposing();
         }

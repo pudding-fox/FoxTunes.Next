@@ -25,13 +25,13 @@ namespace FoxTunes
         public UIComponentCanvasContainer()
         {
             this.EventHandlers = new Dictionary<UIComponentContainer, RoutedPropertyChangedEventHandler<UIComponentConfiguration>>();
-            this.Canvas = new Canvas();
-            this.Content = this.Canvas;
+            this.Grid = new Grid();
+            this.Content = this.Grid;
         }
 
         public IDictionary<UIComponentContainer, RoutedPropertyChangedEventHandler<UIComponentConfiguration>> EventHandlers { get; private set; }
 
-        public Canvas Canvas { get; private set; }
+        public Grid Grid { get; private set; }
 
         protected override void OnConfigurationChanged()
         {
@@ -41,7 +41,7 @@ namespace FoxTunes
 
         protected virtual void UpdateChildren()
         {
-            this.Canvas.Children.Clear(UIDisposerFlags.Default);
+            this.Grid.Children.Clear(UIDisposerFlags.Default);
             if (this.Configuration.Children.Count > 0)
             {
                 foreach (var component in this.Configuration.Children)
@@ -52,11 +52,11 @@ namespace FoxTunes
                     var height = default(string);
                     if (component == null || !component.MetaData.TryGetValue(Top, out top))
                     {
-                        top = "0";
+                        top = string.Empty;
                     }
                     if (component == null || !component.MetaData.TryGetValue(Left, out left))
                     {
-                        left = "0";
+                        left = string.Empty;
                     }
                     if (component == null || !component.MetaData.TryGetValue(Width, out width))
                     {
@@ -72,8 +72,8 @@ namespace FoxTunes
             else
             {
                 {
-                    var top = "0";
-                    var left = "0";
+                    var top = string.Empty;
+                    var left = string.Empty;
                     var width = string.Empty;
                     var height = string.Empty;
                     var component = new UIComponentConfiguration();
@@ -89,8 +89,16 @@ namespace FoxTunes
             {
                 Configuration = component
             };
-            container.SetValue(Canvas.TopProperty, Convert.ToDouble(top));
-            container.SetValue(Canvas.LeftProperty, Convert.ToDouble(left));
+            var margin = new Thickness();
+            if (!string.IsNullOrEmpty(top))
+            {
+                margin.Top = Convert.ToDouble(top);
+            }
+            if (!string.IsNullOrEmpty(left))
+            {
+                margin.Left = Convert.ToDouble(left);
+            }
+            container.Margin = margin;
             if (!string.IsNullOrEmpty(width))
             {
                 container.Width = Convert.ToDouble(width);
@@ -105,7 +113,7 @@ namespace FoxTunes
             });
             container.ConfigurationChanged += eventHandler;
             this.EventHandlers.Add(container, eventHandler);
-            this.Canvas.Children.Add(container);
+            this.Grid.Children.Add(container);
         }
 
         protected virtual void UpdateComponent(UIComponentConfiguration originalComponent, UIComponentConfiguration newComponent)
@@ -130,7 +138,6 @@ namespace FoxTunes
             if (container == null)
             {
                 return;
-
             }
         }
 

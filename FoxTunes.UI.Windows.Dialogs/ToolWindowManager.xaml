@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:System="clr-namespace:System;assembly=mscorlib"
+             xmlns:SystemWindows="clr-namespace:System.Windows;assembly=PresentationCore"
              xmlns:Core="clr-namespace:FoxTunes;assembly=FoxTunes.Core" 
              xmlns:Windows="clr-namespace:FoxTunes" 
              xmlns:ViewModel="clr-namespace:FoxTunes.ViewModel"
@@ -12,6 +13,11 @@
              d:DesignHeight="300" d:DesignWidth="600">
     <UserControl.Resources>
         <ViewModel:ToolWindowManager x:Key="ViewModel"></ViewModel:ToolWindowManager>
+        <ObjectDataProvider x:Key="SizeToContents" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="SystemWindows:SizeToContent"/>
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
     </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -64,6 +70,9 @@
                         <RowDefinition Height="Auto"></RowDefinition>
                         <RowDefinition Height="Auto"></RowDefinition>
                         <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="Auto"></RowDefinition>
                     </Grid.RowDefinitions>
                     <Label Grid.Column="0" Grid.Row="0" Content="{x:Static Windows:StringResources.ToolWindowManager_Title}"/>
                     <TextBox Grid.Column="1" Grid.Row="0" Text="{Binding Title}" Margin="0,0,0,5"></TextBox>
@@ -75,7 +84,13 @@
                     <CheckBox Grid.Column="1" Grid.Row="3" VerticalAlignment="Center" IsChecked="{Binding ShowWithMiniWindow}"></CheckBox>
                     <Label Grid.Column="0" Grid.Row="4" Content="{x:Static Windows:StringResources.ToolWindowManager_AlwaysOnTop}"/>
                     <CheckBox Grid.Column="1" Grid.Row="4" VerticalAlignment="Center" IsChecked="{Binding AlwaysOnTop}"></CheckBox>
-                    <StackPanel Grid.Column="1" Grid.Row="5" HorizontalAlignment="Right" Orientation="Horizontal">
+                    <Label Grid.Column="0" Grid.Row="5" Content="{x:Static Windows:StringResources.ToolWindowManager_ApplyTemplate}"/>
+                    <CheckBox Grid.Column="1" Grid.Row="5" VerticalAlignment="Center" IsChecked="{Binding ApplyTemplate}"></CheckBox>
+                    <Label Grid.Column="0" Grid.Row="6" Content="{x:Static Windows:StringResources.ToolWindowManager_ApplyWindowChrome}"/>
+                    <CheckBox Grid.Column="1" Grid.Row="6" VerticalAlignment="Center" IsChecked="{Binding ApplyWindowChrome}"></CheckBox>
+                    <Label Grid.Column="0" Grid.Row="7" Content="{x:Static Windows:StringResources.ToolWindowManager_SizeToContent}"/>
+                    <ComboBox Grid.Column="1" Grid.Row="7" VerticalAlignment="Center" SelectedValue="{Binding SizeToContent}" ItemsSource="{Binding Source={StaticResource SizeToContents}}" ></ComboBox>
+                    <StackPanel Grid.Column="1" Grid.Row="8" HorizontalAlignment="Right" Orientation="Horizontal">
                         <Button Width="120" Height="30" Margin="0,0,5,0" HorizontalAlignment="Right" Click="OnEditLayoutXMLClick" Content="{x:Static Windows:StringResources.ToolWindowManager_EditLayoutXML}"/>
                         <Button Width="120" Height="30" HorizontalAlignment="Right" Click="OnCopyLayoutToMainClick" Content="{x:Static Windows:StringResources.ToolWindowManager_CopyToMain}"/>
                     </StackPanel>
