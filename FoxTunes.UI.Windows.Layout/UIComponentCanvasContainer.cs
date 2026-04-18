@@ -1,9 +1,12 @@
 ﻿using FoxTunes.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Media;
 
 namespace FoxTunes
 {
@@ -26,12 +29,23 @@ namespace FoxTunes
         {
             this.EventHandlers = new Dictionary<UIComponentContainer, RoutedPropertyChangedEventHandler<UIComponentConfiguration>>();
             this.Grid = new Grid();
+            this.Canvas = new Canvas()
+            {
+                HorizontalAlignment = HorizontalAlignment.Stretch,
+                VerticalAlignment = VerticalAlignment.Stretch,
+                Background = Brushes.Transparent
+            };
+            this.Canvas.SetBinding(Canvas.WidthProperty, new Binding(nameof(this.Grid.ActualWidth)) { Source = this.Grid });
+            this.Canvas.SetBinding(Canvas.HeightProperty, new Binding(nameof(this.Grid.ActualHeight)) { Source = this.Grid });
+            this.Grid.Children.Add(this.Canvas);
             this.Content = this.Grid;
         }
 
         public IDictionary<UIComponentContainer, RoutedPropertyChangedEventHandler<UIComponentConfiguration>> EventHandlers { get; private set; }
 
         public Grid Grid { get; private set; }
+
+        public Canvas Canvas { get; private set; }
 
         protected override void OnConfigurationChanged()
         {
@@ -41,7 +55,7 @@ namespace FoxTunes
 
         protected virtual void UpdateChildren()
         {
-            this.Grid.Children.Clear(UIDisposerFlags.Default);
+            this.Canvas.Children.Clear(UIDisposerFlags.Default);
             if (this.Configuration.Children.Count > 0)
             {
                 foreach (var component in this.Configuration.Children)
@@ -89,16 +103,14 @@ namespace FoxTunes
             {
                 Configuration = component
             };
-            var margin = new Thickness();
             if (!string.IsNullOrEmpty(top))
             {
-                margin.Top = Convert.ToDouble(top);
+                container.SetValue(Canvas.TopProperty, Convert.ToDouble(top));
             }
             if (!string.IsNullOrEmpty(left))
             {
-                margin.Left = Convert.ToDouble(left);
+                container.SetValue(Canvas.LeftProperty, Convert.ToDouble(left));
             }
-            container.Margin = margin;
             if (!string.IsNullOrEmpty(width))
             {
                 container.Width = Convert.ToDouble(width);
@@ -113,7 +125,11 @@ namespace FoxTunes
             });
             container.ConfigurationChanged += eventHandler;
             this.EventHandlers.Add(container, eventHandler);
-            this.Grid.Children.Add(container);
+            if (this.IsInDesignMode)
+            {
+                UIComponentContainerExtensions.SetMoveResize(container, true);
+            }
+            this.Canvas.Children.Add(container);
         }
 
         protected virtual void UpdateComponent(UIComponentConfiguration originalComponent, UIComponentConfiguration newComponent)
@@ -211,6 +227,26 @@ namespace FoxTunes
                 //TODO: Component was not found.
                 throw new NotImplementedException();
             });
+        }
+
+        protected override void OnIsInDesignModeChanged()
+        {
+            foreach (var container in this.Canvas.Children.OfType<UIComponentContainer>())
+            {
+                if (this.IsInDesignMode)
+                {
+                    UIComponentContainerExtensions.SetMoveResize(container, true);
+                }
+                else
+                {
+                    container.Configuration.MetaData.AddOrUpdate(Left, Convert.ToString(Canvas.GetLeft(container)));
+                    container.Configuration.MetaData.AddOrUpdate(Top, Convert.ToString(Canvas.GetTop(container)));
+                    container.Configuration.MetaData.AddOrUpdate(Width, Convert.ToString(container.ActualWidth));
+                    container.Configuration.MetaData.AddOrUpdate(Height, Convert.ToString(container.ActualHeight));
+                    UIComponentContainerExtensions.SetMoveResize(container, false);
+                }
+            }
+            base.OnIsInDesignModeChanged();
         }
     }
 }
