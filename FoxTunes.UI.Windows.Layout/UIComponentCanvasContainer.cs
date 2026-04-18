@@ -55,6 +55,13 @@ namespace FoxTunes
 
         protected virtual void UpdateChildren()
         {
+            foreach (var container in this.Canvas.Children.OfType<UIComponentContainer>())
+            {
+                container.Configuration.MetaData.AddOrUpdate(Left, Convert.ToString(Canvas.GetLeft(container)));
+                container.Configuration.MetaData.AddOrUpdate(Top, Convert.ToString(Canvas.GetTop(container)));
+                container.Configuration.MetaData.AddOrUpdate(Width, Convert.ToString(container.ActualWidth));
+                container.Configuration.MetaData.AddOrUpdate(Height, Convert.ToString(container.ActualHeight));
+            }
             this.Canvas.Children.Clear(UIDisposerFlags.Default);
             if (this.Configuration.Children.Count > 0)
             {

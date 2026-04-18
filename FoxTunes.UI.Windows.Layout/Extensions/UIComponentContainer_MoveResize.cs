@@ -69,6 +69,10 @@ namespace FoxTunes
 
             protected virtual void OnPreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
             {
+                if (!Keyboard.IsKeyDown(Key.LeftAlt) && !Keyboard.IsKeyDown(Key.RightAlt))
+                {
+                    return;
+                }
                 var canvas = this.Container.FindAncestor<Canvas>();
                 if (canvas == null)
                 {
