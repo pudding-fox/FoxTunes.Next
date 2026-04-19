@@ -8,17 +8,17 @@ namespace FoxTunes
     {
         public static readonly DependencyProperty ColumnsSourceProperty = DependencyProperty.RegisterAttached(
             "ColumnsSource",
-            typeof(IEnumerable<PlaylistGridViewColumn>),
+            typeof(IEnumerable<GridViewColumn>),
             typeof(GridViewExtensions),
             new UIPropertyMetadata(null, new PropertyChangedCallback(OnColumnsSourcePropertyChanged))
         );
 
-        public static IEnumerable<PlaylistGridViewColumn> GetColumnsSource(GridView source)
+        public static IEnumerable<GridViewColumn> GetColumnsSource(GridView source)
         {
-            return (IEnumerable<PlaylistGridViewColumn>)source.GetValue(ColumnsSourceProperty);
+            return (IEnumerable<GridViewColumn>)source.GetValue(ColumnsSourceProperty);
         }
 
-        public static void SetColumnsSource(GridView source, IEnumerable<PlaylistGridViewColumn> value)
+        public static void SetColumnsSource(GridView source, IEnumerable<GridViewColumn> value)
         {
             source.SetValue(ColumnsSourceProperty, value);
         }
@@ -30,7 +30,7 @@ namespace FoxTunes
             {
                 return;
             }
-            var columns = e.NewValue as IEnumerable<PlaylistGridViewColumn>;
+            var columns = e.NewValue as IEnumerable<GridViewColumn>;
             if (columns == null)
             {
                 return;

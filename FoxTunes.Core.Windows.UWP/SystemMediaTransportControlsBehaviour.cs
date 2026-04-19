@@ -128,20 +128,29 @@ namespace FoxTunes
 
         public void Disable()
         {
-            this.Timer.Stop();
-            this.Timer.Elapsed -= this.OnElapsed;
-            this.Timer.Dispose();
-            this.PlaybackManager.CurrentStreamChanged -= this.OnCurrentStreamChanged;
-            this.Timer = null;
-            this.TransportControls.IsEnabled = false;
-            this.TransportControls.PlaybackStatus = MediaPlaybackStatus.Closed;
-            this.TransportControls.ButtonPressed -= this.OnButtonPressed;
-            //this.TransportControls.AutoRepeatModeChangeRequested -= this.OnAutoRepeatModeChangeRequested;
-            //this.TransportControls.PlaybackPositionChangeRequested -= this.OnPlaybackPositionChangeRequested;
-            //this.TransportControls.PlaybackRateChangeRequested -= this.OnPlaybackRateChangeRequested;
-            //this.TransportControls.ShuffleEnabledChangeRequested -= this.OnShuffleEnabledChangeRequested;
-            //this.TransportControls.PropertyChanged -= this.OnPropertyChanged;
-            this.TransportControls = null;
+            if (this.Timer != null)
+            {
+                this.Timer.Stop();
+                this.Timer.Elapsed -= this.OnElapsed;
+                this.Timer.Dispose();
+                this.Timer = null;
+            }
+            if (this.PlaybackManager != null)
+            {
+                this.PlaybackManager.CurrentStreamChanged -= this.OnCurrentStreamChanged;
+            }
+            if (this.TransportControls != null)
+            {
+                this.TransportControls.IsEnabled = false;
+                this.TransportControls.PlaybackStatus = MediaPlaybackStatus.Closed;
+                this.TransportControls.ButtonPressed -= this.OnButtonPressed;
+                //this.TransportControls.AutoRepeatModeChangeRequested -= this.OnAutoRepeatModeChangeRequested;
+                //this.TransportControls.PlaybackPositionChangeRequested -= this.OnPlaybackPositionChangeRequested;
+                //this.TransportControls.PlaybackRateChangeRequested -= this.OnPlaybackRateChangeRequested;
+                //this.TransportControls.ShuffleEnabledChangeRequested -= this.OnShuffleEnabledChangeRequested;
+                //this.TransportControls.PropertyChanged -= this.OnPropertyChanged;
+                this.TransportControls = null;
+            }
             Logger.Write(this, LogLevel.Debug, "SystemMediaTransportControls disabled.");
         }
 
