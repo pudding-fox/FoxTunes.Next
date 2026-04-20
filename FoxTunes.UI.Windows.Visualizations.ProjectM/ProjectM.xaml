@@ -5,9 +5,12 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:Windows="clr-namespace:FoxTunes;assembly=FoxTunes.UI.Windows" 
              xmlns:LocalWindows="clr-namespace:FoxTunes"
+             xmlns:Integration="clr-namespace:System.Windows.Forms.Integration;assembly=WindowsFormsIntegration"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300" 
              Foreground="{DynamicResource TextBrush}"
              MinWidth="100"
-             MinHeight="100">
+             MinHeight="100"
+             Loaded="OnLoaded">
+    <Integration:WindowsFormsHost Name="Host"></Integration:WindowsFormsHost>
 </Windows:UIComponentBase>
