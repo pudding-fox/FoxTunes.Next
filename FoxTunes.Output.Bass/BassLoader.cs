@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 
 namespace FoxTunes
 {
@@ -216,7 +217,9 @@ namespace FoxTunes
 
         public bool Load(string fileName)
         {
-            var handle = Bass.PluginLoad(fileName);
+            var handle = default(int);
+            var directoryName = Path.GetDirectoryName(fileName);
+            this.WithDllDirectory(directoryName, () => handle = Bass.PluginLoad(fileName));
             if (handle == 0)
             {
                 Logger.Write(this, LogLevel.Warn, "Failed to load plugin: {0}", fileName);
@@ -243,6 +246,23 @@ namespace FoxTunes
             Loader.Free("bass_fx.dll");
             Loader.Free("bass.dll");
             this.IsLoaded = false;
+        }
+
+        protected virtual void WithDllDirectory(string directoryName, Action action)
+        {
+            SetDefaultDllDirectories(LOAD_LIBRARY_SEARCH_DEFAULT_DIRS | LOAD_LIBRARY_SEARCH_USER_DIRS);
+            var cookie = AddDllDirectory(directoryName);
+            try
+            {
+                action();
+            }
+            finally
+            {
+                if (!IntPtr.Zero.Equals(cookie))
+                {
+                    RemoveDllDirectory(cookie);
+                }
+            }
         }
 
         public bool IsDisposed { get; private set; }
@@ -280,6 +300,19 @@ namespace FoxTunes
                 //Nothing can be done, never throw on GC thread.
             }
         }
+
+        public const uint LOAD_LIBRARY_SEARCH_DEFAULT_DIRS = 0x00001000;
+
+        public const uint LOAD_LIBRARY_SEARCH_USER_DIRS = 0x00000400;
+
+        [DllImport("kernel32.dll")]
+        public static extern bool SetDefaultDllDirectories(uint DirectoryFlags);
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
+        public static extern IntPtr AddDllDirectory(string lpPathName);
+
+        [DllImport("kernel32.dll", SetLastError = true)]
+        public static extern bool RemoveDllDirectory(IntPtr Cookie);
 
         public class BassPlugin : IEquatable<BassPlugin>
         {
