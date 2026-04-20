@@ -146,6 +146,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FoxTunes.AI.OpenAI", "FoxTu
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FoxTunes.UI.Windows.AI", "FoxTunes.UI.Windows.AI\FoxTunes.UI.Windows.AI.csproj", "{55DFA7A5-618E-5E99-0456-87346141BB00}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FoxTunes.UI.Windows.Visualizations.ProjectM", "FoxTunes.UI.Windows.Visualizations.ProjectM\FoxTunes.UI.Windows.Visualizations.ProjectM.csproj", "{13FD4D5F-C1C3-CDC5-E90B-C1CE3040DEBD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -392,6 +394,10 @@ Global
 		{55DFA7A5-618E-5E99-0456-87346141BB00}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{55DFA7A5-618E-5E99-0456-87346141BB00}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{55DFA7A5-618E-5E99-0456-87346141BB00}.Release|Any CPU.Build.0 = Release|Any CPU
+		{13FD4D5F-C1C3-CDC5-E90B-C1CE3040DEBD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{13FD4D5F-C1C3-CDC5-E90B-C1CE3040DEBD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{13FD4D5F-C1C3-CDC5-E90B-C1CE3040DEBD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{13FD4D5F-C1C3-CDC5-E90B-C1CE3040DEBD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -457,6 +463,7 @@ Global
 		{53C78727-3975-36E9-F53A-23F5B9C838F1} = {5EAC9025-32D5-484E-B01F-E03EC5127260}
 		{85A2C702-A551-ECD2-D77E-2E28E1880DA3} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{55DFA7A5-618E-5E99-0456-87346141BB00} = {05C1FA04-4070-44A7-9DFC-38B48FEFA3C2}
+		{13FD4D5F-C1C3-CDC5-E90B-C1CE3040DEBD} = {05C1FA04-4070-44A7-9DFC-38B48FEFA3C2}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {9293982D-B2F3-4C86-A307-057EE1CFA115}
