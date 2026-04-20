@@ -516,7 +516,15 @@ namespace FoxTunes
                         "FoxTunes.Output.Bass.Ffmpeg.dll",
                         "ManagedBass.Ffmpeg.dll",
                         new PackageElement("x86/bass_ffmpeg.dll", "x86/addon"),
-                        new PackageElement("x64/bass_ffmpeg.dll", "x64/addon")
+                        new PackageElement("x86/avcodec-62.dll", "x86/addon"),
+                        new PackageElement("x86/avformat-62.dll", "x86/addon"),
+                        new PackageElement("x86/avutil-60.dll", "x86/addon"),
+                        new PackageElement("x86/swresample-6.dll", "x86/addon"),
+                        new PackageElement("x64/bass_ffmpeg.dll", "x64/addon"),
+                        new PackageElement("x64/avcodec-62.dll", "x64/addon"),
+                        new PackageElement("x64/avformat-62.dll", "x64/addon"),
+                        new PackageElement("x64/avutil-60.dll", "x64/addon"),
+                        new PackageElement("x64/swresample-6.dll", "x64/addon")
                     },
                     PackageFlags.Default
                 ),
