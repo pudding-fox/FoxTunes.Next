@@ -33,6 +33,8 @@ namespace FoxTunes
 
         public static IVisualizationDataSource VisualizationDataSource = ComponentRegistry.Instance.GetComponent<IVisualizationDataSource>();
 
+        public static IUserInterface UserInterface = ComponentRegistry.Instance.GetComponent<IUserInterface>();
+
         public ProjectM()
         {
             this.InitializeComponent();
@@ -133,6 +135,15 @@ namespace FoxTunes
 
         protected virtual void OnLoaded(object sender, RoutedEventArgs e)
         {
+            var window = this.FindAncestor<Window>();
+            if (window != null)
+            {
+                if (window.AllowsTransparency)
+                {
+                    Logger.Write(this, LogLevel.Warn, "Transparency is enabled for window {0}, disabling it.", window.Title);
+                    UserInterface.Warn(Strings.ProjectM_TransparencyWarning);
+                }
+            }
             this.GLControl = new GLControl(new GraphicsMode(32, 24, 0, 4));
             this.GLControl.Dock = DockStyle.Fill;
             this.GLControl.Visible = true;
@@ -141,23 +152,36 @@ namespace FoxTunes
             this.GLControl.HandleCreated += this.OnHandleCreated;
             this.GLControl.SizeChanged += this.OnSizeChanged;
             this.GLControl.MouseDown += this.OnMouseDown;
+            Logger.Write(this, LogLevel.Debug, "GLControl created.");
             this.Host.Child = this.GLControl;
             this.Host.Visibility = Visibility.Visible;
             this.Host.UpdateLayout();
             this.GLControl.CreateControl();
             this.GLControl.Refresh();
+            Logger.Write(this, LogLevel.Debug, "GLControl initialized.");
         }
 
         protected virtual void OnLoad(object sender, EventArgs e)
         {
             this.GLControl.MakeCurrent();
+            Logger.Write(this, LogLevel.Debug, "Initializing glew.");
             var result = glewInit();
             if (result != 0)
             {
+                Logger.Write(this, LogLevel.Warn, "Failed to initialize glew: {0}", result);
                 return;
             }
+            Logger.Write(this, LogLevel.Debug, "Glew initialized.");
+            Logger.Write(this, LogLevel.Debug, "Creating ProjectM context.");
             this.Context = projectm_create();
+            if (IntPtr.Zero.Equals(this.Context))
+            {
+                Logger.Write(this, LogLevel.Warn, "Failed to create ProjectM context.");
+                return;
+            }
+            Logger.Write(this, LogLevel.Debug, "Created ProjectM context.");
             var fileName = Presets.Next();
+            Logger.Write(this, LogLevel.Debug, "Loading preset: {0}", fileName);
             projectm_load_preset_file(this.Context, fileName, false);
         }
 
@@ -186,12 +210,15 @@ namespace FoxTunes
 
         protected virtual void OnSizeChanged(object sender, EventArgs e)
         {
+            Logger.Write(this, LogLevel.Debug, "GLControl size changed: {0}x{1}.", this.GLControl.Width, this.GLControl.Height);
+            Logger.Write(this, LogLevel.Debug, "Updating GL viewport.");
             this.GLControl.MakeCurrent();
             GL.Viewport(0, 0, this.GLControl.Width, this.GLControl.Height);
             if (IntPtr.Zero.Equals(this.Context))
             {
                 return;
             }
+            Logger.Write(this, LogLevel.Debug, "Updating ProjectM window size.");
             projectm_set_window_size(this.Context, (UIntPtr)this.GLControl.Width, (UIntPtr)this.GLControl.Height);
         }
 
@@ -272,6 +299,7 @@ namespace FoxTunes
                     return;
                 }
                 var fileName = Presets.Next();
+                Logger.Write(this, LogLevel.Debug, "Loading preset: {0}", fileName);
                 projectm_load_preset_file(this.Context, fileName, true);
             });
         }
@@ -305,6 +333,7 @@ namespace FoxTunes
             }
             if (this.GLControl != null)
             {
+                Logger.Write(this, LogLevel.Debug, "Disposing GLControl.");
                 this.GLControl.Load -= this.OnLoad;
                 this.GLControl.Paint -= this.OnPaint;
                 this.GLControl.HandleCreated -= this.OnHandleCreated;
@@ -313,6 +342,7 @@ namespace FoxTunes
             }
             if (!IntPtr.Zero.Equals(this.Context))
             {
+                Logger.Write(this, LogLevel.Debug, "Destroying ProjectM context.");
                 projectm_destroy(this.Context);
                 this.Context = IntPtr.Zero;
             }

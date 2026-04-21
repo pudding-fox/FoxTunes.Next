@@ -129,4 +129,7 @@
   <data name="ProjectM.Previous" xml:space="preserve">
     <value>Previous</value>
   </data>
+  <data name="ProjectM.TransparencyWarning" xml:space="preserve">
+    <value>Cannot create OpenGL context while transparency is enabled, please disable it and restart.</value>
+  </data>
 </root>

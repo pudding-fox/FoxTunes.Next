@@ -95,5 +95,14 @@ namespace FoxTunes {
                 return ResourceManager.GetString("ProjectM.Previous", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cannot create OpenGL context while transparency is enabled, please disable it and restart..
+        /// </summary>
+        internal static string ProjectM_TransparencyWarning {
+            get {
+                return ResourceManager.GetString("ProjectM.TransparencyWarning", resourceCulture);
+            }
+        }
     }
 }
