@@ -68,5 +68,32 @@ namespace FoxTunes {
                 return ResourceManager.GetString("ProjectM.Name", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Next.
+        /// </summary>
+        internal static string ProjectM_Next {
+            get {
+                return ResourceManager.GetString("ProjectM.Next", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pause.
+        /// </summary>
+        internal static string ProjectM_Pause {
+            get {
+                return ResourceManager.GetString("ProjectM.Pause", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Previous.
+        /// </summary>
+        internal static string ProjectM_Previous {
+            get {
+                return ResourceManager.GetString("ProjectM.Previous", resourceCulture);
+            }
+        }
     }
 }

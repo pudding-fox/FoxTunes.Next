@@ -120,4 +120,13 @@
   <data name="ProjectM.Name" xml:space="preserve">
     <value>Project M</value>
   </data>
+  <data name="ProjectM.Next" xml:space="preserve">
+    <value>Next</value>
+  </data>
+  <data name="ProjectM.Pause" xml:space="preserve">
+    <value>Pause</value>
+  </data>
+  <data name="ProjectM.Previous" xml:space="preserve">
+    <value>Previous</value>
+  </data>
 </root>

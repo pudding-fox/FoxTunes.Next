@@ -201,8 +201,6 @@ namespace FoxTunes
 
         public ThemeLoader ThemeLoader { get; private set; }
 
-        public IOutputDataSource OutputDataSource { get; private set; }
-
         public IVisualizationDataSource VisualizationDataSource { get; private set; }
 
         public virtual void InitializeComponent(ICore core)
@@ -211,7 +209,6 @@ namespace FoxTunes
             this.PixelSizeConverter = ComponentRegistry.Instance.GetComponent<PixelSizeConverter>();
             this.ThemeLoader = ComponentRegistry.Instance.GetComponent<ThemeLoader>();
             this.ThemeLoader.ThemeChanged += this.OnThemeChanged;
-            this.OutputDataSource = core.Components.OutputDataSource;
             this.VisualizationDataSource = core.Components.VisualizationDataSource;
         }
 
