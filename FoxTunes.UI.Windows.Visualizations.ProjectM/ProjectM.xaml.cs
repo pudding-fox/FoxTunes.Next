@@ -133,7 +133,7 @@ namespace FoxTunes
 
         protected virtual void OnLoaded(object sender, RoutedEventArgs e)
         {
-            this.GLControl = new GLControl(new GraphicsMode(32, 24, 0, 4), 4, 6, GraphicsContextFlags.Default);
+            this.GLControl = new GLControl(new GraphicsMode(32, 24, 0, 4));
             this.GLControl.Dock = DockStyle.Fill;
             this.GLControl.Visible = true;
             this.GLControl.Load += this.OnLoad;
@@ -293,6 +293,24 @@ namespace FoxTunes
 
         protected override void OnDisposing()
         {
+            if (this.Timer1 != null)
+            {
+                this.Timer1.Elapsed -= this.OnTimer1Elapsed;
+                this.Timer1.Dispose();
+            }
+            if (this.Timer2 != null)
+            {
+                this.Timer2.Elapsed += this.OnTimer2Elapsed;
+                this.Timer2.Dispose();
+            }
+            if (this.GLControl != null)
+            {
+                this.GLControl.Load -= this.OnLoad;
+                this.GLControl.Paint -= this.OnPaint;
+                this.GLControl.HandleCreated -= this.OnHandleCreated;
+                this.GLControl.SizeChanged -= this.OnSizeChanged;
+                this.GLControl.MouseDown -= this.OnMouseDown;
+            }
             if (!IntPtr.Zero.Equals(this.Context))
             {
                 projectm_destroy(this.Context);
