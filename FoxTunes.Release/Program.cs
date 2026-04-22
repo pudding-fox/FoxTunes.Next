@@ -825,6 +825,8 @@ namespace FoxTunes
                     new PackageElement[]
                     {
                         "FoxTunes.UI.Windows.Visualizations.ProjectM.dll",
+                        "OpenTK.dll",
+                        "OpenTK.GLControl.dll",
                         new PackageElement("x86/glew32.dll", "x86"),
                         new PackageElement("x86/projectM-4.dll", "x86"),
                         new PackageElement("x64/glew32.dll", "x64"),
