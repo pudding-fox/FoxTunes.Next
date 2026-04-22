@@ -97,6 +97,15 @@ namespace FoxTunes {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Search.
+        /// </summary>
+        internal static string ProjectM_Search {
+            get {
+                return ResourceManager.GetString("ProjectM.Search", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Cannot create OpenGL context while transparency is enabled, please disable it and restart..
         /// </summary>
         internal static string ProjectM_TransparencyWarning {

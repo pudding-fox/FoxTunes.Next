@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace FoxTunes
 {
@@ -134,32 +135,54 @@ namespace FoxTunes
                 }
             }
 
-            var source = GetSource(target, package, element, flags);
-
-            if (!File.Exists(source))
+            foreach (var source in GetSources(target, package, element, flags))
             {
-                Console.WriteLine("File not found: {0}", source);
-                return;
+
+                if (!File.Exists(source))
+                {
+                    Console.WriteLine("File not found: {0}", source);
+                    return;
+                }
+
+                var destination = GetDestination(target, package, element, flags);
+
+                CopyFile(source, destination, flags);
             }
-
-            var destination = GetDestination(target, package, element, flags);
-
-            CopyFile(source, destination, flags);
         }
 
         private static void CopyFile(string source, string destination, ReleaseFlags flags)
         {
-            var directoryName = Path.GetDirectoryName(destination);
-            if (!Directory.Exists(directoryName))
+            if (string.IsNullOrEmpty(Path.GetExtension(destination)))
             {
-                Console.WriteLine("Creating directory: {0}", directoryName);
-                Directory.CreateDirectory(directoryName);
+                var name = destination.Split(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar).Last();
+                var directoryName = string.Concat(destination, Path.GetDirectoryName(source.Split(new[] { name }, StringSplitOptions.None).Last()));
+                if (!Directory.Exists(directoryName))
+                {
+                    Console.WriteLine("Creating directory: {0}", directoryName);
+                    Directory.CreateDirectory(directoryName);
+                }
+
+                destination = Path.Combine(directoryName, Path.GetFileName(source));
+
+                Console.WriteLine("Creating file: {0}", destination);
+                File.Copy(source, destination);
+
+                CopyResouces(source, destination, flags);
             }
+            else
+            {
+                var directoryName = Path.GetDirectoryName(destination);
+                if (!Directory.Exists(directoryName))
+                {
+                    Console.WriteLine("Creating directory: {0}", directoryName);
+                    Directory.CreateDirectory(directoryName);
+                }
 
-            Console.WriteLine("Creating file: {0}", destination);
-            File.Copy(source, destination);
+                Console.WriteLine("Creating file: {0}", destination);
+                File.Copy(source, destination);
 
-            CopyResouces(source, destination, flags);
+                CopyResouces(source, destination, flags);
+            }
         }
 
         private static void CopyResouces(string source, string destination, ReleaseFlags flags)
@@ -213,9 +236,22 @@ namespace FoxTunes
             return Path.Combine(parts.ToArray());
         }
 
-        private static string GetSource(string target, Package package, PackageElement element, ReleaseFlags flags)
+        private static IEnumerable<string> GetSources(string target, Package package, PackageElement element, ReleaseFlags flags)
         {
-            return Path.Combine(GetSource(target, flags), element.FileName);
+            if (element.FileName.Contains("*"))
+            {
+                var directoryName = Path.Combine(GetSource(target, flags), element.FileName.Substring(0, element.FileName.IndexOf("*") - 1));
+                var searchPattern = element.FileName.Substring(element.FileName.IndexOf("*"));
+                var fileNames = Directory.GetFiles(directoryName, searchPattern, SearchOption.AllDirectories);
+                return fileNames.ToArray();
+            }
+            else
+            {
+                return new[]
+                {
+                    Path.Combine(GetSource(target, flags), element.FileName)
+                };
+            }
         }
 
         private static string GetDestination(string target, Package package, PackageElement element, ReleaseFlags flags)
@@ -231,7 +267,14 @@ namespace FoxTunes
             if (!string.IsNullOrEmpty(element.FolderName))
             {
                 parts.Add(element.FolderName);
-                parts.Add(Path.GetFileName(element.FileName));
+                if (element.FileName.Contains("*"))
+                {
+                    //Nothing to do.
+                }
+                else
+                {
+                    parts.Add(Path.GetFileName(element.FileName));
+                }
             }
             else
             {
@@ -774,6 +817,20 @@ namespace FoxTunes
                     new PackageElement[]
                     {
                         "FoxTunes.UI.Windows.Visualizations.dll"
+                    },
+                    PackageFlags.Default
+                ),
+                new Package(
+                    "projectm",
+                    new PackageElement[]
+                    {
+                        "FoxTunes.UI.Windows.Visualizations.ProjectM.dll",
+                        new PackageElement("x86/glew32.dll", "x86"),
+                        new PackageElement("x86/projectM-4.dll", "x86"),
+                        new PackageElement("x64/glew32.dll", "x64"),
+                        new PackageElement("x64/projectM-4.dll", "x64"),
+                        new PackageElement("Presets/*.milk", "Presets"),
+                        new PackageElement("Textures/*.jpg", "Textures")
                     },
                     PackageFlags.Default
                 ),

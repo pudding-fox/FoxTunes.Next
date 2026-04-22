@@ -4,7 +4,9 @@ using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Runtime.InteropServices;
+using System.Runtime.InteropServices.ComTypes;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Forms;
@@ -23,12 +25,22 @@ namespace FoxTunes
 
         public const string NEXT = "BBBB";
 
-        public const string PAUSE = "CCCC";
+        public const string SEARCH = "CCCC";
+
+        public const string PAUSE = "DDDD";
 
         static ProjectM()
         {
             Loader.Load("glew32.dll");
             Loader.Load("projectM-4.dll");
+        }
+
+        public static string Location
+        {
+            get
+            {
+                return Path.GetDirectoryName(typeof(ProjectM).Assembly.Location);
+            }
         }
 
         public static IVisualizationDataSource VisualizationDataSource = ComponentRegistry.Instance.GetComponent<IVisualizationDataSource>();
@@ -44,17 +56,22 @@ namespace FoxTunes
                 Interval = TimeSpan.FromMilliseconds(16),
                 Flags = VisualizationDataFlags.Individual
             };
+            this.Buffers = new Dictionary<int, float[]>();
             this.Timer1 = new global::System.Timers.Timer();
             this.Timer1.Interval = 16;
             this.Timer1.Elapsed += this.OnTimer1Elapsed;
+            this.Timer1.AutoReset = false;
             this.Timer1.Start();
             this.Timer2 = new global::System.Timers.Timer();
             this.Timer2.Interval = 60000;
             this.Timer2.Elapsed += this.OnTimer2Elapsed;
+            this.Timer2.AutoReset = false;
             this.Timer2.Start();
         }
 
         public PCMVisualizationData Data { get; private set; }
+
+        public IDictionary<int, float[]> Buffers { get; private set; }
 
         public global::System.Timers.Timer Timer1 { get; private set; }
 
@@ -84,40 +101,47 @@ namespace FoxTunes
         {
             var task = Windows.Invoke(() =>
             {
-                if (VisualizationDataSource.Update(this.Data))
+                try
                 {
-                    switch (this.Data.Channels)
+                    if (VisualizationDataSource.Update(this.Data))
                     {
-                        case 1:
-                            this.DownmixedData = this.Data.Samples32;
-                            this.DownmixedChannels = Channels.MONO;
-                            break;
-                        case 2:
-                            this.DownmixedData = this.Data.Samples32;
-                            this.DownmixedChannels = Channels.STEREO;
-                            break;
-                        case 6:
-                            this.DownmixedData = Downmix51ToStereo(this.Data.Samples32);
-                            this.DownmixedChannels = Channels.STEREO;
-                            break;
-                        case 8:
-                            this.DownmixedData = Downmix71ToStereo(this.Data.Samples32);
-                            this.DownmixedChannels = Channels.STEREO;
-                            break;
-                        default:
-                            return;
+                        switch (this.Data.Channels)
+                        {
+                            case 1:
+                                this.DownmixedData = this.Data.Samples32;
+                                this.DownmixedChannels = Channels.MONO;
+                                break;
+                            case 2:
+                                this.DownmixedData = this.Data.Samples32;
+                                this.DownmixedChannels = Channels.STEREO;
+                                break;
+                            case 6:
+                                this.DownmixedData = Downmix51ToStereo(this.Data.Samples32);
+                                this.DownmixedChannels = Channels.STEREO;
+                                break;
+                            case 8:
+                                this.DownmixedData = Downmix71ToStereo(this.Data.Samples32);
+                                this.DownmixedChannels = Channels.STEREO;
+                                break;
+                            default:
+                                return;
+                        }
                     }
+                    else
+                    {
+                        this.DownmixedData = null;
+                        this.DownmixedChannels = Channels.NONE;
+                    }
+                    if (this.GLControl == null)
+                    {
+                        return;
+                    }
+                    this.GLControl.Invalidate();
                 }
-                else
+                finally
                 {
-                    this.DownmixedData = null;
-                    this.DownmixedChannels = Channels.NONE;
+                    this.Timer1.Start();
                 }
-                if (this.GLControl == null)
-                {
-                    return;
-                }
-                this.GLControl.Invalidate();
             });
         }
 
@@ -125,11 +149,23 @@ namespace FoxTunes
         {
             var task = Windows.Invoke(() =>
             {
-                if (IntPtr.Zero.Equals(this.Context))
+                try
                 {
-                    return;
+                    if (IntPtr.Zero.Equals(this.Context))
+                    {
+                        return;
+                    }
+                    var fileName = Presets.Next();
+                    Logger.Write(this, LogLevel.Debug, "Loading preset: {0}", fileName);
+                    if (!string.IsNullOrEmpty(fileName))
+                    {
+                        projectm_load_preset_file(this.Context, fileName, true);
+                    }
                 }
-                projectm_load_preset_file(this.Context, Presets.Next(), true);
+                finally
+                {
+                    this.Timer2.Start();
+                }
             });
         }
 
@@ -140,7 +176,7 @@ namespace FoxTunes
             {
                 if (window.AllowsTransparency)
                 {
-                    Logger.Write(this, LogLevel.Warn, "Transparency is enabled for window {0}, disabling it.", window.Title);
+                    Logger.Write(this, LogLevel.Warn, "Transparency is enabled for window {0}, warning.", window.Title);
                     UserInterface.Warn(Strings.ProjectM_TransparencyWarning);
                 }
             }
@@ -163,7 +199,10 @@ namespace FoxTunes
 
         protected virtual void OnLoad(object sender, EventArgs e)
         {
-            this.GLControl.MakeCurrent();
+            if (!this.GLControl.Context.IsCurrent)
+            {
+                this.GLControl.MakeCurrent();
+            }
             Logger.Write(this, LogLevel.Debug, "Initializing glew.");
             var result = glewInit();
             if (result != 0)
@@ -180,9 +219,15 @@ namespace FoxTunes
                 return;
             }
             Logger.Write(this, LogLevel.Debug, "Created ProjectM context.");
+            var directoryName = Path.Combine(Location, "Textures");
+            Logger.Write(this, LogLevel.Debug, "Setting texture path: {0}", directoryName);
+            projectm_set_texture_search_paths(this.Context, new[] { directoryName });
             var fileName = Presets.Next();
             Logger.Write(this, LogLevel.Debug, "Loading preset: {0}", fileName);
-            projectm_load_preset_file(this.Context, fileName, false);
+            if (!string.IsNullOrEmpty(fileName))
+            {
+                projectm_load_preset_file(this.Context, fileName, false);
+            }
         }
 
         protected virtual void OnPaint(object sender, PaintEventArgs e)
@@ -197,22 +242,41 @@ namespace FoxTunes
                 var data = ResampleTo512(this.DownmixedData, channels);
                 var frames = (uint)(data.Length / channels);
                 projectm_pcm_add_float(this.Context, data, frames, this.DownmixedChannels);
-                this.GLControl.MakeCurrent();
+                if (!this.GLControl.Context.IsCurrent)
+                {
+                    this.GLControl.MakeCurrent();
+                }
                 projectm_opengl_render_frame(this.Context);
+                this.GLControl.SwapBuffers();
+            }
+            else
+            {
+                if (!this.GLControl.Context.IsCurrent)
+                {
+                    this.GLControl.MakeCurrent();
+                }
+                GL.ClearColor(0, 0, 0, 1); //Black.
+                GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
                 this.GLControl.SwapBuffers();
             }
         }
 
         protected virtual void OnHandleCreated(object sender, EventArgs e)
         {
-            this.GLControl.MakeCurrent();
+            if (!this.GLControl.Context.IsCurrent)
+            {
+                this.GLControl.MakeCurrent();
+            }
         }
 
         protected virtual void OnSizeChanged(object sender, EventArgs e)
         {
             Logger.Write(this, LogLevel.Debug, "GLControl size changed: {0}x{1}.", this.GLControl.Width, this.GLControl.Height);
             Logger.Write(this, LogLevel.Debug, "Updating GL viewport.");
-            this.GLControl.MakeCurrent();
+            if (!this.GLControl.Context.IsCurrent)
+            {
+                this.GLControl.MakeCurrent();
+            }
             GL.Viewport(0, 0, this.GLControl.Width, this.GLControl.Height);
             if (IntPtr.Zero.Equals(this.Context))
             {
@@ -244,6 +308,7 @@ namespace FoxTunes
             {
                 yield return new InvocationComponent(CATEGORY, PREVIOUS, Strings.ProjectM_Previous);
                 yield return new InvocationComponent(CATEGORY, NEXT, Strings.ProjectM_Next);
+                yield return new InvocationComponent(CATEGORY, SEARCH, Strings.ProjectM_Search, attributes: InvocationComponent.ATTRIBUTE_SEPARATOR);
                 yield return new InvocationComponent(CATEGORY, PAUSE, Strings.ProjectM_Pause, attributes: (byte)((this.Timer2.Enabled ? InvocationComponent.ATTRIBUTE_NONE : InvocationComponent.ATTRIBUTE_SELECTED) | InvocationComponent.ATTRIBUTE_SEPARATOR));
             }
         }
@@ -256,6 +321,8 @@ namespace FoxTunes
                     return this.Previous();
                 case NEXT:
                     return this.Next();
+                case SEARCH:
+                    return this.Search();
                 case PAUSE:
                     return this.Pause();
 
@@ -281,7 +348,11 @@ namespace FoxTunes
                     return;
                 }
                 var fileName = Presets.Previous();
-                projectm_load_preset_file(this.Context, fileName, true);
+                Logger.Write(this, LogLevel.Debug, "Loading preset: {0}", fileName);
+                if (!string.IsNullOrEmpty(fileName))
+                {
+                    projectm_load_preset_file(this.Context, fileName, true);
+                }
             });
         }
 
@@ -300,8 +371,25 @@ namespace FoxTunes
                 }
                 var fileName = Presets.Next();
                 Logger.Write(this, LogLevel.Debug, "Loading preset: {0}", fileName);
-                projectm_load_preset_file(this.Context, fileName, true);
+                if (!string.IsNullOrEmpty(fileName))
+                {
+                    projectm_load_preset_file(this.Context, fileName, true);
+                }
             });
+        }
+
+        public Task Search()
+        {
+            if (IntPtr.Zero.Equals(this.Context))
+            {
+#if NET40
+                return TaskEx.FromResult(false);
+#else
+                return Task.CompletedTask;
+#endif
+            }
+            Presets.Search = UserInterface.Prompt(Strings.ProjectM_Search, Presets.Search);
+            return this.Next();
         }
 
         public Task Pause()
@@ -310,10 +398,12 @@ namespace FoxTunes
             {
                 if (this.Timer2.Enabled)
                 {
+                    Logger.Write(this, LogLevel.Debug, "Pausing preset rotation.");
                     this.Timer2.Stop();
                 }
                 else
                 {
+                    Logger.Write(this, LogLevel.Debug, "Resuming preset rotation.");
                     this.Timer2.Start();
                 }
             });
@@ -328,7 +418,7 @@ namespace FoxTunes
             }
             if (this.Timer2 != null)
             {
-                this.Timer2.Elapsed += this.OnTimer2Elapsed;
+                this.Timer2.Elapsed -= this.OnTimer2Elapsed;
                 this.Timer2.Dispose();
             }
             if (this.GLControl != null)
@@ -349,12 +439,12 @@ namespace FoxTunes
             base.OnDisposing();
         }
 
-        public static float[] Downmix51ToStereo(float[] input)
+        protected virtual float[] Downmix51ToStereo(float[] input)
         {
             var inChannels = 6;
             var outChannels = 2;
             var frames = input.Length / inChannels;
-            var output = new float[frames * outChannels];
+            var output = this.GetBuffer(frames * outChannels);
             for (var f = 0; f < frames; f++)
             {
                 var i = f * inChannels;
@@ -371,12 +461,12 @@ namespace FoxTunes
             return output;
         }
 
-        public static float[] Downmix71ToStereo(float[] input)
+        protected virtual float[] Downmix71ToStereo(float[] input)
         {
             var inChannels = 8;
             var outChannels = 2;
             var frames = input.Length / inChannels;
-            var output = new float[frames * outChannels];
+            var output = this.GetBuffer(frames * outChannels);
             for (var f = 0; f < frames; f++)
             {
                 var i = f * inChannels;
@@ -395,32 +485,53 @@ namespace FoxTunes
             return output;
         }
 
-        public static float[] ResampleTo512(float[] input, int channels)
+        protected virtual float[] ResampleTo512(float[] input, int channels)
         {
             const int targetFrames = 512;
-
-            int inputFrames = input.Length / channels;
-            if (inputFrames == 0) return new float[targetFrames * channels];
-
-            float[] output = new float[targetFrames * channels];
-
-            for (int i = 0; i < targetFrames; i++)
+            var inputFrames = input.Length / channels;
+            var output = this.GetBuffer(targetFrames * channels);
+            for (var i = 0; i < targetFrames; i++)
             {
-                float srcIndex = (float)i * inputFrames / targetFrames;
-                int i0 = (int)srcIndex;
-                int i1 = Math.Min(i0 + 1, inputFrames - 1);
-                float t = srcIndex - i0;
-
-                for (int c = 0; c < channels; c++)
+                var srcIndex = (float)i * inputFrames / targetFrames;
+                var i0 = (int)srcIndex;
+                var i1 = Math.Min(i0 + 1, inputFrames - 1);
+                var t = srcIndex - i0;
+                for (var c = 0; c < channels; c++)
                 {
-                    float a = input[(i0 * channels) + c];
-                    float b = input[(i1 * channels) + c];
-
+                    var a = input[(i0 * channels) + c];
+                    var b = input[(i1 * channels) + c];
                     output[(i * channels) + c] = a + (b - a) * t;
                 }
             }
-
             return output;
+        }
+
+        protected virtual float[] GetBuffer(int size)
+        {
+            return this.Buffers.GetOrAdd(size, () => new float[size]);
+        }
+
+        public static void projectm_set_texture_search_paths(IntPtr instance, string[] paths)
+        {
+            var _paths = new IntPtr[paths.Length];
+            try
+            {
+                for (var a = 0; a < paths.Length; a++)
+                {
+                    _paths[a] = Marshal.StringToHGlobalAnsi(paths[a]);
+                }
+                projectm_set_texture_search_paths(instance, _paths, _paths.Length);
+            }
+            finally
+            {
+                foreach (var path in _paths)
+                {
+                    if (path != IntPtr.Zero)
+                    {
+                        Marshal.FreeHGlobal(path);
+                    }
+                }
+            }
         }
 
 
@@ -429,6 +540,9 @@ namespace FoxTunes
 
         [DllImport("projectM-4.dll", CallingConvention = CallingConvention.Cdecl)]
         public static extern IntPtr projectm_create();
+
+        [DllImport("projectM-4.dll", CallingConvention = CallingConvention.Cdecl)]
+        public static extern void projectm_set_texture_search_paths(IntPtr instance, IntPtr[] paths, int count);
 
         [DllImport("projectM-4.dll", CallingConvention = CallingConvention.Cdecl)]
         public static extern void projectm_set_window_size(IntPtr ctx, UIntPtr width, UIntPtr height);
