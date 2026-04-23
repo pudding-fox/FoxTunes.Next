@@ -124,6 +124,15 @@ namespace FoxTunes {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Apply Transparency.
+        /// </summary>
+        internal static string ToolWindowManager_ApplyTransparency {
+            get {
+                return ResourceManager.GetString("ToolWindowManager.ApplyTransparency", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Apply Window Chrome.
         /// </summary>
         internal static string ToolWindowManager_ApplyWindowChrome {

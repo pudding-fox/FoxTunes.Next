@@ -66,7 +66,7 @@ namespace FoxTunes.ViewModel
             {
                 return;
             }
-            
+
             this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
         }
 

@@ -91,12 +91,6 @@ namespace FoxTunes
             var windows = new HashSet<IntPtr>();
             foreach (var window in WindowBase.Active)
             {
-                var isTemplateApplied = default(bool);
-                await Windows.Invoke(() => isTemplateApplied = this.IsTemplateApplied(window.Handle)).ConfigureAwait(false);
-                if (!isTemplateApplied)
-                {
-                    continue;
-                }
                 windows.Add(window.Handle);
                 var currentColor = default(Color);
                 if (this.AccentColors.TryGetValue(window.Handle, out currentColor))

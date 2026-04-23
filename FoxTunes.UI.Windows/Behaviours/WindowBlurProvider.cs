@@ -73,16 +73,6 @@ namespace FoxTunes
 
         protected abstract void OnDisabled();
 
-        protected virtual bool IsTemplateApplied(IntPtr handle)
-        {
-            var window = HwndSource.FromHwnd(handle).RootVisual as WindowBase;
-            if (window == null)
-            {
-                return false;
-            }
-            return WindowBase.GetApplyTemplate(window);
-        }
-
         public abstract IEnumerable<ConfigurationSection> GetConfigurationSections();
 
         public bool IsDisposed { get; private set; }

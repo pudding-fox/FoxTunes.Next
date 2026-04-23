@@ -115,9 +115,9 @@ namespace FoxTunes
 
         public static event EventHandler ActiveChanged;
 
-        public WindowBase()
+        public WindowBase(bool allowsTransparency = true)
         {
-            this.InitializeComponent();
+            this.InitializeComponent(allowsTransparency);
             this.Loaded += this.OnLoaded;
         }
 
@@ -201,11 +201,14 @@ namespace FoxTunes
 
         public event EventHandler ApplyWindowChromeChanged;
 
-        private void InitializeComponent()
+        private void InitializeComponent(bool allowsTransparency)
         {
             this.WindowStyle = WindowStyle.None;
             this.Background = Brushes.Transparent;
-            WindowExtensions.SetAllowsTransparency(this, true);
+            if (allowsTransparency)
+            {
+                WindowExtensions.SetAllowsTransparency(this, true);
+            }
             WindowExtensions.SetFontFamily(this, true);
             WindowExtensions.SetFontSize(this, true);
         }

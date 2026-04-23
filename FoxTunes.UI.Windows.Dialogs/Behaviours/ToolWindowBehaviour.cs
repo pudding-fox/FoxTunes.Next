@@ -1,4 +1,5 @@
 ﻿#pragma warning disable 0436
+using FoxDb;
 using FoxTunes.Interfaces;
 using System;
 using System.Collections.Concurrent;
@@ -109,8 +110,7 @@ namespace FoxTunes
                 await global::FoxTunes.Windows.Invoke(() =>
                 {
                     Logger.Write(this, LogLevel.Debug, "Creating window: {0}", ToolWindowConfiguration.GetTitle(config));
-                    window = new ToolWindow();
-                    window.Configuration = config;
+                    window = new ToolWindow(config);
                     window.ShowActivated = false;
                     window.Closed += this.OnClosed;
                 }).ConfigureAwait(false);
@@ -435,6 +435,7 @@ namespace FoxTunes
                 ShowWithMiniWindow = false,
                 ApplyTemplate = true,
                 ApplyWindowChrome = true,
+                ApplyTransparency = true,
                 SizeToContent = SizeToContent.Manual,
                 Component = new UIComponentConfiguration()
             };
@@ -445,6 +446,21 @@ namespace FoxTunes
             }
             await this.UpdateVisiblity(config, window).ConfigureAwait(false);
             return config;
+        }
+
+        public async Task Reload(ToolWindowConfiguration config)
+        {
+            var window = default(ToolWindow);
+            if (this.Windows.TryRemove(config, out window))
+            {
+                await global::FoxTunes.Windows.Invoke(() => window.Close());
+            }
+            window = await this.Load(config).ConfigureAwait(false);
+            if (window == null)
+            {
+                return;
+            }
+            await this.UpdateVisiblity(config, window).ConfigureAwait(false);
         }
 
         public Task Manage()
@@ -832,6 +848,32 @@ namespace FoxTunes
         }
 
         public event EventHandler ApplyWindowChromeChanged;
+
+        private bool _ApplyTransparency { get; set; }
+
+        public bool ApplyTransparency
+        {
+            get
+            {
+                return this._ApplyTransparency;
+            }
+            set
+            {
+                this._ApplyTransparency = value;
+                this.OnApplyTransparencyChanged();
+            }
+        }
+
+        protected virtual void OnApplyTransparencyChanged()
+        {
+            if (this.ApplyTransparencyChanged != null)
+            {
+                this.ApplyTransparencyChanged(this, EventArgs.Empty);
+            }
+            this.OnPropertyChanged("ApplyTransparency");
+        }
+
+        public event EventHandler ApplyTransparencyChanged;
 
         private SizeToContent _SizeToContent { get; set; }
 

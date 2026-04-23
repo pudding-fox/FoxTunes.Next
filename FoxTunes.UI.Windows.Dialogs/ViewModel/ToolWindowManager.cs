@@ -1,6 +1,5 @@
 ﻿using FoxTunes.Interfaces;
 using System;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
@@ -96,8 +95,10 @@ namespace FoxTunes.ViewModel
                 this.Windows.Clear();
                 this.Windows.AddRange(this.Behaviour.Windows.Keys.Select(configuration =>
                 {
-                    var window = new ToolWindow();
-                    window.Configuration = configuration;
+                    var window = new ToolWindow()
+                    {
+                        Configuration = configuration
+                    };
                     return window;
                 }));
                 if (selectedWindow != null)

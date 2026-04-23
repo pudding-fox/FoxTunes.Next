@@ -43,6 +43,7 @@ namespace FoxTunes
                     writer.WriteAttributeString(nameof(ToolWindowConfiguration.AlwaysOnTop), Convert.ToString(config.AlwaysOnTop));
                     writer.WriteAttributeString(nameof(ToolWindowConfiguration.ApplyTemplate), Convert.ToString(config.ApplyTemplate));
                     writer.WriteAttributeString(nameof(ToolWindowConfiguration.ApplyWindowChrome), Convert.ToString(config.ApplyWindowChrome));
+                    writer.WriteAttributeString(nameof(ToolWindowConfiguration.ApplyTransparency), Convert.ToString(config.ApplyTransparency));
                     writer.WriteAttributeString(nameof(ToolWindowConfiguration.SizeToContent), Convert.ToString(config.SizeToContent));
                     SaveComponent(writer, config.Component);
                     writer.WriteEndElement();
@@ -127,6 +128,7 @@ namespace FoxTunes
                     var alwaysOnTop = reader.GetAttribute(nameof(ToolWindowConfiguration.AlwaysOnTop)) ?? bool.FalseString;
                     var applyTemplate = reader.GetAttribute(nameof(ToolWindowConfiguration.ApplyTemplate)) ?? bool.TrueString;
                     var applyWindowChome = reader.GetAttribute(nameof(ToolWindowConfiguration.ApplyWindowChrome)) ?? bool.TrueString;
+                    var applyTransparency = reader.GetAttribute(nameof(ToolWindowConfiguration.ApplyTransparency)) ?? bool.TrueString;
                     var sizeToContent = reader.GetAttribute(nameof(ToolWindowConfiguration.SizeToContent)) ?? Enum.GetName(typeof(SizeToContent), SizeToContent.Manual);
                     reader.ReadStartElement(nameof(ToolWindowConfiguration));
                     yield return new ToolWindowConfiguration()
@@ -141,6 +143,7 @@ namespace FoxTunes
                         AlwaysOnTop = Convert.ToBoolean(alwaysOnTop),
                         ApplyTemplate = Convert.ToBoolean(applyTemplate),
                         ApplyWindowChrome = Convert.ToBoolean(applyWindowChome),
+                        ApplyTransparency = Convert.ToBoolean(applyTransparency),
                         SizeToContent = (SizeToContent)Enum.Parse(typeof(SizeToContent), sizeToContent),
                         Component = LoadComponent(reader)
                     };

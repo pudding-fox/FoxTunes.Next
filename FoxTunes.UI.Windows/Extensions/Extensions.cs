@@ -253,7 +253,14 @@ namespace FoxTunes
         public static IntPtr GetHandle(this Window window)
         {
             var source = new WindowInteropHelper(window);
-            return source.EnsureHandle();
+            try
+            {
+                return source.EnsureHandle();
+            }
+            catch
+            {
+                return IntPtr.Zero;
+            }
         }
 
         public static Size GetElementPixelSize(this FrameworkElement element, Size size)

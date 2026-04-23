@@ -50,10 +50,6 @@ namespace FoxTunes
         {
             foreach (var window in WindowBase.Active)
             {
-                if (!this.IsTemplateApplied(window.Handle))
-                {
-                    continue;
-                }
                 WindowExtensions.EnableAcrylicBlur(
                     window.Handle,
                     this.GetAccentColor()

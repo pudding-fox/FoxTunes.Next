@@ -82,6 +82,14 @@
             }
         }
 
+        public static string ToolWindowManager_ApplyTransparency
+        {
+            get
+            {
+                return Strings.ToolWindowManager_ApplyTransparency;
+            }
+        }
+
         public static string ToolWindowManager_SizeToContent
         {
             get

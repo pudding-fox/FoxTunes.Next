@@ -1,7 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace FoxTunes
@@ -11,9 +10,10 @@ namespace FoxTunes
     /// </summary>
     public partial class ToolWindow : WindowBase
     {
-        public ToolWindow()
+        public ToolWindow(ToolWindowConfiguration configuration) : base(configuration.ApplyTransparency)
         {
             this.InitializeComponent();
+            this.Configuration = configuration;
         }
 
         public override string Id
@@ -40,7 +40,7 @@ namespace FoxTunes
                 }
                 return viewModel.Configuration;
             }
-            set
+            private set
             {
                 var viewModel = this.TryFindResource("ViewModel") as global::FoxTunes.ViewModel.ToolWindow;
                 if (viewModel == null)

@@ -23,10 +23,6 @@ namespace FoxTunes
         {
             foreach (var window in WindowBase.Active)
             {
-                if (!this.IsTemplateApplied(window.Handle))
-                {
-                    continue;
-                }
                 WindowExtensions.EnableBlur(window.Handle);
             }
         }

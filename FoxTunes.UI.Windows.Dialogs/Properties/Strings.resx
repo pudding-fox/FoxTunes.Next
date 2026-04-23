@@ -138,6 +138,9 @@
   <data name="ToolWindowManager.ApplyTemplate" xml:space="preserve">
     <value>Apply Template</value>
   </data>
+  <data name="ToolWindowManager.ApplyTransparency" xml:space="preserve">
+    <value>Apply Transparency</value>
+  </data>
   <data name="ToolWindowManager.ApplyWindowChrome" xml:space="preserve">
     <value>Apply Window Chrome</value>
   </data>

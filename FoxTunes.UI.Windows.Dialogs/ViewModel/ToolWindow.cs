@@ -5,6 +5,13 @@ namespace FoxTunes.ViewModel
 {
     public class ToolWindow : ViewModelBase
     {
+        public static readonly ToolWindowBehaviour Behaviour = ComponentRegistry.Instance.GetComponent<ToolWindowBehaviour>();
+
+        public ToolWindow() : base(false)
+        {
+
+        }
+
         public string Title
         {
             get
@@ -48,6 +55,10 @@ namespace FoxTunes.ViewModel
             }
             set
             {
+                if (this.Configuration == null)
+                {
+                    return;
+                }
                 this.Configuration.Left = !double.IsNaN(value.Left) ? Convert.ToInt32(value.Left) : 0;
                 this.Configuration.Top = !double.IsNaN(value.Top) ? Convert.ToInt32(value.Top) : 0;
                 this.Configuration.Width = !double.IsNaN(value.Width) ? Convert.ToInt32(value.Width) : 0;
@@ -254,6 +265,45 @@ namespace FoxTunes.ViewModel
 
         public event EventHandler ApplyWindowChromeChanged;
 
+        public bool ApplyTransparency
+        {
+            get
+            {
+                if (this.Configuration == null)
+                {
+                    return true;
+                }
+                return this.Configuration.ApplyTransparency;
+            }
+            set
+            {
+                if (this.Configuration == null || this.Configuration.ApplyTransparency == value)
+                {
+                    return;
+                }
+                this.Configuration.ApplyTransparency = value;
+            }
+        }
+
+        protected virtual void OnApplyTransparencyChanged(object sender, EventArgs e)
+        {
+            var window = default(global::FoxTunes.ToolWindow);
+            if (Behaviour.Windows.TryGetValue(this.Configuration, out window))
+            {
+                if (window.AllowsTransparency != this.ApplyTransparency)
+                {
+                    var task = Behaviour.Reload(this.Configuration);
+                }
+            }
+            if (this.ApplyTransparencyChanged != null)
+            {
+                this.ApplyTransparencyChanged(this, EventArgs.Empty);
+            }
+            this.OnPropertyChanged("ApplyTransparency");
+        }
+
+        public event EventHandler ApplyTransparencyChanged;
+
         public SizeToContent SizeToContent
         {
             get
@@ -315,6 +365,7 @@ namespace FoxTunes.ViewModel
                 this.Configuration.AlwaysOnTopChanged += this.OnAlwaysOnTopChanged;
                 this.Configuration.ApplyTemplateChanged += this.OnApplyTemplateChanged;
                 this.Configuration.ApplyWindowChromeChanged += this.OnApplyWindowChromeChanged;
+                this.Configuration.ApplyTransparencyChanged += this.OnApplyTransparencyChanged;
                 this.Configuration.SizeToContentChanged += this.OnSizeToContentChanged;
 
                 this.OnTitleChanged(this, EventArgs.Empty);
@@ -325,6 +376,7 @@ namespace FoxTunes.ViewModel
                 this.OnAlwaysOnTopChanged(this, EventArgs.Empty);
                 this.OnApplyTemplateChanged(this, EventArgs.Empty);
                 this.OnApplyWindowChromeChanged(this, EventArgs.Empty);
+                this.OnApplyTransparencyChanged(this, EventArgs.Empty);
                 this.OnSizeToContentChanged(this, EventArgs.Empty);
             }
             if (this.ConfigurationChanged != null)
@@ -352,6 +404,7 @@ namespace FoxTunes.ViewModel
                 this.Configuration.AlwaysOnTopChanged -= this.OnAlwaysOnTopChanged;
                 this.Configuration.ApplyTemplateChanged -= this.OnApplyTemplateChanged;
                 this.Configuration.ApplyWindowChromeChanged -= this.OnApplyWindowChromeChanged;
+                this.Configuration.ApplyTransparencyChanged -= this.OnApplyTransparencyChanged;
                 this.Configuration.SizeToContentChanged -= this.OnSizeToContentChanged;
             }
             base.OnDisposing();
