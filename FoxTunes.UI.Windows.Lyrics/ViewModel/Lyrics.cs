@@ -1,7 +1,9 @@
 ﻿using FoxTunes.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -9,6 +11,10 @@ namespace FoxTunes.ViewModel
 {
     public class Lyrics : ViewModelBase
     {
+        public static readonly Regex SYNCED_TAG = new Regex(@"[\w+:\w+]", RegexOptions.Compiled);
+
+        public static readonly Regex SYNCED_LYRICS = new Regex(@"\[(\d{2}:\d{2}\.\d{2})\]\s+(.+)", RegexOptions.Compiled);
+
         public static readonly string PADDING = string.Join(string.Empty, Enumerable.Repeat(Environment.NewLine, 10));
 
         public IPlaybackManager PlaybackManager { get; private set; }
@@ -45,6 +51,58 @@ namespace FoxTunes.ViewModel
 
         public event EventHandler HasDataChanged;
 
+        private bool _HasPlainData { get; set; }
+
+        public bool HasPlainData
+        {
+            get
+            {
+                return this._HasPlainData;
+            }
+            set
+            {
+                this._HasPlainData = value;
+                this.OnHasPlainDataChanged();
+            }
+        }
+
+        protected virtual void OnHasPlainDataChanged()
+        {
+            if (this.HasPlainDataChanged != null)
+            {
+                this.HasPlainDataChanged(this, EventArgs.Empty);
+            }
+            this.OnPropertyChanged("HasPlainData");
+        }
+
+        public event EventHandler HasPlainDataChanged;
+
+        private bool _HasSyncedData { get; set; }
+
+        public bool HasSyncedData
+        {
+            get
+            {
+                return this._HasSyncedData;
+            }
+            set
+            {
+                this._HasSyncedData = value;
+                this.OnHasSyncedDataChanged();
+            }
+        }
+
+        protected virtual void OnHasSyncedDataChanged()
+        {
+            if (this.HasSyncedDataChanged != null)
+            {
+                this.HasSyncedDataChanged(this, EventArgs.Empty);
+            }
+            this.OnPropertyChanged("HasSyncedData");
+        }
+
+        public event EventHandler HasSyncedDataChanged;
+
         private bool _AutoScroll { get; set; }
 
         public bool AutoScroll
@@ -76,31 +134,68 @@ namespace FoxTunes.ViewModel
 
         public event EventHandler AutoScrollChanged;
 
-        private string _Data { get; set; }
+        private string _PlainData { get; set; }
 
-        public string Data
+        public string PlainData
         {
             get
             {
-                return this._Data;
+                return this._PlainData;
             }
             set
             {
-                this._Data = value;
-                this.OnDataChanged();
+                this._PlainData = value;
+                this.OnPlainDataChanged();
             }
         }
 
-        protected virtual void OnDataChanged()
+        protected virtual void OnPlainDataChanged()
         {
-            if (this.DataChanged != null)
+            if (this.PlainDataChanged != null)
             {
-                this.DataChanged(this, EventArgs.Empty);
+                this.PlainDataChanged(this, EventArgs.Empty);
             }
-            this.OnPropertyChanged("Data");
+            this.OnPropertyChanged("PlainData");
         }
 
-        public event EventHandler DataChanged;
+        public event EventHandler PlainDataChanged;
+
+        private SyncedLyrics[] _SyncedData { get; set; }
+
+        public SyncedLyrics[] SyncedData
+        {
+            get
+            {
+                return this._SyncedData;
+            }
+            set
+            {
+                this._SyncedData = value;
+                this.OnSyncedDataChanged();
+            }
+        }
+
+        protected virtual void OnSyncedDataChanged()
+        {
+            if (this.SyncedDataChanged != null)
+            {
+                this.SyncedDataChanged(this, EventArgs.Empty);
+            }
+            this.OnPropertyChanged("SyncedData");
+        }
+
+        public event EventHandler SyncedDataChanged;
+
+        protected virtual void OnIsSyncedChanged()
+        {
+            if (this.IsSyncedChanged != null)
+            {
+                this.IsSyncedChanged(this, EventArgs.Empty);
+            }
+            this.OnPropertyChanged("IsSynced");
+        }
+
+        public event EventHandler IsSyncedChanged;
 
         public long Position
         {
@@ -155,7 +250,6 @@ namespace FoxTunes.ViewModel
             }
         }
 
-
         protected virtual void OnLengthChanged()
         {
             if (this.LengthChanged != null)
@@ -166,6 +260,43 @@ namespace FoxTunes.ViewModel
         }
 
         public event EventHandler LengthChanged;
+
+        public SyncedLyrics CurrentLyrics
+        {
+            get
+            {
+                if (this.SyncedData == null)
+                {
+                    return null;
+                }
+                if (this.PlaybackManager == null)
+                {
+                    return null;
+                }
+                var outputStream = this.PlaybackManager.CurrentStream;
+                if (outputStream == null)
+                {
+                    return null;
+                }
+                var duration = outputStream.GetDuration(this.Position);
+                return this.SyncedData.LastOrDefault(data =>
+                {
+                    var time = TimeSpan.FromSeconds((data.Minute * 60) + data.Second);
+                    return duration > time;
+                });
+            }
+        }
+
+        protected virtual void OnCurrentLyricsChanged()
+        {
+            if (this.CurrentLyricsChanged != null)
+            {
+                this.CurrentLyricsChanged(this, EventArgs.Empty);
+            }
+            this.OnPropertyChanged("CurrentLyrics");
+        }
+
+        public event EventHandler CurrentLyricsChanged;
 
         protected override void InitializeComponent(ICore core)
         {
@@ -187,12 +318,15 @@ namespace FoxTunes.ViewModel
                 else
                 {
                     this.PlaybackManager.CurrentStreamChanged -= this.OnCurrentStreamChanged;
-                    if (this.HasData)
+                    if (this.HasPlainData || this.HasSyncedData)
                     {
                         var task = Windows.Invoke(() =>
                         {
                             this.HasData = false;
-                            this.Data = null;
+                            this.HasPlainData = false;
+                            this.HasSyncedData = false;
+                            this.PlainData = null;
+                            this.SyncedData = null;
                         });
                     }
                 }
@@ -238,11 +372,14 @@ namespace FoxTunes.ViewModel
 
         protected virtual void OnNotify(object sender, EventArgs e)
         {
-            if (!this.HasData)
+            if (this.HasPlainData)
             {
-                return;
+                this.OnPositionChanged();
             }
-            this.OnPositionChanged();
+            else if (this.HasSyncedData)
+            {
+                this.OnCurrentLyricsChanged();
+            }
         }
 
         protected virtual Task Refresh(IEnumerable<string> names)
@@ -280,13 +417,56 @@ namespace FoxTunes.ViewModel
             {
                 if (!string.IsNullOrEmpty(data))
                 {
-                    this.Data = data;
-                    this.HasData = true;
+                    var syncedData = new List<SyncedLyrics>();
+                    using (var reader = new StringReader(data))
+                    {
+                        var line = default(string);
+                        while ((line = reader.ReadLine()) != null)
+                        {
+                            {
+                                var match = SYNCED_LYRICS.Match(line);
+                                if (match.Success)
+                                {
+                                    syncedData.Add(new SyncedLyrics(match.Groups[1].Value, match.Groups[2].Value));
+                                    continue;
+                                }
+                            }
+                            {
+                                var match = SYNCED_TAG.Match(line);
+                                if (match.Success)
+                                {
+                                    continue;
+                                }
+                                else
+                                {
+                                    break;
+                                }
+                            }
+
+                        }
+                    }
+                    if (syncedData.Any())
+                    {
+                        this.HasData = true;
+                        this.HasPlainData = false;
+                        this.HasSyncedData = true;
+                        this.SyncedData = syncedData.ToArray();
+                    }
+                    else
+                    {
+                        this.HasData = true;
+                        this.HasPlainData = true;
+                        this.HasSyncedData = false;
+                        this.PlainData = data;
+                    }
                 }
                 else
                 {
                     this.HasData = false;
-                    this.Data = null;
+                    this.HasPlainData = false;
+                    this.HasSyncedData = false;
+                    this.PlainData = null;
+                    this.SyncedData = null;
                 }
                 this.OnPositionChanged();
                 this.OnLengthChanged();
@@ -307,5 +487,42 @@ namespace FoxTunes.ViewModel
             }
             base.OnDisposing();
         }
+    }
+
+    public class SyncedLyrics
+    {
+        public SyncedLyrics(string timeStamp, string data)
+        {
+            this.TimeStamp = timeStamp;
+            this.Data = data;
+        }
+
+        public string TimeStamp { get; private set; }
+
+        public int Minute
+        {
+            get
+            {
+                return Convert.ToInt32(this.TimeStamp.Split(':').First());
+            }
+        }
+
+        public int Second
+        {
+            get
+            {
+                return Convert.ToInt32(this.TimeStamp.Split(':').Last().Split('.').First());
+            }
+        }
+
+        public int Hundredth
+        {
+            get
+            {
+                return Convert.ToInt32(this.TimeStamp.Split(':').Last().Split('.').Last());
+            }
+        }
+
+        public string Data { get; private set; }
     }
 }

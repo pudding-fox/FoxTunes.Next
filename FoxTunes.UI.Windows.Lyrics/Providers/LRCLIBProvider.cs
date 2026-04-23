@@ -65,10 +65,16 @@ namespace FoxTunes
                 if (result != null)
                 {
                     Logger.Write(this, LogLevel.Debug, "Got match, fetching lyrics..");
+                    var syncedLyrics = default(string);
+                    if (result.TryGetValue("syncedLyrics", out syncedLyrics) && !string.IsNullOrEmpty(syncedLyrics))
+                    {
+                        Logger.Write(this, LogLevel.Debug, "Success (Synced Lyrics).");
+                        return new LyricsResult(syncedLyrics);
+                    }
                     var plainLyrics = default(string);
                     if (result.TryGetValue("plainLyrics", out plainLyrics) && !string.IsNullOrEmpty(plainLyrics))
                     {
-                        Logger.Write(this, LogLevel.Debug, "Success.");
+                        Logger.Write(this, LogLevel.Debug, "Success. (Plain Lyrics)");
                         return new LyricsResult(plainLyrics);
                     }
                 }

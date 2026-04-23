@@ -12,7 +12,52 @@
              MinWidth="200"
              MinHeight="200">
     <UserControl.Resources>
-        <LocalViewModel:Lyrics x:Key="ViewModel"></LocalViewModel:Lyrics>
+        <LocalViewModel:Lyrics x:Key="ViewModel" HasPlainDataChanged="OnHasPlainDataChanged" HasSyncedDataChanged="OnHasSyncedDataChanged"></LocalViewModel:Lyrics>
+        <Style x:Key="PlainStyle" TargetType="{x:Type ContentControl}">
+            <Setter Property="Content">
+                <Setter.Value>
+                    <ScrollViewer 
+                            HorizontalScrollBarVisibility="Disabled" 
+                            VerticalScrollBarVisibility="Auto" 
+                            Padding="5">
+                        <TextBlock 
+                                VerticalAlignment="Top" 
+                                TextAlignment="Center" 
+                                TextWrapping="Wrap" 
+                                Foreground="{DynamicResource TextBrush}" 
+                                Text="{Binding Data, Source={StaticResource ViewModel}}"/>
+                    </ScrollViewer>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding AutoScroll, Source={StaticResource ViewModel}}" Value="True">
+                    <Setter Property="Content">
+                        <Setter.Value>
+                            <ScrollViewer 
+                                HorizontalScrollBarVisibility="Disabled" 
+                                VerticalScrollBarVisibility="Auto" 
+                                Padding="5" 
+                                LocalWindows:ScrollViewerExtensions.AutoScroll="True"
+                                LocalWindows:ScrollViewerExtensions.VerticalValue="{Binding Position, Source={StaticResource ViewModel}}"
+                                LocalWindows:ScrollViewerExtensions.VerticalMax="{Binding Length, Source={StaticResource ViewModel}}">
+                                <TextBlock VerticalAlignment="Top" TextAlignment="Center" TextWrapping="Wrap" Foreground="{DynamicResource TextBrush}">
+                                    <Run Text="{x:Static LocalViewModel:Lyrics.PADDING}"></Run>
+                                    <Run Text="{Binding Data, Source={StaticResource ViewModel}}"></Run>
+                                    <Run Text="{x:Static LocalViewModel:Lyrics.PADDING}"></Run>
+                                </TextBlock>
+                            </ScrollViewer>
+                        </Setter.Value>
+                    </Setter>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+        <Style x:Key="SyncedStyle" TargetType="{x:Type ContentControl}">
+            <Setter Property="Content">
+                <Setter.Value>
+                    <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" TextWrapping="Wrap" Text="{Binding CurrentLyrics.Data, Source={StaticResource ViewModel}}" Foreground="{DynamicResource TextBrush}"></TextBlock>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </UserControl.Resources>
     <Windows:UIComponentBase.IsComponentEnabled>
         <Binding Path="HasData" Source="{StaticResource ViewModel}"/>
@@ -20,46 +65,8 @@
     <UserControl.ContextMenu>
         <Windows:Menu Category="{Binding Source={x:Static LocalWindows:LyricsBehaviour.CATEGORY}}"></Windows:Menu>
     </UserControl.ContextMenu>
-    <ContentControl>
-        <ContentControl.Style>
-            <Style TargetType="{x:Type ContentControl}">
-                <Setter Property="Content">
-                    <Setter.Value>
-                        <ScrollViewer 
-                                HorizontalScrollBarVisibility="Disabled" 
-                                VerticalScrollBarVisibility="Auto" 
-                                Padding="5">
-                            <TextBlock 
-                                    VerticalAlignment="Top" 
-                                    TextAlignment="Center" 
-                                    TextWrapping="Wrap" 
-                                    Foreground="{DynamicResource TextBrush}" 
-                                    Text="{Binding Data, Source={StaticResource ViewModel}}"/>
-                        </ScrollViewer>
-                    </Setter.Value>
-                </Setter>
-                <Style.Triggers>
-                    <DataTrigger Binding="{Binding AutoScroll, Source={StaticResource ViewModel}}" Value="True">
-                        <Setter Property="Content">
-                            <Setter.Value>
-                                <ScrollViewer 
-                                        HorizontalScrollBarVisibility="Disabled" 
-                                        VerticalScrollBarVisibility="Auto" 
-                                        Padding="5" 
-                                        LocalWindows:ScrollViewerExtensions.AutoScroll="True"
-                                        LocalWindows:ScrollViewerExtensions.VerticalValue="{Binding Position, Source={StaticResource ViewModel}}"
-                                        LocalWindows:ScrollViewerExtensions.VerticalMax="{Binding Length, Source={StaticResource ViewModel}}">
-                                    <TextBlock VerticalAlignment="Top" TextAlignment="Center" TextWrapping="Wrap" Foreground="{DynamicResource TextBrush}">
-                                        <Run Text="{x:Static LocalViewModel:Lyrics.PADDING}"></Run>
-                                        <Run Text="{Binding Data, Source={StaticResource ViewModel}}"></Run>
-                                        <Run Text="{x:Static LocalViewModel:Lyrics.PADDING}"></Run>
-                                    </TextBlock>
-                                </ScrollViewer>
-                            </Setter.Value>
-                        </Setter>
-                    </DataTrigger>
-                </Style.Triggers>
-            </Style>
-        </ContentControl.Style>
-    </ContentControl>
+    <Grid>
+        <ContentControl Name="ContentControl"></ContentControl>
+        <Rectangle Fill="Transparent"></Rectangle>
+    </Grid>
 </Windows:UIComponentBase>
