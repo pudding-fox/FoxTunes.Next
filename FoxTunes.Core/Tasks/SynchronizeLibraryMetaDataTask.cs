@@ -59,7 +59,6 @@ namespace FoxTunes
                 if (this.Output.IsLoaded(libraryItem.FileName))
                 {
                     Logger.Write(this, LogLevel.Debug, "File \"{0}\" could not be written, the update will be retried: The file is in use.", libraryItem.FileName);
-                    this.AddError(libraryItem, string.Format("File \"{0}\" could not be written, the update will be retried: The file is in use.", libraryItem.FileName));
                     await this.Schedule(libraryItem).ConfigureAwait(false);
                     continue;
                 }

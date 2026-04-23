@@ -60,7 +60,6 @@ namespace FoxTunes
                 if (this.Output.IsLoaded(playlistItem.FileName))
                 {
                     Logger.Write(this, LogLevel.Debug, "File \"{0}\" could not be written, the update will be retried: The file is in use.", playlistItem.FileName);
-                    this.AddError(playlistItem, string.Format("File \"{0}\" could not be written, the update will be retried: The file is in use.", playlistItem.FileName));
                     await this.Schedule(playlistItem).ConfigureAwait(false);
                     continue;
                 }
