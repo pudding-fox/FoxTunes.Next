@@ -296,6 +296,10 @@ namespace FoxTunes
                     scriptingContexts.Dispose();
                     return Windows.Invoke(() =>
                     {
+                        if (this.CollectionView == null)
+                        {
+                            return;
+                        }
                         this.CollectionView.GroupDescriptions.Add(
                             new PlaylistGroupDescription(
                                 groups

@@ -59,7 +59,9 @@ namespace FoxTunes
             {
                 volume = 1;
             }
-            this.SetVolume(volume);
+            var dB = -20.0f + (volume * 20.0f);
+            var gain = (float)Math.Pow(10.0, dB / 20.0);
+            this.SetVolume(gain);
         }
 
         public abstract bool CheckFormat(int rate, int channels);

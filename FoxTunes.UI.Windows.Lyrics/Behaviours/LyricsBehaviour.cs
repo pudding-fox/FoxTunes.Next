@@ -22,6 +22,8 @@ namespace FoxTunes
             this.Providers = new List<ILyricsProvider>();
         }
 
+        public LyricsMetaDataSource LyricsMetaDataSource { get; private set; }
+
         public IList<ILyricsProvider> Providers { get; private set; }
 
         public IPlaybackManager PlaybackManager { get; private set; }
@@ -40,6 +42,7 @@ namespace FoxTunes
 
         public override void InitializeComponent(ICore core)
         {
+            this.LyricsMetaDataSource = ComponentRegistry.Instance.GetComponent<LyricsMetaDataSource>();
             this.Providers.AddRange(ComponentRegistry.Instance.GetComponents<ILyricsProvider>());
             this.PlaybackManager = core.Managers.Playback;
             this.OnDemandMetaDataProvider = core.Components.OnDemandMetaDataProvider;
@@ -227,23 +230,16 @@ namespace FoxTunes
 #endif
             }
             var playlistItem = outputStream.PlaylistItem;
-            if (this.OnDemandMetaDataProvider.IsSourceEnabled(CommonMetaData.Lyrics, MetaDataItemType.Tag))
-            {
-                return this.OnDemandMetaDataProvider.GetMetaData(
-                    new[] { outputStream.PlaylistItem },
-                    new OnDemandMetaDataRequest(
-                        CommonMetaData.Lyrics,
-                        MetaDataItemType.Tag,
-                        updateType,
-                        provider
-                    )
-                );
-            }
-#if NET40
-            return TaskEx.FromResult(false);
-#else
-            return Task.CompletedTask;
-#endif
+            return this.OnDemandMetaDataProvider.GetMetaData(
+                this.LyricsMetaDataSource,
+                new[] { outputStream.PlaylistItem },
+                new OnDemandMetaDataRequest(
+                    CommonMetaData.Lyrics,
+                    MetaDataItemType.Tag,
+                    updateType,
+                    provider
+                )
+            );
         }
 
         public IEnumerable<ConfigurationSection> GetConfigurationSections()

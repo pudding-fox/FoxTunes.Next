@@ -1,7 +1,6 @@
 ﻿using FoxTunes.Interfaces;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Windows;
@@ -36,8 +35,27 @@ namespace FoxTunes.ViewModel
             this.InitializeComponent(Core.Instance);
         }
 
-        public string Name { get; private set; }
+        public int Id
+        {
+            get
+            {
+                var id = default(int);
+                unchecked
+                {
+                    if (!string.IsNullOrEmpty(this.Name))
+                    {
+                        id += this.Name.GetHashCode();
+                    }
+                    foreach (var element in this.Elements)
+                    {
+                        id += element.Id.GetHashCode();
+                    }
+                }
+                return id;
+            }
+        }
 
+        public string Name { get; private set; }
 
         public bool HasElements
         {

@@ -1,4 +1,7 @@
-﻿namespace FoxTunes
+﻿using System;
+using System.Windows;
+
+namespace FoxTunes
 {
     /// <summary>
     /// Interaction logic for Play.xaml
@@ -9,6 +12,31 @@
         public Play()
         {
             this.InitializeComponent();
+            this.OnIsPlayingChanged(this, EventArgs.Empty);
+        }
+
+        protected virtual void OnIsPlayingChanged(object sender, EventArgs e)
+        {
+            var viewModel = default(global::FoxTunes.ViewModel.Play);
+            if (this.TryFindResource<global::FoxTunes.ViewModel.Play>("ViewModel", out viewModel))
+            {
+                if (viewModel.IsPlaying)
+                {
+                    var content = default(FrameworkElement);
+                    if (this.TryFindResource<FrameworkElement>("PauseContent", out content))
+                    {
+                        this.Button.Content = content;
+                    }
+                }
+                else
+                {
+                    var content = default(FrameworkElement);
+                    if (this.TryFindResource<FrameworkElement>("PlayContent", out content))
+                    {
+                        this.Button.Content = content;
+                    }
+                }
+            }
         }
     }
 }

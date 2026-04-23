@@ -61,6 +61,15 @@ namespace FoxTunes {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cannot create multiple ProjectM instances, it is unstable..
+        /// </summary>
+        internal static string ProjectM_InstanceWarning {
+            get {
+                return ResourceManager.GetString("ProjectM.InstanceWarning", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Project M.
         /// </summary>
         internal static string ProjectM_Name {

@@ -11,6 +11,8 @@ namespace FoxTunes.Interfaces
 
         Task<IEnumerable<string>> GetMetaData(IEnumerable<IFileData> fileDatas, OnDemandMetaDataRequest request);
 
+        Task<IEnumerable<string>> GetMetaData(IOnDemandMetaDataSource source, IEnumerable<IFileData> fileDatas, OnDemandMetaDataRequest request);
+
         string GetCurrentMetaData(IFileData fileData, OnDemandMetaDataRequest request);
 
         IDictionary<IFileData, string> GetCurrentMetaData(IEnumerable<IFileData> fileDatas, OnDemandMetaDataRequest request);

@@ -10,7 +10,7 @@ namespace FoxTunes
 {
     public class SingletonReentrantTask : BaseComponent, IDisposable
     {
-        public const int TIMEOUT = 1000;
+        public const int TIMEOUT = 5000;
 
         public const byte PRIORITY_HIGH = 0;
 

@@ -1,9 +1,7 @@
 ﻿using FoxTunes.Interfaces;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 
@@ -216,6 +214,7 @@ namespace FoxTunes.ViewModel
 
         public void Refresh()
         {
+            var selectedPage = this.SelectedPage;
             this.Pages.Clear();
             foreach (var section in this.Configuration.Sections.OrderBy(section => section.Name))
             {
@@ -245,7 +244,18 @@ namespace FoxTunes.ViewModel
                 var page = new ComponentSettingsPage(section.Name, elements);
                 this.Pages.Add(page);
             }
-            this.SelectedPage = this.Pages.FirstOrDefault();
+            if (selectedPage != null && !string.IsNullOrEmpty(selectedPage.Name))
+            {
+                this.SelectedPage = this.Pages.FirstOrDefault(page => page.Id == selectedPage.Id);
+                if (this.SelectedPage == null)
+                {
+                    this.SelectedPage = this.Pages.FirstOrDefault();
+                }
+            }
+            else
+            {
+                this.SelectedPage = this.Pages.FirstOrDefault();
+            }
         }
 
         public virtual bool MatchesFilter(global::FoxTunes.ConfigurationSection section)

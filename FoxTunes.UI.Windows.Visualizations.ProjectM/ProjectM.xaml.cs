@@ -6,7 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
-using System.Runtime.InteropServices.ComTypes;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Forms;
@@ -47,6 +46,8 @@ namespace FoxTunes
 
         public static IUserInterface UserInterface = ComponentRegistry.Instance.GetComponent<IUserInterface>();
 
+        public static IntPtr Context { get; private set; }
+
         public ProjectM()
         {
             this.InitializeComponent();
@@ -79,11 +80,11 @@ namespace FoxTunes
 
         public GLControl GLControl { get; private set; }
 
-        public IntPtr Context { get; private set; }
-
         public Channels DownmixedChannels { get; private set; }
 
         public float[] DownmixedData { get; private set; }
+
+        public bool OwnsContext { get; private set; }
 
         protected virtual void CreateMenu()
         {
@@ -103,6 +104,10 @@ namespace FoxTunes
             {
                 try
                 {
+                    if (IntPtr.Zero.Equals(Context))
+                    {
+                        return;
+                    }
                     if (VisualizationDataSource.Update(this.Data))
                     {
                         switch (this.Data.Channels)
@@ -151,7 +156,7 @@ namespace FoxTunes
             {
                 try
                 {
-                    if (IntPtr.Zero.Equals(this.Context))
+                    if (IntPtr.Zero.Equals(Context))
                     {
                         return;
                     }
@@ -159,7 +164,7 @@ namespace FoxTunes
                     Logger.Write(this, LogLevel.Debug, "Loading preset: {0}", fileName);
                     if (!string.IsNullOrEmpty(fileName))
                     {
-                        projectm_load_preset_file(this.Context, fileName, true);
+                        projectm_load_preset_file(Context, fileName, true);
                     }
                 }
                 finally
@@ -171,6 +176,16 @@ namespace FoxTunes
 
         protected virtual void OnLoaded(object sender, RoutedEventArgs e)
         {
+            if (this.GLControl != null)
+            {
+                //Nothing to do.
+                return;
+            }
+            if (!IntPtr.Zero.Equals(Context))
+            {
+                UserInterface.Warn(Strings.ProjectM_InstanceWarning);
+                return;
+            }
             var window = this.FindAncestor<Window>();
             if (window != null)
             {
@@ -178,6 +193,7 @@ namespace FoxTunes
                 {
                     Logger.Write(this, LogLevel.Warn, "Transparency is enabled for window {0}, warning.", window.Title);
                     UserInterface.Warn(Strings.ProjectM_TransparencyWarning);
+                    return;
                 }
             }
             this.GLControl = new GLControl(new GraphicsMode(32, 24, 0, 4));
@@ -212,27 +228,28 @@ namespace FoxTunes
             }
             Logger.Write(this, LogLevel.Debug, "Glew initialized.");
             Logger.Write(this, LogLevel.Debug, "Creating ProjectM context.");
-            this.Context = projectm_create();
-            if (IntPtr.Zero.Equals(this.Context))
+            Context = projectm_create();
+            if (IntPtr.Zero.Equals(Context))
             {
                 Logger.Write(this, LogLevel.Warn, "Failed to create ProjectM context.");
                 return;
             }
+            this.OwnsContext = true;
             Logger.Write(this, LogLevel.Debug, "Created ProjectM context.");
             var directoryName = Path.Combine(Location, "Textures");
             Logger.Write(this, LogLevel.Debug, "Setting texture path: {0}", directoryName);
-            projectm_set_texture_search_paths(this.Context, new[] { directoryName });
+            projectm_set_texture_search_paths(Context, new[] { directoryName });
             var fileName = Presets.Next();
             Logger.Write(this, LogLevel.Debug, "Loading preset: {0}", fileName);
             if (!string.IsNullOrEmpty(fileName))
             {
-                projectm_load_preset_file(this.Context, fileName, false);
+                projectm_load_preset_file(Context, fileName, false);
             }
         }
 
         protected virtual void OnPaint(object sender, PaintEventArgs e)
         {
-            if (IntPtr.Zero.Equals(this.Context))
+            if (IntPtr.Zero.Equals(Context))
             {
                 return;
             }
@@ -241,12 +258,12 @@ namespace FoxTunes
                 var channels = this.DownmixedChannels == Channels.MONO ? 1 : 2;
                 var data = ResampleTo512(this.DownmixedData, channels);
                 var frames = (uint)(data.Length / channels);
-                projectm_pcm_add_float(this.Context, data, frames, this.DownmixedChannels);
+                projectm_pcm_add_float(Context, data, frames, this.DownmixedChannels);
                 if (!this.GLControl.Context.IsCurrent)
                 {
                     this.GLControl.MakeCurrent();
                 }
-                projectm_opengl_render_frame(this.Context);
+                projectm_opengl_render_frame(Context);
                 this.GLControl.SwapBuffers();
             }
             else
@@ -278,12 +295,12 @@ namespace FoxTunes
                 this.GLControl.MakeCurrent();
             }
             GL.Viewport(0, 0, this.GLControl.Width, this.GLControl.Height);
-            if (IntPtr.Zero.Equals(this.Context))
+            if (IntPtr.Zero.Equals(Context))
             {
                 return;
             }
             Logger.Write(this, LogLevel.Debug, "Updating ProjectM window size.");
-            projectm_set_window_size(this.Context, (UIntPtr)this.GLControl.Width, (UIntPtr)this.GLControl.Height);
+            projectm_set_window_size(Context, (UIntPtr)this.GLControl.Width, (UIntPtr)this.GLControl.Height);
         }
 
         protected virtual void OnMouseDown(object sender, MouseEventArgs e)
@@ -343,7 +360,7 @@ namespace FoxTunes
             }
             return Windows.Invoke(() =>
             {
-                if (IntPtr.Zero.Equals(this.Context))
+                if (IntPtr.Zero.Equals(Context))
                 {
                     return;
                 }
@@ -351,7 +368,7 @@ namespace FoxTunes
                 Logger.Write(this, LogLevel.Debug, "Loading preset: {0}", fileName);
                 if (!string.IsNullOrEmpty(fileName))
                 {
-                    projectm_load_preset_file(this.Context, fileName, true);
+                    projectm_load_preset_file(Context, fileName, true);
                 }
             });
         }
@@ -365,7 +382,7 @@ namespace FoxTunes
             }
             return Windows.Invoke(() =>
             {
-                if (IntPtr.Zero.Equals(this.Context))
+                if (IntPtr.Zero.Equals(Context))
                 {
                     return;
                 }
@@ -373,14 +390,14 @@ namespace FoxTunes
                 Logger.Write(this, LogLevel.Debug, "Loading preset: {0}", fileName);
                 if (!string.IsNullOrEmpty(fileName))
                 {
-                    projectm_load_preset_file(this.Context, fileName, true);
+                    projectm_load_preset_file(Context, fileName, true);
                 }
             });
         }
 
         public Task Search()
         {
-            if (IntPtr.Zero.Equals(this.Context))
+            if (IntPtr.Zero.Equals(Context))
             {
 #if NET40
                 return TaskEx.FromResult(false);
@@ -430,11 +447,11 @@ namespace FoxTunes
                 this.GLControl.SizeChanged -= this.OnSizeChanged;
                 this.GLControl.MouseDown -= this.OnMouseDown;
             }
-            if (!IntPtr.Zero.Equals(this.Context))
+            if (!IntPtr.Zero.Equals(Context) && this.OwnsContext)
             {
                 Logger.Write(this, LogLevel.Debug, "Destroying ProjectM context.");
-                projectm_destroy(this.Context);
-                this.Context = IntPtr.Zero;
+                projectm_destroy(Context);
+                Context = IntPtr.Zero;
             }
             base.OnDisposing();
         }

@@ -31,8 +31,11 @@ namespace FoxTunes
             this.EventHandlers = new Dictionary<UIComponentContainer, RoutedPropertyChangedEventHandler<UIComponentConfiguration>>();
             this.TabControl = new global::System.Windows.Controls.TabControl()
             {
-                AllowDrop = true
+                AllowDrop = true,
+                IsSynchronizedWithCurrentItem = false
             };
+            VirtualizingPanel.SetIsVirtualizing(this.TabControl, false);
+            VirtualizingPanel.SetVirtualizationMode(this.TabControl, VirtualizationMode.Standard);
             TabControlExtensions.SetDragOverSelection(this.TabControl, true);
             TabControlExtensions.SetRightButtonSelect(this.TabControl, true);
             this.Content = this.TabControl;

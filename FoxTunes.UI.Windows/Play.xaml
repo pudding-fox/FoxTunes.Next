@@ -9,44 +9,25 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300" d:DataContext="{d:DesignInstance Core:Core, IsDesignTimeCreatable=False}">
     <UserControl.Resources>
-        <ViewModel:Play x:Key="ViewModel"></ViewModel:Play>
+        <ViewModel:Play x:Key="ViewModel" IsPlayingChanged="OnIsPlayingChanged"></ViewModel:Play>
+        <Viewbox x:Key="PlayContent" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" Width="15" Height="15">
+            <Canvas Width="16" Height="16">
+                <Path Fill="{DynamicResource TextBrush}">
+                    <Path.Data>
+                        <PathGeometry Figures="M5 16L7 16L15 8L7 -2.7818e-08L5 0L5 16Z" />
+                    </Path.Data>
+                </Path>
+            </Canvas>
+        </Viewbox>
+        <Viewbox x:Key="PauseContent" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" Width="15" Height="15">
+            <Canvas Width="512" Height="512">
+                <Path Fill="{DynamicResource TextBrush}">
+                    <Path.Data>
+                        <PathGeometry Figures="M0,512h162.9V0H0V512z M349.1,0v512H512V0H349.1z" />
+                    </Path.Data>
+                </Path>
+            </Canvas>
+        </Viewbox>
     </UserControl.Resources>
-    <Button Command="{Binding Command, Mode=OneWay, Source={StaticResource ViewModel}}">
-        <Button.Style>
-            <Style TargetType="{x:Type Button}" BasedOn="{StaticResource {x:Type Button}}">
-                <Setter Property="Content">
-                    <Setter.Value>
-                        <Viewbox xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" Width="15" Height="15">
-                            <Canvas Width="16" Height="16">
-                                <Path Fill="{DynamicResource TextBrush}">
-                                    <Path.Data>
-                                        <PathGeometry Figures="M5 16L7 16L15 8L7 -2.7818e-08L5 0L5 16Z" />
-                                    </Path.Data>
-                                </Path>
-                            </Canvas>
-                        </Viewbox>
-                    </Setter.Value>
-                </Setter>
-                <Style.Triggers>
-                    <DataTrigger Binding="{Binding IsPlaying, Source={StaticResource ViewModel}}" Value="True">
-                        <DataTrigger.Setters>
-                            <Setter Property="Content">
-                                <Setter.Value>
-                                    <Viewbox xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" Width="15" Height="15">
-                                        <Canvas Width="512" Height="512">
-                                            <Path Fill="{DynamicResource TextBrush}">
-                                                <Path.Data>
-                                                    <PathGeometry Figures="M0,512h162.9V0H0V512z M349.1,0v512H512V0H349.1z" />
-                                                </Path.Data>
-                                            </Path>
-                                        </Canvas>
-                                    </Viewbox>
-                                </Setter.Value>
-                            </Setter>
-                        </DataTrigger.Setters>
-                    </DataTrigger>
-                </Style.Triggers>
-            </Style>
-        </Button.Style>
-    </Button>
+    <Button Name="Button" Command="{Binding Command, Mode=OneWay, Source={StaticResource ViewModel}}"/>
 </Windows:UIComponentBase>
