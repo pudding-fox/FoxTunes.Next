@@ -11,9 +11,9 @@ namespace FoxTunes.ViewModel
 {
     public class Lyrics : ViewModelBase
     {
-        public static readonly Regex SYNCED_TAG = new Regex(@"[\w+:\w+]", RegexOptions.Compiled);
+        public static readonly Regex SYNCED_TAG = new Regex(@"\[\w+:\w+\]", RegexOptions.Compiled);
 
-        public static readonly Regex SYNCED_LYRICS = new Regex(@"\[(\d{2}:\d{2}\.\d{2})\]\s+(.+)", RegexOptions.Compiled);
+        public static readonly Regex SYNCED_LYRICS = new Regex(@"\[(\d{1,2}:\d{1,2}\.\d{1,2})\]\s+?(.+)?", RegexOptions.Compiled);
 
         public static readonly string PADDING = string.Join(string.Empty, Enumerable.Repeat(Environment.NewLine, 10));
 
@@ -120,11 +120,6 @@ namespace FoxTunes.ViewModel
 
         protected virtual void OnAutoScrollChanged()
         {
-            PlaybackStateNotifier.Notify -= this.OnNotify;
-            if (this.AutoScroll)
-            {
-                PlaybackStateNotifier.Notify += this.OnNotify;
-            }
             if (this.AutoScrollChanged != null)
             {
                 this.AutoScrollChanged(this, EventArgs.Empty);
@@ -133,6 +128,32 @@ namespace FoxTunes.ViewModel
         }
 
         public event EventHandler AutoScrollChanged;
+
+        private int _SyncedRows { get; set; }
+
+        public int SyncedRows
+        {
+            get
+            {
+                return this._SyncedRows;
+            }
+            set
+            {
+                this._SyncedRows = value;
+                this.OnSyncedRowsChanged();
+            }
+        }
+
+        protected virtual void OnSyncedRowsChanged()
+        {
+            if (this.SyncedRowsChanged != null)
+            {
+                this.SyncedRowsChanged(this, EventArgs.Empty);
+            }
+            this.OnPropertyChanged("SyncedRows");
+        }
+
+        public event EventHandler SyncedRowsChanged;
 
         private string _PlainData { get; set; }
 
@@ -185,17 +206,6 @@ namespace FoxTunes.ViewModel
         }
 
         public event EventHandler SyncedDataChanged;
-
-        protected virtual void OnIsSyncedChanged()
-        {
-            if (this.IsSyncedChanged != null)
-            {
-                this.IsSyncedChanged(this, EventArgs.Empty);
-            }
-            this.OnPropertyChanged("IsSynced");
-        }
-
-        public event EventHandler IsSyncedChanged;
 
         public long Position
         {
@@ -261,7 +271,7 @@ namespace FoxTunes.ViewModel
 
         public event EventHandler LengthChanged;
 
-        public SyncedLyrics CurrentLyrics
+        public SyncedLyrics[] CurrentLyrics
         {
             get
             {
@@ -279,11 +289,31 @@ namespace FoxTunes.ViewModel
                     return null;
                 }
                 var duration = outputStream.GetDuration(this.Position);
-                return this.SyncedData.LastOrDefault(data =>
+                foreach (var data in this.SyncedData)
                 {
-                    var time = TimeSpan.FromSeconds((data.Minute * 60) + data.Second);
+                    data.IsActive = false;
+                }
+                var syncedData = this.SyncedData.LastOrDefault(data =>
+                {
+                    var time =
+                        TimeSpan.FromMinutes(data.Minute) +
+                        TimeSpan.FromSeconds(data.Second) +
+                        TimeSpan.FromMilliseconds(data.Hundredth * 10);
                     return duration > time;
                 });
+                if (syncedData == null)
+                {
+                    return this.SyncedData.Take(this.SyncedRows).ToArray();
+                }
+                syncedData.IsActive = true;
+                var half = this.SyncedRows / 2;
+                var start = Math.Max(0, this.SyncedData.IndexOf(syncedData) - half);
+                if (start + this.SyncedRows > this.SyncedData.Length)
+                {
+                    start = Math.Max(0, this.SyncedData.Length - this.SyncedRows);
+                }
+                var result = this.SyncedData.Skip(start).Take(this.SyncedRows).ToArray();
+                return result;
             }
         }
 
@@ -300,6 +330,7 @@ namespace FoxTunes.ViewModel
 
         protected override void InitializeComponent(ICore core)
         {
+            PlaybackStateNotifier.Notify += this.OnNotify;
             this.PlaybackManager = core.Managers.Playback;
             this.OnDemandMetaDataProvider = core.Components.OnDemandMetaDataProvider;
             this.SignalEmitter = core.Components.SignalEmitter;
@@ -335,6 +366,10 @@ namespace FoxTunes.ViewModel
                 LyricsBehaviourConfiguration.SECTION,
                 LyricsBehaviourConfiguration.AUTO_SCROLL
             ).ConnectValue(value => this.AutoScroll = value);
+            this.Configuration.GetElement<IntegerConfigurationElement>(
+                LyricsBehaviourConfiguration.SECTION,
+                LyricsBehaviourConfiguration.SYNCED_ROWS
+            ).ConnectValue(value => this.SyncedRows = value);
             base.InitializeComponent(core);
         }
 
@@ -400,6 +435,16 @@ namespace FoxTunes.ViewModel
 
         protected virtual async Task Refresh()
         {
+            if (this.HasData)
+            {
+                await Windows.Invoke(() =>
+                {
+                    this.HasData = true;
+                    this.HasPlainData = true;
+                    this.HasSyncedData = false;
+                    this.PlainData = Strings.Lyrics_Loading;
+                }).ConfigureAwait(false);
+            }
             var data = default(string);
             var outputStream = this.PlaybackManager.CurrentStream;
             if (outputStream != null)
@@ -413,64 +458,79 @@ namespace FoxTunes.ViewModel
                     )
                 ).ConfigureAwait(false);
             }
-            await Windows.Invoke(() =>
+            if (!string.IsNullOrEmpty(data))
             {
-                if (!string.IsNullOrEmpty(data))
-                {
-                    var syncedData = new List<SyncedLyrics>();
-                    using (var reader = new StringReader(data))
-                    {
-                        var line = default(string);
-                        while ((line = reader.ReadLine()) != null)
-                        {
-                            {
-                                var match = SYNCED_LYRICS.Match(line);
-                                if (match.Success)
-                                {
-                                    syncedData.Add(new SyncedLyrics(match.Groups[1].Value, match.Groups[2].Value));
-                                    continue;
-                                }
-                            }
-                            {
-                                var match = SYNCED_TAG.Match(line);
-                                if (match.Success)
-                                {
-                                    continue;
-                                }
-                                else
-                                {
-                                    break;
-                                }
-                            }
-
-                        }
-                    }
-                    if (syncedData.Any())
-                    {
-                        this.HasData = true;
-                        this.HasPlainData = false;
-                        this.HasSyncedData = true;
-                        this.SyncedData = syncedData.ToArray();
-                    }
-                    else
-                    {
-                        this.HasData = true;
-                        this.HasPlainData = true;
-                        this.HasSyncedData = false;
-                        this.PlainData = data;
-                    }
-                }
-                else
+                await this.Refresh(data).ConfigureAwait(false);
+            }
+            else
+            {
+                await Windows.Invoke(() =>
                 {
                     this.HasData = false;
                     this.HasPlainData = false;
                     this.HasSyncedData = false;
                     this.PlainData = null;
                     this.SyncedData = null;
-                }
+                }).ConfigureAwait(false);
+            }
+            await Windows.Invoke(() =>
+            {
                 this.OnPositionChanged();
                 this.OnLengthChanged();
+                this.OnCurrentLyricsChanged();
             }).ConfigureAwait(false);
+        }
+
+        protected virtual async Task Refresh(string data)
+        {
+            var syncedData = new List<SyncedLyrics>();
+            using (var reader = new StringReader(data))
+            {
+                var line = default(string);
+                while ((line = reader.ReadLine()) != null)
+                {
+                    {
+                        var match = SYNCED_LYRICS.Match(line);
+                        if (match.Success)
+                        {
+                            syncedData.Add(new SyncedLyrics(match.Groups[1].Value, match.Groups[2].Value));
+                            continue;
+                        }
+                    }
+                    {
+                        var match = SYNCED_TAG.Match(line);
+                        if (match.Success)
+                        {
+                            continue;
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
+
+                }
+            }
+            if (syncedData.Any())
+            {
+                await Windows.Invoke(() =>
+                {
+                    this.HasData = true;
+                    this.HasPlainData = false;
+                    this.HasSyncedData = true;
+                    this.SyncedData = syncedData.ToArray();
+                }).ConfigureAwait(false);
+            }
+            else
+            {
+                await Windows.Invoke(() =>
+                {
+                    this.HasData = true;
+                    this.HasPlainData = true;
+                    this.HasSyncedData = false;
+                    this.PlainData = data;
+                }).ConfigureAwait(false);
+            }
         }
 
         protected override Freezable CreateInstanceCore()
@@ -489,12 +549,25 @@ namespace FoxTunes.ViewModel
         }
     }
 
-    public class SyncedLyrics
+    public class SyncedLyrics : ViewModelBase
     {
-        public SyncedLyrics(string timeStamp, string data)
+        private SyncedLyrics()
+        {
+
+        }
+
+        public SyncedLyrics(string timeStamp, string data) : this()
         {
             this.TimeStamp = timeStamp;
-            this.Data = data;
+            if (string.IsNullOrEmpty(data))
+            {
+                this.Data = "🎵🎵🎵";
+            }
+            else
+            {
+                this.Data = data;
+            }
+            this.Freeze();
         }
 
         public string TimeStamp { get; private set; }
@@ -524,5 +597,36 @@ namespace FoxTunes.ViewModel
         }
 
         public string Data { get; private set; }
+
+        private bool _IsActive { get; set; }
+
+        public bool IsActive
+        {
+            get
+            {
+                return this._IsActive;
+            }
+            set
+            {
+                this._IsActive = value;
+                this.OnIsActiveChanged();
+            }
+        }
+
+        protected virtual void OnIsActiveChanged()
+        {
+            if (this.IsActiveChanged != null)
+            {
+                this.IsActiveChanged(this, EventArgs.Empty);
+            }
+            this.OnPropertyChanged("IsActive");
+        }
+
+        public event EventHandler IsActiveChanged;
+
+        protected override Freezable CreateInstanceCore()
+        {
+            return new SyncedLyrics();
+        }
     }
 }

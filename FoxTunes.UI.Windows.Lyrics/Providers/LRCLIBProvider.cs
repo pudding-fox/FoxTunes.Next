@@ -47,6 +47,7 @@ namespace FoxTunes
 
         public override async Task<LyricsResult> Lookup(IFileData fileData)
         {
+            const int MIN_LENGTH = 5;
             Logger.Write(this, LogLevel.Debug, "Getting track information for file \"{0}\"..", fileData.FileName);
             var artist = default(string);
             var song = default(string);
@@ -66,13 +67,13 @@ namespace FoxTunes
                 {
                     Logger.Write(this, LogLevel.Debug, "Got match, fetching lyrics..");
                     var syncedLyrics = default(string);
-                    if (result.TryGetValue("syncedLyrics", out syncedLyrics) && !string.IsNullOrEmpty(syncedLyrics))
+                    if (result.TryGetValue("syncedLyrics", out syncedLyrics) && !string.IsNullOrEmpty(syncedLyrics) && syncedLyrics.Length >= MIN_LENGTH)
                     {
                         Logger.Write(this, LogLevel.Debug, "Success (Synced Lyrics).");
                         return new LyricsResult(syncedLyrics);
                     }
                     var plainLyrics = default(string);
-                    if (result.TryGetValue("plainLyrics", out plainLyrics) && !string.IsNullOrEmpty(plainLyrics))
+                    if (result.TryGetValue("plainLyrics", out plainLyrics) && !string.IsNullOrEmpty(plainLyrics) && plainLyrics.Length >= MIN_LENGTH)
                     {
                         Logger.Write(this, LogLevel.Debug, "Success. (Plain Lyrics)");
                         return new LyricsResult(plainLyrics);

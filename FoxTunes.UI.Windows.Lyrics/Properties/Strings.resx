@@ -123,6 +123,9 @@
   <data name="LRCLIBLyricsProviderConfiguration.BaseUrl" xml:space="preserve">
     <value>Base Url</value>
   </data>
+  <data name="Lyrics.Loading" xml:space="preserve">
+    <value>Loading...</value>
+  </data>
   <data name="Lyrics.Name" xml:space="preserve">
     <value>Lyrics</value>
   </data>
@@ -137,6 +140,9 @@
   </data>
   <data name="LyricsBehaviourConfiguration.Section" xml:space="preserve">
     <value>Lyrics</value>
+  </data>
+  <data name="LyricsBehaviourConfiguration.SyncedRows" xml:space="preserve">
+    <value>Synced Rows</value>
   </data>
   <data name="LyricsBehaviourConfiguration.WriteTags" xml:space="preserve">
     <value>Write Tags</value>

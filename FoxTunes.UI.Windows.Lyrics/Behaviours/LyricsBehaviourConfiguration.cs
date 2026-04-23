@@ -14,6 +14,14 @@ namespace FoxTunes
 
         public const string WRITE_TAGS = "EEEE4CCA-250F-4892-9B00-CB0C22D094D3";
 
+        public const string SYNCED_ROWS = "FFFFCB57-EE0F-4C05-B204-36000AECE975";
+
+        public const int SYNCED_ROWS_MIN = 1;
+
+        public const int SYNCED_ROWS_MAX = 29;
+
+        public const int SYNCED_ROWS_DEFAULT = 7;
+
         public static IEnumerable<ConfigurationSection> GetConfigurationSections()
         {
             yield return new ConfigurationSection(SECTION, Strings.LyricsBehaviourConfiguration_Section)
@@ -24,7 +32,10 @@ namespace FoxTunes
                 .WithElement(new SelectionConfigurationElement(AUTO_LOOKUP_PROVIDER, Strings.LyricsBehaviourConfiguration_AutoLookupProvider)
                     .DependsOn(SECTION, AUTO_LOOKUP))
                 .WithElement(new BooleanConfigurationElement(WRITE_TAGS, Strings.LyricsBehaviourConfiguration_WriteTags)
-                    .WithValue(true)
+                    .WithValue(true))
+                .WithElement(new IntegerConfigurationElement(SYNCED_ROWS, Strings.LyricsBehaviourConfiguration_SyncedRows)
+                    .WithValue(SYNCED_ROWS_DEFAULT)
+                    .WithValidationRule(new IntegerValidationRule(SYNCED_ROWS_MIN, SYNCED_ROWS_MAX, 2))
             );
         }
     }

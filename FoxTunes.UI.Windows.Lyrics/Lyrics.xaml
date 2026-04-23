@@ -13,6 +13,7 @@
              MinHeight="200">
     <UserControl.Resources>
         <LocalViewModel:Lyrics x:Key="ViewModel" HasPlainDataChanged="OnHasPlainDataChanged" HasSyncedDataChanged="OnHasSyncedDataChanged"></LocalViewModel:Lyrics>
+        <LocalViewModel:FontSizeConverter x:Key="FontSizeConverter"></LocalViewModel:FontSizeConverter>
         <Style x:Key="PlainStyle" TargetType="{x:Type ContentControl}">
             <Setter Property="Content">
                 <Setter.Value>
@@ -25,7 +26,7 @@
                                 TextAlignment="Center" 
                                 TextWrapping="Wrap" 
                                 Foreground="{DynamicResource TextBrush}" 
-                                Text="{Binding Data, Source={StaticResource ViewModel}}"/>
+                                Text="{Binding PlainData, Source={StaticResource ViewModel}}"/>
                     </ScrollViewer>
                 </Setter.Value>
             </Setter>
@@ -42,7 +43,7 @@
                                 LocalWindows:ScrollViewerExtensions.VerticalMax="{Binding Length, Source={StaticResource ViewModel}}">
                                 <TextBlock VerticalAlignment="Top" TextAlignment="Center" TextWrapping="Wrap" Foreground="{DynamicResource TextBrush}">
                                     <Run Text="{x:Static LocalViewModel:Lyrics.PADDING}"></Run>
-                                    <Run Text="{Binding Data, Source={StaticResource ViewModel}}"></Run>
+                                    <Run Text="{Binding PlainData, Source={StaticResource ViewModel}}"></Run>
                                     <Run Text="{x:Static LocalViewModel:Lyrics.PADDING}"></Run>
                                 </TextBlock>
                             </ScrollViewer>
@@ -54,7 +55,24 @@
         <Style x:Key="SyncedStyle" TargetType="{x:Type ContentControl}">
             <Setter Property="Content">
                 <Setter.Value>
-                    <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" TextWrapping="Wrap" Text="{Binding CurrentLyrics.Data, Source={StaticResource ViewModel}}" Foreground="{DynamicResource TextBrush}"></TextBlock>
+                    <ItemsControl VerticalAlignment="Center" ItemsSource="{Binding CurrentLyrics, Source={StaticResource ViewModel}}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate DataType="{x:Type LocalViewModel:SyncedLyrics}">
+                                <TextBlock TextAlignment="Center" TextWrapping="Wrap" Foreground="{DynamicResource TextBrush}" Text="{Binding Data}">
+                                    <TextBlock.Style>
+                                        <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource {x:Type TextBlock}}">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding IsActive}" Value="True">
+                                                    <Setter Property="FontSize" Value="{Binding Converter={StaticResource FontSizeConverter},ConverterParameter=6}"></Setter>
+                                                    <Setter Property="FontWeight" Value="UltraBold"></Setter>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBlock.Style>
+                                </TextBlock>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
                 </Setter.Value>
             </Setter>
         </Style>

@@ -79,6 +79,15 @@ namespace FoxTunes {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Loading....
+        /// </summary>
+        internal static string Lyrics_Loading {
+            get {
+                return ResourceManager.GetString("Lyrics.Loading", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Lyrics.
         /// </summary>
         internal static string Lyrics_Name {
@@ -120,6 +129,15 @@ namespace FoxTunes {
         internal static string LyricsBehaviourConfiguration_Section {
             get {
                 return ResourceManager.GetString("LyricsBehaviourConfiguration.Section", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Synced Rows.
+        /// </summary>
+        internal static string LyricsBehaviourConfiguration_SyncedRows {
+            get {
+                return ResourceManager.GetString("LyricsBehaviourConfiguration.SyncedRows", resourceCulture);
             }
         }
         
