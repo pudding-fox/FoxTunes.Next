@@ -42,15 +42,6 @@ namespace FoxTunes
             }
         }
 
-        protected override void OnMouseDown(MouseButtonEventArgs e)
-        {
-            if (e.ChangedButton == MouseButton.Left)
-            {
-                this.DragMove();
-            }
-            base.OnMouseDown(e);
-        }
-
         protected override void OnClosing(CancelEventArgs e)
         {
             global::FoxTunes.Properties.Settings.Default.MiniWindowBounds = this.RestoreBounds;

@@ -98,15 +98,6 @@ namespace FoxTunes
             base.OnRenderSizeChanged(sizeInfo);
         }
 
-        protected override void OnMouseDown(MouseButtonEventArgs e)
-        {
-            if (e.LeftButton == MouseButtonState.Pressed)
-            {
-                this.DragMove();
-            }
-            base.OnMouseDown(e);
-        }
-
         protected override void OnClosing(CancelEventArgs e)
         {
             this.UpdateBounds();

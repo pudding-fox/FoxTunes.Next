@@ -14,7 +14,8 @@
         SizeToContent="WidthAndHeight"
         ResizeMode="CanMinimize"
         ApplyTemplate="False"
-        ApplyWindowChrome="False">
+        ApplyWindowChrome="False"
+        Windows:WindowExtensions.DragMove="True">
     <Window.Resources>
         <LocalViewModel:Mini x:Key="ViewModel"></LocalViewModel:Mini>
     </Window.Resources>
