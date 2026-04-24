@@ -1,5 +1,6 @@
 ﻿using FoxTunes.Interfaces;
 using System;
+using System.CodeDom;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
@@ -145,6 +146,10 @@ namespace FoxTunes
 
         public class UIComponentDesignerAdorner : Adorner, IInvocableComponent, IDisposable
         {
+            public const string COPY = "AAAA";
+
+            public const string PASTE = "BBBB";
+
             public const string EXIT = "ZZZZ";
 
             public UIComponentDesignerAdorner(UIComponentContainer container) : base(container)
@@ -244,6 +249,11 @@ namespace FoxTunes
             {
                 get
                 {
+                    yield return new InvocationComponent(InvocationComponent.CATEGORY_GLOBAL, COPY, Strings.UIComponentContainer_Copy, attributes: InvocationComponent.ATTRIBUTE_SEPARATOR);
+                    if (this.CanPaste)
+                    {
+                        yield return new InvocationComponent(InvocationComponent.CATEGORY_GLOBAL, PASTE, Strings.UIComponentContainer_Paste);
+                    }
                     yield return new InvocationComponent(InvocationComponent.CATEGORY_GLOBAL, EXIT, Strings.UIComponentContainer_Exit, attributes: InvocationComponent.ATTRIBUTE_SEPARATOR);
                 }
             }
@@ -252,6 +262,10 @@ namespace FoxTunes
             {
                 switch (component.Id)
                 {
+                    case COPY:
+                        return this.Copy();
+                    case PASTE:
+                        return this.Paste();
                     case EXIT:
                         return this.Exit();
                 }
@@ -260,6 +274,85 @@ namespace FoxTunes
 #else
                 return Task.CompletedTask;
 #endif
+            }
+
+            public Task Copy()
+            {
+                return Windows.Invoke(() =>
+                {
+                    try
+                    {
+                        using (var stream = new MemoryStream())
+                        {
+                            Serializer.Save(stream, this.Container.Configuration);
+                            stream.Seek(0, SeekOrigin.Begin);
+                            var reader = new StreamReader(stream);
+                            Clipboard.SetText(reader.ReadToEnd());
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        Logger.Write(this, LogLevel.Warn, "Failed to copy configuration to clipboard: {0}", e.Message);
+                    }
+                });
+            }
+
+            public bool CanPaste
+            {
+                get
+                {
+                    try
+                    {
+                        var text = Clipboard.GetText();
+                        if (!string.IsNullOrEmpty(text))
+                        {
+                            using (var stream = new MemoryStream())
+                            {
+                                var writer = new StreamWriter(stream);
+                                writer.Write(text);
+                                writer.Flush();
+                                stream.Seek(0, SeekOrigin.Begin);
+                                var configuration = Serializer.LoadComponent(stream);
+                                if (configuration != null)
+                                {
+                                    return true;
+                                }
+                            }
+                        }
+                    }
+                    catch
+                    {
+                        //Nothing can be done.
+                    }
+                    return false;
+                }
+            }
+
+            public Task Paste()
+            {
+                return Windows.Invoke(() =>
+                {
+                    try
+                    {
+                        var text = Clipboard.GetText();
+                        if (!string.IsNullOrEmpty(text))
+                        {
+                            using (var stream = new MemoryStream())
+                            {
+                                var writer = new StreamWriter(stream);
+                                writer.Write(text);
+                                writer.Flush();
+                                stream.Seek(0, SeekOrigin.Begin);
+                                var configuration = Serializer.LoadComponent(stream);
+                                this.Container.Configuration = configuration;
+                            }
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        Logger.Write(this, LogLevel.Warn, "Failed to copy configuration from clipboard: {0}", e.Message);
+                    }
+                });
             }
 
             public Task Exit()

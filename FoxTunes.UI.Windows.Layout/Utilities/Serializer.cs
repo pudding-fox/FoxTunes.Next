@@ -23,15 +23,14 @@ namespace FoxTunes
 
         public static void Save(Stream stream, UIComponentConfiguration config)
         {
-            using (var writer = new XmlTextWriter(stream, Encoding.Default))
-            {
-                writer.Formatting = Formatting.Indented;
-                writer.WriteStartDocument();
-                writer.WriteStartElement(Publication.Product);
-                SaveComponent(writer, config);
-                writer.WriteEndElement();
-                writer.WriteEndDocument();
-            }
+            var writer = new XmlTextWriter(stream, Encoding.Default);
+            writer.Formatting = Formatting.Indented;
+            writer.WriteStartDocument();
+            writer.WriteStartElement(Publication.Product);
+            SaveComponent(writer, config);
+            writer.WriteEndElement();
+            writer.WriteEndDocument();
+            writer.Flush();
         }
 
         public static string SaveComponent(UIComponentConfiguration config)

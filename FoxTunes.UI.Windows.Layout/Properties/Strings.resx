@@ -387,4 +387,10 @@
   <data name="UIComponentCanvasContainer.Name" xml:space="preserve">
     <value>Canvas</value>
   </data>
+  <data name="UIComponentContainer.Copy" xml:space="preserve">
+    <value>Copy</value>
+  </data>
+  <data name="UIComponentContainer.Paste" xml:space="preserve">
+    <value>Paste</value>
+  </data>
 </root>

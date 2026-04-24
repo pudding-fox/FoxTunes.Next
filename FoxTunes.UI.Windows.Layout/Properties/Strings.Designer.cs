@@ -205,11 +205,29 @@ namespace FoxTunes {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Copy.
+        /// </summary>
+        internal static string UIComponentContainer_Copy {
+            get {
+                return ResourceManager.GetString("UIComponentContainer.Copy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Done.
         /// </summary>
         internal static string UIComponentContainer_Exit {
             get {
                 return ResourceManager.GetString("UIComponentContainer.Exit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Paste.
+        /// </summary>
+        internal static string UIComponentContainer_Paste {
+            get {
+                return ResourceManager.GetString("UIComponentContainer.Paste", resourceCulture);
             }
         }
         
