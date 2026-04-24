@@ -18,6 +18,16 @@
                 <Windows:DiagonalStackPanel XStep="25" YStep="15" Reverse="True"></Windows:DiagonalStackPanel>
             </ItemsPanelTemplate>
         </ItemsControl.ItemsPanel>
+        <ItemsControl.ItemContainerStyle>
+            <Style TargetType="{x:Type ContentPresenter}">
+                <Setter Property="Panel.ZIndex" Value="0"></Setter>
+                <Style.Triggers>
+                    <Trigger Property="IsMouseOver" Value="True">
+                        <Setter Property="Panel.ZIndex" Value="999"/>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+        </ItemsControl.ItemContainerStyle>
         <ItemsControl.ItemTemplate>
             <DataTemplate DataType="{x:Type Core:MetaDataItem}">
                 <Border Background="{DynamicResource ControlBrush}" BorderBrush="{DynamicResource ControlBorderBrush}" BorderThickness="1" Padding="5">
