@@ -1,6 +1,7 @@
 ﻿using FoxDb;
 using FoxTunes.Interfaces;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
@@ -9,6 +10,33 @@ namespace FoxTunes.ViewModel
 {
     public class PlaylistConfiguration : ViewModelBase
     {
+        public IEnumerable<PlaylistType> Types
+        {
+            get
+            {
+                yield return PlaylistType.None;
+                yield return PlaylistType.Selection;
+                yield return PlaylistType.Dynamic;
+                yield return PlaylistType.Smart;
+                yield return PlaylistType.Everything;
+                if (this.AIEnabled != null && this.AIEnabled.Value)
+                {
+                    yield return PlaylistType.AIPrompt;
+                    yield return PlaylistType.AIDJ;
+                }
+            }
+        }
+        protected virtual void OnTypesChanged()
+        {
+            if (this.TypesChanged != null)
+            {
+                this.TypesChanged(this, EventArgs.Empty);
+            }
+            this.OnPropertyChanged("Types");
+        }
+
+        public event EventHandler TypesChanged;
+
         private Playlist _Playlist { get; set; }
 
         public Playlist Playlist
@@ -69,6 +97,10 @@ namespace FoxTunes.ViewModel
 
         public IErrorEmitter ErrorEmitter { get; private set; }
 
+        public IConfiguration Configuration { get; private set; }
+
+        public BooleanConfigurationElement AIEnabled { get; private set; }
+
         protected override void InitializeComponent(ICore core)
         {
             this.DatabaseFactory = core.Factories.Database;
@@ -76,13 +108,24 @@ namespace FoxTunes.ViewModel
             this.PlaylistManager.SelectedPlaylistChanged += this.OnSelectedPlaylistChanged;
             this.SignalEmitter = core.Components.SignalEmitter;
             this.ErrorEmitter = core.Components.ErrorEmitter;
+            this.Configuration = core.Components.Configuration;
+            this.AIEnabled = this.Configuration.GetElement<BooleanConfigurationElement>(
+                AIBehaviourConfiguration.SECTION,
+                AIBehaviourConfiguration.ENABLED
+            );
+            this.AIEnabled.ValueChanged += this.OnValueChanged;
             var task = this.Refresh();
             base.InitializeComponent(core);
         }
 
-        private void OnSelectedPlaylistChanged(object sender, EventArgs e)
+        protected virtual void OnSelectedPlaylistChanged(object sender, EventArgs e)
         {
             var task = this.Refresh();
+        }
+
+        protected virtual void OnValueChanged(object sender, EventArgs e)
+        {
+            var task = Windows.Invoke(() => this.OnTypesChanged());
         }
 
         public Task Refresh()

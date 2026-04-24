@@ -14,13 +14,20 @@
     <Windows:UIComponentBase.IsComponentEnabled>
         <Binding Path="HasData" Source="{StaticResource ViewModel}"></Binding>
     </Windows:UIComponentBase.IsComponentEnabled>
-    <Grid>
+    <Grid Grid.IsSharedSizeScope="True">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" SharedSizeGroup="Label"></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+        </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"></RowDefinition>
             <RowDefinition></RowDefinition>
             <RowDefinition Height="Auto"></RowDefinition>
         </Grid.RowDefinitions>
-        <Windows:PlaylistConfigDialog Grid.Column="0" Grid.Row="0" x:Name="PlaylistConfigDialog"></Windows:PlaylistConfigDialog>
-        <StackPanel Grid.Column="0" Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right">
+        <Label Grid.Column="0" Grid.Row="0">Type</Label>
+        <ComboBox Grid.Column="1" Grid.Row="0" SelectedValue="{Binding Playlist.Type, Source={StaticResource ViewModel}}" ItemsSource="{Binding Types, Mode=OneWay, Source={StaticResource ViewModel}}" Margin="0,0,0,5"></ComboBox>
+        <Windows:PlaylistConfigDialog Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" x:Name="PlaylistConfigDialog"></Windows:PlaylistConfigDialog>
+        <StackPanel Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Right">
             <Button Width="70" Height="30" Margin="7,7,0,0" Windows:ButtonExtensions.Command="{Binding SaveCommand, Mode=OneWay, Source={StaticResource ViewModel}}" Content="{x:Static ViewModel:StringResources.PlaylistManager_Save}"/>
         </StackPanel>
     </Grid>

@@ -51,6 +51,17 @@ namespace FoxTunes.ViewModel
             }
         }
 
+        protected virtual void OnTypesChanged()
+        {
+            if (this.TypesChanged != null)
+            {
+                this.TypesChanged(this, EventArgs.Empty);
+            }
+            this.OnPropertyChanged("Types");
+        }
+
+        public event EventHandler TypesChanged;
+
         protected override void InitializeComponent(ICore core)
         {
             global::FoxTunes.BackgroundTask.ActiveChanged += this.OnActiveChanged;
@@ -61,12 +72,18 @@ namespace FoxTunes.ViewModel
                 AIBehaviourConfiguration.SECTION,
                 AIBehaviourConfiguration.ENABLED
             );
+            this.AIEnabled.ValueChanged += this.OnValueChanged;
             base.InitializeComponent(core);
         }
 
         protected virtual async void OnActiveChanged(object sender, EventArgs e)
         {
             await Windows.Invoke(() => this.OnIsSavingChanged()).ConfigureAwait(false);
+        }
+
+        protected virtual async void OnValueChanged(object sender, EventArgs e)
+        {
+            await Windows.Invoke(() => this.OnTypesChanged());
         }
 
         public bool PlaylistManagerVisible
