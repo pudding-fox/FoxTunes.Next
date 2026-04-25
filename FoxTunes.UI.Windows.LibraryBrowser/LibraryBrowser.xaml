@@ -100,7 +100,10 @@
                                 <LocalWindows:LibraryBrowserTemplateSelector.DefaultTemplate>
                                     <DataTemplate DataType="{x:Type Core:LibraryHierarchyNode}">
                                         <StackPanel Width="{Binding TileSize, Source={StaticResource ViewModel}}" Orientation="Vertical" Margin="3,3,5,0">
-                                            <Windows:AsyncImage DataContext="{Binding Converter={StaticResource LibraryBrowserImageConverter}, Mode=OneWay}" Width="{Binding TileSize, Source={StaticResource ViewModel}}" Height="{Binding TileSize, Source={StaticResource ViewModel}}" Source="{Binding Value, FallbackValue={StaticResource Transparent}}"></Windows:AsyncImage>
+                                            <Grid>
+                                                <Windows:AsyncImage DataContext="{Binding Converter={StaticResource LibraryBrowserImageConverter}, Mode=OneWay}" Width="{Binding TileSize, Source={StaticResource ViewModel}}" Height="{Binding TileSize, Source={StaticResource ViewModel}}" Source="{Binding Value, FallbackValue={StaticResource Transparent}}" MouseMove="OnMouseMove" MouseLeave="OnMouseLeave"></Windows:AsyncImage>
+                                                <Rectangle x:Name="HoverImage" IsHitTestVisible="False" Height="{Binding TileSize, Source={StaticResource ViewModel}}"></Rectangle>
+                                            </Grid>
                                             <TextBlock HorizontalAlignment="Center" Text="{Binding Value}" TextTrimming="CharacterEllipsis" Foreground="{DynamicResource TextBrush}"></TextBlock>
                                         </StackPanel>
                                     </DataTemplate>

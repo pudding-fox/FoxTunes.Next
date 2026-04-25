@@ -3,19 +3,20 @@ using FoxTunes.Interfaces;
 using FoxTunes.ViewModel;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Shapes;
 using System.Windows.Threading;
 
 namespace FoxTunes
 {
     public abstract class LibraryBrowserBase : ConfigurableUIComponentBase
     {
+        public static readonly ArtworkBrushFactory ArtworkBrushFactory = ComponentRegistry.Instance.GetComponent<ArtworkBrushFactory>();
+
         protected override void CreateMenu()
         {
             var menu = new Menu()
@@ -226,6 +227,130 @@ namespace FoxTunes
             }
         }
 
+        protected virtual void OnMouseMove(object sender, MouseEventArgs e)
+        {
+            var viewModel = default(global::FoxTunes.ViewModel.LibraryBrowser);
+            if (this.TryFindResource<global::FoxTunes.ViewModel.LibraryBrowser>("ViewModel", out viewModel))
+            {
+                if (viewModel.ImageMode != LibraryBrowserImageMode.Compound)
+                {
+                    return;
+                }
+                var sourceImage = sender as AsyncImage;
+                if (sourceImage != null)
+                {
+                    var hoverImage = sourceImage.Parent.FindChild<Rectangle>("HoverImage");
+                    this.UpdateHoverImage(sourceImage, hoverImage, e.GetPosition(sourceImage));
+                }
+            }
+        }
+
+        protected virtual void OnMouseLeave(object sender, MouseEventArgs e)
+        {
+            var sourceImage = sender as AsyncImage;
+            if (sourceImage != null)
+            {
+                var hoverImage = sourceImage.Parent.FindChild<Rectangle>("HoverImage");
+                hoverImage.Fill = null;
+            }
+        }
+
+        protected virtual void UpdateHoverImage(AsyncImage sourceImage, Rectangle hoverImage, Point point)
+        {
+            if (sourceImage.Parent is FrameworkElement frameworkElement)
+            {
+                var libraryHierarchyNode = frameworkElement.DataContext as LibraryHierarchyNode;
+                if (libraryHierarchyNode != null)
+                {
+                    this.UpdateHoverImage(sourceImage, hoverImage, point, libraryHierarchyNode);
+                }
+            }
+        }
+
+        protected virtual async void UpdateHoverImage(AsyncImage sourceImage, Rectangle hoverImage, Point point, LibraryHierarchyNode libraryHierarchyNode)
+        {
+            var converter = default(LibraryHierarchyNodeConverter);
+            if (this.TryFindResource<LibraryHierarchyNodeConverter>("LibraryHierarchyNodeConverter", out converter))
+            {
+                var fileData = await converter.Convert(libraryHierarchyNode).ConfigureAwait(false);
+                if (fileData != null && fileData.MetaDatas != null)
+                {
+                    var index = default(int);
+                    switch (fileData.MetaDatas.Count)
+                    {
+                        case 0:
+                            //Nothing to do.
+                            return;
+                        case 1:
+                            //Nothing to do.
+                            return;
+                        case 2:
+                            if (point.X < sourceImage.ActualWidth / 2)
+                            {
+                                index = 0;
+                            }
+                            else
+                            {
+                                index = 1;
+                            }
+                            break;
+                        case 3:
+                            if (point.Y < sourceImage.ActualHeight / 2)
+                            {
+                                index = 0;
+                            }
+                            else
+                            {
+                                if (point.X < sourceImage.ActualWidth / 2)
+                                {
+                                    index = 1;
+                                }
+                                else
+                                {
+                                    index = 2;
+                                }
+                            }
+                            break;
+                        default:
+                        case 4:
+                            if (point.Y < sourceImage.ActualHeight / 2)
+                            {
+                                if (point.X < sourceImage.ActualWidth / 2)
+                                {
+                                    index = 0;
+                                }
+                                else
+                                {
+                                    index = 1;
+                                }
+                            }
+                            else
+                            {
+                                if (point.X < sourceImage.ActualWidth / 2)
+                                {
+                                    index = 2;
+                                }
+                                else
+                                {
+                                    index = 3;
+                                }
+                            }
+                            break;
+                    }
+                    this.UpdateHoverImage(hoverImage, fileData.MetaDatas[index].Value);
+                }
+            }
+        }
+
+        protected virtual void UpdateHoverImage(Rectangle hoverImage, string value)
+        {
+            var task = Windows.Invoke(() =>
+            {
+                hoverImage.Fill = ArtworkBrushFactory.Create(value, global::System.Convert.ToInt32(hoverImage.ActualWidth), global::System.Convert.ToInt32(hoverImage.ActualHeight), false, true);
+            });
+        }
+
+
         public override IEnumerable<string> InvocationCategories
         {
             get
@@ -242,21 +367,21 @@ namespace FoxTunes
                     InvocationComponent.CATEGORY_LIBRARY,
                      this.TileSize.Id,
                      Strings.LibraryBrowserBase_Size_Small,
-                     path: string.Concat(Strings.LibraryBrowserBase_Path, Path.AltDirectorySeparatorChar, this.TileSize.Name),
+                     path: string.Concat(Strings.LibraryBrowserBase_Path, global::System.IO.Path.AltDirectorySeparatorChar, this.TileSize.Name),
                      attributes: this.TileSize.Value == LibraryBrowserBaseConfiguration.TILE_SIZE_SMALL ? InvocationComponent.ATTRIBUTE_SELECTED : InvocationComponent.ATTRIBUTE_NONE
                 );
                 yield return new InvocationComponent(
                     InvocationComponent.CATEGORY_LIBRARY,
                      this.TileSize.Id,
                      Strings.LibraryBrowserBase_Size_Medium,
-                     path: string.Concat(Strings.LibraryBrowserBase_Path, Path.AltDirectorySeparatorChar, this.TileSize.Name),
+                     path: string.Concat(Strings.LibraryBrowserBase_Path, global::System.IO.Path.AltDirectorySeparatorChar, this.TileSize.Name),
                      attributes: this.TileSize.Value == LibraryBrowserBaseConfiguration.TILE_SIZE_MEDIUM ? InvocationComponent.ATTRIBUTE_SELECTED : InvocationComponent.ATTRIBUTE_NONE
                 );
                 yield return new InvocationComponent(
                     InvocationComponent.CATEGORY_LIBRARY,
                      this.TileSize.Id,
                      Strings.LibraryBrowserBase_Size_Large,
-                     path: string.Concat(Strings.LibraryBrowserBase_Path, Path.AltDirectorySeparatorChar, this.TileSize.Name),
+                     path: string.Concat(Strings.LibraryBrowserBase_Path, global::System.IO.Path.AltDirectorySeparatorChar, this.TileSize.Name),
                      attributes: this.TileSize.Value == LibraryBrowserBaseConfiguration.TILE_SIZE_LARGE ? InvocationComponent.ATTRIBUTE_SELECTED : InvocationComponent.ATTRIBUTE_NONE
                 );
                 foreach (var option in this.ImageMode.Options)
@@ -265,7 +390,7 @@ namespace FoxTunes
                         InvocationComponent.CATEGORY_LIBRARY,
                         this.ImageMode.Id,
                         option.Name,
-                        path: string.Concat(Strings.LibraryBrowserBase_Path, Path.AltDirectorySeparatorChar, this.ImageMode.Name),
+                        path: string.Concat(Strings.LibraryBrowserBase_Path, global::System.IO.Path.AltDirectorySeparatorChar, this.ImageMode.Name),
                         attributes: this.ImageMode.Value == option ? InvocationComponent.ATTRIBUTE_SELECTED : InvocationComponent.ATTRIBUTE_NONE
                     );
                 }

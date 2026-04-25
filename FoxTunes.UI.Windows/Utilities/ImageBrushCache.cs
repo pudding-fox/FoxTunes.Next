@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using System.Windows.Media;
 
 namespace FoxTunes
@@ -9,18 +8,18 @@ namespace FoxTunes
     {
         public ImageBrushCache(int capacity)
         {
-            this.Store = new CappedDictionary<Key, Task<ImageBrush>>(capacity);
+            this.Store = new CappedDictionary<Key, ImageBrush>(capacity);
         }
 
-        public CappedDictionary<Key, Task<ImageBrush>> Store { get; private set; }
+        public CappedDictionary<Key, ImageBrush> Store { get; private set; }
 
-        public bool TryGetValue(T value, int width, int height, bool preserveAspectRatio, out Task<ImageBrush> brush)
+        public bool TryGetValue(T value, int width, int height, bool preserveAspectRatio, out ImageBrush brush)
         {
             var key = new Key(value, width, height, preserveAspectRatio);
             return this.Store.TryGetValue(key, out brush);
         }
 
-        public Task<ImageBrush> GetOrAdd(T value, int width, int height, bool preserveAspectRatio, Func<Task<ImageBrush>> factory)
+        public ImageBrush GetOrAdd(T value, int width, int height, bool preserveAspectRatio, Func<ImageBrush> factory)
         {
             var key = new Key(value, width, height, preserveAspectRatio);
             return this.Store.GetOrAdd(key, factory);

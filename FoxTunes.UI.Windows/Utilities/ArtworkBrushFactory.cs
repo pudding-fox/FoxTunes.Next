@@ -88,7 +88,7 @@ namespace FoxTunes
             {
                 return AsyncResult<ImageBrush>.FromValue(placeholder);
             }
-            var brush = default(Task<ImageBrush>);
+            var brush = default(ImageBrush);
             if (this.Store.TryGetValue(fileName, width, height, preserveAspectRatio, out brush))
             {
                 if (brush != null)
@@ -101,40 +101,41 @@ namespace FoxTunes
                 }
             }
             return new AsyncResult<ImageBrush>(
-                placeholder, 
-                this.Store.GetOrAdd(fileName, width, height, preserveAspectRatio, () =>
+                placeholder,
 #if NET40
-                    TaskEx.FromResult(this.Create(fileName, width, height, preserveAspectRatio, true))
+                TaskEx.Run(() => this.Create(fileName, width, height, preserveAspectRatio, true))
 #else
-                    Task.FromResult(this.Create(fileName, width, height, preserveAspectRatio, true))
+                Task.Run(() => this.Create(fileName, width, height, preserveAspectRatio, true))
 #endif
-                )
             );
         }
 
-        protected virtual ImageBrush Create(string fileName, int width, int height, bool preserveAspectRatio, bool cache)
+        public ImageBrush Create(string fileName, int width, int height, bool preserveAspectRatio, bool cache)
         {
-            Logger.Write(this, LogLevel.Debug, "Creating brush: {0}x{1}", width, height);
-            var source = this.ImageLoader.Load(
-                fileName,
-                width,
-                height,
-                preserveAspectRatio,
-                cache
-            );
-            if (source == null)
+            return this.Store.GetOrAdd(fileName, width, height, preserveAspectRatio, () =>
             {
-                return null;
-            }
-            var brush = new ImageBrush(source)
-            {
-                Stretch = Stretch.Uniform
-            };
-            if (brush.CanFreeze)
-            {
-                brush.Freeze();
-            }
-            return brush;
+                Logger.Write(this, LogLevel.Debug, "Creating brush: {0}x{1}", width, height);
+                var source = this.ImageLoader.Load(
+                    fileName,
+                    width,
+                    height,
+                    preserveAspectRatio,
+                    cache
+                );
+                if (source == null)
+                {
+                    return null;
+                }
+                var brush = new ImageBrush(source)
+                {
+                    Stretch = Stretch.Uniform
+                };
+                if (brush.CanFreeze)
+                {
+                    brush.Freeze();
+                }
+                return brush;
+            });
         }
 
         protected virtual void CreateTaskFactory(int threads)

@@ -30,7 +30,7 @@ namespace FoxTunes
 
         public TaskFactory Factory { get; private set; }
 
-        public ImageBrushCache<Tuple<LibraryHierarchyNode, LibraryBrowserImageMode>> Store { get; private set; }
+        public AsyncImageBrushCache<Tuple<LibraryHierarchyNode, LibraryBrowserImageMode>> Store { get; private set; }
 
         public override void InitializeComponent(ICore core)
         {
@@ -168,7 +168,7 @@ namespace FoxTunes
         protected virtual void CreateCache(int capacity)
         {
             Logger.Write(this, LogLevel.Debug, "Creating cache for {0} items.", capacity);
-            this.Store = new ImageBrushCache<Tuple<LibraryHierarchyNode, LibraryBrowserImageMode>>(capacity);
+            this.Store = new AsyncImageBrushCache<Tuple<LibraryHierarchyNode, LibraryBrowserImageMode>>(capacity);
         }
 
         protected virtual void Reset(IEnumerable<LibraryHierarchyNode> libraryHierarchyNodes)

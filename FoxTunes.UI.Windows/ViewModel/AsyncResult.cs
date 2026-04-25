@@ -9,7 +9,7 @@ namespace FoxTunes.ViewModel
 
         }
 
-        private AsyncResult(T value)
+        public AsyncResult(T value)
         {
             this.Value = value;
         }
