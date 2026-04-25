@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows;
+using System.Windows.Controls.Primitives;
 
 namespace FoxTunes.ViewModel
 {
@@ -59,10 +60,10 @@ namespace FoxTunes.ViewModel
                 {
                     return;
                 }
-                this.Configuration.Left = !double.IsNaN(value.Left) ? Convert.ToInt32(value.Left) : 0;
-                this.Configuration.Top = !double.IsNaN(value.Top) ? Convert.ToInt32(value.Top) : 0;
-                this.Configuration.Width = !double.IsNaN(value.Width) ? Convert.ToInt32(value.Width) : 0;
-                this.Configuration.Height = !double.IsNaN(value.Height) ? Convert.ToInt32(value.Height) : 0;
+                this.Configuration.Left = !double.IsNaN(value.Left) && !double.IsInfinity(value.Left) ? Convert.ToInt32(value.Left) : 0;
+                this.Configuration.Top = !double.IsNaN(value.Top) && !double.IsInfinity(value.Top) ? Convert.ToInt32(value.Top) : 0;
+                this.Configuration.Width = !double.IsNaN(value.Width) && !double.IsInfinity(value.Width) ? Convert.ToInt32(value.Width) : 0;
+                this.Configuration.Height = !double.IsNaN(value.Height) && !double.IsInfinity(value.Height) ? Convert.ToInt32(value.Height) : 0;
                 this.OnBoundsChanged(this, EventArgs.Empty);
             }
         }
@@ -288,7 +289,7 @@ namespace FoxTunes.ViewModel
         protected virtual void OnApplyTransparencyChanged(object sender, EventArgs e)
         {
             var window = default(global::FoxTunes.ToolWindow);
-            if (Behaviour.Windows.TryGetValue(this.Configuration, out window))
+            if (this.IsInitialized && Behaviour.Windows.TryGetValue(this.Configuration, out window))
             {
                 if (window.AllowsTransparency != this.ApplyTransparency)
                 {
@@ -378,6 +379,8 @@ namespace FoxTunes.ViewModel
                 this.OnApplyWindowChromeChanged(this, EventArgs.Empty);
                 this.OnApplyTransparencyChanged(this, EventArgs.Empty);
                 this.OnSizeToContentChanged(this, EventArgs.Empty);
+
+                this.InitializeComponent(Core.Instance);
             }
             if (this.ConfigurationChanged != null)
             {

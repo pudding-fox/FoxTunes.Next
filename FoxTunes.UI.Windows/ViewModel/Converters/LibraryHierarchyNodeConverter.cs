@@ -10,7 +10,7 @@ namespace FoxTunes.ViewModel
 {
     public class LibraryHierarchyNodeConverter : IValueConverter
     {
-        public const int MAX_IMAGES = 4;
+        public const int MAX_IMAGES = 12;
 
         public static readonly ILibraryHierarchyBrowser LibraryHierarchyBrowser = ComponentRegistry.Instance.GetComponent<ILibraryHierarchyBrowser>();
 
