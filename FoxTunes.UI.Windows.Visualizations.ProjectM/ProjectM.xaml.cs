@@ -257,6 +257,9 @@ namespace FoxTunes
                     if (!string.IsNullOrEmpty(fileName))
                     {
                         projectm_load_preset_file(Context, fileName, true);
+#if DEBUG
+                        this.Slow = 0;
+#endif
                     }
                 }
                 finally
@@ -336,6 +339,9 @@ namespace FoxTunes
             if (!string.IsNullOrEmpty(fileName))
             {
                 projectm_load_preset_file(Context, fileName, false);
+#if DEBUG
+                this.Slow = 0;
+#endif
             }
         }
 
@@ -464,6 +470,9 @@ namespace FoxTunes
                 if (!string.IsNullOrEmpty(fileName))
                 {
                     projectm_load_preset_file(Context, fileName, true);
+#if DEBUG
+                    this.Slow = 0;
+#endif
                 }
             });
         }
@@ -486,6 +495,9 @@ namespace FoxTunes
                 if (!string.IsNullOrEmpty(fileName))
                 {
                     projectm_load_preset_file(Context, fileName, true);
+#if DEBUG
+                    this.Slow = 0;
+#endif
                 }
             });
         }
