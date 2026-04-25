@@ -6,9 +6,11 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Forms;
+using System.Windows.Threading;
 
 namespace FoxTunes
 {
@@ -58,13 +60,20 @@ namespace FoxTunes
                 Flags = VisualizationDataFlags.Individual
             };
             this.Buffers = new Dictionary<int, float[]>();
+#if DEBUG
+            this.Timer = new DispatcherTimer(TimeSpan.FromSeconds(1), DispatcherPriority.Render, this.OnCalculateFPS, this.Dispatcher);
+#endif
             this.Timer1 = new global::System.Timers.Timer();
             this.Timer1.Interval = 16;
             this.Timer1.Elapsed += this.OnTimer1Elapsed;
             this.Timer1.AutoReset = false;
             this.Timer1.Start();
             this.Timer2 = new global::System.Timers.Timer();
+#if DEBUG
+            this.Timer2.Interval = 15000;
+#else
             this.Timer2.Interval = 60000;
+#endif
             this.Timer2.Elapsed += this.OnTimer2Elapsed;
             this.Timer2.AutoReset = false;
             this.Timer2.Start();
@@ -73,6 +82,89 @@ namespace FoxTunes
         public PCMVisualizationData Data { get; private set; }
 
         public IDictionary<int, float[]> Buffers { get; private set; }
+
+#if DEBUG
+
+        const int SLOW_THRESHOLD = 10;
+
+        public DispatcherTimer Timer { get; private set; }
+
+        public volatile int Frames = 0;
+
+        public int Slow = 0;
+
+        protected virtual void OnCalculateFPS(object sender, EventArgs e)
+        {
+            this.FPS = Interlocked.Exchange(ref this.Frames, 0);
+        }
+
+        public int FPS
+        {
+            set
+            {
+                if (IntPtr.Zero.Equals(Context))
+                {
+                    return;
+                }
+                if (this.DownmixedData == null || this.DownmixedChannels == Channels.NONE)
+                {
+                    return;
+                }
+                if (value < SLOW_THRESHOLD)
+                {
+                    this.Slow++;
+                    if (this.Slow > SLOW_THRESHOLD)
+                    {
+                        var fileName = Presets.FileNames[Presets.Index];
+                        Logger.Write(this, LogLevel.Debug, "Slow down detected for preset: {0}", fileName);
+                        var relativeFileName = GetRelativePath(Location, fileName);
+                        var absoluteFileName = GetAbsolutePath(relativeFileName);
+                        if (!string.IsNullOrEmpty(absoluteFileName))
+                        {
+                            File.Delete(absoluteFileName);
+                        }
+                        this.Slow = 0;
+                    }
+                }
+                else
+                {
+                    this.Slow = 0;
+                }
+            }
+        }
+
+        public static string GetRelativePath(string basePath, string fullPath)
+        {
+            var baseUri = new Uri(AppendDirectorySeparatorChar(basePath));
+            var fullUri = new Uri(fullPath);
+            var relativeUri = baseUri.MakeRelativeUri(fullUri);
+            var relativePath = Uri.UnescapeDataString(relativeUri.ToString());
+            return relativePath.Replace('/', Path.DirectorySeparatorChar);
+        }
+
+        private static string AppendDirectorySeparatorChar(string path)
+        {
+            if (!path.EndsWith(Path.DirectorySeparatorChar.ToString()))
+                return path + Path.DirectorySeparatorChar;
+            return path;
+        }
+
+        private static string GetAbsolutePath(string relativePath)
+        {
+            var directoryName = Path.GetDirectoryName(Location);
+            do
+            {
+                var absolutePath = Path.Combine(directoryName, "FoxTunes.UI.Windows.Visualizations.ProjectM", relativePath);
+                if (File.Exists(absolutePath))
+                {
+                    return absolutePath;
+                }
+                directoryName = Path.GetDirectoryName(directoryName);
+            } while (!string.IsNullOrEmpty(directoryName));
+            return null;
+        }
+
+#endif
 
         public global::System.Timers.Timer Timer1 { get; private set; }
 
@@ -265,6 +357,9 @@ namespace FoxTunes
                 }
                 projectm_opengl_render_frame(Context);
                 this.GLControl.SwapBuffers();
+#if DEBUG
+                Interlocked.Increment(ref this.Frames);
+#endif
             }
             else
             {
