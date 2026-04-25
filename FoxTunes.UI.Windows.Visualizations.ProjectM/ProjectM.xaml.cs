@@ -10,7 +10,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Forms;
-using System.Windows.Threading;
 
 namespace FoxTunes
 {
@@ -61,7 +60,11 @@ namespace FoxTunes
             };
             this.Buffers = new Dictionary<int, float[]>();
 #if DEBUG
-            this.Timer = new DispatcherTimer(TimeSpan.FromSeconds(1), DispatcherPriority.Render, this.OnCalculateFPS, this.Dispatcher);
+            this.Timer = new global::System.Timers.Timer();
+            this.Timer.Interval = 1000;
+            this.Timer.Elapsed += this.OnTimerElapsed;
+            this.Timer.AutoReset = false;
+            this.Timer.Start();
 #endif
             this.Timer1 = new global::System.Timers.Timer();
             this.Timer1.Interval = 16;
@@ -87,15 +90,22 @@ namespace FoxTunes
 
         const int SLOW_THRESHOLD = 10;
 
-        public DispatcherTimer Timer { get; private set; }
+        public global::System.Timers.Timer Timer { get; private set; }
 
         public volatile int Frames = 0;
 
         public int Slow = 0;
 
-        protected virtual void OnCalculateFPS(object sender, EventArgs e)
+        protected virtual void OnTimerElapsed(object sender, EventArgs e)
         {
-            this.FPS = Interlocked.Exchange(ref this.Frames, 0);
+            try
+            {
+                this.FPS = Interlocked.Exchange(ref this.Frames, 0);
+            }
+            finally
+            {
+                this.Timer.Start();
+            }
         }
 
         public int FPS
@@ -535,6 +545,13 @@ namespace FoxTunes
 
         protected override void OnDisposing()
         {
+#if DEBUG
+            if (this.Timer != null)
+            {
+                this.Timer.Elapsed -= this.OnTimerElapsed;
+                this.Timer.Dispose();
+            }
+#endif
             if (this.Timer1 != null)
             {
                 this.Timer1.Elapsed -= this.OnTimer1Elapsed;
