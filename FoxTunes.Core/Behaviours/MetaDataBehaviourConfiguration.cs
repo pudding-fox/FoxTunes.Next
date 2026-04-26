@@ -104,7 +104,7 @@ namespace FoxTunes
                 .WithElement(
                     new BooleanConfigurationElement(DETECT_COMPILATIONS, Strings.MetaDataBehaviourConfiguration_DetectCompilations).WithValue(Publication.ReleaseType == ReleaseType.Default))
                 .WithElement(
-                    new IntegerConfigurationElement(THREADS_ELEMENT, Strings.MetaDataBehaviourConfiguration_Threads, path: Strings.General_Advanced).WithValue(Math.Max(Environment.ProcessorCount, 4)).WithValidationRule(new IntegerValidationRule(1, 32)))
+                    new IntegerConfigurationElement(THREADS_ELEMENT, Strings.MetaDataBehaviourConfiguration_Threads, path: Strings.General_Advanced).WithValue(Environment.ProcessorCount / 2).WithValidationRule(new IntegerValidationRule(1, 32)))
                 .WithElement(
                     new SelectionConfigurationElement(WRITE_ELEMENT, Strings.MetaDataBehaviourConfiguration_Write, path: Strings.General_Advanced).WithOptions(GetWriteBehaviourOptions()))
                 .WithElement(

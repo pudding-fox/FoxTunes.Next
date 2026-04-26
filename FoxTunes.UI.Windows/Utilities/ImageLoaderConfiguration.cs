@@ -26,7 +26,7 @@ namespace FoxTunes
             yield return new ConfigurationSection(ImageBehaviourConfiguration.SECTION, "Images")
                 .WithElement(new BooleanConfigurationElement(HIGH_QUALITY_RESIZER, "High Quality Resizer").WithValue(true))
                 .WithElement(new IntegerConfigurationElement(CACHE_SIZE, "Cache Size", path: "Advanced").WithValue(cacheSize).WithValidationRule(new IntegerValidationRule(64, 2048)))
-                .WithElement(new IntegerConfigurationElement(THREADS, "Background Threads", path: "Advanced").WithValue(Environment.ProcessorCount).WithValidationRule(new IntegerValidationRule(1, 32))
+                .WithElement(new IntegerConfigurationElement(THREADS, "Background Threads", path: "Advanced").WithValue(Environment.ProcessorCount / 2).WithValidationRule(new IntegerValidationRule(1, 32))
             );
         }
     }

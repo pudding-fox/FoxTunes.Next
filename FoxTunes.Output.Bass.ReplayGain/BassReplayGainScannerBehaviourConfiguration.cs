@@ -22,7 +22,7 @@ namespace FoxTunes
                         .DependsOn(SECTION, ENABLED))
                 .WithElement(
                     new IntegerConfigurationElement(THREADS, Strings.BassReplayGainScannerBehaviourConfiguration_BackgroundThreads, path: Strings.BassReplayGainScannerBehaviourConfiguration_Path)
-                        .WithValue(Environment.ProcessorCount).WithValidationRule(new IntegerValidationRule(1, 32))
+                        .WithValue(Environment.ProcessorCount / 2).WithValidationRule(new IntegerValidationRule(1, 32))
                         .DependsOn(SECTION, ENABLED)
                 );
         }

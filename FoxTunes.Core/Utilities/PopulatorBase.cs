@@ -204,7 +204,7 @@ namespace FoxTunes
             {
                 return new ParallelOptions()
                 {
-                    MaxDegreeOfParallelism = Environment.ProcessorCount
+                    MaxDegreeOfParallelism = Environment.ProcessorCount / 2
                 };
             }
         }

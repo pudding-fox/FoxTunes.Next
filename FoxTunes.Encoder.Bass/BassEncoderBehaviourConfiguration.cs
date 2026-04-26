@@ -46,7 +46,7 @@ namespace FoxTunes
                     .DependsOn(SECTION, ENABLED_ELEMENT))
                 .WithElement(
                     new IntegerConfigurationElement(THREADS_ELEMENT, Strings.BassEncoderBehaviourConfiguration_Threads)
-                    .WithValue(Environment.ProcessorCount)
+                    .WithValue(Environment.ProcessorCount / 2)
                     .WithValidationRule(new IntegerValidationRule(1, 32))
                     .DependsOn(SECTION, ENABLED_ELEMENT)
             );

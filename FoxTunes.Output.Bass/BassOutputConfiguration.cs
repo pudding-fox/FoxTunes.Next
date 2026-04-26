@@ -52,7 +52,7 @@ namespace FoxTunes
                 .WithElement(new IntegerConfigurationElement(RESAMPLE_QUALITY_ELEMENT, Strings.BassOutputConfiguration_ResampleQuality, path: Strings.General_Advanced).WithValue(2).WithValidationRule(new IntegerValidationRule(1, 10)))
                 .WithElement(new BooleanConfigurationElement(DEVICE_MONITOR_ELEMENT, Strings.BassOutputConfiguration_DeviceMonitor, path: Strings.General_Advanced).WithValue(Publication.ReleaseType == ReleaseType.Default))
                 .WithElement(new IntegerConfigurationElement(UPDATE_PERIOD_ELEMENT, Strings.BassOutputConfiguration_UpdatePeriod, path: Strings.General_Advanced).WithValue(100).WithValidationRule(new IntegerValidationRule(5, 100)))
-                .WithElement(new IntegerConfigurationElement(UPDATE_THREADS_ELEMENT, Strings.BassOutputConfiguration_UpdateThreads, path: Strings.General_Advanced).WithValue(1).WithValidationRule(new IntegerValidationRule(1, Environment.ProcessorCount))
+                .WithElement(new IntegerConfigurationElement(UPDATE_THREADS_ELEMENT, Strings.BassOutputConfiguration_UpdateThreads, path: Strings.General_Advanced).WithValue(1).WithValidationRule(new IntegerValidationRule(1, Environment.ProcessorCount / 2))
             );
         }
 
