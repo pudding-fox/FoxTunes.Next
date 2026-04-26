@@ -14,10 +14,16 @@ FROM (
         ON "PlaylistItems"."Id" = "PlaylistItem_MetaDataItem"."PlaylistItem_Id"
     JOIN "MetaDataItems"
         ON "PlaylistItem_MetaDataItem"."MetaDataItem_Id" = "MetaDataItems"."Id"
-    WHERE "PlaylistItems"."Playlist_Id" = @playlistId AND
+    WHERE "PlaylistItems"."Playlist_Id" = @playlistId 
+<#
+	if (this.Filter != null && this.Filter.Groups.Any())
+	{
+#>
+    AND
 	(
 	<#= new PlaylistFilterBuilder(this.Database, this.Filter).TransformText() #>
 	)
+<# } #>
     UNION ALL
     SELECT "PlaylistItems"."Id", "PlaylistItems"."Sequence"
     FROM "PlaylistItems"
@@ -25,10 +31,16 @@ FROM (
         ON "PlaylistItems"."LibraryItem_Id" = "LibraryItem_MetaDataItem"."LibraryItem_Id"
     JOIN "MetaDataItems"
         ON "LibraryItem_MetaDataItem"."MetaDataItem_Id" = "MetaDataItems"."Id"
-    WHERE "PlaylistItems"."Playlist_Id" = @playlistId AND
+    WHERE "PlaylistItems"."Playlist_Id" = @playlistId
+<#
+	if (this.Filter != null && this.Filter.Groups.Any())
+	{
+#>
+    AND
 	(
 	<#= new PlaylistFilterBuilder(this.Database, this.Filter).TransformText() #>
 	)
+<# } #>
 )  "PlaylistItems"
 GROUP BY "PlaylistItems"."Id"
 ORDER BY "PlaylistItems"."Sequence";

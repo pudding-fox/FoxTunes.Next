@@ -20,7 +20,7 @@ namespace FoxTunes.Templates
     /// Class to produce the template output
     /// </summary>
     
-    #line 1 "C:\Users\misha\Source\repos\FoxTunes.Next\FoxTunes.DB\Templates\GetPlaylistItems.tt"
+    #line 1 "C:\Users\misha\source\repos\FoxTunes.Next\FoxTunes.DB\Templates\GetPlaylistItems.tt"
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.TextTemplating", "17.0.0.0")]
     public partial class GetPlaylistItems : GetPlaylistItemsBase
     {
@@ -39,35 +39,65 @@ FROM (
         ON ""PlaylistItems"".""Id"" = ""PlaylistItem_MetaDataItem"".""PlaylistItem_Id""
     JOIN ""MetaDataItems""
         ON ""PlaylistItem_MetaDataItem"".""MetaDataItem_Id"" = ""MetaDataItems"".""Id""
-    WHERE ""PlaylistItems"".""Playlist_Id"" = @playlistId AND
-	(
-	");
+    WHERE ""PlaylistItems"".""Playlist_Id"" = @playlistId 
+");
             
-            #line 19 "C:\Users\misha\Source\repos\FoxTunes.Next\FoxTunes.DB\Templates\GetPlaylistItems.tt"
+            #line 18 "C:\Users\misha\source\repos\FoxTunes.Next\FoxTunes.DB\Templates\GetPlaylistItems.tt"
+
+	if (this.Filter != null && this.Filter.Groups.Any())
+	{
+
+            
+            #line default
+            #line hidden
+            this.Write("    AND\r\n\t(\r\n\t");
+            
+            #line 24 "C:\Users\misha\source\repos\FoxTunes.Next\FoxTunes.DB\Templates\GetPlaylistItems.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(new PlaylistFilterBuilder(this.Database, this.Filter).TransformText()));
             
             #line default
             #line hidden
-            this.Write(@"
-	)
-    UNION ALL
+            this.Write("\r\n\t)\r\n");
+            
+            #line 26 "C:\Users\misha\source\repos\FoxTunes.Next\FoxTunes.DB\Templates\GetPlaylistItems.tt"
+ } 
+            
+            #line default
+            #line hidden
+            this.Write(@"    UNION ALL
     SELECT ""PlaylistItems"".""Id"", ""PlaylistItems"".""Sequence""
     FROM ""PlaylistItems""
     JOIN ""LibraryItem_MetaDataItem""
         ON ""PlaylistItems"".""LibraryItem_Id"" = ""LibraryItem_MetaDataItem"".""LibraryItem_Id""
     JOIN ""MetaDataItems""
         ON ""LibraryItem_MetaDataItem"".""MetaDataItem_Id"" = ""MetaDataItems"".""Id""
-    WHERE ""PlaylistItems"".""Playlist_Id"" = @playlistId AND
-	(
-	");
+    WHERE ""PlaylistItems"".""Playlist_Id"" = @playlistId
+");
             
-            #line 30 "C:\Users\misha\Source\repos\FoxTunes.Next\FoxTunes.DB\Templates\GetPlaylistItems.tt"
+            #line 35 "C:\Users\misha\source\repos\FoxTunes.Next\FoxTunes.DB\Templates\GetPlaylistItems.tt"
+
+	if (this.Filter != null && this.Filter.Groups.Any())
+	{
+
+            
+            #line default
+            #line hidden
+            this.Write("    AND\r\n\t(\r\n\t");
+            
+            #line 41 "C:\Users\misha\source\repos\FoxTunes.Next\FoxTunes.DB\Templates\GetPlaylistItems.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(new PlaylistFilterBuilder(this.Database, this.Filter).TransformText()));
             
             #line default
             #line hidden
-            this.Write("\r\n\t)\r\n)  \"PlaylistItems\"\r\nGROUP BY \"PlaylistItems\".\"Id\"\r\nORDER BY \"PlaylistItems\"" +
-                    ".\"Sequence\";");
+            this.Write("\r\n\t)\r\n");
+            
+            #line 43 "C:\Users\misha\source\repos\FoxTunes.Next\FoxTunes.DB\Templates\GetPlaylistItems.tt"
+ } 
+            
+            #line default
+            #line hidden
+            this.Write(")  \"PlaylistItems\"\r\nGROUP BY \"PlaylistItems\".\"Id\"\r\nORDER BY \"PlaylistItems\".\"Sequ" +
+                    "ence\";");
             return this.GenerationEnvironment.ToString();
         }
     }
