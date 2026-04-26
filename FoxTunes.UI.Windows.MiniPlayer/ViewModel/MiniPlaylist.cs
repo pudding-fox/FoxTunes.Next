@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
@@ -25,18 +26,33 @@ namespace FoxTunes.ViewModel
 
         public IConfiguration Configuration { get; private set; }
 
-        private PlaylistItem _SelectedItem { get; set; }
-
         public PlaylistItem SelectedItem
         {
             get
             {
-                return this._SelectedItem;
+                if (this.PlaylistManager == null || this.PlaylistManager.SelectedItems == null)
+                {
+                    return null;
+                }
+                return this.PlaylistManager.SelectedItems.FirstOrDefault();
             }
             set
             {
-                this._SelectedItem = value;
-                this.OnSelectedItemChanged();
+                if (this.PlaylistManager == null)
+                {
+                    return;
+                }
+                if (value != null)
+                {
+                    this.PlaylistManager.SelectedItems = new[]
+                    {
+                        value
+                    };
+                }
+                else
+                {
+                    this.PlaylistManager.SelectedItems = null;
+                }
             }
         }
 
@@ -116,6 +132,7 @@ namespace FoxTunes.ViewModel
         {
             base.InitializeComponent(core);
             this.ScriptingContext = this.ScriptingRuntime.CreateContext();
+            this.PlaylistManager.SelectedItemsChanged += this.OnSelectedItemsChanged;
             this.PlaylistManager.CurrentPlaylistChanged += this.OnCurrentPlaylistChanged;
             this.PlaylistManager.SelectedPlaylistChanged += this.OnSelectedPlaylistChanged;
             this.PlaylistManager.CurrentItemChanged += this.OnCurrentItemChanged;
@@ -128,6 +145,11 @@ namespace FoxTunes.ViewModel
                 MiniPlayerBehaviourConfiguration.SECTION,
                 MiniPlayerBehaviourConfiguration.PLAYLIST_ARTWORK_ELEMENT
             ).ConnectValue(value => { var task = Windows.Invoke(() => this.ShowArtwork = value); });
+        }
+
+        protected virtual void OnSelectedItemsChanged(object sender, EventArgs e)
+        {
+            var task = Windows.Invoke(this.OnSelectedItemChanged);
         }
 
         protected virtual void OnCurrentPlaylistChanged(object sender, EventArgs e)
@@ -169,26 +191,7 @@ namespace FoxTunes.ViewModel
 
         public virtual Task RefreshSelectedItem()
         {
-            if (this.PlaybackManager == null)
-            {
-#if NET40
-                return TaskEx.FromResult(false);
-#else
-                return Task.CompletedTask;
-#endif
-            }
-            var outputStream = this.PlaybackManager.CurrentStream;
-            return Windows.Invoke(() =>
-            {
-                if (outputStream != null)
-                {
-                    this.SelectedItem = outputStream.PlaylistItem;
-                }
-                else
-                {
-                    this.SelectedItem = null;
-                }
-            });
+            return Windows.Invoke(new Action(this.OnSelectedItemChanged));
         }
 
         public ICommand PlaySelectedItemCommand
@@ -337,6 +340,7 @@ namespace FoxTunes.ViewModel
         {
             if (this.PlaylistManager != null)
             {
+                this.PlaylistManager.SelectedItemsChanged -= this.OnSelectedItemsChanged;
                 this.PlaylistManager.CurrentPlaylistChanged -= this.OnCurrentPlaylistChanged;
                 this.PlaylistManager.SelectedPlaylistChanged -= this.OnSelectedPlaylistChanged;
                 this.PlaylistManager.CurrentItemChanged -= this.OnCurrentItemChanged;
