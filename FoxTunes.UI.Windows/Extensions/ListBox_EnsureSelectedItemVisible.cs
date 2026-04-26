@@ -2,7 +2,7 @@
 using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Threading;
+using System.Windows.Controls.Primitives;
 
 namespace FoxTunes
 {
@@ -59,6 +59,12 @@ namespace FoxTunes
             {
                 this.ListBox = listBox;
                 this.ListBox.SelectionChanged += this.OnSelectionChanged;
+                BindingHelper.AddHandler(
+                    this.ListBox,
+                    global::System.Windows.Controls.ListBox.ItemsSourceProperty,
+                    typeof(global::System.Windows.Controls.ListBox),
+                    this.OnItemsSourceChanged
+                );
             }
 
             public ListBox ListBox { get; private set; }
@@ -69,20 +75,33 @@ namespace FoxTunes
                 {
                     return;
                 }
-                var action = new Action(() =>
                 {
-                    this.ListBox.ScrollIntoView(value);
-                    this.ListBox.UpdateLayout();
-                    var container = this.ListBox.ItemContainerGenerator.ContainerFromItem(value) as ListViewItem;
+                    var container = this.ListBox.ItemContainerGenerator.ContainerFromItem(value) as ListBoxItem;
                     if (container != null)
                     {
                         container.BringIntoView();
+                        return;
                     }
-                });
-                this.ListBox.Dispatcher.BeginInvoke(
-                    action,
-                    DispatcherPriority.Loaded
-                );
+                }
+                {
+                    var onStatusChanged = default(EventHandler);
+                    onStatusChanged = new EventHandler((sender, e) =>
+                    {
+                        if (this.ListBox.ItemContainerGenerator.Status != GeneratorStatus.ContainersGenerated)
+                        {
+                            return;
+                        }
+                        this.ListBox.ItemContainerGenerator.StatusChanged -= onStatusChanged;
+                        var container = this.ListBox.ItemContainerGenerator.ContainerFromItem(value) as ListBoxItem;
+                        if (container != null)
+                        {
+                            container.BringIntoView();
+                            return;
+                        }
+                    });
+                    this.ListBox.ItemContainerGenerator.StatusChanged += onStatusChanged;
+                    this.ListBox.ScrollIntoView(value);
+                }
             }
 
             protected virtual void OnSelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -90,11 +109,28 @@ namespace FoxTunes
                 this.EnsureVisible(this.ListBox.SelectedItem);
             }
 
+            protected virtual void OnItemsSourceChanged(object sender, EventArgs e)
+            {
+                var selectedItems = GetSelectedItems(this.ListBox);
+                if (selectedItems == null || selectedItems.Count == 0)
+                {
+                    return;
+                }
+                this.EnsureVisible(this.ListBox.SelectedItem);
+            }
+
+
             protected override void OnDisposing()
             {
                 if (this.ListBox != null)
                 {
                     this.ListBox.SelectionChanged -= this.OnSelectionChanged;
+                    BindingHelper.RemoveHandler(
+                        this.ListBox,
+                        global::System.Windows.Controls.ListBox.ItemsSourceProperty,
+                        typeof(global::System.Windows.Controls.ListBox),
+                        this.OnItemsSourceChanged
+                    );
                 }
                 base.OnDisposing();
             }

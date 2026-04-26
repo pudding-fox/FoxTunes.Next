@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
-using System.Windows.Data;
-using System.Windows.Threading;
 
 namespace FoxTunes
 {
@@ -88,42 +84,24 @@ namespace FoxTunes
                     }
                 }
                 {
-                    var group = this.GetGroup(value);
-                    var action = new Action(() =>
+                    var onStatusChanged = default(EventHandler);
+                    onStatusChanged = new EventHandler((sender, e) =>
                     {
-                        if (group != null)
+                        if (this.ListView.ItemContainerGenerator.Status != GeneratorStatus.ContainersGenerated)
                         {
-                            this.ListView.ScrollIntoView(group);
-                            this.ListView.UpdateLayout();
+                            return;
                         }
-                        this.ListView.ScrollIntoView(value);
-                        this.ListView.UpdateLayout();
+                        this.ListView.ItemContainerGenerator.StatusChanged -= onStatusChanged;
                         var container = this.ListView.ItemContainerGenerator.ContainerFromItem(value) as ListViewItem;
                         if (container != null)
                         {
                             container.BringIntoView();
+                            return;
                         }
                     });
-                    this.ListView.Dispatcher.BeginInvoke(
-                        action,
-                        DispatcherPriority.Loaded
-                    );
+                    this.ListView.ItemContainerGenerator.StatusChanged += onStatusChanged;
+                    this.ListView.ScrollIntoView(value);
                 }
-            }
-
-            private object GetGroup(object value)
-            {
-                if (this.ListView.IsGrouping)
-                {
-                    foreach (var group in this.ListView.Items.Groups.OfType<CollectionViewGroup>())
-                    {
-                        if (group.Items.Contains(value))
-                        {
-                            return group;
-                        }
-                    }
-                }
-                return null;
             }
 
             protected virtual void OnSelectionChanged(object sender, SelectionChangedEventArgs e)
