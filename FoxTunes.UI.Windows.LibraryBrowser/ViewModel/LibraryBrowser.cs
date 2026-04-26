@@ -170,6 +170,7 @@ namespace FoxTunes.ViewModel
 
         protected virtual void OnImageModeChanged()
         {
+            this.Dispatch(this.Refresh);
             if (this.ImageModeChanged != null)
             {
                 this.ImageModeChanged(this, EventArgs.Empty);
@@ -240,7 +241,6 @@ namespace FoxTunes.ViewModel
             }
             return this.Refresh();
         }
-
 
         protected override async Task OnRefresh()
         {
