@@ -79,26 +79,36 @@ namespace FoxTunes
                 {
                     return;
                 }
-                var group = this.GetGroup(value);
-                var action = new Action(() =>
                 {
-                    if (group != null)
-                    {
-                        this.ListView.ScrollIntoView(group);
-                        this.ListView.UpdateLayout();
-                    }
-                    this.ListView.ScrollIntoView(value);
-                    this.ListView.UpdateLayout();
                     var container = this.ListView.ItemContainerGenerator.ContainerFromItem(value) as ListViewItem;
                     if (container != null)
                     {
                         container.BringIntoView();
+                        return;
                     }
-                });
-                this.ListView.Dispatcher.BeginInvoke(
-                    action,
-                    DispatcherPriority.Loaded
-                );
+                }
+                {
+                    var group = this.GetGroup(value);
+                    var action = new Action(() =>
+                    {
+                        if (group != null)
+                        {
+                            this.ListView.ScrollIntoView(group);
+                            this.ListView.UpdateLayout();
+                        }
+                        this.ListView.ScrollIntoView(value);
+                        this.ListView.UpdateLayout();
+                        var container = this.ListView.ItemContainerGenerator.ContainerFromItem(value) as ListViewItem;
+                        if (container != null)
+                        {
+                            container.BringIntoView();
+                        }
+                    });
+                    this.ListView.Dispatcher.BeginInvoke(
+                        action,
+                        DispatcherPriority.Loaded
+                    );
+                }
             }
 
             private object GetGroup(object value)
