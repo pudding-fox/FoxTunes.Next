@@ -1,7 +1,6 @@
 ﻿using FoxDb;
 using FoxDb.Interfaces;
 using FoxTunes.Interfaces;
-using Microsoft.SqlServer.Server;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -173,19 +172,6 @@ namespace FoxTunes
                 libraryHierarchy => libraryHierarchy,
                 libraryHierarchy => libraryHierarchy.Levels.OrderBy(libraryHierarchyLevel => libraryHierarchyLevel.Sequence).ToArray()
             );
-        }
-
-        private IQueryable<LibraryItem> GetItems(LibraryItemStatus? status, ITransactionSource transaction)
-        {
-            var queryable = this.Database.AsQueryable<LibraryItem>(transaction);
-            if (!status.HasValue)
-            {
-                return queryable.Where(libraryItem => libraryItem.MetaDatas.Any());
-            }
-            else
-            {
-                return queryable.Where(libraryItem => libraryItem.Status == status.Value && libraryItem.MetaDatas.Any());
-            }
         }
 
         private string[] GetPathSegments(string fileName)

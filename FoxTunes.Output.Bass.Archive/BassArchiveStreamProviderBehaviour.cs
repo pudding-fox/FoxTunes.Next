@@ -436,6 +436,7 @@ namespace FoxTunes
                 await this.WithSubTask(this.Factory, async () => libraryItems = await this.Factory.Create(paths).ConfigureAwait(false)).ConfigureAwait(false);
                 using (var task = new SingletonReentrantTask(this, ComponentSlots.Database, SingletonReentrantTask.PRIORITY_HIGH, async cancellationToken =>
                 {
+                    await this.RemoveLibraryItems().ConfigureAwait(false);
                     await this.AddLibraryItems(libraryItems).ConfigureAwait(false);
                     if (cancellationToken.IsCancellationRequested)
                     {
@@ -447,6 +448,8 @@ namespace FoxTunes
                 {
                     await task.Run().ConfigureAwait(false);
                 }
+                await RemoveCancelledLibraryItems(this.Database).ConfigureAwait(false);
+                await SetLibraryItemsStatus(this.Database, LibraryItemStatus.None).ConfigureAwait(false);
             }
 
             private async Task RemoveLibraryItems()

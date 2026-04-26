@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using FoxDb;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -8,8 +9,13 @@ namespace FoxTunes
     {
         new public const string ID = "8C8CCEFC-A83E-438A-A365-9383DA23E08E";
 
+        public BuildLibraryHierarchiesTask() : base(ID)
+        {
+
+        }
+
         public BuildLibraryHierarchiesTask(IEnumerable<LibraryItem> libraryItems)
-            : base(ID)
+            : this()
         {
             this.LibraryItems = libraryItems;
         }
@@ -20,7 +26,14 @@ namespace FoxTunes
         {
             get
             {
-                return this.LibraryItems.Count() > 512;
+                if (this.LibraryItems == null)
+                {
+                    return true;
+                }
+                else
+                {
+                    return this.LibraryItems.Count() > 512;
+                }
             }
         }
 
@@ -41,7 +54,21 @@ namespace FoxTunes
 
         protected override async Task OnRun()
         {
-            await this.BuildHierarchies(this.LibraryItems).ConfigureAwait(false);
+            if (this.LibraryItems == null)
+            {
+                await this.RemoveHierarchies(null).ConfigureAwait(false);
+                var libraryItems = default(IEnumerable<LibraryItem>);
+                using (var transaction = this.Database.BeginTransaction(this.Database.PreferredIsolationLevel))
+                {
+                    var set = this.Database.Set<LibraryItem>(transaction);
+                    libraryItems = set.ToArray();
+                }
+                await this.BuildHierarchies(libraryItems).ConfigureAwait(false);
+            }
+            else
+            {
+                await this.BuildHierarchies(this.LibraryItems).ConfigureAwait(false);
+            }
         }
     }
 }

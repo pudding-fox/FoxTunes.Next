@@ -49,18 +49,11 @@ namespace FoxTunes
 
         public async Task Build()
         {
-            using (var database = this.DatabaseFactory.Create())
+            using (var task = new BuildLibraryHierarchiesTask())
             {
-                using (var transaction = database.BeginTransaction(database.PreferredIsolationLevel))
-                {
-                    var set = database.Set<LibraryItem>(transaction);
-                    using (var task = new BuildLibraryHierarchiesTask(set.ToArray()))
-                    {
-                        task.InitializeComponent(this.Core);
-                        await this.BackgroundTaskEmitter.Send(task).ConfigureAwait(false);
-                        await task.Run().ConfigureAwait(false);
-                    }
-                }
+                task.InitializeComponent(this.Core);
+                await this.BackgroundTaskEmitter.Send(task).ConfigureAwait(false);
+                await task.Run().ConfigureAwait(false);
             }
         }
 

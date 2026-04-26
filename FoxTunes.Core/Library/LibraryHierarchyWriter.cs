@@ -46,7 +46,7 @@ namespace FoxTunes
                 this.AddCommand.Parameters["isLeaf"] = isLeaf;
                 if (isLeaf)
                 {
-                    await this.AddCommand.ExecuteNonQueryAsync().ConfigureAwait(false);
+                    libraryHierarchyItemId = Converter.ChangeType<int>(await this.AddCommand.ExecuteScalarAsync().ConfigureAwait(false));
                 }
                 else
                 {
