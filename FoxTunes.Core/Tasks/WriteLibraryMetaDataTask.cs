@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace FoxTunes
@@ -124,9 +123,6 @@ namespace FoxTunes
                 }
 
                 await this.WriteLibraryMetaData(libraryItem).ConfigureAwait(false);
-
-                libraryItem.Status = LibraryItemStatus.Import;
-                await LibraryTaskBase.UpdateLibraryItem(this.Database, libraryItem).ConfigureAwait(false);
 
                 if (this.Flags.HasFlag(MetaDataUpdateFlags.WriteToFiles))
                 {
