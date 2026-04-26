@@ -88,7 +88,8 @@ namespace FoxTunes
 
         protected virtual void OnHierarchiesUpdated(HierarchiesUpdatedSignalState state)
         {
-            if (state != null && state.LibraryHierarchyNodes != null && state.LibraryHierarchyNodes.Any())
+            const int LIMIT = 1024;
+            if (state != null && state.LibraryHierarchyNodes != null && state.LibraryHierarchyNodes.Any() && state.LibraryHierarchyNodes.Count() < LIMIT)
             {
                 this.Reset(state.LibraryHierarchyNodes);
             }
