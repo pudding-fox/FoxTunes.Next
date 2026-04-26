@@ -32,7 +32,14 @@ namespace FoxTunes.ViewModel
                 {
                     return;
                 }
-                this.PlaylistManager.SelectedItems = value.OfType<PlaylistItem>().ToArray();
+                if (value != null)
+                {
+                    this.PlaylistManager.SelectedItems = value.OfType<PlaylistItem>().ToArray();
+                }
+                else
+                {
+                    this.PlaylistManager.SelectedItems = null;
+                }
             }
         }
 
