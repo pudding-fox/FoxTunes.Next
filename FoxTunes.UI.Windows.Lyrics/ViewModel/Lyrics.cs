@@ -1,4 +1,5 @@
-﻿using FoxTunes.Interfaces;
+﻿using FoxDb;
+using FoxTunes.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -271,49 +272,29 @@ namespace FoxTunes.ViewModel
 
         public event EventHandler LengthChanged;
 
+        private SyncedLyrics[] _CurrentLyrics { get; set; }
+
         public SyncedLyrics[] CurrentLyrics
         {
             get
             {
-                if (this.SyncedData == null)
+                return this._CurrentLyrics;
+            }
+            set
+            {
+                if (value == null)
                 {
-                    return null;
+                    return;
                 }
-                if (this.PlaybackManager == null)
+                else if (this._CurrentLyrics != null)
                 {
-                    return null;
+                    if (Enumerable.SequenceEqual(this._CurrentLyrics, value))
+                    {
+                        return;
+                    }
                 }
-                var outputStream = this.PlaybackManager.CurrentStream;
-                if (outputStream == null)
-                {
-                    return null;
-                }
-                var duration = outputStream.GetDuration(this.Position);
-                foreach (var data in this.SyncedData)
-                {
-                    data.IsActive = false;
-                }
-                var syncedData = this.SyncedData.LastOrDefault(data =>
-                {
-                    var time =
-                        TimeSpan.FromMinutes(data.Minute) +
-                        TimeSpan.FromSeconds(data.Second) +
-                        TimeSpan.FromMilliseconds(data.Hundredth * 10);
-                    return duration > time;
-                });
-                if (syncedData == null)
-                {
-                    return this.SyncedData.Take(this.SyncedRows).ToArray();
-                }
-                syncedData.IsActive = true;
-                var half = this.SyncedRows / 2;
-                var start = Math.Max(0, this.SyncedData.IndexOf(syncedData) - half);
-                if (start + this.SyncedRows > this.SyncedData.Length)
-                {
-                    start = Math.Max(0, this.SyncedData.Length - this.SyncedRows);
-                }
-                var result = this.SyncedData.Skip(start).Take(this.SyncedRows).ToArray();
-                return result;
+                this._CurrentLyrics = value;
+                this.OnCurrentLyricsChanged();
             }
         }
 
@@ -413,8 +394,51 @@ namespace FoxTunes.ViewModel
             }
             else if (this.HasSyncedData)
             {
-                this.OnCurrentLyricsChanged();
+                this.CurrentLyrics = this.GetCurrentLyrics();
             }
+        }
+
+        protected virtual SyncedLyrics[] GetCurrentLyrics()
+        {
+            if (this.SyncedData == null)
+            {
+                return null;
+            }
+            if (this.PlaybackManager == null)
+            {
+                return null;
+            }
+            var outputStream = this.PlaybackManager.CurrentStream;
+            if (outputStream == null)
+            {
+                return null;
+            }
+            var duration = outputStream.GetDuration(this.Position);
+            foreach (var data in this.SyncedData)
+            {
+                data.IsActive = false;
+            }
+            var syncedData = this.SyncedData.LastOrDefault(data =>
+            {
+                var time =
+                    TimeSpan.FromMinutes(data.Minute) +
+                    TimeSpan.FromSeconds(data.Second) +
+                    TimeSpan.FromMilliseconds(data.Hundredth * 10);
+                return duration > time;
+            });
+            if (syncedData == null)
+            {
+                return this.SyncedData.Take(this.SyncedRows).ToArray();
+            }
+            syncedData.IsActive = true;
+            var half = this.SyncedRows / 2;
+            var start = Math.Max(0, this.SyncedData.IndexOf(syncedData) - half);
+            if (start + this.SyncedRows > this.SyncedData.Length)
+            {
+                start = Math.Max(0, this.SyncedData.Length - this.SyncedRows);
+            }
+            var result = this.SyncedData.Skip(start).Take(this.SyncedRows).ToArray();
+            return result;
         }
 
         protected virtual Task Refresh(IEnumerable<string> names)
@@ -549,7 +573,7 @@ namespace FoxTunes.ViewModel
         }
     }
 
-    public class SyncedLyrics : ViewModelBase
+    public class SyncedLyrics : ViewModelBase, IEquatable<SyncedLyrics>
     {
         private SyncedLyrics()
         {
@@ -623,6 +647,49 @@ namespace FoxTunes.ViewModel
         }
 
         public event EventHandler IsActiveChanged;
+
+        public virtual bool Equals(SyncedLyrics other)
+        {
+            if (other == null)
+            {
+                return false;
+            }
+            if (object.ReferenceEquals(this, other))
+            {
+                return true;
+            }
+            if (!string.Equals(this.Data, other.Data))
+            {
+                return false;
+            }
+            if (!string.Equals(this.TimeStamp, other.TimeStamp))
+            {
+                return false;
+            }
+            return true;
+        }
+
+        public static bool operator ==(SyncedLyrics a, SyncedLyrics b)
+        {
+            if ((object)a == null && (object)b == null)
+            {
+                return true;
+            }
+            if ((object)a == null || (object)b == null)
+            {
+                return false;
+            }
+            if (object.ReferenceEquals((object)a, (object)b))
+            {
+                return true;
+            }
+            return a.Equals(b);
+        }
+
+        public static bool operator !=(SyncedLyrics a, SyncedLyrics b)
+        {
+            return !(a == b);
+        }
 
         protected override Freezable CreateInstanceCore()
         {
