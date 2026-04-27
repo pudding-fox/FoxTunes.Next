@@ -83,8 +83,5 @@
     <UserControl.ContextMenu>
         <Windows:Menu Category="{Binding Source={x:Static LocalWindows:LyricsBehaviour.CATEGORY}}"></Windows:Menu>
     </UserControl.ContextMenu>
-    <Grid>
-        <ContentControl Name="ContentControl"></ContentControl>
-        <Rectangle Fill="Transparent"></Rectangle>
-    </Grid>
+    <ContentControl Name="ContentControl"></ContentControl>
 </Windows:UIComponentBase>
