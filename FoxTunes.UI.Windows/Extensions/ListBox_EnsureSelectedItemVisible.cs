@@ -60,6 +60,7 @@ namespace FoxTunes
             {
                 this.ListBox = listBox;
                 this.ListBox.SelectionChanged += this.OnSelectionChanged;
+                this.ListBox.IsVisibleChanged += this.OnIsVisibleChanged;
                 BindingHelper.AddHandler(
                     this.ListBox,
                     global::System.Windows.Controls.ListBox.ItemsSourceProperty,
@@ -118,6 +119,15 @@ namespace FoxTunes
                 this.EnsureVisible(this.ListBox.SelectedItem);
             }
 
+            protected virtual void OnIsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
+            {
+                if (!this.ListBox.IsVisible)
+                {
+                    return;
+                }
+                this.EnsureVisible(this.ListBox.SelectedItem);
+            }
+
             protected virtual void OnItemsSourceChanged(object sender, EventArgs e)
             {
                 var selectedItems = GetSelectedItems(this.ListBox);
@@ -134,6 +144,7 @@ namespace FoxTunes
                 if (this.ListBox != null)
                 {
                     this.ListBox.SelectionChanged -= this.OnSelectionChanged;
+                    this.ListBox.IsVisibleChanged -= this.OnIsVisibleChanged;
                     BindingHelper.RemoveHandler(
                         this.ListBox,
                         global::System.Windows.Controls.ListBox.ItemsSourceProperty,
