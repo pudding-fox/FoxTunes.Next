@@ -126,11 +126,6 @@ namespace FoxTunes
                 if (playlistItem.LibraryItem_Id.HasValue)
                 {
                     await this.WriteLibraryMetaData(playlistItem).ConfigureAwait(false);
-                    await LibraryTaskBase.UpdateLibraryItem(
-                        this.Database,
-                        playlistItem.LibraryItem_Id.Value,
-                        libraryItem => libraryItem.Status = LibraryItemStatus.Import
-                    ).ConfigureAwait(false);
                 }
                 else
                 {
