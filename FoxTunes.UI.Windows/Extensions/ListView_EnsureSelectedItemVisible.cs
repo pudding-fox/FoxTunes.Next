@@ -3,6 +3,7 @@ using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
+using System.Windows.Threading;
 
 namespace FoxTunes
 {
@@ -97,6 +98,14 @@ namespace FoxTunes
                         {
                             container.BringIntoView();
                             return;
+                        }
+                        else
+                        {
+                            this.ListView.Dispatcher.BeginInvoke(new Action(() =>
+                            {
+                                this.ListView.ItemContainerGenerator.StatusChanged += onStatusChanged;
+                                this.ListView.ScrollIntoView(value);
+                            }), DispatcherPriority.Loaded);
                         }
                     });
                     this.ListView.ItemContainerGenerator.StatusChanged += onStatusChanged;
