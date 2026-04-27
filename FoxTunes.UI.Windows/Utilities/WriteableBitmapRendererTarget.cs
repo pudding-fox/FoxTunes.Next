@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
@@ -76,7 +75,9 @@ namespace FoxTunes
 
         public override bool TryLock()
         {
-            return this.Bitmap.TryLock(LockTimeout);
+            //return this.Bitmap.TryLock(LockTimeout);
+            this.Bitmap.Lock();
+            return true;
         }
 
         public override void Unlock()
