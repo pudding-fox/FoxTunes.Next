@@ -251,18 +251,36 @@ namespace FoxTunes.ViewModel
             }
         }
 
-        private Task AddToPlaylist(LibraryHierarchyNode libraryHierarchyNode)
+        private async Task AddToPlaylist(LibraryHierarchyNode libraryHierarchyNode)
         {
-            var playlist = this.GetPlaylist();
-            if (playlist != null)
+            var clear = default(bool);
+            var play = default(bool);
+            switch (MiniPlayerBehaviourConfiguration.GetDropBehaviour(this.DropCommit.Value))
             {
-                return this.PlaylistManager.Add(playlist, libraryHierarchyNode, false);
+                case MiniPlayerDropBehaviour.Append:
+                    clear = false;
+                    play = false;
+                    break;
+                case MiniPlayerDropBehaviour.AppendAndPlay:
+                    clear = false;
+                    play = true;
+                    break;
+                case MiniPlayerDropBehaviour.Replace:
+                    clear = true;
+                    play = false;
+                    break;
+                case MiniPlayerDropBehaviour.ReplaceAndPlay:
+                    clear = true;
+                    play = true;
+                    break;
             }
-#if NET40
-            return TaskEx.FromResult(false);
-#else
-            return Task.CompletedTask;
-#endif
+            var playlist = this.GetPlaylist();
+            var index = this.PlaylistBrowser.GetInsertIndex(playlist);
+            await this.PlaylistManager.Add(playlist, libraryHierarchyNode, clear);
+            if (play)
+            {
+                await this.PlaylistManager.Play(playlist, index).ConfigureAwait(false);
+            }
         }
 
         public Playlist GetPlaylist()
