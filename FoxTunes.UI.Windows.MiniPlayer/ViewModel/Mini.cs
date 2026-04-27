@@ -182,15 +182,6 @@ namespace FoxTunes.ViewModel
 
         protected virtual void OnDrop(DragEventArgs e)
         {
-            if (e.OriginalSource is DependencyObject dependencyObject)
-            {
-                if (dependencyObject.FindAncestor<global::FoxTunes.MiniPlaylist>() != null)
-                {
-                    //Hack hack hack ... cannot find a way to "handle" this async event.
-                    //The action would be duplicated between us and MiniPlaylist.
-                    return;
-                }
-            }
             try
             {
                 if (e.Data.GetDataPresent(DataFormats.FileDrop))
