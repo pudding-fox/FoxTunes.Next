@@ -263,21 +263,6 @@ namespace FoxTunes {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to DELETE FROM [LibraryItems]
-        ///WHERE NOT EXISTS
-        ///(
-        ///		SELECT *
-        ///		FROM [LibraryHierarchyItem_LibraryItem]
-        ///		WHERE [LibraryHierarchyItem_LibraryItem].[LibraryItem_Id] = [LibraryItems].[Id]
-        ///).
-        /// </summary>
-        internal static string RemoveCancelledLibraryItems {
-            get {
-                return ResourceManager.GetString("RemoveCancelledLibraryItems", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to DELETE FROM [LibraryHierarchyItem_LibraryItem]
         ///WHERE (@libraryHierarchyId IS NULL OR [LibraryHierarchyItem_Id] IN
         ///	(
@@ -346,14 +331,14 @@ namespace FoxTunes {
         ///			ON &quot;LibraryItems&quot;.&quot;Id&quot; =  &quot;LibraryItem_MetaDataItem&quot;.&quot;LibraryItem_Id&quot;
         ///	WHERE &quot;MetaDataItems&quot;.&quot;Name&quot; = @name 
         ///		AND  &quot;MetaDataItems&quot;.&quot;Type&quot; = @type
-        ///		AND &quot;LibraryItems&quot;.&quot;Status&quot; = @status
         ///)
         ///	
         ///DELETE FROM &quot;LibraryItem_MetaDataItem&quot;
         ///WHERE &quot;MetaDataItem_Id&quot; IN
         ///(
         ///	SELECT &quot;Id&quot;
-        ///	FROM &quot;MetaData&quot; [rest of string was truncated]&quot;;.
+        ///	FROM &quot;MetaData&quot;
+        ///).
         /// </summary>
         internal static string RemoveLibraryVariousArtists {
             get {

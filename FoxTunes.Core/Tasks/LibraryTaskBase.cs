@@ -165,10 +165,10 @@ namespace FoxTunes
                 using (var transaction = this.Database.BeginTransaction(this.Database.PreferredIsolationLevel))
                 {
                     var populator = new LibraryVariousArtistsPopulator(this.Database);
-                    await populator.Clear(LibraryItemStatus.None, transaction).ConfigureAwait(false);
+                    await populator.Clear(transaction).ConfigureAwait(false);
                     if (this.DetectCompilations.Value)
                     {
-                        await populator.Populate(LibraryItemStatus.None, transaction).ConfigureAwait(false);
+                        await populator.Populate(transaction).ConfigureAwait(false);
                     }
                     transaction.Commit();
                 }
@@ -336,14 +336,6 @@ namespace FoxTunes
                 }
             }
             return result;
-        }
-
-        public static async Task RemoveCancelledLibraryItems(IDatabaseComponent database)
-        {
-            using (var transaction = database.BeginTransaction(database.PreferredIsolationLevel))
-            {
-                await database.ExecuteAsync(database.Queries.RemoveCancelledLibraryItems).ConfigureAwait(false);
-            }
         }
 
         public static async Task SetLibraryItemsStatus(IDatabaseComponent database, LibraryItemStatus status)

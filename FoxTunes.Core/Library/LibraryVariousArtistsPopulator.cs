@@ -13,7 +13,7 @@ namespace FoxTunes
 
         public IDatabaseComponent Database { get; private set; }
 
-        public Task Populate(LibraryItemStatus libraryItemStatus, ITransactionSource transaction)
+        public Task Populate(ITransactionSource transaction)
         {
             return this.Database.ExecuteAsync(this.Database.Queries.UpdateLibraryVariousArtists, (parameters, phase) =>
             {
@@ -23,13 +23,12 @@ namespace FoxTunes
                         parameters["name"] = CustomMetaData.VariousArtists;
                         parameters["type"] = MetaDataItemType.Tag;
                         parameters["value"] = bool.TrueString;
-                        parameters["status"] = libraryItemStatus;
                         break;
                 }
             }, transaction);
         }
 
-        public Task Clear(LibraryItemStatus libraryItemStatus, ITransactionSource transaction)
+        public Task Clear(ITransactionSource transaction)
         {
             return this.Database.ExecuteAsync(this.Database.Queries.RemoveLibraryVariousArtists, (parameters, phase) =>
             {
@@ -38,7 +37,6 @@ namespace FoxTunes
                     case DatabaseParameterPhase.Fetch:
                         parameters["name"] = CustomMetaData.VariousArtists;
                         parameters["type"] = MetaDataItemType.Tag;
-                        parameters["status"] = libraryItemStatus;
                         break;
                 }
             }, transaction);

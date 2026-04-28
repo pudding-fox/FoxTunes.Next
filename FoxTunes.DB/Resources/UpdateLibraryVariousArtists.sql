@@ -32,7 +32,6 @@ AS
 			WHERE "MetaData"."Id" = "LibraryItems"."Id" AND "MetaData"."Name" = 'Artist'
 		) AS "Artist"
 		FROM "LibraryItems"
-		WHERE "Status" = @status
 	) AS "Artist"
 ),
 

@@ -196,16 +196,6 @@ namespace FoxTunes
 
         public abstract IDatabaseQuery GetPlaylistMetaData(int count, int limit);
 
-        public IDatabaseQuery RemoveCancelledLibraryItems
-        {
-            get
-            {
-                return this.Database.QueryFactory.Create(
-                    Resources.RemoveCancelledLibraryItems
-                );
-            }
-        }
-
         public IDatabaseQuery RemoveLibraryHierarchyItems
         {
             get
