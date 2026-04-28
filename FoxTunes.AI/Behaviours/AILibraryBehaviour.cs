@@ -101,6 +101,7 @@ namespace FoxTunes
                 await task.Run().ConfigureAwait(false);
                 this.FileId.Value = task.FileId;
                 this.VectorStoreId.Value = task.VectorStoreId;
+                this.Configuration.Save();
             }
         }
 
