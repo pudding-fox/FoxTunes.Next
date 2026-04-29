@@ -122,5 +122,50 @@ namespace FoxTunes {
                 return ResourceManager.GetString("ProjectM.TransparencyWarning", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Extreme.
+        /// </summary>
+        internal static string ProjectMBehaviourConfiguration_Complexity_Extreme {
+            get {
+                return ResourceManager.GetString("ProjectMBehaviourConfiguration.Complexity.Extreme", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to High.
+        /// </summary>
+        internal static string ProjectMBehaviourConfiguration_Complexity_High {
+            get {
+                return ResourceManager.GetString("ProjectMBehaviourConfiguration.Complexity.High", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Low.
+        /// </summary>
+        internal static string ProjectMBehaviourConfiguration_Complexity_Low {
+            get {
+                return ResourceManager.GetString("ProjectMBehaviourConfiguration.Complexity.Low", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Medium.
+        /// </summary>
+        internal static string ProjectMBehaviourConfiguration_Complexity_Medium {
+            get {
+                return ResourceManager.GetString("ProjectMBehaviourConfiguration.Complexity.Medium", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Project M.
+        /// </summary>
+        internal static string ProjectMBehaviourConfiguration_Section {
+            get {
+                return ResourceManager.GetString("ProjectMBehaviourConfiguration.Section", resourceCulture);
+            }
+        }
     }
 }

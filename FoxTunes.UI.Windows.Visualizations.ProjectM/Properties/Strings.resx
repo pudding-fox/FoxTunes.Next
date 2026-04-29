@@ -138,4 +138,19 @@
   <data name="ProjectM.TransparencyWarning" xml:space="preserve">
     <value>Cannot create OpenGL context while transparency is enabled, please disable it and restart.</value>
   </data>
+  <data name="ProjectMBehaviourConfiguration.Complexity.Extreme" xml:space="preserve">
+    <value>Extreme</value>
+  </data>
+  <data name="ProjectMBehaviourConfiguration.Complexity.High" xml:space="preserve">
+    <value>High</value>
+  </data>
+  <data name="ProjectMBehaviourConfiguration.Complexity.Low" xml:space="preserve">
+    <value>Low</value>
+  </data>
+  <data name="ProjectMBehaviourConfiguration.Complexity.Medium" xml:space="preserve">
+    <value>Medium</value>
+  </data>
+  <data name="ProjectMBehaviourConfiguration.Section" xml:space="preserve">
+    <value>Project M</value>
+  </data>
 </root>
