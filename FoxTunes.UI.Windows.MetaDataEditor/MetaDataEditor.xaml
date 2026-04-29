@@ -106,7 +106,7 @@
                                     </ContextMenu>
                                 </StackPanel.ContextMenu>
                                 <Grid Width="100" Height="100">
-                                    <Rectangle DataContext="{Binding Value, Converter={StaticResource ArtworkImageConverter}}" Fill="{Binding Value, FallbackValue={StaticResource Transparent}}"></Rectangle>
+                                    <Windows:AsyncImage DataContext="{Binding Value, Converter={StaticResource ArtworkImageConverter}}" Source="{Binding Value, FallbackValue={StaticResource Transparent}}"></Windows:AsyncImage>
                                     <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{Binding HasMultipleValues, Converter={StaticResource BooleanToVisibilityConverter}}" Text="{x:Static LocalWindows:StringResources.MetaDataEntry_MultipleValues}" Foreground="{DynamicResource TextBrush}"></TextBlock>
                                     <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{Binding HasValue, Converter={StaticResource NegatingBooleanToVisibilityConverter}}" Text="{x:Static LocalWindows:StringResources.MetaDataEntry_NoValue}" Foreground="{DynamicResource TextBrush}"></TextBlock>
                                 </Grid>

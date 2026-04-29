@@ -4,6 +4,7 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
+using static FoxTunes.ComponentScanner;
 
 namespace FoxTunes
 {
@@ -45,6 +46,8 @@ namespace FoxTunes
         {
             this.InitializeComponent();
         }
+
+        public int Version { get; private set; }
 
         public Brush Source
         {
@@ -93,6 +96,12 @@ namespace FoxTunes
 
         protected virtual void Update(Rectangle from, Rectangle to, Brush brush)
         {
+            from.BeginAnimation(Rectangle.OpacityProperty, null);
+            to.BeginAnimation(Rectangle.OpacityProperty, null);
+
+            this.Version++;
+            var version = this.Version;
+
             to.Fill = brush;
             to.Opacity = 0;
             to.Visibility = Visibility.Visible;
@@ -106,9 +115,12 @@ namespace FoxTunes
             var completed = default(EventHandler);
             completed = new EventHandler((sender, e) =>
             {
-                from.Opacity = 0;
-                from.Visibility = Visibility.Hidden;
-                from.Fill = null;
+                if (this.Version == version)
+                {
+                    from.Opacity = 0;
+                    from.Visibility = Visibility.Hidden;
+                    from.Fill = null;
+                }
                 fadeOut.Completed -= completed;
             });
             fadeOut.Completed += completed;

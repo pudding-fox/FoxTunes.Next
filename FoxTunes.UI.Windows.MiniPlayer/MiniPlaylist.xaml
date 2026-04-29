@@ -64,7 +64,7 @@
                                         <ColumnDefinition></ColumnDefinition>
                                     </Grid.ColumnDefinitions>
                                     <Border Grid.Column="0" Background="{DynamicResource ControlBrush}" BorderBrush="{DynamicResource ControlBorderBrush}" BorderThickness="1">
-                                        <Rectangle DataContext="{Binding Converter={StaticResource ArtworkImageConverter}}" Width="50" Height="50" Fill="{Binding Value, FallbackValue={StaticResource Transparent}}"></Rectangle>
+                                        <Windows:AsyncImage DataContext="{Binding Converter={StaticResource ArtworkImageConverter}}" Width="50" Height="50" Source="{Binding Value, FallbackValue={StaticResource Transparent}}"></Windows:AsyncImage>
                                     </Border>
                                     <TextBlock Grid.Column="1" VerticalAlignment="Center" Margin="4,0,0,0" Foreground="{DynamicResource TextBrush}" Text="{Binding Converter={StaticResource ViewModel}}" TextTrimming="CharacterEllipsis"></TextBlock>
                                 </Grid>

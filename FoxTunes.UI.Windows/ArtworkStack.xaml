@@ -31,7 +31,7 @@
         <ItemsControl.ItemTemplate>
             <DataTemplate DataType="{x:Type Core:MetaDataItem}">
                 <Border Background="{DynamicResource ControlBrush}" BorderBrush="{DynamicResource ControlBorderBrush}" BorderThickness="1" Padding="5">
-                    <Rectangle DataContext="{Binding Value, Converter={StaticResource ArtworkImageConverter}}" Width="100" Height="100" Fill="{Binding Value, FallbackValue={StaticResource Transparent}}"></Rectangle>
+                    <Windows:AsyncImage DataContext="{Binding Value, Converter={StaticResource ArtworkImageConverter}}" Width="100" Height="100" Source="{Binding Value, FallbackValue={StaticResource Transparent}}"></Windows:AsyncImage>
                 </Border>
             </DataTemplate>
         </ItemsControl.ItemTemplate>

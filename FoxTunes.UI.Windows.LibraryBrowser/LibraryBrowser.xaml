@@ -102,7 +102,7 @@
                                         <StackPanel Width="{Binding TileSize, Source={StaticResource ViewModel}}" Orientation="Vertical" Margin="3,3,5,0">
                                             <Grid>
                                                 <Windows:AsyncImage DataContext="{Binding Converter={StaticResource LibraryBrowserImageConverter}, Mode=OneWay}" Width="{Binding TileSize, Source={StaticResource ViewModel}}" Height="{Binding TileSize, Source={StaticResource ViewModel}}" Source="{Binding Value, FallbackValue={StaticResource Transparent}}" MouseMove="OnMouseMove" MouseLeave="OnMouseLeave"></Windows:AsyncImage>
-                                                <Rectangle x:Name="HoverImage" IsHitTestVisible="False" Height="{Binding TileSize, Source={StaticResource ViewModel}}"></Rectangle>
+                                                <Windows:AsyncImage x:Name="HoverImage" IsHitTestVisible="False" Width="{Binding TileSize, Source={StaticResource ViewModel}}" Height="{Binding TileSize, Source={StaticResource ViewModel}}"></Windows:AsyncImage>
                                             </Grid>
                                             <TextBlock HorizontalAlignment="Center" Text="{Binding Value}" TextTrimming="CharacterEllipsis" Foreground="{DynamicResource TextBrush}"></TextBlock>
                                         </StackPanel>

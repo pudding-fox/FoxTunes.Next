@@ -239,7 +239,7 @@ namespace FoxTunes
                 var sourceImage = sender as AsyncImage;
                 if (sourceImage != null)
                 {
-                    var hoverImage = sourceImage.Parent.FindChild<Rectangle>("HoverImage");
+                    var hoverImage = sourceImage.Parent.FindChild<AsyncImage>("HoverImage");
                     this.UpdateHoverImage(sourceImage, hoverImage, e.GetPosition(sourceImage));
                 }
             }
@@ -250,12 +250,12 @@ namespace FoxTunes
             var sourceImage = sender as AsyncImage;
             if (sourceImage != null)
             {
-                var hoverImage = sourceImage.Parent.FindChild<Rectangle>("HoverImage");
-                hoverImage.Fill = null;
+                var hoverImage = sourceImage.Parent.FindChild<AsyncImage>("HoverImage");
+                hoverImage.Source = null;
             }
         }
 
-        protected virtual void UpdateHoverImage(AsyncImage sourceImage, Rectangle hoverImage, Point point)
+        protected virtual void UpdateHoverImage(AsyncImage sourceImage, AsyncImage hoverImage, Point point)
         {
             if (sourceImage.Parent is FrameworkElement frameworkElement)
             {
@@ -267,7 +267,7 @@ namespace FoxTunes
             }
         }
 
-        protected virtual async void UpdateHoverImage(AsyncImage sourceImage, Rectangle hoverImage, Point point, LibraryHierarchyNode libraryHierarchyNode)
+        protected virtual async void UpdateHoverImage(AsyncImage sourceImage, AsyncImage hoverImage, Point point, LibraryHierarchyNode libraryHierarchyNode)
         {
             var converter = default(LibraryHierarchyNodeConverter);
             if (this.TryFindResource<LibraryHierarchyNodeConverter>("LibraryHierarchyNodeConverter", out converter))
@@ -342,11 +342,11 @@ namespace FoxTunes
             }
         }
 
-        protected virtual void UpdateHoverImage(Rectangle hoverImage, string value)
+        protected virtual void UpdateHoverImage(AsyncImage hoverImage, string value)
         {
             var task = Windows.Invoke(() =>
             {
-                hoverImage.Fill = ArtworkBrushFactory.Create(value, global::System.Convert.ToInt32(hoverImage.ActualWidth), global::System.Convert.ToInt32(hoverImage.ActualHeight), false, true);
+                hoverImage.Source = ArtworkBrushFactory.Create(value, global::System.Convert.ToInt32(hoverImage.ActualWidth), global::System.Convert.ToInt32(hoverImage.ActualHeight), false, true);
             });
         }
 

@@ -19,8 +19,8 @@
         <System:Boolean x:Key="True">True</System:Boolean>
         <System:Boolean x:Key="False">False</System:Boolean>
     </Windows:ConfigurableUIComponentBase.Resources>
-    <Rectangle DataContext="{Binding FileName, Converter={StaticResource ArtworkImageConverter}, Source={StaticResource ViewModel}}" Fill="{Binding Value, FallbackValue={StaticResource Transparent}}">
-        <Rectangle.Style>
+    <Windows:AsyncImage DataContext="{Binding FileName, Converter={StaticResource ArtworkImageConverter}, Source={StaticResource ViewModel}}" Source="{Binding Value, FallbackValue={StaticResource Transparent}}">
+        <Windows:AsyncImage.Style>
             <Style TargetType="{x:Type Rectangle}">
                 <Setter Property="Effect" Value="{x:Null}"/>
                 <Style.Triggers>
@@ -38,6 +38,6 @@
                     </DataTrigger>
                 </Style.Triggers>
             </Style>
-        </Rectangle.Style>
-    </Rectangle>
+        </Windows:AsyncImage.Style>
+    </Windows:AsyncImage>
 </Windows:ConfigurableUIComponentBase>
