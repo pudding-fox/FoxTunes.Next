@@ -91,6 +91,10 @@ namespace FoxTunes
             var windows = new HashSet<IntPtr>();
             foreach (var window in WindowBase.Active)
             {
+                if (!WindowExtensions.GetAllowsTransparency(window))
+                {
+                    continue;
+                }
                 windows.Add(window.Handle);
                 var currentColor = default(Color);
                 if (this.AccentColors.TryGetValue(window.Handle, out currentColor))
@@ -132,6 +136,10 @@ namespace FoxTunes
         {
             foreach (var window in WindowBase.Active)
             {
+                if (!WindowExtensions.GetAllowsTransparency(window))
+                {
+                    continue;
+                }
                 WindowExtensions.DisableAcrylicBlur(
                     window.Handle
                 );

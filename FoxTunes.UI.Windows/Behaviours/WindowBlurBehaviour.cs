@@ -23,6 +23,10 @@ namespace FoxTunes
         {
             foreach (var window in WindowBase.Active)
             {
+                if (!WindowExtensions.GetAllowsTransparency(window))
+                {
+                    continue;
+                }
                 WindowExtensions.EnableBlur(window.Handle);
             }
         }
@@ -31,6 +35,10 @@ namespace FoxTunes
         {
             foreach (var window in WindowBase.Active)
             {
+                if (!WindowExtensions.GetAllowsTransparency(window))
+                {
+                    continue;
+                }
                 WindowExtensions.DisableBlur(window.Handle);
             }
         }

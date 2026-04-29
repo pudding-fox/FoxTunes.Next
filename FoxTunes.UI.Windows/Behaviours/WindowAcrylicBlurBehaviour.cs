@@ -50,6 +50,10 @@ namespace FoxTunes
         {
             foreach (var window in WindowBase.Active)
             {
+                if (!WindowExtensions.GetAllowsTransparency(window))
+                {
+                    continue;
+                }
                 WindowExtensions.EnableAcrylicBlur(
                     window.Handle,
                     this.GetAccentColor()
@@ -61,6 +65,10 @@ namespace FoxTunes
         {
             foreach (var window in WindowBase.Active)
             {
+                if (!WindowExtensions.GetAllowsTransparency(window))
+                {
+                    continue;
+                }
                 WindowExtensions.DisableAcrylicBlur(
                     window.Handle
                 );

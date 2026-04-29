@@ -160,6 +160,15 @@ namespace FoxTunes {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Interval (Seconds).
+        /// </summary>
+        internal static string ProjectMBehaviourConfiguration_Interval {
+            get {
+                return ResourceManager.GetString("ProjectMBehaviourConfiguration.Interval", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Project M.
         /// </summary>
         internal static string ProjectMBehaviourConfiguration_Section {

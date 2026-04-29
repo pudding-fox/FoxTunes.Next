@@ -47,6 +47,8 @@ namespace FoxTunes
 
         public static IUserInterface UserInterface = ComponentRegistry.Instance.GetComponent<IUserInterface>();
 
+        public static IConfiguration Configuration = ComponentRegistry.Instance.GetComponent<IConfiguration>();
+
         public static IntPtr Context { get; private set; }
 
         public ProjectM()
@@ -72,14 +74,23 @@ namespace FoxTunes
             this.Timer1.AutoReset = false;
             this.Timer1.Start();
             this.Timer2 = new global::System.Timers.Timer();
-#if DEBUG
-            this.Timer2.Interval = 15000;
-#else
-            this.Timer2.Interval = 60000;
-#endif
+            Configuration.GetElement<IntegerConfigurationElement>(
+                ProjectMBehaviourConfiguration.SECTION,
+                ProjectMBehaviourConfiguration.INTERVAL
+            ).ConnectValue(value =>
+            {
+                if (value > 0)
+                {
+                    this.Timer2.Interval = value * 1000;
+                    this.Timer2.Start();
+                }
+                else
+                {
+                    this.Timer2.Stop();
+                }
+            });
             this.Timer2.Elapsed += this.OnTimer2Elapsed;
             this.Timer2.AutoReset = false;
-            this.Timer2.Start();
         }
 
         public PCMVisualizationData Data { get; private set; }

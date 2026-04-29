@@ -150,6 +150,9 @@
   <data name="ProjectMBehaviourConfiguration.Complexity.Medium" xml:space="preserve">
     <value>Medium</value>
   </data>
+  <data name="ProjectMBehaviourConfiguration.Interval" xml:space="preserve">
+    <value>Interval (Seconds)</value>
+  </data>
   <data name="ProjectMBehaviourConfiguration.Section" xml:space="preserve">
     <value>Project M</value>
   </data>
