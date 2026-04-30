@@ -224,7 +224,7 @@ namespace FoxTunes
 
         protected virtual bool TryParseKeyValue(string input, out FieldNode node)
         {
-            var match = Regex.Match(input, @"(?<name>[a-zA-Z0-9]+)\s*(?<op>>=|<=|:|>|<)\s*(?<value>.+)");
+            var match = Regex.Match(input, @"(?<name>[a-zA-Z0-9]+)\s*(?<op>>:|<:|:|>|<)\s*(?<value>.+)");
             if (!match.Success)
             {
                 node = default(FieldNode);
@@ -246,11 +246,11 @@ namespace FoxTunes
                     return FilterParserEntryOperator.Match;
                 case ">":
                     return FilterParserEntryOperator.Greater;
-                case ">=":
+                case ">:":
                     return FilterParserEntryOperator.GreaterEqual;
                 case "<":
                     return FilterParserEntryOperator.Less;
-                case "<=":
+                case "<:":
                     return FilterParserEntryOperator.LessEqual;
             }
         }

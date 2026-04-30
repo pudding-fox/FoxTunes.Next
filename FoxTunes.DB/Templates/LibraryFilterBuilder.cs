@@ -60,8 +60,7 @@ if (this.Filter != null)
             #line hidden
             this.Write("\t\r\nEXISTS\r\n(\r\n\tSELECT * \r\n\tFROM \"LibraryItem_MetaDataItem\"\r\n\t\tJOIN \"MetaDataItems" +
                     "\" ON \"MetaDataItems\".\"Id\" = \"LibraryItem_MetaDataItem\".\"MetaDataItem_Id\"\r\n\tWHERE" +
-                    " \"LibraryItem_MetaDataItem\".\"LibraryItem_Id\" = \"HorizontalMetaData\".\"Id\" AND (\r\n" +
-                    "");
+                    " \"LibraryItem_MetaDataItem\".\"LibraryItem_Id\" = \"LibraryItems\".\"Id\" AND (\r\n");
             
             #line 30 "C:\sourcecode\source\personal\FoxTunes.Next\FoxTunes.DB\Templates\LibraryFilterBuilder.tt"
 

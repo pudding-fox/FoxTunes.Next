@@ -9,12 +9,30 @@
 WITH "VerticalMetaData"
 AS
 (
-	SELECT "LibraryItems"."Id", "LibraryItems"."FileName", "LibraryItems"."DirectoryName", "MetaDataItems"."Name", "MetaDataItems"."Value"
+	SELECT "LibraryItems"."Id", "LibraryItems"."FileName", "MetaDataItems"."Name", "MetaDataItems"."Value"
 	FROM "LibraryItems"
-		JOIN "LibraryItem_MetaDataItem"
+		LEFT OUTER JOIN "LibraryItem_MetaDataItem"
 			ON "LibraryItem_MetaDataItem"."LibraryItem_Id" = "LibraryItems"."Id" 
-		JOIN "MetaDataItems" 
+		LEFT OUTER JOIN "MetaDataItems" 
 			ON "MetaDataItems"."Id" = "LibraryItem_MetaDataItem"."MetaDataItem_Id"
+	WHERE
+		(
+<#
+var first = true;
+foreach (var name in this.Names)
+{
+	if (first)
+	{
+		first = false;
+	}
+	else
+	{
+#> OR <#
+	}
+#>"MetaDataItems"."Name" = <#= this.Database.QueryFactory.Dialect.String(name) #><#
+}
+#>
+		)
 )
 ,
 "HorizontalMetaData"
@@ -24,7 +42,7 @@ AS
 	new PivotViewBuilder(
 		this.Database,
 		"VerticalMetaData", 
-		new[] { "Id", "FileName", "DirectoryName" }, 
+		new[] { "Id", "FileName" }, 
 		new[] { "Name" }, 
 		new[] { "Value" }, 
 		this.Names
@@ -33,7 +51,7 @@ AS
 )
 
 INSERT INTO "PlaylistItems" ("Playlist_Id", "LibraryItem_Id", "Sequence", "DirectoryName", "FileName", "Status", "Flags") 
-SELECT @playlistId, "Id", @sequence + ROW_NUMBER() OVER
+SELECT @playlistId, "LibraryItems"."Id", @sequence + ROW_NUMBER() OVER
 (
 	ORDER BY
 <#
@@ -50,8 +68,10 @@ else
 <#
 }
 #>
-) - 1, "DirectoryName", "FileName", @status, 0
-FROM "HorizontalMetaData"
+) - 1, "LibraryItems"."DirectoryName", "LibraryItems"."FileName", @status, 0
+FROM "LibraryItems"
+	LEFT OUTER JOIN "HorizontalMetaData"
+		ON "HorizontalMetaData"."Id" = "LibraryItems"."Id"
 WHERE
 <#= new LibraryFilterBuilder(this.Database, this.Filter).TransformText() #>
 <#

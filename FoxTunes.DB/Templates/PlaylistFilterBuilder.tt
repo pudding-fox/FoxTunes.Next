@@ -20,6 +20,14 @@ if (this.Filter != null)
 		{
 #> AND <#
 		}
+#>	
+EXISTS
+(
+	SELECT * 
+	FROM "PlaylistItem_MetaDataItem"
+		JOIN "MetaDataItems" ON "MetaDataItems"."Id" = "PlaylistItem_MetaDataItem"."MetaDataItem_Id"
+	WHERE "PlaylistItem_MetaDataItem"."PlaylistItem_Id" = "PlaylistItems"."Id" AND (
+<#
 		var firstEntry = true;
 		foreach (var entry in group.Entries)
 		{
@@ -75,7 +83,7 @@ if (this.Filter != null)
 #><#= this.Database.QueryFactory.Dialect.String(entry.Value.Replace(FilterParserResultEntry.BOUNDED_WILDCARD, "_").Replace(FilterParserResultEntry.UNBOUNDED_WILDCARD, "%"))  #><#
 			}
 #>
-)<#
+))<#
 		}
 	}
 }

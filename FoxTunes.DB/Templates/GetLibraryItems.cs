@@ -20,7 +20,7 @@ namespace FoxTunes.Templates
     /// Class to produce the template output
     /// </summary>
     
-    #line 1 "C:\Users\misha\source\repos\FoxTunes.Next\FoxTunes.DB\Templates\GetLibraryItems.tt"
+    #line 1 "C:\sourcecode\source\personal\FoxTunes.Next\FoxTunes.DB\Templates\GetLibraryItems.tt"
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.TextTemplating", "17.0.0.0")]
     public partial class GetLibraryItems : GetLibraryItemsBase
     {
@@ -57,36 +57,12 @@ WHERE ""LibraryHierarchyItems"".""LibraryHierarchy_Id"" = @libraryHierarchyId
 	AND ""LibraryHierarchyItems"".""Id"" = @libraryHierarchyItemId
 ");
             
-            #line 33 "C:\Users\misha\source\repos\FoxTunes.Next\FoxTunes.DB\Templates\GetLibraryItems.tt"
-
-	if (this.Filter != null && this.Filter.Groups.Any())
-	{
-
+            #line 33 "C:\sourcecode\source\personal\FoxTunes.Next\FoxTunes.DB\Templates\GetLibraryItems.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(new LibraryHierarchyFilterBuilder(this.Database, this.Filter, LibraryHierarchyFilterSource.LibraryItem).TransformText()));
             
             #line default
             #line hidden
-            this.Write(@"	AND EXISTS
-	(
-		SELECT 1
-		FROM ""LibraryItem_MetaDataItem""
-			JOIN ""MetaDataItems"" ON ""MetaDataItems"".""Id"" = ""LibraryItem_MetaDataItem"".""MetaDataItem_Id""
-			JOIN ""LibraryHierarchyItem_LibraryItem"" ON ""LibraryHierarchyItem_LibraryItem"".""LibraryHierarchyItem_Id"" = ""LibraryHierarchyItems"".""Id""
-		WHERE ""LibraryItem_MetaDataItem"".""LibraryItem_Id"" = ""LibraryHierarchyItem_LibraryItem"".""LibraryItem_Id""
-");
-            
-            #line 44 "C:\Users\misha\source\repos\FoxTunes.Next\FoxTunes.DB\Templates\GetLibraryItems.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(new LibraryHierarchyFilterBuilder(this.Database, this.Filter).TransformText()));
-            
-            #line default
-            #line hidden
-            this.Write("\r\n\t)\r\n");
-            
-            #line 46 "C:\Users\misha\source\repos\FoxTunes.Next\FoxTunes.DB\Templates\GetLibraryItems.tt"
- } 
-            
-            #line default
-            #line hidden
-            this.Write("ORDER BY \"LibraryItems\".\"FileName\"");
+            this.Write("\r\nORDER BY \"LibraryItems\".\"FileName\"");
             return this.GenerationEnvironment.ToString();
         }
     }

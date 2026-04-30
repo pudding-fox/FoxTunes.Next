@@ -9,32 +9,35 @@
 WITH "VerticalMetaData"
 AS
 (
-	SELECT "LibraryItems"."Id", "LibraryItems"."FileName", "LibraryItems"."DirectoryName", "MetaDataItems"."Name", "MetaDataItems"."Value"
+	SELECT "LibraryItems"."Id", "LibraryItems"."FileName", "MetaDataItems"."Name", "MetaDataItems"."Value"
 	FROM "LibraryHierarchyItems"
 		JOIN "LibraryHierarchyItem_LibraryItem" 
 			ON "LibraryHierarchyItems"."Id" = "LibraryHierarchyItem_LibraryItem"."LibraryHierarchyItem_Id"
 		JOIN "LibraryItems"
 			ON "LibraryItems"."Id" = "LibraryHierarchyItem_LibraryItem"."LibraryItem_Id"
-		JOIN "LibraryItem_MetaDataItem"
+		LEFT OUTER JOIN "LibraryItem_MetaDataItem"
 			ON "LibraryItem_MetaDataItem"."LibraryItem_Id" = "LibraryItems"."Id" 
-		JOIN "MetaDataItems" 
+		LEFT OUTER JOIN "MetaDataItems" 
 			ON "MetaDataItems"."Id" = "LibraryItem_MetaDataItem"."MetaDataItem_Id"
-	WHERE "LibraryHierarchyItems"."LibraryHierarchy_Id" = @libraryHierarchyId
-		AND "LibraryHierarchyItems"."Id" = @libraryHierarchyItemId
-<#
-	if (this.Filter != null && this.Filter.Groups.Any())
-	{
-#>
-		AND EXISTS
+	WHERE "LibraryHierarchyItems"."Id" = @libraryHierarchyItemId
+		AND
 		(
-			SELECT 1
-			FROM "LibraryItem_MetaDataItem"
-				JOIN "MetaDataItems" 
-					ON "MetaDataItems"."Id" = "LibraryItem_MetaDataItem"."MetaDataItem_Id"
-			WHERE "LibraryItem_MetaDataItem"."LibraryItem_Id" = "LibraryItems"."Id"
-<#= new LibraryHierarchyFilterBuilder(this.Database, this.Filter).TransformText() #>
+<#
+var first = true;
+foreach (var name in this.Names)
+{
+	if (first)
+	{
+		first = false;
+	}
+	else
+	{
+#> OR <#
+	}
+#>"MetaDataItems"."Name" = <#= this.Database.QueryFactory.Dialect.String(name) #><#
+}
+#>
 		)
-<# } #>
 )
 ,
 "HorizontalMetaData"
@@ -44,7 +47,7 @@ AS
 	new PivotViewBuilder(
 		this.Database,
 		"VerticalMetaData", 
-		new[] { "Id", "FileName", "DirectoryName" }, 
+		new[] { "Id", "FileName" }, 
 		new[] { "Name" }, 
 		new[] { "Value" }, 
 		this.Names
@@ -52,13 +55,21 @@ AS
 #>
 )
 
-INSERT INTO "PlaylistItems" ("Playlist_Id", "LibraryItem_Id", "Sequence", "FileName", "DirectoryName", "Status", "Flags") 
-SELECT @playlistId, "Id", @sequence + ROW_NUMBER() OVER
+INSERT INTO "PlaylistItems" ("Playlist_Id", "LibraryItem_Id", "Sequence", "DirectoryName", "FileName", "Status", "Flags") 
+SELECT @playlistId, "LibraryItems"."Id", @sequence + ROW_NUMBER() OVER
 (
 	ORDER BY
 <#= new PlaylistSortBuilder(this.Database, this.Sort).TransformText() #>
-) - 1, "FileName", "DirectoryName", @status, 0
-FROM "HorizontalMetaData";
+) - 1, "LibraryItems"."DirectoryName", "LibraryItems"."FileName", @status, 0
+FROM "LibraryHierarchyItems"
+	JOIN "LibraryHierarchyItem_LibraryItem" 
+		ON "LibraryHierarchyItems"."Id" = "LibraryHierarchyItem_LibraryItem"."LibraryHierarchyItem_Id"
+	JOIN "LibraryItems"
+		ON "LibraryItems"."Id" = "LibraryHierarchyItem_LibraryItem"."LibraryItem_Id"
+	LEFT OUTER JOIN "HorizontalMetaData"
+		ON "HorizontalMetaData"."Id" = "LibraryItems"."Id"
+WHERE "LibraryHierarchyItems"."Id" = @libraryHierarchyItemId
+<#= new LibraryHierarchyFilterBuilder(this.Database, this.Filter, LibraryHierarchyFilterSource.LibraryItem).TransformText() #>;
 
 SELECT COUNT(*)
 FROM "PlaylistItems"

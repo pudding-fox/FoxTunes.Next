@@ -26,7 +26,7 @@ EXISTS
 	SELECT * 
 	FROM "LibraryItem_MetaDataItem"
 		JOIN "MetaDataItems" ON "MetaDataItems"."Id" = "LibraryItem_MetaDataItem"."MetaDataItem_Id"
-	WHERE "LibraryItem_MetaDataItem"."LibraryItem_Id" = "HorizontalMetaData"."Id" AND (
+	WHERE "LibraryItem_MetaDataItem"."LibraryItem_Id" = "LibraryItems"."Id" AND (
 <#
 		var firstEntry = true;
 		foreach (var entry in group.Entries)
