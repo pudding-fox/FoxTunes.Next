@@ -9,51 +9,25 @@ namespace FoxTunes
     [ComponentDependency(Slot = ComponentSlots.Database)]
     public class FilterParser : StandardComponent, IFilterParser, IConfigurableComponent
     {
-        public FilterParser()
-        {
-            this.Providers = new Lazy<IList<IFilterParserProvider>>(
-                () => ComponentRegistry.Instance.GetComponents<IFilterParserProvider>().ToList()
-            );
-        }
+        public FilterParserResultConverter Converter { get; private set; }
 
-        public Lazy<IList<IFilterParserProvider>> Providers { get; private set; }
+        public override void InitializeComponent(ICore core)
+        {
+            this.Converter = new FilterParserResultConverter();
+            this.Converter.InitializeComponent(core);
+            base.InitializeComponent(core);
+        }
 
         public bool TryParse(string filter, out IFilterParserResult result)
         {
-            var success = default(bool);
-            var groups = new List<IFilterParserResultGroup>();
-            while (!string.IsNullOrEmpty(filter))
+            var node = this.Parse(filter);
+            if (node == null)
             {
-                filter = filter.Trim();
-                foreach (var provider in this.Providers.Value)
-                {
-                    var currentGroups = default(IEnumerable<IFilterParserResultGroup>);
-                    if (provider.TryParse(ref filter, out currentGroups))
-                    {
-                        groups.AddRange(currentGroups);
-                        success = true;
-                        break;
-                    }
-                }
-                if (!success)
-                {
-                    break;
-                }
+                result = default(IFilterParserResult);
+                return false;
             }
-            if (!success && !string.IsNullOrEmpty(filter))
-            {
-                Logger.Write(this, LogLevel.Warn, "Failed to parse filter: {0}", filter);
-            }
-            if (groups.Any())
-            {
-                result = new FilterParserResult(this.PostProcess(groups).ToArray());
-                return true;
-            }
-            else
-            {
-                result = null;
-                return true;
-            }
+            result = this.Converter.Convert(node);
+            return true;
         }
 
         public bool AppliesTo(string filter, IEnumerable<string> names)
@@ -76,41 +50,250 @@ namespace FoxTunes
             return false;
         }
 
-        protected virtual IEnumerable<IFilterParserResultGroup> PostProcess(IEnumerable<IFilterParserResultGroup> groups)
-        {
-            var result = new Dictionary<string, IList<IFilterParserResultEntry>>(StringComparer.OrdinalIgnoreCase);
-            foreach (var group in groups)
-            {
-                if (group.Entries.Count() > 1)
-                {
-                    yield return group;
-                    continue;
-                }
-                foreach (var entry in group.Entries)
-                {
-                    result.GetOrAdd(entry.Name, () => new List<IFilterParserResultEntry>()).Add(entry);
-                }
-            }
-            foreach (var group in result.Values.Select(entries => new FilterParserResultGroup(entries)))
-            {
-                yield return group;
-            }
-        }
 
         public IEnumerable<ConfigurationSection> GetConfigurationSections()
         {
             return FilterParserConfiguration.GetConfigurationSections();
         }
 
-        [ComponentPriority(ComponentPriorityAttribute.LOW)]
-        [ComponentDependency(Slot = ComponentSlots.Database)]
-        public class DefaultFilterParserProvider : FilterParserProvider
+        public abstract class FilterNode
+        {
+        }
+
+        public class AndNode : FilterNode
+        {
+            public AndNode(IEnumerable<FilterNode> children)
+            {
+                this.Children = children;
+            }
+
+            public IEnumerable<FilterNode> Children { get; private set; }
+        }
+
+        public class FieldNode : FilterNode
+        {
+            public FieldNode(string name, FilterParserEntryOperator @operator, string value)
+            {
+                this.Name = name;
+                this.Operator = @operator;
+                this.Value = value;
+            }
+
+            public string Name { get; private set; }
+
+            public FilterParserEntryOperator Operator { get; private set; }
+
+            public string Value { get; private set; }
+        }
+
+        public class KeywordNode : FilterNode
+        {
+            public KeywordNode(string name)
+            {
+                this.Name = name;
+            }
+
+            public string Name { get; private set; }
+        }
+
+        public class FlagNode : FilterNode
+        {
+            public FlagNode(string name)
+            {
+                this.Name = name;
+            }
+
+            public string Name { get; private set; }
+        }
+
+        public class CompositeNode : FilterNode
+        {
+            public CompositeNode(IEnumerable<FilterNode> children)
+            {
+                this.Children = children;
+            }
+
+            public IEnumerable<FilterNode> Children { get; private set; }
+        }
+
+        public enum TokenType
+        {
+            Flag,
+            Rating,
+            KeyValue,
+            Keyword
+        }
+
+        public class Token
+        {
+            public Token(TokenType type, string value)
+            {
+                this.Type = type;
+                this.Value = value;
+            }
+
+            public TokenType Type { get; private set; }
+
+            public string Value { get; private set; }
+        }
+
+        protected virtual FilterNode Parse(string input)
+        {
+            var tokens = this.Tokenize(input);
+            var children = new List<FilterNode>();
+            for (int i = 0; i < tokens.Count; i++)
+            {
+                var token = tokens[i];
+                switch (token.Type)
+                {
+                    case TokenType.Rating:
+                        children.Add(new FieldNode(CommonStatistics.Rating, FilterParserEntryOperator.Equal, token.Value));
+                        break;
+                    case TokenType.Flag:
+                        children.Add(ParseFlag(token.Value));
+                        break;
+                    case TokenType.KeyValue:
+                        var field = default(FieldNode);
+                        if (this.TryParseKeyValue(token.Value, out field))
+                        {
+                            children.Add(field);
+                        }
+                        break;
+                    case TokenType.Keyword:
+                        children.Add(new KeywordNode(token.Value));
+                        break;
+                }
+            }
+            return new AndNode(children);
+        }
+
+        protected virtual List<Token> Tokenize(string input)
+        {
+            var tokens = new List<Token>();
+            var parts = input.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            foreach (var part in parts)
+            {
+                if (part.EndsWith("*"))
+                {
+                    var rating = default(int);
+                    if (int.TryParse(part.TrimEnd('*'), out rating))
+                    {
+                        tokens.Add(new Token(TokenType.Rating, Convert.ToString(rating)));
+                        continue;
+                    }
+                }
+                if (part.Equals("like", StringComparison.OrdinalIgnoreCase) || part.Equals("love", StringComparison.OrdinalIgnoreCase))
+                {
+                    tokens.Add(new Token(TokenType.Flag, "like"));
+                    continue;
+                }
+                if (part.Equals("HD", StringComparison.OrdinalIgnoreCase) || part.Equals("high-def", StringComparison.OrdinalIgnoreCase))
+                {
+                    tokens.Add(new Token(TokenType.Flag, "HD"));
+                    continue;
+                }
+                if (part.Contains(":") || part.Contains(">") || part.Contains("<"))
+                {
+                    tokens.Add(new Token(TokenType.KeyValue, part));
+                    continue;
+                }
+                tokens.Add(new Token(TokenType.Keyword, part));
+            }
+            return tokens;
+        }
+
+
+        protected virtual FilterNode ParseFlag(string value)
+        {
+            if (value == "like")
+            {
+                return new FieldNode(CommonStatistics.Like, FilterParserEntryOperator.Equal, bool.TrueString);
+            }
+            if (value == "HD")
+            {
+                var children = new[]
+                {
+                    new FieldNode(CommonProperties.AudioSampleRate, FilterParserEntryOperator.Greater, "44100"),
+                    new FieldNode(CommonProperties.BitsPerSample,FilterParserEntryOperator.Greater, "16")
+                };
+                return new CompositeNode(children);
+            }
+
+            return new FlagNode(value);
+        }
+
+        protected virtual bool TryParseKeyValue(string input, out FieldNode node)
+        {
+            var match = Regex.Match(input, @"(?<name>[a-zA-Z0-9]+)\s*(?<op>>=|<=|:|>|<)\s*(?<value>.+)");
+            if (!match.Success)
+            {
+                node = default(FieldNode);
+                return false;
+            }
+            var name = match.Groups["name"].Value;
+            var op = match.Groups["op"].Value;
+            var value = match.Groups["value"].Value;
+            node = new FieldNode(name, this.MapOperator(op), this.Normalize(op, value));
+            return true;
+        }
+
+        protected virtual FilterParserEntryOperator MapOperator(string op)
+        {
+            switch (op)
+            {
+                default:
+                case ":":
+                    return FilterParserEntryOperator.Match;
+                case ">":
+                    return FilterParserEntryOperator.Greater;
+                case ">=":
+                    return FilterParserEntryOperator.GreaterEqual;
+                case "<":
+                    return FilterParserEntryOperator.Less;
+                case "<=":
+                    return FilterParserEntryOperator.LessEqual;
+            }
+        }
+
+        protected virtual string Normalize(string op, string value)
+        {
+            if (op == ":")
+            {
+                return "*" + value + "*";
+            }
+            return value;
+        }
+
+        public bool Matches(FilterNode node, IEnumerable<string> names)
+        {
+            if (node is AndNode and)
+            {
+                return and.Children.All(n => Matches(n, names));
+            }
+            if (node is KeywordNode keyword)
+            {
+                return names.Contains(keyword.Name, StringComparer.OrdinalIgnoreCase);
+            }
+            if (node is FlagNode flag)
+            {
+                return names.Contains(flag.Name, StringComparer.OrdinalIgnoreCase);
+            }
+            if (node is FieldNode field)
+            {
+                return names.Contains(field.Name, StringComparer.OrdinalIgnoreCase);
+            }
+            if (node is CompositeNode composite)
+            {
+                return composite.Children.Any(n => Matches(n, names));
+            }
+            return false;
+        }
+
+        public class FilterParserResultConverter : BaseComponent
         {
             public ILibraryHierarchyCache LibraryHierarchyCache { get; private set; }
 
             public IConfiguration Configuration { get; private set; }
-
-            public IEnumerable<string> SearchNames { get; private set; }
 
             public override void InitializeComponent(ICore core)
             {
@@ -132,227 +315,70 @@ namespace FoxTunes
                 base.InitializeComponent(core);
             }
 
-            public override bool TryParse(ref string filter, out IFilterParserResultGroup group)
+            public IEnumerable<string> SearchNames { get; private set; }
+
+            public IFilterParserResult Convert(FilterNode node)
             {
-                if (string.IsNullOrWhiteSpace(filter))
-                {
-                    group = default(IFilterParserResultGroup);
-                    return false;
-                }
-                group = this.Parse(filter);
-                this.OnParsed(ref filter, 0, filter.Length);
-                return true;
+                var groups = Visit(node).ToArray();
+                return new FilterParserResult(groups);
             }
 
-            protected virtual IFilterParserResultGroup Parse(string filter)
+            private IEnumerable<IFilterParserResultGroup> Visit(FilterNode node)
             {
-                var pattern = string.Format(
-                    "{0}{1}{0}",
-                    FilterParserResultEntry.UNBOUNDED_WILDCARD,
-                    filter.Trim().Replace(" ", FilterParserResultEntry.UNBOUNDED_WILDCARD)
-                );
-                var entries = this.SearchNames.Select(
-                    name => new FilterParserResultEntry(name, FilterParserEntryOperator.Match, pattern)
-                ).ToArray();
-                return new FilterParserResultGroup(entries);
-            }
-        }
-
-        [ComponentPriority(ComponentPriorityAttribute.NORMAL)]
-        [ComponentDependency(Slot = ComponentSlots.Database)]
-        public class KeyValueFilterParserProvider : FilterParserProvider
-        {
-            protected const string ENTRY = "ENTRY";
-
-            protected const string NAME = "NAME";
-
-            protected const string OPERATOR = "OPERATOR";
-
-            protected const string VALUE = "VALUE";
-
-            public KeyValueFilterParserProvider()
-            {
-                var operators = string.Join("|", new[]
+                if (node is AndNode and)
                 {
-                    FilterParserResultEntry.GREATER_EQUAL,
-                    FilterParserResultEntry.GREATER,
-                    FilterParserResultEntry.LESS_EQUAL,
-                    FilterParserResultEntry.LESS,
-                    FilterParserResultEntry.EQUAL
-                }.Select(element => "(" + Regex.Escape(element) + ")"));
-                this.Regex = new Regex(
-                   this.GetExpression(operators),
-                    RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.ExplicitCapture
-                );
-            }
-
-            public Regex Regex { get; private set; }
-
-            protected virtual string GetExpression(string operators)
-            {
-                return "^(?:(?<" + ENTRY + ">(?<" + NAME + ">[a-z]+)\\s*(?<" + OPERATOR + ">" + operators + ")\\s*(?<" + VALUE + ">.+?)))+$";
-            }
-
-            public override bool TryParse(ref string filter, out IEnumerable<IFilterParserResultGroup> groups)
-            {
-                if (string.IsNullOrWhiteSpace(filter))
-                {
-                    groups = default(IEnumerable<IFilterParserResultGroup>);
-                    return false;
-                }
-                var match = this.Regex.Match(filter);
-                if (!match.Success)
-                {
-                    groups = default(IEnumerable<IFilterParserResultGroup>);
-                    return false;
-                }
-                groups = this.Parse(match);
-                this.OnParsed(ref filter, match.Index, match.Length);
-                return true;
-            }
-
-            protected virtual IEnumerable<IFilterParserResultGroup> Parse(Match match)
-            {
-                for (int a = 0, b = match.Groups[ENTRY].Captures.Count; a < b; a++)
-                {
-                    var name = match.Groups[NAME].Captures[a].Value.Trim();
-                    var @operator = FilterParserResultEntry.GetOperator(
-                        match.Groups[OPERATOR].Captures[a].Value.Trim()
-                    );
-                    var value = match.Groups[VALUE].Captures[a].Value.Trim();
-                    switch (@operator)
+                    foreach (var child in and.Children)
                     {
-                        case FilterParserEntryOperator.Match:
-                            value = string.Format(
-                                "{0}{1}{0}",
-                                FilterParserResultEntry.UNBOUNDED_WILDCARD,
-                                value
-                            );
-                            break;
+                        foreach (var group in this.Visit(child))
+                        {
+                            yield return group;
+                        }
                     }
-                    yield return new FilterParserResultGroup(new FilterParserResultEntry(name, @operator, value));
                 }
-            }
-        }
-
-        [ComponentPriority(ComponentPriorityAttribute.HIGH)]
-        [ComponentDependency(Slot = ComponentSlots.Database)]
-        public class RatingFilterParserProvider : FilterParserProvider
-        {
-            const string RATING = "RATING";
-
-            public RatingFilterParserProvider()
-            {
-                this.Regex = new Regex(
-                    @"(?:(?:^|\s+)(?:(?<" + RATING + @">[0-5])\\*)(?:$|\s+))",
-                    RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.ExplicitCapture
-                );
-            }
-
-            public Regex Regex { get; private set; }
-
-            public override bool TryParse(ref string filter, out IFilterParserResultGroup result)
-            {
-                if (string.IsNullOrWhiteSpace(filter))
+                else if (node is CompositeNode composite)
                 {
-                    result = default(IFilterParserResultGroup);
-                    return false;
+                    var entries = new List<IFilterParserResultEntry>();
+                    foreach (var child in composite.Children)
+                    {
+                        foreach (var group in this.Visit(child))
+                        {
+                            entries.AddRange(group.Entries);
+                        }
+                    }
+                    yield return new FilterParserResultGroup(entries);
                 }
-                var match = this.Regex.Match(filter);
-                if (!match.Success)
+                else if (node is FieldNode field)
                 {
-                    result = default(IFilterParserResultGroup);
-                    return false;
+                    yield return new FilterParserResultGroup(
+                        new FilterParserResultEntry(
+                            field.Name,
+                            field.Operator,
+                            field.Value
+                        )
+                    );
                 }
-                result = this.Parse(match);
-                this.OnParsed(ref filter, match.Index, match.Length);
-                return true;
-            }
-
-            protected virtual IFilterParserResultGroup Parse(Match match)
-            {
-                var value = match.Groups[RATING].Value;
-                return new FilterParserResultGroup(new FilterParserResultEntry(CommonStatistics.Rating, FilterParserEntryOperator.Equal, value));
-            }
-        }
-
-        [ComponentPriority(ComponentPriorityAttribute.HIGH)]
-        [ComponentDependency(Slot = ComponentSlots.Database)]
-        public class LikeFilterParserProvider : FilterParserProvider
-        {
-            public LikeFilterParserProvider()
-            {
-                this.Regex = new Regex(
-                    @"(?:(?:^|\s+)(like|love)(?:$|\s+))",
-                    RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.ExplicitCapture
-                );
-            }
-
-            public Regex Regex { get; private set; }
-
-            public override bool TryParse(ref string filter, out IFilterParserResultGroup result)
-            {
-                if (string.IsNullOrWhiteSpace(filter))
+                else if (node is FlagNode flag)
                 {
-                    result = default(IFilterParserResultGroup);
-                    return false;
+                    yield return new FilterParserResultGroup(
+                        new FilterParserResultEntry(
+                            flag.Name,
+                            FilterParserEntryOperator.Equal,
+                            bool.TrueString
+                        )
+                    );
                 }
-                var match = this.Regex.Match(filter);
-                if (!match.Success)
+                else if (node is KeywordNode keyword)
                 {
-                    result = default(IFilterParserResultGroup);
-                    return false;
+                    yield return new FilterParserResultGroup(
+                        this.SearchNames.Select(name =>
+                            new FilterParserResultEntry(
+                                name,
+                                FilterParserEntryOperator.Match,
+                                string.Concat("*", keyword.Name, "*")
+                            )
+                        )
+                    );
                 }
-                result = this.Parse(match);
-                this.OnParsed(ref filter, match.Index, match.Length);
-                return true;
-            }
-
-            protected virtual IFilterParserResultGroup Parse(Match match)
-            {
-                return new FilterParserResultGroup(new FilterParserResultEntry(CommonStatistics.Like, FilterParserEntryOperator.Equal, bool.TrueString));
-            }
-        }
-
-        [ComponentPriority(ComponentPriorityAttribute.HIGH)]
-        [ComponentDependency(Slot = ComponentSlots.Database)]
-        public class HighDefFilterParserProvider : FilterParserProvider
-        {
-            public HighDefFilterParserProvider()
-            {
-                this.Regex = new Regex(
-                    @"(?:(?:^|\s+)(HD|high\-def)(?:$|\s+))",
-                    RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.ExplicitCapture
-                );
-            }
-
-            public Regex Regex { get; private set; }
-
-            public override bool TryParse(ref string filter, out IFilterParserResultGroup result)
-            {
-                if (string.IsNullOrWhiteSpace(filter))
-                {
-                    result = default(IFilterParserResultGroup);
-                    return false;
-                }
-                var match = this.Regex.Match(filter);
-                if (!match.Success)
-                {
-                    result = default(IFilterParserResultGroup);
-                    return false;
-                }
-                result = this.Parse(match);
-                this.OnParsed(ref filter, match.Index, match.Length);
-                return true;
-            }
-
-            protected virtual IFilterParserResultGroup Parse(Match match)
-            {
-                return new FilterParserResultGroup(new[]
-                {
-                    new FilterParserResultEntry(CommonProperties.AudioSampleRate, FilterParserEntryOperator.Greater, Convert.ToString(44100)),
-                    new FilterParserResultEntry(CommonProperties.BitsPerSample, FilterParserEntryOperator.Greater, Convert.ToString(16))
-                });
             }
         }
     }
