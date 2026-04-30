@@ -351,6 +351,10 @@ namespace FoxTunes
             {
                 return false;
             }
+            if (outputStream.Length == 0)
+            {
+                return false;
+            }
             var source = HwndSource.FromHwnd(handle);
             if (source == null)
             {

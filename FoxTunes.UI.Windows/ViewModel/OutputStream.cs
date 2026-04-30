@@ -88,7 +88,7 @@ namespace FoxTunes.ViewModel
         {
             get
             {
-                return this.Length - this.Position;
+                return Math.Max(this.Length - this.Position, 0);
             }
         }
 

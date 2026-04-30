@@ -517,6 +517,16 @@ namespace FoxTunes
             return value;
         }
 
+        public static bool HasScheme(this string value, params string[] schemes)
+        {
+            var uri = default(Uri);
+            if (Uri.TryCreate(value, UriKind.Absolute, out uri))
+            {
+                return schemes.Contains(uri.Scheme, StringComparer.OrdinalIgnoreCase);
+            }
+            return false;
+        }
+
         public static IEnumerable<T> OrderBy<T>(this IEnumerable<T> sequence)
         {
             return sequence.OrderBy(element => element);

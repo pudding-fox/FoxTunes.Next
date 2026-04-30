@@ -76,7 +76,15 @@ namespace FoxTunes
         public virtual IBassStream CreateInteractiveStream(PlaylistItem playlistItem, IEnumerable<IBassStreamAdvice> advice, bool immidiate, BassFlags flags)
         {
             var fileName = this.GetFileName(playlistItem, advice);
-            var channelHandle = Bass.CreateStream(fileName, 0, 0, flags);
+            var channelHandle = default(int);
+            if (fileName.HasScheme("http", "https"))
+            {
+                channelHandle = Bass.CreateStream(fileName, 0, flags, default(DownloadProcedure));
+            }
+            else
+            {
+                channelHandle = Bass.CreateStream(fileName, 0, 0, flags);
+            }
             return this.CreateInteractiveStream(channelHandle, advice, flags);
         }
 

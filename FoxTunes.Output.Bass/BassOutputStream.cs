@@ -316,6 +316,10 @@ namespace FoxTunes
 
         public override TimeSpan GetDuration(long position)
         {
+            if (position < 0)
+            {
+                return TimeSpan.Zero;
+            }
             return TimeSpan.FromSeconds(Bass.ChannelBytes2Seconds(this.ChannelHandle, position));
         }
 
