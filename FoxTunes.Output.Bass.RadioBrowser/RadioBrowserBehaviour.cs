@@ -141,7 +141,7 @@ namespace FoxTunes
                     return new[]
                     {
                         nameof(Station.Name),
-                        nameof(Station.Url)
+                        nameof(Station.UrlResolved)
                     };
                 }
             }
@@ -176,7 +176,7 @@ namespace FoxTunes
                         return new[]
                         {
                             this.Station.Name,
-                            this.Station.Url
+                            this.Station.UrlResolved
                         };
                     }
                 }
@@ -273,13 +273,7 @@ namespace FoxTunes
             protected virtual async Task<int> AddPlaylistItems(IEnumerable<Station> stations, CancellationToken cancellationToken)
             {
                 var count = default(int);
-                var playlistItems = stations.Select(
-                    station => new PlaylistItem()
-                    {
-                        DirectoryName = station.Url,
-                        FileName = station.Url
-                    }
-                );
+                var playlistItems = this.CreatePlaylistItems(stations);
                 using (var transaction = this.Database.BeginTransaction(this.Database.PreferredIsolationLevel))
                 {
                     var set = this.Database.Set<PlaylistItem>(transaction);
@@ -299,6 +293,18 @@ namespace FoxTunes
                     }
                 }
                 return count;
+            }
+
+            protected virtual IEnumerable<PlaylistItem> CreatePlaylistItems(IEnumerable<Station> stations)
+            {
+                foreach (var station in stations)
+                {
+                    yield return new PlaylistItem()
+                    {
+                        DirectoryName = station.UrlResolved,
+                        FileName = station.UrlResolved
+                    };
+                }
             }
 
             protected override Task OnCompleted()
