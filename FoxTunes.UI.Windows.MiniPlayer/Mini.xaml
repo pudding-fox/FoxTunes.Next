@@ -34,7 +34,7 @@
                     <Setter Property="Margin" Value="2,0,0,0"></Setter>
                 </DataTrigger>
                 <DataTrigger Binding="{Binding ShowArtwork.Value, Source={StaticResource ViewModel}}" Value="False">
-                    <Setter Property="Height" Value="100"></Setter>
+                    <Setter Property="Height" Value="115"></Setter>
                     <Setter Property="Margin" Value="0,0,0,2"></Setter>
                 </DataTrigger>
             </Style.Triggers>

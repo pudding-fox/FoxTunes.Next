@@ -243,11 +243,11 @@ namespace FoxTunes.ViewModel
                 {
                     effects = DragDropEffects.Copy;
                 }
-                if (e.Data.GetDataPresent(typeof(LibraryHierarchyNode)))
+                else if (e.Data.GetDataPresent(typeof(LibraryHierarchyNode)))
                 {
                     effects = DragDropEffects.Copy;
                 }
-                if (ShellIDListHelper.GetDataPresent(e.Data))
+                else if (ShellIDListHelper.GetDataPresent(e.Data))
                 {
                     effects = DragDropEffects.Copy;
                 }
@@ -263,41 +263,35 @@ namespace FoxTunes.ViewModel
         {
             get
             {
-                return CommandFactory.Instance.CreateCommand<DragEventArgs>(
-                    new Func<DragEventArgs, Task>(this.OnDrop)
-                );
+                return CommandFactory.Instance.CreateCommand<DragEventArgs>(this.OnDrop);
             }
         }
 
-        protected virtual Task OnDrop(DragEventArgs e)
+        protected virtual void OnDrop(DragEventArgs e)
         {
             try
             {
                 if (e.Data.GetDataPresent(DataFormats.FileDrop))
                 {
                     var paths = e.Data.GetData(DataFormats.FileDrop) as IEnumerable<string>;
-                    return this.AddToPlaylist(paths);
+                    var task = this.AddToPlaylist(paths);
                 }
-                if (e.Data.GetDataPresent(typeof(LibraryHierarchyNode)))
+                else if (e.Data.GetDataPresent(typeof(LibraryHierarchyNode)))
                 {
                     var libraryHierarchyNode = e.Data.GetData(typeof(LibraryHierarchyNode)) as LibraryHierarchyNode;
-                    return this.AddToPlaylist(libraryHierarchyNode);
+                    var task = this.AddToPlaylist(libraryHierarchyNode);
                 }
-                if (ShellIDListHelper.GetDataPresent(e.Data))
+                else if (ShellIDListHelper.GetDataPresent(e.Data))
                 {
                     var paths = ShellIDListHelper.GetData(e.Data);
-                    return this.AddToPlaylist(paths);
+                    var task = this.AddToPlaylist(paths);
                 }
             }
             catch (Exception exception)
             {
                 Logger.Write(this, LogLevel.Warn, "Failed to process clipboard contents: {0}", exception.Message);
             }
-#if NET40
-            return TaskEx.FromResult(false);
-#else
-            return Task.CompletedTask;
-#endif
+            e.Handled = true;
         }
 
         private Task AddToPlaylist(IEnumerable<string> paths)

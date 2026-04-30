@@ -512,6 +512,11 @@ namespace FoxTunes.ViewModel
                     var paths = e.Data.GetData(DataFormats.FileDrop) as IEnumerable<string>;
                     this.Value = paths.FirstOrDefault();
                 }
+                else if (ShellIDListHelper.GetDataPresent(e.Data))
+                {
+                    var paths = ShellIDListHelper.GetData(e.Data);
+                    this.Value = paths.FirstOrDefault();
+                }
             }
             catch (Exception exception)
             {

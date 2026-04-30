@@ -156,11 +156,11 @@ namespace FoxTunes.ViewModel
                 {
                     effects = DragDropEffects.Copy;
                 }
-                if (e.Data.GetDataPresent(typeof(LibraryHierarchyNode)))
+                else if (e.Data.GetDataPresent(typeof(LibraryHierarchyNode)))
                 {
                     effects = DragDropEffects.Copy;
                 }
-                if (ShellIDListHelper.GetDataPresent(e.Data))
+                else if (ShellIDListHelper.GetDataPresent(e.Data))
                 {
                     effects = DragDropEffects.Copy;
                 }
@@ -189,12 +189,12 @@ namespace FoxTunes.ViewModel
                     var paths = e.Data.GetData(DataFormats.FileDrop) as IEnumerable<string>;
                     var task = this.AddToPlaylist(paths);
                 }
-                if (e.Data.GetDataPresent(typeof(LibraryHierarchyNode)))
+                else if (e.Data.GetDataPresent(typeof(LibraryHierarchyNode)))
                 {
                     var libraryHierarchyNode = e.Data.GetData(typeof(LibraryHierarchyNode)) as LibraryHierarchyNode;
                     var task = this.AddToPlaylist(libraryHierarchyNode);
                 }
-                if (ShellIDListHelper.GetDataPresent(e.Data))
+                else if (ShellIDListHelper.GetDataPresent(e.Data))
                 {
                     var paths = ShellIDListHelper.GetData(e.Data);
                     var task = this.AddToPlaylist(paths);
@@ -204,6 +204,7 @@ namespace FoxTunes.ViewModel
             {
                 Logger.Write(this, LogLevel.Warn, "Failed to process clipboard contents: {0}", exception.Message);
             }
+            e.Handled = true;
         }
 
         private async Task AddToPlaylist(IEnumerable<string> paths)

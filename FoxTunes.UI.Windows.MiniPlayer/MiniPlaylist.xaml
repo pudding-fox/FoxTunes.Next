@@ -17,13 +17,13 @@
         <SolidColorBrush x:Key="Transparent" Color="Transparent"></SolidColorBrush>
     </UserControl.Resources>
     <Interactivity:Interaction.Triggers>
-        <Interactivity:EventTrigger EventName="PreviewDragEnter">
+        <Interactivity:EventTrigger EventName="DragEnter">
             <ViewModel:InvokeParameterizedCommandAction Command="{Binding DragEnterCommand, Source={StaticResource ViewModel}}" />
         </Interactivity:EventTrigger>
-        <Interactivity:EventTrigger EventName="PreviewDragOver">
+        <Interactivity:EventTrigger EventName="DragOver">
             <ViewModel:InvokeParameterizedCommandAction Command="{Binding DragOverCommand, Source={StaticResource ViewModel}}" />
         </Interactivity:EventTrigger>
-        <Interactivity:EventTrigger EventName="PreviewDrop">
+        <Interactivity:EventTrigger EventName="Drop">
             <ViewModel:InvokeParameterizedCommandAction Command="{Binding DropCommand, Source={StaticResource ViewModel}}" />
         </Interactivity:EventTrigger>
     </Interactivity:Interaction.Triggers>

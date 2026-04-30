@@ -380,11 +380,7 @@ namespace FoxTunes.ViewModel
                 {
                     effects = DragDropEffects.Copy;
                 }
-                if (e.Data.GetDataPresent(typeof(LibraryHierarchyNode)))
-                {
-                    effects = DragDropEffects.Copy;
-                }
-                if (ShellIDListHelper.GetDataPresent(e.Data))
+                else if (ShellIDListHelper.GetDataPresent(e.Data))
                 {
                     effects = DragDropEffects.Copy;
                 }
@@ -415,7 +411,7 @@ namespace FoxTunes.ViewModel
                     var paths = e.Data.GetData(DataFormats.FileDrop) as IEnumerable<string>;
                     return this.FileActionHandlerManager.RunPaths(paths, FileActionType.Library);
                 }
-                if (ShellIDListHelper.GetDataPresent(e.Data))
+                else if (ShellIDListHelper.GetDataPresent(e.Data))
                 {
                     var paths = ShellIDListHelper.GetData(e.Data);
                     return this.LibraryManager.Add(paths);

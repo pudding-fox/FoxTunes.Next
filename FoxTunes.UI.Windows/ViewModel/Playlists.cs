@@ -260,15 +260,15 @@ namespace FoxTunes.ViewModel
                 {
                     effects = DragDropEffects.Copy;
                 }
-                if (e.Data.GetDataPresent(typeof(LibraryHierarchyNode)))
+                else if (e.Data.GetDataPresent(typeof(LibraryHierarchyNode)))
                 {
                     effects = DragDropEffects.Copy;
                 }
-                if (e.Data.GetDataPresent<IEnumerable<PlaylistItem>>())
+                else if (e.Data.GetDataPresent<IEnumerable<PlaylistItem>>())
                 {
                     effects = DragDropEffects.Copy;
                 }
-                if (ShellIDListHelper.GetDataPresent(e.Data))
+                else if (ShellIDListHelper.GetDataPresent(e.Data))
                 {
                     effects = DragDropEffects.Copy;
                 }
@@ -316,19 +316,19 @@ namespace FoxTunes.ViewModel
                     var paths = e.Data.GetData(DataFormats.FileDrop) as IEnumerable<string>;
                     return this.AddPlaylist(paths);
                 }
-                if (e.Data.GetDataPresent(typeof(LibraryHierarchyNode)))
+                else if (e.Data.GetDataPresent(typeof(LibraryHierarchyNode)))
                 {
                     var libraryHierarchyNode = e.Data.GetData(typeof(LibraryHierarchyNode)) as LibraryHierarchyNode;
                     return this.AddPlaylist(libraryHierarchyNode);
                 }
-                if (e.Data.GetDataPresent<IEnumerable<PlaylistItem>>())
+                else if (e.Data.GetDataPresent<IEnumerable<PlaylistItem>>())
                 {
                     var playlistItems = e.Data
                         .GetData<IEnumerable<PlaylistItem>>()
                         .OrderBy(playlistItem => playlistItem.Sequence);
                     return this.AddPlaylist(playlistItems);
                 }
-                if (ShellIDListHelper.GetDataPresent(e.Data))
+                else if (ShellIDListHelper.GetDataPresent(e.Data))
                 {
                     var paths = ShellIDListHelper.GetData(e.Data);
                     return this.AddPlaylist(paths);
@@ -373,19 +373,19 @@ namespace FoxTunes.ViewModel
                     var paths = e.Data.GetData(DataFormats.FileDrop) as IEnumerable<string>;
                     return PlaylistActionsBehaviour.Instance.Add(playlist, paths, false);
                 }
-                if (e.Data.GetDataPresent(typeof(LibraryHierarchyNode)))
+                else if(e.Data.GetDataPresent(typeof(LibraryHierarchyNode)))
                 {
                     var libraryHierarchyNode = e.Data.GetData(typeof(LibraryHierarchyNode)) as LibraryHierarchyNode;
                     return PlaylistActionsBehaviour.Instance.Add(playlist, libraryHierarchyNode, false);
                 }
-                if (e.Data.GetDataPresent<IEnumerable<PlaylistItem>>())
+                else if (e.Data.GetDataPresent<IEnumerable<PlaylistItem>>())
                 {
                     var playlistItems = e.Data
                         .GetData<IEnumerable<PlaylistItem>>()
                         .OrderBy(playlistItem => playlistItem.Sequence);
                     return PlaylistActionsBehaviour.Instance.Add(playlist, playlistItems, false);
                 }
-                if (ShellIDListHelper.GetDataPresent(e.Data))
+                else if (ShellIDListHelper.GetDataPresent(e.Data))
                 {
                     var paths = ShellIDListHelper.GetData(e.Data);
                     return PlaylistActionsBehaviour.Instance.Add(playlist, paths, false);
