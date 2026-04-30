@@ -2,7 +2,9 @@
 using FoxDb.Interfaces;
 using FoxTunes.Interfaces;
 using RadioBrowserWrapper.Models;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace FoxTunes
@@ -95,11 +97,29 @@ namespace FoxTunes
         {
             foreach (var station in stations)
             {
-                yield return new PlaylistItem()
+                var m3uSuffixes = new[]
                 {
-                    DirectoryName = station.UrlResolved,
-                    FileName = station.UrlResolved
+                    "m3u",
+                    "m3u?",
+                    "m3u8",
+                    "m3u8?"
                 };
+                if (m3uSuffixes.Any(m3uSuffix => station.UrlResolved.EndsWith(m3uSuffix, StringComparison.OrdinalIgnoreCase)))
+                {
+                    var helper = M3UHelper.FromUrl(station.UrlResolved);
+                    foreach (var playlistItem in helper.Read())
+                    {
+                        yield return playlistItem;
+                    }
+                }
+                else
+                {
+                    yield return new PlaylistItem()
+                    {
+                        DirectoryName = station.UrlResolved,
+                        FileName = station.UrlResolved
+                    };
+                }
             }
         }
 
