@@ -70,7 +70,7 @@ namespace FoxTunes
             var search = this.UserInterface.Prompt(Strings.RadioBrowserBehaviour_Search);
             if (string.IsNullOrEmpty(search))
             {
-                return;
+                return; 
             }
             var browser = new RadioBrowser(new RadioBrowserOptions()
             {
