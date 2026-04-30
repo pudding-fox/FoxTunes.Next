@@ -768,6 +768,26 @@ namespace FoxTunes
                     PackageFlags.Default
                 ),
                 new Package(
+                    "radio",
+                    new PackageElement[]
+                    {
+                        "FoxTunes.Output.Bass.RadioBrowser.dll",
+                        "RadioBrowserWrapper.dll",
+                        "Microsoft.Extensions.DependencyInjection.Abstractions.dll",
+                        "Microsoft.Bcl.AsyncInterfaces.dll",
+                        "System.Threading.Tasks.Extensions.dll",
+                        "Microsoft.Extensions.Options.dll",
+                        "System.Text.Json.dll",
+                        "System.Buffers.dll",
+                        "System.Memory.dll",
+                        "System.Numerics.Vectors.dll",
+                        "System.Runtime.CompilerServices.Unsafe.dll",
+                        "System.Text.Encodings.Web.dll",
+                        "System.ValueTuple.dll"
+                    },
+                    PackageFlags.Default
+                ),
+                new Package(
                     "ratings",
                     new PackageElement[]
                     {

@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace FoxTunes
 {
+    [ComponentDependency(Slot = ComponentSlots.UserInterface)]
     public class RadioBrowserBehaviour : StandardBehaviour, IInvocableComponent
     {
         const string SEARCH = "AAAA";
@@ -71,7 +72,10 @@ namespace FoxTunes
             {
                 return;
             }
-            var browser = new RadioBrowser();
+            var browser = new RadioBrowser(new RadioBrowserOptions()
+            {
+                ServerUrl = "all.api.radio-browser.info"
+            });
             var searchOptions = new AdvancedStationSearchOptions()
             {
                 Name = search
