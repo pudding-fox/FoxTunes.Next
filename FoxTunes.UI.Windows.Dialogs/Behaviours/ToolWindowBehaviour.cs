@@ -171,6 +171,10 @@ namespace FoxTunes
                 action = () =>
                 {
                     Logger.Write(this, LogLevel.Debug, "Showing window: {0}", ToolWindowConfiguration.GetTitle(config));
+                    if (window.WindowState == WindowState.Maximized)
+                    {
+                        window.WindowState = WindowState.Normal;
+                    }
                     window.Show();
                 };
             }
