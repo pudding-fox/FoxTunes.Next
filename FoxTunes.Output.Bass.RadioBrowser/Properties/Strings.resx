@@ -123,4 +123,16 @@
   <data name="RadioBrowserBehaviour.Search" xml:space="preserve">
     <value>Search</value>
   </data>
+  <data name="RadioBrowserBehaviourConfiguration.BaseUrl" xml:space="preserve">
+    <value>Base Url</value>
+  </data>
+  <data name="RadioBrowserBehaviourConfiguration.Enabled" xml:space="preserve">
+    <value>Enabled</value>
+  </data>
+  <data name="RadioBrowserBehaviourConfiguration.Section" xml:space="preserve">
+    <value>Radio</value>
+  </data>
+  <data name="String1" xml:space="preserve">
+    <value />
+  </data>
 </root>

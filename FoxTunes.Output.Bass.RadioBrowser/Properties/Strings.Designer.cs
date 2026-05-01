@@ -77,5 +77,41 @@ namespace FoxTunes {
                 return ResourceManager.GetString("RadioBrowserBehaviour.Search", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Base Url.
+        /// </summary>
+        internal static string RadioBrowserBehaviourConfiguration_BaseUrl {
+            get {
+                return ResourceManager.GetString("RadioBrowserBehaviourConfiguration.BaseUrl", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enabled.
+        /// </summary>
+        internal static string RadioBrowserBehaviourConfiguration_Enabled {
+            get {
+                return ResourceManager.GetString("RadioBrowserBehaviourConfiguration.Enabled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Radio.
+        /// </summary>
+        internal static string RadioBrowserBehaviourConfiguration_Section {
+            get {
+                return ResourceManager.GetString("RadioBrowserBehaviourConfiguration.Section", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        internal static string String1 {
+            get {
+                return ResourceManager.GetString("String1", resourceCulture);
+            }
+        }
     }
 }

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace FoxTunes
 {
     [ComponentDependency(Slot = ComponentSlots.UserInterface)]
-    public class RadioBrowserBehaviour : StandardBehaviour, IInvocableComponent
+    public class RadioBrowserBehaviour : StandardBehaviour, IInvocableComponent, IConfigurableComponent
     {
         const string SEARCH = "AAAA";
 
@@ -24,6 +24,12 @@ namespace FoxTunes
 
         public IBackgroundTaskEmitter BackgroundTaskEmitter { get; private set; }
 
+        public IConfiguration Configuration { get; private set; }
+
+        public BooleanConfigurationElement Enabled { get; private set; }
+
+        public TextConfigurationElement BaseUrl { get; private set; }
+
         public override void InitializeComponent(ICore core)
         {
             this.Core = core;
@@ -32,6 +38,15 @@ namespace FoxTunes
             this.ReportEmitter = core.Components.ReportEmitter;
             this.PlaylistBrowser = core.Components.PlaylistBrowser;
             this.BackgroundTaskEmitter = core.Components.BackgroundTaskEmitter;
+            this.Configuration = core.Components.Configuration;
+            this.Enabled = this.Configuration.GetElement<BooleanConfigurationElement>(
+                RadioBrowserBehaviourConfiguration.SECTION,
+                RadioBrowserBehaviourConfiguration.ENABLED
+            );
+            this.BaseUrl = this.Configuration.GetElement<TextConfigurationElement>(
+                RadioBrowserBehaviourConfiguration.SECTION,
+                RadioBrowserBehaviourConfiguration.BASE_URL
+            );
             base.InitializeComponent(core);
         }
 
@@ -47,7 +62,10 @@ namespace FoxTunes
         {
             get
             {
-                yield return new InvocationComponent(InvocationComponent.CATEGORY_PLAYLIST, SEARCH, Strings.RadioBrowserBehaviour_Search, path: Strings.RadioBrowserBehaviour_Path);
+                if (this.Enabled.Value)
+                {
+                    yield return new InvocationComponent(InvocationComponent.CATEGORY_PLAYLIST, SEARCH, Strings.RadioBrowserBehaviour_Search, path: Strings.RadioBrowserBehaviour_Path);
+                }
             }
         }
 
@@ -70,11 +88,11 @@ namespace FoxTunes
             var search = this.UserInterface.Prompt(Strings.RadioBrowserBehaviour_Search);
             if (string.IsNullOrEmpty(search))
             {
-                return; 
+                return;
             }
             var browser = new RadioBrowser(new RadioBrowserOptions()
             {
-                ServerUrl = "all.api.radio-browser.info"
+                ServerUrl = this.BaseUrl.Value
             });
             var searchOptions = new AdvancedStationSearchOptions()
             {
@@ -106,6 +124,11 @@ namespace FoxTunes
                 await this.BackgroundTaskEmitter.Send(task).ConfigureAwait(false);
                 await task.Run().ConfigureAwait(false);
             }
+        }
+
+        public IEnumerable<ConfigurationSection> GetConfigurationSections()
+        {
+            return RadioBrowserBehaviourConfiguration.GetConfigurationSections();
         }
     }
 }
