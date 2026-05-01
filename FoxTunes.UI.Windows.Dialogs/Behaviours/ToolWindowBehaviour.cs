@@ -590,7 +590,7 @@ namespace FoxTunes
         {
             get
             {
-                return this._Title;
+                return ToolWindowConfiguration.GetTitle(this);
             }
             set
             {
@@ -935,9 +935,9 @@ namespace FoxTunes
 
         public static string GetTitle(ToolWindowConfiguration instance)
         {
-            if (!string.IsNullOrEmpty(instance.Title))
+            if (!string.IsNullOrEmpty(instance._Title))
             {
-                return instance.Title;
+                return instance._Title;
             }
             if (!instance.Component.Component.IsEmpty)
             {

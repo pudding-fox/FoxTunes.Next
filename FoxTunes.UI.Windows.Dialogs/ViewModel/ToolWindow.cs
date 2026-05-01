@@ -10,37 +10,6 @@ namespace FoxTunes.ViewModel
 
         }
 
-        public string Title
-        {
-            get
-            {
-                if (this.Configuration == null)
-                {
-                    return string.Empty;
-                }
-                return ToolWindowConfiguration.GetTitle(this.Configuration);
-            }
-            set
-            {
-                if (this.Configuration == null || string.Equals(this.Configuration.Title, value))
-                {
-                    return;
-                }
-                this.Configuration.Title = value;
-            }
-        }
-
-        protected virtual void OnTitleChanged(object sender, EventArgs e)
-        {
-            if (this.TitleChanged != null)
-            {
-                this.TitleChanged(this, EventArgs.Empty);
-            }
-            this.OnPropertyChanged("Title");
-        }
-
-        public event EventHandler TitleChanged;
-
         public Rect Bounds
         {
             get
@@ -65,6 +34,7 @@ namespace FoxTunes.ViewModel
             }
         }
 
+
         protected virtual void OnBoundsChanged(object sender, EventArgs e)
         {
             if (this.BoundsChanged != null)
@@ -76,254 +46,6 @@ namespace FoxTunes.ViewModel
 
         public event EventHandler BoundsChanged;
 
-        public UIComponentConfiguration Component
-        {
-            get
-            {
-                if (this.Configuration == null)
-                {
-                    return null;
-                }
-                return this.Configuration.Component;
-            }
-            set
-            {
-                if (this.Configuration == null || object.ReferenceEquals(this.Configuration.Component, value))
-                {
-                    return;
-                }
-                this.Configuration.Component = value;
-            }
-        }
-
-        protected virtual void OnComponentChanged(object sender, EventArgs e)
-        {
-            this.OnTitleChanged(this, EventArgs.Empty);
-            if (this.ComponentChanged != null)
-            {
-                this.ComponentChanged(this, EventArgs.Empty);
-            }
-            this.OnPropertyChanged("Component");
-        }
-
-        public event EventHandler ComponentChanged;
-
-        public bool ShowWithMainWindow
-        {
-            get
-            {
-                if (this.Configuration == null)
-                {
-                    return false;
-                }
-                return this.Configuration.ShowWithMainWindow;
-            }
-            set
-            {
-                if (this.Configuration == null || this.Configuration.ShowWithMainWindow == value)
-                {
-                    return;
-                }
-                this.Configuration.ShowWithMainWindow = value;
-            }
-        }
-
-        protected virtual void OnShowWithMainWindowChanged(object sender, EventArgs e)
-        {
-            if (this.ShowWithMainWindowChanged != null)
-            {
-                this.ShowWithMainWindowChanged(this, EventArgs.Empty);
-            }
-            this.OnPropertyChanged("ShowWithMainWindow");
-        }
-
-        public event EventHandler ShowWithMainWindowChanged;
-
-        public bool ShowWithMiniWindow
-        {
-            get
-            {
-                if (this.Configuration == null)
-                {
-                    return false;
-                }
-                return this.Configuration.ShowWithMiniWindow;
-            }
-            set
-            {
-                if (this.Configuration == null || this.Configuration.ShowWithMiniWindow == value)
-                {
-                    return;
-                }
-                this.Configuration.ShowWithMiniWindow = value;
-            }
-        }
-
-        protected virtual void OnShowWithMiniWindowChanged(object sender, EventArgs e)
-        {
-            if (this.ShowWithMiniWindowChanged != null)
-            {
-                this.ShowWithMiniWindowChanged(this, EventArgs.Empty);
-            }
-            this.OnPropertyChanged("ShowWithMiniWindow");
-        }
-
-        public event EventHandler ShowWithMiniWindowChanged;
-
-        public bool AlwaysOnTop
-        {
-            get
-            {
-                if (this.Configuration == null)
-                {
-                    return false;
-                }
-                return this.Configuration.AlwaysOnTop;
-            }
-            set
-            {
-                if (this.Configuration == null || this.Configuration.AlwaysOnTop == value)
-                {
-                    return;
-                }
-                this.Configuration.AlwaysOnTop = value;
-            }
-        }
-
-        protected virtual void OnAlwaysOnTopChanged(object sender, EventArgs e)
-        {
-            if (this.AlwaysOnTopChanged != null)
-            {
-                this.AlwaysOnTopChanged(this, EventArgs.Empty);
-            }
-            this.OnPropertyChanged("AlwaysOnTop");
-        }
-
-        public event EventHandler AlwaysOnTopChanged;
-
-        public bool ApplyTemplate
-        {
-            get
-            {
-                if (this.Configuration == null)
-                {
-                    return true;
-                }
-                return this.Configuration.ApplyTemplate;
-            }
-            set
-            {
-                if (this.Configuration == null || this.Configuration.ApplyTemplate == value)
-                {
-                    return;
-                }
-                this.Configuration.ApplyTemplate = value;
-            }
-        }
-
-        protected virtual void OnApplyTemplateChanged(object sender, EventArgs e)
-        {
-            if (this.ApplyTemplateChanged != null)
-            {
-                this.ApplyTemplateChanged(this, EventArgs.Empty);
-            }
-            this.OnPropertyChanged("ApplyTemplate");
-        }
-
-        public event EventHandler ApplyTemplateChanged;
-
-        public bool ApplyWindowChrome
-        {
-            get
-            {
-                if (this.Configuration == null)
-                {
-                    return true;
-                }
-                return this.Configuration.ApplyWindowChrome;
-            }
-            set
-            {
-                if (this.Configuration == null || this.Configuration.ApplyWindowChrome == value)
-                {
-                    return;
-                }
-                this.Configuration.ApplyWindowChrome = value;
-            }
-        }
-
-        protected virtual void OnApplyWindowChromeChanged(object sender, EventArgs e)
-        {
-            if (this.ApplyWindowChromeChanged != null)
-            {
-                this.ApplyWindowChromeChanged(this, EventArgs.Empty);
-            }
-            this.OnPropertyChanged("ApplyWindowChrome");
-        }
-
-        public event EventHandler ApplyWindowChromeChanged;
-
-        public bool ApplyTransparency
-        {
-            get
-            {
-                if (this.Configuration == null)
-                {
-                    return true;
-                }
-                return this.Configuration.ApplyTransparency;
-            }
-            set
-            {
-                if (this.Configuration == null || this.Configuration.ApplyTransparency == value)
-                {
-                    return;
-                }
-                this.Configuration.ApplyTransparency = value;
-            }
-        }
-
-        protected virtual void OnApplyTransparencyChanged(object sender, EventArgs e)
-        {
-            if (this.ApplyTransparencyChanged != null)
-            {
-                this.ApplyTransparencyChanged(this, EventArgs.Empty);
-            }
-            this.OnPropertyChanged("ApplyTransparency");
-        }
-
-        public event EventHandler ApplyTransparencyChanged;
-
-        public SizeToContent SizeToContent
-        {
-            get
-            {
-                if (this.Configuration == null)
-                {
-                    return SizeToContent.Manual;
-                }
-                return this.Configuration.SizeToContent;
-            }
-            set
-            {
-                if (this.Configuration == null || this.Configuration.SizeToContent == value)
-                {
-                    return;
-                }
-                this.Configuration.SizeToContent = value;
-            }
-        }
-
-        protected virtual void OnSizeToContentChanged(object sender, EventArgs e)
-        {
-            if (this.SizeToContentChanged != null)
-            {
-                this.SizeToContentChanged(this, EventArgs.Empty);
-            }
-            this.OnPropertyChanged("SizeToContent");
-        }
-
-        public event EventHandler SizeToContentChanged;
 
         private ToolWindowConfiguration _Configuration { get; set; }
 
@@ -346,31 +68,6 @@ namespace FoxTunes.ViewModel
 
         protected virtual void OnConfigurationChanged()
         {
-            if (this.Configuration != null)
-            {
-                this.Configuration.TitleChanged += this.OnTitleChanged;
-                this.Configuration.ComponentChanged += this.OnComponentChanged;
-                this.Configuration.ShowWithMainWindowChanged += this.OnShowWithMainWindowChanged;
-                this.Configuration.ShowWithMiniWindowChanged += this.OnShowWithMiniWindowChanged;
-                this.Configuration.AlwaysOnTopChanged += this.OnAlwaysOnTopChanged;
-                this.Configuration.ApplyTemplateChanged += this.OnApplyTemplateChanged;
-                this.Configuration.ApplyWindowChromeChanged += this.OnApplyWindowChromeChanged;
-                this.Configuration.ApplyTransparencyChanged += this.OnApplyTransparencyChanged;
-                this.Configuration.SizeToContentChanged += this.OnSizeToContentChanged;
-
-                this.OnTitleChanged(this, EventArgs.Empty);
-                this.OnBoundsChanged(this, EventArgs.Empty);
-                this.OnComponentChanged(this, EventArgs.Empty);
-                this.OnShowWithMainWindowChanged(this, EventArgs.Empty);
-                this.OnShowWithMiniWindowChanged(this, EventArgs.Empty);
-                this.OnAlwaysOnTopChanged(this, EventArgs.Empty);
-                this.OnApplyTemplateChanged(this, EventArgs.Empty);
-                this.OnApplyWindowChromeChanged(this, EventArgs.Empty);
-                this.OnApplyTransparencyChanged(this, EventArgs.Empty);
-                this.OnSizeToContentChanged(this, EventArgs.Empty);
-
-                this.InitializeComponent(Core.Instance);
-            }
             if (this.ConfigurationChanged != null)
             {
                 this.ConfigurationChanged(this, EventArgs.Empty);
@@ -383,23 +80,6 @@ namespace FoxTunes.ViewModel
         protected override Freezable CreateInstanceCore()
         {
             return new ToolWindow();
-        }
-
-        protected override void OnDisposing()
-        {
-            if (this.Configuration != null)
-            {
-                this.Configuration.TitleChanged -= this.OnTitleChanged;
-                this.Configuration.ComponentChanged -= this.OnComponentChanged;
-                this.Configuration.ShowWithMainWindowChanged -= this.OnShowWithMainWindowChanged;
-                this.Configuration.ShowWithMiniWindowChanged -= this.OnShowWithMiniWindowChanged;
-                this.Configuration.AlwaysOnTopChanged -= this.OnAlwaysOnTopChanged;
-                this.Configuration.ApplyTemplateChanged -= this.OnApplyTemplateChanged;
-                this.Configuration.ApplyWindowChromeChanged -= this.OnApplyWindowChromeChanged;
-                this.Configuration.ApplyTransparencyChanged -= this.OnApplyTransparencyChanged;
-                this.Configuration.SizeToContentChanged -= this.OnSizeToContentChanged;
-            }
-            base.OnDisposing();
         }
     }
 }

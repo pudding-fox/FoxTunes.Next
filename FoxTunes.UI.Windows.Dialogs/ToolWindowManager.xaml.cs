@@ -34,12 +34,12 @@ namespace FoxTunes
             //Ensure any pending changes are committed.
             Configuration.Save();
             var layoutEditor = new LayoutEditor();
-            layoutEditor.Component = toolWindow.Component;
+            layoutEditor.Component = toolWindow.Configuration.Component;
             if (!await Windows.ShowDialog(Core.Instance, Strings.ToolWindowManager_EditLayoutXML, layoutEditor).ConfigureAwait(false))
             {
                 return;
             }
-            await Windows.Invoke(() => toolWindow.Component = layoutEditor.Component).ConfigureAwait(false);
+            await Windows.Invoke(() => toolWindow.Configuration.Component = layoutEditor.Component).ConfigureAwait(false);
         }
 
         protected virtual void OnCopyLayoutToMainClick(object sender, RoutedEventArgs e)
@@ -68,7 +68,7 @@ namespace FoxTunes
             mainLayout.Value = string.Concat(
                 "<?xml version=\"1.0\" encoding=\"Windows-1252\"?>\r\n<FoxTunes>\r\n",
                 Convert.ToString(
-                    converter.Convert(toolWindow.Component, typeof(string), null, CultureInfo.CurrentCulture)
+                    converter.Convert(toolWindow.Configuration.Component, typeof(string), null, CultureInfo.CurrentCulture)
                 ),
                 "\r\n</FoxTunes>"
             );

@@ -14,20 +14,20 @@
         <LocalViewModel:ToolWindow x:Key="ViewModel"></LocalViewModel:ToolWindow>
     </Window.Resources>
     <Window.Topmost>
-        <Binding Path="AlwaysOnTop" Source="{StaticResource ViewModel}"/>
+        <Binding Path="Configuration.AlwaysOnTop" Source="{StaticResource ViewModel}"/>
     </Window.Topmost>
     <Window.SizeToContent>
-        <Binding Path="SizeToContent" Source="{StaticResource ViewModel}"/>
+        <Binding Path="Configuration.SizeToContent" Source="{StaticResource ViewModel}"/>
     </Window.SizeToContent>
     <Window.Title>
         <!-- This seems to produce a binding warning but I don't know why. The FallbackValue doesn't seem to help. -->
-        <Binding Path="Title" Source="{StaticResource ViewModel}" Mode="OneWay" FallbackValue="Tool Window"/>
+        <Binding Path="Configuration.Title" Source="{StaticResource ViewModel}" Mode="OneWay" FallbackValue="Tool Window"/>
     </Window.Title>
     <Windows:WindowBase.ApplyTemplate>
-        <Binding Path="ApplyTemplate" Source="{StaticResource ViewModel}"/>
+        <Binding Path="Configuration.ApplyTemplate" Source="{StaticResource ViewModel}"/>
     </Windows:WindowBase.ApplyTemplate>
     <Windows:WindowBase.ApplyWindowChrome>
-        <Binding Path="ApplyWindowChrome" Source="{StaticResource ViewModel}"/>
+        <Binding Path="Configuration.ApplyWindowChrome" Source="{StaticResource ViewModel}"/>
     </Windows:WindowBase.ApplyWindowChrome>
-    <Layout:UIComponentRoot x:Name="Root" Grid.Row="1" Configuration="{Binding Component, Source={StaticResource ViewModel}}"></Layout:UIComponentRoot>
+    <Layout:UIComponentRoot x:Name="Root" Grid.Row="1" Configuration="{Binding Configuration.Component, Source={StaticResource ViewModel}}"></Layout:UIComponentRoot>
 </Windows:WindowBase>
