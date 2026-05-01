@@ -6,7 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Forms;
@@ -61,13 +60,6 @@ namespace FoxTunes
                 Flags = VisualizationDataFlags.Individual
             };
             this.Buffers = new Dictionary<int, float[]>();
-#if DEBUG
-            this.Timer = new global::System.Timers.Timer();
-            this.Timer.Interval = 1000;
-            this.Timer.Elapsed += this.OnTimerElapsed;
-            this.Timer.AutoReset = false;
-            this.Timer.Start();
-#endif
             this.Timer1 = new global::System.Timers.Timer();
             this.Timer1.Interval = 16;
             this.Timer1.Elapsed += this.OnTimer1Elapsed;
@@ -96,96 +88,6 @@ namespace FoxTunes
         public PCMVisualizationData Data { get; private set; }
 
         public IDictionary<int, float[]> Buffers { get; private set; }
-
-#if DEBUG
-
-        const int SLOW_THRESHOLD = 10;
-
-        public global::System.Timers.Timer Timer { get; private set; }
-
-        public volatile int Frames = 0;
-
-        public int Slow = 0;
-
-        protected virtual void OnTimerElapsed(object sender, EventArgs e)
-        {
-            try
-            {
-                this.FPS = Interlocked.Exchange(ref this.Frames, 0);
-            }
-            finally
-            {
-                this.Timer.Start();
-            }
-        }
-
-        public int FPS
-        {
-            set
-            {
-                if (IntPtr.Zero.Equals(Context))
-                {
-                    return;
-                }
-                if (this.DownmixedData == null || this.DownmixedChannels == Channels.NONE)
-                {
-                    return;
-                }
-                if (value < SLOW_THRESHOLD)
-                {
-                    this.Slow++;
-                    if (this.Slow > SLOW_THRESHOLD)
-                    {
-                        var fileName = Presets.FileNames[Presets.Index];
-                        Logger.Write(this, LogLevel.Debug, "Slow down detected for preset: {0}", fileName);
-                        var relativeFileName = GetRelativePath(Location, fileName);
-                        var absoluteFileName = GetAbsolutePath(relativeFileName);
-                        if (!string.IsNullOrEmpty(absoluteFileName))
-                        {
-                            File.Delete(absoluteFileName);
-                        }
-                        this.Slow = 0;
-                    }
-                }
-                else
-                {
-                    this.Slow = 0;
-                }
-            }
-        }
-
-        public static string GetRelativePath(string basePath, string fullPath)
-        {
-            var baseUri = new Uri(AppendDirectorySeparatorChar(basePath));
-            var fullUri = new Uri(fullPath);
-            var relativeUri = baseUri.MakeRelativeUri(fullUri);
-            var relativePath = Uri.UnescapeDataString(relativeUri.ToString());
-            return relativePath.Replace('/', Path.DirectorySeparatorChar);
-        }
-
-        private static string AppendDirectorySeparatorChar(string path)
-        {
-            if (!path.EndsWith(Path.DirectorySeparatorChar.ToString()))
-                return path + Path.DirectorySeparatorChar;
-            return path;
-        }
-
-        private static string GetAbsolutePath(string relativePath)
-        {
-            var directoryName = Path.GetDirectoryName(Location);
-            do
-            {
-                var absolutePath = Path.Combine(directoryName, "FoxTunes.UI.Windows.Visualizations.ProjectM", relativePath);
-                if (File.Exists(absolutePath))
-                {
-                    return absolutePath;
-                }
-                directoryName = Path.GetDirectoryName(directoryName);
-            } while (!string.IsNullOrEmpty(directoryName));
-            return null;
-        }
-
-#endif
 
         public global::System.Timers.Timer Timer1 { get; private set; }
 
@@ -278,9 +180,6 @@ namespace FoxTunes
                     if (!string.IsNullOrEmpty(fileName))
                     {
                         projectm_load_preset_file(Context, fileName, true);
-#if DEBUG
-                        this.Slow = 0;
-#endif
                     }
                 }
                 finally
@@ -360,9 +259,6 @@ namespace FoxTunes
             if (!string.IsNullOrEmpty(fileName))
             {
                 projectm_load_preset_file(Context, fileName, false);
-#if DEBUG
-                this.Slow = 0;
-#endif
             }
         }
 
@@ -384,9 +280,6 @@ namespace FoxTunes
                 }
                 projectm_opengl_render_frame(Context);
                 this.GLControl.SwapBuffers();
-#if DEBUG
-                Interlocked.Increment(ref this.Frames);
-#endif
             }
             else
             {
@@ -491,9 +384,6 @@ namespace FoxTunes
                 if (!string.IsNullOrEmpty(fileName))
                 {
                     projectm_load_preset_file(Context, fileName, true);
-#if DEBUG
-                    this.Slow = 0;
-#endif
                 }
             });
         }
@@ -516,9 +406,6 @@ namespace FoxTunes
                 if (!string.IsNullOrEmpty(fileName))
                 {
                     projectm_load_preset_file(Context, fileName, true);
-#if DEBUG
-                    this.Slow = 0;
-#endif
                 }
             });
         }
@@ -556,13 +443,6 @@ namespace FoxTunes
 
         protected override void OnDisposing()
         {
-#if DEBUG
-            if (this.Timer != null)
-            {
-                this.Timer.Elapsed -= this.OnTimerElapsed;
-                this.Timer.Dispose();
-            }
-#endif
             if (this.Timer1 != null)
             {
                 this.Timer1.Elapsed -= this.OnTimer1Elapsed;
