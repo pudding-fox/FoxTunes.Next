@@ -1,13 +1,10 @@
 ﻿using System;
 using System.Windows;
-using System.Windows.Controls.Primitives;
 
 namespace FoxTunes.ViewModel
 {
     public class ToolWindow : ViewModelBase
     {
-        public static readonly ToolWindowBehaviour Behaviour = ComponentRegistry.Instance.GetComponent<ToolWindowBehaviour>();
-
         public ToolWindow() : base(false)
         {
 
@@ -288,14 +285,6 @@ namespace FoxTunes.ViewModel
 
         protected virtual void OnApplyTransparencyChanged(object sender, EventArgs e)
         {
-            var window = default(global::FoxTunes.ToolWindow);
-            if (this.IsInitialized && Behaviour.Windows.TryGetValue(this.Configuration, out window))
-            {
-                if (window.AllowsTransparency != this.ApplyTransparency)
-                {
-                    var task = Behaviour.Reload(this.Configuration);
-                }
-            }
             if (this.ApplyTransparencyChanged != null)
             {
                 this.ApplyTransparencyChanged(this, EventArgs.Empty);

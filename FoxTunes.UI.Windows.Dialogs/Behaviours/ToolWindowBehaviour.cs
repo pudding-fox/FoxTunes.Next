@@ -1,5 +1,4 @@
 ﻿#pragma warning disable 0436
-using FoxDb;
 using FoxTunes.Interfaces;
 using System;
 using System.Collections.Concurrent;
@@ -116,12 +115,32 @@ namespace FoxTunes
                 }).ConfigureAwait(false);
                 this.Windows[config] = window;
                 this.OnLoaded(config, window);
+                config.ApplyTransparencyChanged += this.OnApplyTransparencyChanged;
                 return window;
             }
             catch (Exception e)
             {
                 Logger.Write(this, LogLevel.Warn, "Failed to load config: {0}", e.Message);
                 return null;
+            }
+        }
+
+        protected virtual void OnApplyTransparencyChanged(object sender, EventArgs e)
+        {
+            if (sender is ToolWindowConfiguration config)
+            {
+                var window = default(ToolWindow);
+                if (this.Windows.TryGetValue(config, out window))
+                {
+                    if (window.AllowsTransparency != config.ApplyTransparency)
+                    {
+                        Logger.Write(this, LogLevel.Debug, "Transparency settings were modified, re-loading window: {0}", ToolWindowConfiguration.GetTitle(config));
+                        window.Dispatcher.BeginInvoke(new Action(() =>
+                        {
+                            var task = this.Reload(config);
+                        }));
+                    }
+                }
             }
         }
 
@@ -199,11 +218,9 @@ namespace FoxTunes
         protected virtual void Unload(ToolWindowConfiguration config, ToolWindow window)
         {
             Logger.Write(this, LogLevel.Debug, "Unloading config: {0}", ToolWindowConfiguration.GetTitle(config));
-            this.Windows.TryGetValue(config, out window);
-            if (!this.Windows.TryRemove(config))
-            {
-                return;
-            }
+            this.Windows.TryRemove(config);
+            window.Closed -= this.OnClosed;
+            config.ApplyTransparencyChanged -= this.OnApplyTransparencyChanged;
             this.OnUnloaded(config, window);
         }
 
