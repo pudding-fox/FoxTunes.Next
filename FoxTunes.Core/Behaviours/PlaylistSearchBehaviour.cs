@@ -30,6 +30,10 @@ namespace FoxTunes
 
         public void Search()
         {
+            if (string.IsNullOrWhiteSpace(this.PlaylistManager.Filter))
+            {
+                return;
+            }
             var playlistItems = this.PlaylistBrowser.GetItems(this.PlaylistManager.SelectedPlaylist, this.PlaylistManager.Filter);
             if (playlistItems != null && playlistItems.Any())
             {
