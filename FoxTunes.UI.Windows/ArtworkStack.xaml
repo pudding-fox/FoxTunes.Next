@@ -15,7 +15,7 @@
     <ItemsControl ItemsSource="{Binding FileData.MetaDatas, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Windows:ArtworkStack}}}">
         <ItemsControl.ItemsPanel>
             <ItemsPanelTemplate>
-                <Windows:DiagonalStackPanel XStep="25" YStep="15" Reverse="True"></Windows:DiagonalStackPanel>
+                <Windows:DiagonalStackPanel XStep="25" YStep="25" Reverse="True"></Windows:DiagonalStackPanel>
             </ItemsPanelTemplate>
         </ItemsControl.ItemsPanel>
         <ItemsControl.ItemContainerStyle>
