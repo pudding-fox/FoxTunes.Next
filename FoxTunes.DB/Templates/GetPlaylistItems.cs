@@ -20,7 +20,7 @@ namespace FoxTunes.Templates
     /// Class to produce the template output
     /// </summary>
     
-    #line 1 "C:\sourcecode\source\personal\FoxTunes.Next\FoxTunes.DB\Templates\GetPlaylistItems.tt"
+    #line 1 "C:\Users\misha\Source\repos\FoxTunes.Next\FoxTunes.DB\Templates\GetPlaylistItems.tt"
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.TextTemplating", "17.0.0.0")]
     public partial class GetPlaylistItems : GetPlaylistItemsBase
     {
@@ -30,21 +30,11 @@ namespace FoxTunes.Templates
         /// </summary>
         public virtual string TransformText()
         {
-            this.Write(@"
-SELECT ""PlaylistItems"".""Id""
-FROM
-(
-	SELECT ""PlaylistItems"".""Id"", ""PlaylistItems"".""Sequence""
-	FROM  ""PlaylistItems"" 
-		LEFT JOIN ""PlaylistItem_MetaDataItem"" ON ""PlaylistItems"".""Id"" = ""PlaylistItem_MetaDataItem"".""PlaylistItem_Id"" 
-		LEFT JOIN ""LibraryItem_MetaDataItem"" ON ""PlaylistItems"".""LibraryItem_Id"" = ""LibraryItem_MetaDataItem"".""LibraryItem_Id""
-		JOIN ""MetaDataItems"" ON ""PlaylistItem_MetaDataItem"".""MetaDataItem_Id"" = ""MetaDataItems"".""Id"" OR
-				""LibraryItem_MetaDataItem"".""MetaDataItem_Id"" = ""MetaDataItems"".""Id""
-	WHERE ""PlaylistItems"".""Playlist_Id"" = @playlistId AND
-	(
-	");
+            this.Write("\r\nSELECT \"PlaylistItems\".\"Id\"\r\nFROM\r\n(\r\n\tSELECT \"PlaylistItems\".\"Id\", \"PlaylistIt" +
+                    "ems\".\"Sequence\"\r\n\tFROM  \"PlaylistItems\" \r\n\tWHERE \"PlaylistItems\".\"Playlist_Id\" =" +
+                    " @playlistId AND\r\n\t(\r\n\t");
             
-            #line 20 "C:\sourcecode\source\personal\FoxTunes.Next\FoxTunes.DB\Templates\GetPlaylistItems.tt"
+            #line 16 "C:\Users\misha\Source\repos\FoxTunes.Next\FoxTunes.DB\Templates\GetPlaylistItems.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(new PlaylistFilterBuilder(this.Database, this.Filter).TransformText()));
             
             #line default

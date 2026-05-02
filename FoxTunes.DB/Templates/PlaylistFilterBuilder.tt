@@ -24,9 +24,10 @@ if (this.Filter != null)
 EXISTS
 (
 	SELECT * 
-	FROM "PlaylistItem_MetaDataItem"
-		JOIN "MetaDataItems" ON "MetaDataItems"."Id" = "PlaylistItem_MetaDataItem"."MetaDataItem_Id"
-	WHERE "PlaylistItem_MetaDataItem"."PlaylistItem_Id" = "PlaylistItems"."Id" AND (
+	FROM "MetaDataItems" 
+		LEFT JOIN "LibraryItem_MetaDataItem" ON "LibraryItem_MetaDataItem"."MetaDataItem_Id" = "MetaDataItems"."Id" 
+		LEFT JOIN "PlaylistItem_MetaDataItem" ON  "MetaDataItems"."Id" =  "PlaylistItem_MetaDataItem"."MetaDataItem_Id"
+	WHERE  ("LibraryItem_MetaDataItem"."LibraryItem_Id" = "PlaylistItems"."LibraryItem_Id" OR "PlaylistItem_MetaDataItem"."PlaylistItem_Id" = "PlaylistItems"."Id")AND (
 <#
 		var firstEntry = true;
 		foreach (var entry in group.Entries)
@@ -83,8 +84,9 @@ EXISTS
 #><#= this.Database.QueryFactory.Dialect.String(entry.Value.Replace(FilterParserResultEntry.BOUNDED_WILDCARD, "_").Replace(FilterParserResultEntry.UNBOUNDED_WILDCARD, "%"))  #><#
 			}
 #>
-))<#
+)<#
 		}
+#>))<#		
 	}
 }
 #>

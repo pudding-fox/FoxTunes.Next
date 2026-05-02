@@ -11,10 +11,6 @@ FROM
 (
 	SELECT "PlaylistItems"."Id", "PlaylistItems"."Sequence"
 	FROM  "PlaylistItems" 
-		LEFT JOIN "PlaylistItem_MetaDataItem" ON "PlaylistItems"."Id" = "PlaylistItem_MetaDataItem"."PlaylistItem_Id" 
-		LEFT JOIN "LibraryItem_MetaDataItem" ON "PlaylistItems"."LibraryItem_Id" = "LibraryItem_MetaDataItem"."LibraryItem_Id"
-		JOIN "MetaDataItems" ON "PlaylistItem_MetaDataItem"."MetaDataItem_Id" = "MetaDataItems"."Id" OR
-				"LibraryItem_MetaDataItem"."MetaDataItem_Id" = "MetaDataItems"."Id"
 	WHERE "PlaylistItems"."Playlist_Id" = @playlistId AND
 	(
 	<#= new PlaylistFilterBuilder(this.Database, this.Filter).TransformText() #>
