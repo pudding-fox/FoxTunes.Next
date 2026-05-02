@@ -669,28 +669,6 @@ namespace FoxTunes.ViewModel
             return true;
         }
 
-        public static bool operator ==(SyncedLyrics a, SyncedLyrics b)
-        {
-            if ((object)a == null && (object)b == null)
-            {
-                return true;
-            }
-            if ((object)a == null || (object)b == null)
-            {
-                return false;
-            }
-            if (object.ReferenceEquals((object)a, (object)b))
-            {
-                return true;
-            }
-            return a.Equals(b);
-        }
-
-        public static bool operator !=(SyncedLyrics a, SyncedLyrics b)
-        {
-            return !(a == b);
-        }
-
         protected override Freezable CreateInstanceCore()
         {
             return new SyncedLyrics();

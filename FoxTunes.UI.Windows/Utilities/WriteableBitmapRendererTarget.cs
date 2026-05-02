@@ -75,9 +75,7 @@ namespace FoxTunes
 
         public override bool TryLock()
         {
-            //return this.Bitmap.TryLock(LockTimeout);
-            this.Bitmap.Lock();
-            return true;
+            return this.Bitmap.TryLock(LockTimeout);
         }
 
         public override void Unlock()
