@@ -40,7 +40,8 @@
                 Width="{Binding ActualWidth, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Border}}}"
                 Height="{Binding ActualHeight, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Border}}}"
                 Background="Transparent"
-                Windows:ListBoxExtensions.EnsureSelectedItemVisible="True">
+                Windows:ListBoxExtensions.EnsureSelectedItemVisible="True"
+                Windows:ItemsControlExtensions.MaintainOffset="True">
                 <Interactivity:Interaction.Triggers>
                     <Interactivity:EventTrigger EventName="MouseDoubleClick">
                         <Interactivity:InvokeCommandAction Command="{Binding PlaySelectedItemCommand, Source={StaticResource ViewModel}}"/>

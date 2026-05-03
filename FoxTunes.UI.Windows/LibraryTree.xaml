@@ -39,6 +39,7 @@
                   Windows:TreeViewExtensions.DragSourceInitialized="DragSourceInitialized"
                   Windows:TreeViewExtensions.AutoExpand="True"
                   Windows:TreeViewExtensions.Search="True"
+                  Windows:ItemsControlExtensions.MaintainOffset="True"
                   Background="{DynamicResource ControlBackgroundBrush}">
             <Interactivity:Interaction.Triggers>
                 <Windows:FilteredEventTrigger EventName="MouseDoubleClick" SourceType="{x:Type TreeViewItem}">

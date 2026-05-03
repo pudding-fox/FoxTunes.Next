@@ -44,6 +44,7 @@
                   Windows:ListViewExtensions.AutoSizeColumns="True"
                   Windows:ListViewExtensions.EnsureSelectedItemVisible="True"
                   Windows:ListViewExtensions.Search="True"
+                  Windows:ItemsControlExtensions.MaintainOffset="True"
                   ScrollViewer.CanContentScroll="True"
                   GridViewColumnHeader.Click="OnHeaderClick"
                   RequestBringIntoView="OnRequestBringIntoView"
