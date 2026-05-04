@@ -21,7 +21,7 @@
     </Windows:ConfigurableUIComponentBase.Resources>
     <Windows:AsyncImage DataContext="{Binding FileName, Converter={StaticResource ArtworkImageConverter}, Source={StaticResource ViewModel}}" Source="{Binding Value, FallbackValue={StaticResource Transparent}}">
         <Windows:AsyncImage.Style>
-            <Style TargetType="{x:Type Rectangle}">
+            <Style TargetType="{x:Type Windows:AsyncImage}">
                 <Setter Property="Effect" Value="{x:Null}"/>
                 <Style.Triggers>
                     <DataTrigger Value="{StaticResource True}">
