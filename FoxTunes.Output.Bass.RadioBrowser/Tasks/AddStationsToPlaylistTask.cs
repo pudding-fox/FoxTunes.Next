@@ -39,7 +39,7 @@ namespace FoxTunes
 
         protected override Task OnStarted()
         {
-            this.Name = "Opening archive";
+            this.Name = "Scanning";
             return base.OnStarted();
         }
 
