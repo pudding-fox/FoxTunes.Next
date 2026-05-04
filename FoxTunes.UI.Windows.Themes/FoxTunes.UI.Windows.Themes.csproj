@@ -29,6 +29,7 @@
 
 	<ItemGroup>
 		<EmbeddedResource Include="Images\Artwork.png" />
+		<EmbeddedResource Include="Images\Fox.png" />
 	</ItemGroup>
 
 	<ItemGroup>

@@ -39,6 +39,13 @@ namespace FoxTunes
                         Strings.ColorPalette_Audacity,
                         string.Empty,
                         Resources.Audacity
+                    ),
+                    new ThemeBase.ColorPalette(
+                        "Custom_EEEE",
+                        ColorPaletteRole.Visualization | ColorPaletteRole.WaveForm,
+                        Strings.ColorPalette_Fox,
+                        string.Empty,
+                        Resources.Fox
                     )
                 };
             }
@@ -104,6 +111,24 @@ namespace FoxTunes
                         Strings.ColorPalette_Transparent,
                         string.Empty,
                         Resources.Transparent,
+                        ColorPaletteFlags.System
+                    ),
+                }.Concat(Custom).ToArray();
+            }
+        }
+
+        public static IEnumerable<IColorPalette> Fox
+        {
+            get
+            {
+                return new[]
+{
+                    new ThemeBase.ColorPalette(
+                        "Fox_EEEE",
+                        ColorPaletteRole.Visualization | ColorPaletteRole.WaveForm,
+                        Strings.ColorPalette_Fox,
+                        string.Empty,
+                        Resources.Fox,
                         ColorPaletteFlags.System
                     ),
                 }.Concat(Custom).ToArray();

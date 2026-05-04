@@ -84,6 +84,21 @@ namespace FoxTunes {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to //BACKGROUND
+        ///#FF24160F
+        ///#FF9A5A12
+        ///1000:#FFF8E7CC
+        /////VALUE
+        ///#FF24160F
+        ///1000:#FFF08A2F.
+        /// </summary>
+        internal static string Fox {
+            get {
+                return ResourceManager.GetString("Fox", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to BLACK
         ///1000:WHITE.
         /// </summary>

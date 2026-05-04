@@ -186,4 +186,13 @@
   <data name="TransparentThemeConfiguration.Opacity" xml:space="preserve">
     <value>Opacity</value>
   </data>
+  <data name="FoxTheme.Name" xml:space="preserve">
+    <value>Fox</value>
+  </data>
+  <data name="FoxTheme.Description" xml:space="preserve">
+    <value />
+  </data>
+  <data name="ColorPalette.Fox" xml:space="preserve">
+    <value>Fox</value>
+  </data>
 </root>

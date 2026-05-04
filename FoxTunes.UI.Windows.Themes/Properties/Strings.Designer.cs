@@ -151,6 +151,15 @@ namespace FoxTunes {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Fox.
+        /// </summary>
+        internal static string ColorPalette_Fox {
+            get {
+                return ResourceManager.GetString("ColorPalette.Fox", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Default (Gradient).
         /// </summary>
         internal static string ColorPalette_Gradient {
@@ -210,6 +219,24 @@ namespace FoxTunes {
         internal static string ExpressionDarkTheme_Name {
             get {
                 return ResourceManager.GetString("ExpressionDarkTheme.Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        internal static string FoxTheme_Description {
+            get {
+                return ResourceManager.GetString("FoxTheme.Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Fox.
+        /// </summary>
+        internal static string FoxTheme_Name {
+            get {
+                return ResourceManager.GetString("FoxTheme.Name", resourceCulture);
             }
         }
         
