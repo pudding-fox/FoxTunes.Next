@@ -83,5 +83,40 @@ namespace FoxTunes
         }
 
         public event EventHandler ScriptChanged;
+
+        private LibraryHierarchyLevelHints _Hints { get; set; }
+
+        public LibraryHierarchyLevelHints Hints
+        {
+            get
+            {
+                return this._Hints;
+            }
+            set
+            {
+                this._Hints = value;
+                this.OnHintsChanged();
+            }
+        }
+
+        protected virtual void OnHintsChanged()
+        {
+            if (this.HintsChanged != null)
+            {
+                this.HintsChanged(this, EventArgs.Empty);
+            }
+            this.OnPropertyChanged("Hints");
+        }
+
+        public event EventHandler HintsChanged;
+    }
+
+    public enum LibraryHierarchyLevelHints : byte
+    {
+        None,
+        Genre,
+        Artist,
+        Album,
+        Title
     }
 }

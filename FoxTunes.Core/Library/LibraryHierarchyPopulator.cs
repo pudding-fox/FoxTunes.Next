@@ -112,7 +112,7 @@ namespace FoxTunes
                     var pathSegments = this.GetPathSegments(libraryItem.FileName);
                     for (int a = 0, b = pathSegments.Length - 1; a <= b; a++)
                     {
-                        parentId = await this.Populate(libraryHierarchyNodes, libraryItem, libraryHierarchy, pathSegments[a], parentId, a == b);
+                        parentId = await this.Populate(libraryHierarchyNodes, libraryItem, libraryHierarchy, null, pathSegments[a], parentId, a == b);
                     }
                     break;
             }
@@ -127,10 +127,10 @@ namespace FoxTunes
             );
             runner.Prepare();
             var value = Convert.ToString(runner.Run());
-            return this.Populate(libraryHierarchyNodes, libraryItem, libraryHierarchy, value, parentId, isLeaf);
+            return this.Populate(libraryHierarchyNodes, libraryItem, libraryHierarchy, libraryHierarchyLevel, value, parentId, isLeaf);
         }
 
-        private async Task<int> Populate(IDictionary<int, LibraryHierarchyNode> libraryHierarchyNodes, LibraryItem libraryItem, LibraryHierarchy libraryHierarchy, string value, int? parentId, bool isLeaf)
+        private async Task<int> Populate(IDictionary<int, LibraryHierarchyNode> libraryHierarchyNodes, LibraryItem libraryItem, LibraryHierarchy libraryHierarchy, LibraryHierarchyLevel libraryHierarchyLevel, string value, int? parentId, bool isLeaf)
         {
 #if NET40
             this.Semaphore.Wait();
@@ -139,7 +139,7 @@ namespace FoxTunes
 #endif
             try
             {
-                var id = await this.Writer.Write(libraryHierarchy, libraryItem.Id, parentId, value, isLeaf).ConfigureAwait(false);
+                var id = await this.Writer.Write(libraryHierarchy, libraryHierarchyLevel, libraryItem.Id, parentId, value, isLeaf).ConfigureAwait(false);
                 var parent = default(LibraryHierarchyNode);
                 if (parentId.HasValue)
                 {

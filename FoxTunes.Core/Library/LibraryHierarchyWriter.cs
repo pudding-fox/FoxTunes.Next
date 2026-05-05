@@ -28,7 +28,7 @@ namespace FoxTunes
 
         public IDatabaseCommand UpdateCommand { get; private set; }
 
-        public async Task<int> Write(LibraryHierarchy libraryHierarchy, int libraryItemId, int? parentId, string value, bool isLeaf)
+        public async Task<int> Write(LibraryHierarchy libraryHierarchy, LibraryHierarchyLevel libraryHierarchyLevel, int libraryItemId, int? parentId, string value, bool isLeaf)
         {
             var libraryHierarchyItemId = default(int);
             if (!isLeaf && this.Store.TryGetValue(libraryHierarchy.Id, parentId, value, out libraryHierarchyItemId))
@@ -40,6 +40,14 @@ namespace FoxTunes
             else
             {
                 this.AddCommand.Parameters["libraryHierarchyId"] = libraryHierarchy.Id;
+                if (libraryHierarchyLevel != null)
+                {
+                    this.AddCommand.Parameters["libraryHierarchyLevelId"] = libraryHierarchyLevel.Id;
+                }
+                else
+                {
+                    this.AddCommand.Parameters["libraryHierarchyLevelId"] = null;
+                }
                 this.AddCommand.Parameters["libraryItemId"] = libraryItemId;
                 this.AddCommand.Parameters["parentId"] = parentId;
                 this.AddCommand.Parameters["value"] = value;

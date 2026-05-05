@@ -1,8 +1,6 @@
 ﻿using FoxDb;
 using FoxTunes.Interfaces;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -81,7 +79,7 @@ namespace FoxTunes
         {
             get
             {
-                return "C1399216-D828-4EB8-9249-70DEA89EADFA";
+                return "EC70F79B-7BB9-4897-9B6C-B85A32EFE041";
             }
         }
 
@@ -114,9 +112,9 @@ namespace FoxTunes
                     Enabled = true,
                     Levels = new ObservableCollection<LibraryHierarchyLevel>()
                     {
-                        new LibraryHierarchyLevel() { Sequence = 0, Script = scriptingRuntime.CoreScripts.Artist },
-                        new LibraryHierarchyLevel() { Sequence = 1, Script = scriptingRuntime.CoreScripts.Year_Album },
-                        new LibraryHierarchyLevel() { Sequence = 2, Script = scriptingRuntime.CoreScripts.Disk_Track_Title }
+                        new LibraryHierarchyLevel() { Sequence = 0, Script = scriptingRuntime.CoreScripts.Artist, Hints = LibraryHierarchyLevelHints.Artist },
+                        new LibraryHierarchyLevel() { Sequence = 1, Script = scriptingRuntime.CoreScripts.Year_Album, Hints = LibraryHierarchyLevelHints.Album },
+                        new LibraryHierarchyLevel() { Sequence = 2, Script = scriptingRuntime.CoreScripts.Disk_Track_Title, Hints = LibraryHierarchyLevelHints.Title }
                     }
                 });
                 set.Add(new LibraryHierarchy()
@@ -127,9 +125,9 @@ namespace FoxTunes
                     Enabled = false,
                     Levels = new ObservableCollection<LibraryHierarchyLevel>()
                     {
-                        new LibraryHierarchyLevel() { Sequence = 0, Script = scriptingRuntime.CoreScripts.Genre },
-                        new LibraryHierarchyLevel() { Sequence = 1, Script = scriptingRuntime.CoreScripts.Year_Album },
-                        new LibraryHierarchyLevel() { Sequence = 2, Script = scriptingRuntime.CoreScripts.Disk_Track_Title }
+                        new LibraryHierarchyLevel() { Sequence = 0, Script = scriptingRuntime.CoreScripts.Genre, Hints = LibraryHierarchyLevelHints.Genre },
+                        new LibraryHierarchyLevel() { Sequence = 1, Script = scriptingRuntime.CoreScripts.Year_Album, Hints = LibraryHierarchyLevelHints.Album,  },
+                        new LibraryHierarchyLevel() { Sequence = 2, Script = scriptingRuntime.CoreScripts.Disk_Track_Title, Hints = LibraryHierarchyLevelHints.Title }
                     }
                 });
                 set.Add(new LibraryHierarchy()
@@ -140,9 +138,9 @@ namespace FoxTunes
                     Enabled = false,
                     Levels = new ObservableCollection<LibraryHierarchyLevel>()
                     {
-                        new LibraryHierarchyLevel() { Sequence = 0, Script = scriptingRuntime.CoreScripts.Genre },
-                        new LibraryHierarchyLevel() { Sequence = 1, Script = scriptingRuntime.CoreScripts.Rating },
-                        new LibraryHierarchyLevel() { Sequence = 2, Script = scriptingRuntime.CoreScripts.Artist_Title_BPM }
+                        new LibraryHierarchyLevel() { Sequence = 0, Script = scriptingRuntime.CoreScripts.Genre, Hints = LibraryHierarchyLevelHints.Genre },
+                        new LibraryHierarchyLevel() { Sequence = 1, Script = scriptingRuntime.CoreScripts.Rating, Hints = LibraryHierarchyLevelHints.None, },
+                        new LibraryHierarchyLevel() { Sequence = 2, Script = scriptingRuntime.CoreScripts.Artist_Title_BPM, Hints = LibraryHierarchyLevelHints.None }
                     }
                 });
                 set.Add(new LibraryHierarchy()

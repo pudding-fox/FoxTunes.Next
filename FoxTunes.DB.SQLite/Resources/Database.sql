@@ -48,12 +48,14 @@ CREATE TABLE [LibraryHierarchyLevels] (
 	[Id]	INTEGER PRIMARY KEY NOT NULL,
 	[LibraryHierarchy_Id]  INTEGER NULL,
 	[Sequence] INTEGER NOT NULL,
-	[Script]	TEXT NOT NULL COLLATE NOCASE);
+	[Script]	TEXT NOT NULL COLLATE NOCASE,
+	[Hints] INTEGER NOT NULL);
 
 CREATE TABLE [LibraryHierarchyItems](
     [Id] INTEGER PRIMARY KEY NOT NULL, 
 	[Parent_Id] INTEGER NULL,
     [LibraryHierarchy_Id] bigint NOT NULL,
+	[LibraryHierarchyLevel_Id] bigint NULL,
     [Value] text NOT NULL COLLATE NOCASE, 
     [IsLeaf] bit NOT NULL);
 

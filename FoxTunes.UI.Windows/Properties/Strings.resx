@@ -747,4 +747,7 @@
   <data name="PlaylistConfigDialog.History" xml:space="preserve">
     <value>History Size</value>
   </data>
+  <data name="LibrarySettingsDialog.Hints" xml:space="preserve">
+    <value>Hints</value>
+  </data>
 </root>

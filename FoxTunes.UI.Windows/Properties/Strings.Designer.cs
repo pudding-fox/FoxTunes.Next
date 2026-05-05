@@ -619,6 +619,15 @@ namespace FoxTunes {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Hints.
+        /// </summary>
+        internal static string LibrarySettingsDialog_Hints {
+            get {
+                return ResourceManager.GetString("LibrarySettingsDialog.Hints", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Levels.
         /// </summary>
         internal static string LibrarySettingsDialog_Levels {

@@ -190,6 +190,14 @@
             }
         }
 
+        public static string LibrarySettingsDialog_Hints
+        {
+            get
+            {
+                return Strings.LibrarySettingsDialog_Hints;
+            }
+        }
+
         public static string LibrarySettingsDialog_Enabled
         {
             get
