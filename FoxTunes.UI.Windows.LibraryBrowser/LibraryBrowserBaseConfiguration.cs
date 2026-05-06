@@ -22,6 +22,8 @@ namespace FoxTunes
 
         public const string TILE_IMAGE = "BBBBFCBE-2AA0-4B99-9C6E-E3F196540807";
 
+        public const string TILE_IMAGE_AUTO = "00009CBA-11EA-456B-A575-BABB263A8FF2";
+
         public const string TILE_IMAGE_FIRST = "AAAA9419-8D7E-4150-8FB8-999D2C019941";
 
         public const string TILE_IMAGE_COMPOUND = "BBBB32EB-B876-4F72-BA33-88D84817EE30";
@@ -41,6 +43,7 @@ namespace FoxTunes
 
         private static IEnumerable<SelectionConfigurationOption> GetLibraryImageOptions()
         {
+            yield return new SelectionConfigurationOption(TILE_IMAGE_AUTO, Strings.LibraryBrowserBaseConfiguration_Image_Auto);
             yield return new SelectionConfigurationOption(TILE_IMAGE_FIRST, Strings.LibraryBrowserBaseConfiguration_Image_First);
             yield return new SelectionConfigurationOption(TILE_IMAGE_COMPOUND, Strings.LibraryBrowserBaseConfiguration_Image_Compound).Default();
         }
@@ -49,6 +52,8 @@ namespace FoxTunes
         {
             switch (option.Id)
             {
+                case TILE_IMAGE_AUTO:
+                    return LibraryBrowserImageMode.Auto;
                 case TILE_IMAGE_FIRST:
                     return LibraryBrowserImageMode.First;
                 default:
@@ -61,6 +66,7 @@ namespace FoxTunes
     public enum LibraryBrowserImageMode : byte
     {
         None,
+        Auto,
         First,
         Compound
     }

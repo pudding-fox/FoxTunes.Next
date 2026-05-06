@@ -31,7 +31,7 @@ namespace FoxTunes.Templates
         public virtual string TransformText()
         {
             this.Write(@"
-SELECT ""LibraryHierarchyItems"".""Id"", ""LibraryHierarchy_Id"", ""Value"", ""IsLeaf""
+SELECT ""LibraryHierarchyItems"".""Id"", ""LibraryHierarchy_Id"", ""LibraryHierarchyLevel_Id"", ""Value"", ""IsLeaf""
 FROM ""LibraryHierarchyItems""
 WHERE ""LibraryHierarchy_Id"" = @libraryHierarchyId
 	AND ((@libraryHierarchyItemId IS NULL AND ""LibraryHierarchyItems"".""Parent_Id"" IS NULL) 

@@ -135,6 +135,9 @@
   <data name="LibraryBrowserBaseConfiguration.Image" xml:space="preserve">
     <value>Image Type</value>
   </data>
+  <data name="LibraryBrowserBaseConfiguration.Image.Auto" xml:space="preserve">
+    <value>Auto</value>
+  </data>
   <data name="LibraryBrowserBaseConfiguration.Image.Compound" xml:space="preserve">
     <value>Compound</value>
   </data>

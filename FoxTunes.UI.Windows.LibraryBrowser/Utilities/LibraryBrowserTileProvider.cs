@@ -22,11 +22,17 @@ namespace FoxTunes
 
         public ImageLoader ImageLoader { get; private set; }
 
+        public ILibraryHierarchyBrowser LibraryHierarchyBrowser { get; private set; }
+
+        public IOnDemandMetaDataProvider OnDemandMetaDataProvider { get; private set; }
+
         public ISignalEmitter SignalEmitter { get; private set; }
 
         public override void InitializeComponent(ICore core)
         {
             this.ImageLoader = ComponentRegistry.Instance.GetComponent<ImageLoader>();
+            this.LibraryHierarchyBrowser = core.Components.LibraryHierarchyBrowser;
+            this.OnDemandMetaDataProvider = core.Components.OnDemandMetaDataProvider;
             this.SignalEmitter = core.Components.SignalEmitter;
             this.SignalEmitter.Signal += this.OnSignal;
             base.InitializeComponent(core);
@@ -141,6 +147,8 @@ namespace FoxTunes
             ).ToArray();
             switch (mode)
             {
+                case LibraryBrowserImageMode.Auto:
+                    return await this.CreateImageSource0(libraryHierarchyNode, fileNames, width, height).ConfigureAwait(false);
                 case LibraryBrowserImageMode.First:
                     switch (fileNames.Length)
                     {
@@ -164,6 +172,39 @@ namespace FoxTunes
                         default:
                             return this.CreateImageSource4(libraryHierarchyNode, fileNames, width, height, cache);
                     }
+            }
+        }
+
+        private async Task<ImageSource> CreateImageSource0(LibraryHierarchyNode libraryHierarchyNode, string[] fileNames, int width, int height)
+        {
+            var libraryHierarchyLevel = this.LibraryHierarchyBrowser.GetLevel(libraryHierarchyNode.LibraryHierarchyLevelId);
+            if (libraryHierarchyLevel != null)
+            {
+                switch (libraryHierarchyLevel.Hints)
+                {
+                    case LibraryHierarchyLevelHints.Artist:
+                        var libraryItems = this.LibraryHierarchyBrowser.GetItems(libraryHierarchyNode);
+                        var newFileNames = await this.OnDemandMetaDataProvider.GetMetaData(
+                            libraryItems,
+                            new OnDemandMetaDataRequest(
+                            CommonImageTypes.Artist,
+                            MetaDataItemType.Image,
+                            MetaDataUpdateType.System
+                            )
+                        ).ConfigureAwait(false);
+                        if (newFileNames.Any())
+                        {
+                            return this.CreateImageSource1(libraryHierarchyNode, newFileNames.ToArray(), width, height);
+                        }
+                        break;
+                }
+            }
+            switch (fileNames.Length)
+            {
+                case 0:
+                    return null;
+                default:
+                    return this.CreateImageSource1(libraryHierarchyNode, fileNames, width, height);
             }
         }
 

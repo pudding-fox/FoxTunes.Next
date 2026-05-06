@@ -87,7 +87,7 @@ namespace FoxTunes
 
         protected override async Task OnRun()
         {
-            using (var task = new SingletonReentrantTask(this, ComponentSlots.Database, SingletonReentrantTask.PRIORITY_LOW, async cancellationToken =>
+            using (var task = new SingletonReentrantTask(this, ComponentSlots.Database, SingletonReentrantTask.PRIORITY_HIGH, async cancellationToken =>
             {
                 await this.WritePlaylistMetaData(cancellationToken).ConfigureAwait(false);
                 if (cancellationToken.IsCancellationRequested)

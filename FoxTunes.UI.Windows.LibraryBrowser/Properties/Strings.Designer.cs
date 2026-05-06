@@ -115,6 +115,15 @@ namespace FoxTunes {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Auto.
+        /// </summary>
+        internal static string LibraryBrowserBaseConfiguration_Image_Auto {
+            get {
+                return ResourceManager.GetString("LibraryBrowserBaseConfiguration.Image.Auto", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Compound.
         /// </summary>
         internal static string LibraryBrowserBaseConfiguration_Image_Compound {
