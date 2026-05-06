@@ -54,6 +54,94 @@ namespace FoxTunes
 
         public string Secret { get; private set; }
 
+        public async Task<Artist> GetArtist(string name)
+        {
+            var url = this.GetArtistUrl1(name);
+            var result = await Store.GetOrAdd(url, async () =>
+            {
+                Logger.Write(this, LogLevel.Debug, "Querying the API: {0}", url);
+                var request = this.CreateRequest(url);
+                using (var response = (HttpWebResponse)request.GetResponse())
+                {
+                    if (response.StatusCode != HttpStatusCode.OK)
+                    {
+                        Logger.Write(this, LogLevel.Warn, "Status code does not indicate success.");
+                        return default(Artist);
+                    }
+                    var artist = await this.GetArtist1(response.GetResponseStream()).ConfigureAwait(false);
+                    return artist;
+                }
+            });
+            return result as Artist;
+        }
+
+        protected virtual async Task<Artist> GetArtist1(Stream stream)
+        {
+            using (var reader = new StreamReader(stream))
+            {
+                var json = await reader.ReadToEndAsync().ConfigureAwait(false);
+                var data = json.FromJson<Dictionary<string, object>>();
+                return await this.GetArtist1(data).ConfigureAwait(false);
+            }
+        }
+
+        protected virtual async Task<Artist> GetArtist1(IDictionary<string, object> data)
+        {
+            var temp = default(object);
+            if (data.TryGetValue("results", out temp) && temp is IList<object> results && results.Count > 0)
+            {
+                temp = results.First();
+                if (temp is IDictionary<string, object> result)
+                {
+                    var id = default(object);
+                    if (result.TryGetValue("id", out id))
+                    {
+                        var url = this.GetArtistUrl2(Convert.ToString(id));
+                        return await Store.GetOrAdd(url, async () =>
+                        {
+                            Logger.Write(this, LogLevel.Debug, "Querying the API: {0}", url);
+                            var request = this.CreateRequest(url);
+                            using (var response = (HttpWebResponse)request.GetResponse())
+                            {
+                                if (response.StatusCode != HttpStatusCode.OK)
+                                {
+                                    Logger.Write(this, LogLevel.Warn, "Status code does not indicate success.");
+                                    return default(Artist);
+                                }
+                                var artist = await this.GetArtist2(response.GetResponseStream()).ConfigureAwait(false);
+                                return artist;
+                            }
+                        }).ConfigureAwait(false) as Artist;
+                    }
+                }
+            }
+            return null;
+        }
+
+        protected virtual async Task<Artist> GetArtist2(Stream stream)
+        {
+            using (var reader = new StreamReader(stream))
+            {
+                var json = await reader.ReadToEndAsync().ConfigureAwait(false);
+                var data = json.FromJson<Dictionary<string, object>>();
+                return this.GetArtist2(data);
+            }
+        }
+
+        protected virtual Artist GetArtist2(IDictionary<string, object> data)
+        {
+            var temp = default(object);
+            if (data.TryGetValue("images", out temp) && temp is IList<object> images && images.Count > 0)
+            {
+                temp = images.First();
+                if (temp is IDictionary<string, object> image)
+                {
+                    return Artist.FromResults(image);
+                }
+            }
+            return null;
+        }
+
         public async Task<IEnumerable<Release>> GetReleases(ReleaseLookup releaseLookup, bool master)
         {
             var url = this.GetUrl(releaseLookup, master);
@@ -182,6 +270,23 @@ namespace FoxTunes
                     goto read;
                 }
             }
+        }
+
+        protected virtual string GetArtistUrl1(string artist)
+        {
+            var builder = new StringBuilder();
+            builder.Append(this.BaseUrl);
+            builder.Append("/database/search?");
+            builder.AppendFormat("q={0}&type=artist", UrlHelper.EscapeDataString(artist));
+            return builder.ToString();
+        }
+
+        protected virtual string GetArtistUrl2(string id)
+        {
+            var builder = new StringBuilder();
+            builder.Append(this.BaseUrl);
+            builder.AppendFormat("/artists/{0}", UrlHelper.EscapeDataString(id));
+            return builder.ToString();
         }
 
         protected virtual string GetUrl(ReleaseLookup releaseLookup, bool master)
@@ -624,6 +729,28 @@ namespace FoxTunes
             Complete,
             Cancelled,
             Failed
+        }
+
+        public class Artist
+        {
+            public static readonly string None = "none (" + Publication.Version + ")";
+
+            private Artist(IDictionary<string, object> data)
+            {
+                const string ID = "id";
+                const string URI = "uri";
+                this.Id = Convert.ToString(data.GetValueOrDefault(ID));
+                this.Url = Convert.ToString(data.GetValueOrDefault(URI));
+            }
+
+            public string Id { get; private set; }
+
+            public string Url { get; private set; }
+
+            public static Artist FromResults(IDictionary<string, object> results)
+            {
+                return new Artist(results);
+            }
         }
 
         public class Release

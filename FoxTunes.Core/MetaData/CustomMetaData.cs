@@ -14,6 +14,8 @@ namespace FoxTunes
 
         public const string DiscogsRelease = "__FT_DiscogsRelease";
 
+        public const string DiscogsArtist = "__FT_DiscogsArtist";
+
         public const string LyricsRelease = "__FT_LyricsRelease";
 
         public const string SourceFileName = "__FT_SourceFileName";

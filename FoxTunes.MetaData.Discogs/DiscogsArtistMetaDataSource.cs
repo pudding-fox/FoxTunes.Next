@@ -9,11 +9,17 @@ namespace FoxTunes
     [ComponentDependency(Slot = ComponentSlots.UserInterface)]
     public class DiscogsArtistMetaDataSource : StandardComponent, IOnDemandMetaDataSource
     {
+        public ICore Core { get; private set; }
+
         public DiscogsBehaviour Behaviour { get; private set; }
+
+        public IBackgroundTaskEmitter BackgroundTaskEmitter { get; private set; }
 
         public override void InitializeComponent(ICore core)
         {
+            this.Core = core;
             this.Behaviour = ComponentRegistry.Instance.GetComponent<DiscogsBehaviour>();
+            this.BackgroundTaskEmitter = core.Components.BackgroundTaskEmitter;
             base.InitializeComponent(core);
         }
 
@@ -51,9 +57,9 @@ namespace FoxTunes
             lock (fileData.MetaDatas)
             {
                 var metaDataItem = fileData.MetaDatas.FirstOrDefault(
-                    element => string.Equals(element.Name, CustomMetaData.DiscogsRelease, StringComparison.OrdinalIgnoreCase) && element.Type == MetaDataItemType.Tag
+                    element => string.Equals(element.Name, CustomMetaData.DiscogsArtist, StringComparison.OrdinalIgnoreCase) && element.Type == MetaDataItemType.Tag
                 );
-                if (metaDataItem != null && string.Equals(metaDataItem.Value, Discogs.Release.None, StringComparison.OrdinalIgnoreCase))
+                if (metaDataItem != null && string.Equals(metaDataItem.Value, Discogs.Artist.None, StringComparison.OrdinalIgnoreCase))
                 {
                     //We have previously attempted a lookup and it failed, don't try again (automatically).
                     return false;
@@ -64,8 +70,13 @@ namespace FoxTunes
 
         public async Task<OnDemandMetaDataValues> GetValues(IEnumerable<IFileData> fileDatas, OnDemandMetaDataRequest request)
         {
-            var releaseLookups = await this.Behaviour.FetchReleases(fileDatas, request.UpdateType).ConfigureAwait(false);
-            return this.Behaviour.GetMetaDataValues(releaseLookups, CommonImageTypes.Artist, false);
+            using (var task = new DiscogsFetchArtistTask(fileDatas, MetaDataUpdateType.System))
+            {
+                task.InitializeComponent(this.Core);
+                await this.BackgroundTaskEmitter.Send(task).ConfigureAwait(false);
+                await task.Run().ConfigureAwait(false);
+                return new OnDemandMetaDataValues(task.Values, MetaDataUpdateFlags.None);
+            }
         }
     }
 }
