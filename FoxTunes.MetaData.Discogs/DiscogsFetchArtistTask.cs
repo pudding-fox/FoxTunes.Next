@@ -1,4 +1,5 @@
 ﻿using FoxTunes.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -95,7 +96,8 @@ namespace FoxTunes
             var value = default(string);
             if (artist != null)
             {
-                value = artist.Id;
+                //TODO: This should be an Id but sometimes there isn't one. Weird.
+                value = Convert.ToString(Math.Abs(artist.Url.GetDeterministicHashCode()));
             }
             else
             {

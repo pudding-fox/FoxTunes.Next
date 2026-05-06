@@ -727,13 +727,9 @@ namespace FoxTunes
 
             private Artist(IDictionary<string, object> data)
             {
-                const string ID = "id";
                 const string URI = "uri";
-                this.Id = Convert.ToString(data.GetValueOrDefault(ID));
                 this.Url = Convert.ToString(data.GetValueOrDefault(URI));
             }
-
-            public string Id { get; private set; }
 
             public string Url { get; private set; }
 
