@@ -22,7 +22,7 @@ namespace FoxTunes
         static Discogs()
         {
             Store = new CappedDictionary<string, Task<object>>(CACHE_SIZE);
-            RateLimiter = new RateLimiter(1000 / MAX_REQUESTS);
+            RateLimiter = new RateLimiter(2400); //25 per minute.
         }
 
         public const string BASE_URL = "https://api.discogs.com";
@@ -31,21 +31,11 @@ namespace FoxTunes
 
         public const string SECRET = "IwUSieObFFyLInDlctXYmmVNIumjnhiv";
 
-        public const int MAX_REQUESTS = 2;
-
-        public Discogs(string baseUrl = BASE_URL, string key = KEY, string secret = SECRET, int maxRequests = MAX_REQUESTS)
+        public Discogs(string baseUrl = BASE_URL, string key = KEY, string secret = SECRET)
         {
             this.BaseUrl = string.IsNullOrEmpty(baseUrl) ? BASE_URL : baseUrl;
             this.Key = string.IsNullOrEmpty(key) ? KEY : key;
             this.Secret = string.IsNullOrEmpty(secret) ? SECRET : secret;
-            if (maxRequests < 0 || maxRequests > 10)
-            {
-                RateLimiter.Interval = 1000 / MAX_REQUESTS;
-            }
-            else
-            {
-                RateLimiter.Interval = 1000 / maxRequests;
-            }
         }
 
         public string BaseUrl { get; private set; }

@@ -14,8 +14,6 @@ namespace FoxTunes
 
         public const string CONSUMER_SECRET = "DDDD019F-AC8C-4C17-9127-0ADB9FE86FD0";
 
-        public const string MAX_REQUESTS = "EEEE9991-C4EC-4DDA-9315-F658BC461283";
-
         public const string MIN_CONFIDENCE = "FFFFDFA1-BB70-44A8-AA80-DFDD67235356";
 
         public const string AUTO_LOOKUP = "FFGG9A7F-90EF-42D8-827F-5638A586B398";
@@ -40,10 +38,6 @@ namespace FoxTunes
                     .WithValue(Discogs.SECRET)
                     .DependsOn(SECTION, ENABLED)
                     .WithFlags(ConfigurationElementFlags.Secret))
-                .WithElement(new IntegerConfigurationElement(MAX_REQUESTS, Strings.DiscogsBehaviourConfiguration_MaxRequests, path: Strings.General_Advanced)
-                    .WithValue(Discogs.MAX_REQUESTS)
-                    .WithValidationRule(new IntegerValidationRule(1, 10))
-                    .DependsOn(SECTION, ENABLED))
                 .WithElement(new DoubleConfigurationElement(MIN_CONFIDENCE, Strings.DiscogsBehaviourConfiguration_MinConfidence, path: Strings.General_Advanced)
                     .WithValue(0.8)
                     .WithValidationRule(new DoubleValidationRule(0, 1, 0.1))
