@@ -199,13 +199,7 @@ namespace FoxTunes
                         break;
                 }
             }
-            switch (fileNames.Length)
-            {
-                case 0:
-                    return null;
-                default:
-                    return this.CreateImageSource1(libraryHierarchyNode, fileNames, width, height);
-            }
+            return null;
         }
 
         private ImageSource CreateImageSource0(LibraryHierarchyNode libraryHierarchyNode, string fileName, int width, int height, bool cache)
@@ -221,7 +215,6 @@ namespace FoxTunes
                 using (source.StreamSource = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.Read))
                 {
                     source.DecodePixelWidth = width;
-                    source.DecodePixelHeight = height;
                     source.EndInit();
                     if (source.CanFreeze)
                     {
