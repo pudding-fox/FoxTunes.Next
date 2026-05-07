@@ -14,6 +14,14 @@ namespace FoxTunes.ViewModel
             this.Tasks = new List<Task>();
         }
 
+        public MonitoringAsyncResult(IObservable source, params Func<Task<T>>[] factories) : this()
+        {
+            this.Source = source;
+            PropertyChangedEventManager.AddListener(source, this, string.Empty);
+            this.Factories = factories;
+            this.Dispatch(this.Run);
+        }
+
         public MonitoringAsyncResult(TaskScheduler scheduler, IObservable source, params Func<Task<T>>[] factories) : this()
         {
             this.Scheduler = scheduler;
@@ -21,6 +29,15 @@ namespace FoxTunes.ViewModel
             PropertyChangedEventManager.AddListener(source, this, string.Empty);
             this.Factories = factories;
             this.Tasks.Add(this.Scheduler.StartNew(this.Run));
+        }
+
+        public MonitoringAsyncResult(IObservable source, T value, params Func<Task<T>>[] factories) : this()
+        {
+            this.Source = source;
+            PropertyChangedEventManager.AddListener(source, this, string.Empty);
+            this.Value = value;
+            this.Factories = factories;
+            this.Dispatch(this.Run);
         }
 
         public MonitoringAsyncResult(TaskScheduler scheduler, IObservable source, T value, params Func<Task<T>>[] factories) : this()

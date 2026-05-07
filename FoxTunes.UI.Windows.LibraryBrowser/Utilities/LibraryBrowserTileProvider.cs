@@ -109,7 +109,7 @@ namespace FoxTunes
         public Task<ImageSource> CreateImageSource(LibraryHierarchyNode libraryHierarchyNode, Func<Task<MetaDataItem[]>> metaDataItems, int width, int height, LibraryBrowserImageMode mode, bool cache)
         {
             //We only support caching for compound images.
-            if (mode != LibraryBrowserImageMode.Compound)
+            if (mode == LibraryBrowserImageMode.First)
             {
                 cache = false;
             }
@@ -118,7 +118,7 @@ namespace FoxTunes
                 if (cache)
                 {
                     var fileName = default(string);
-                    if (this.ReadFromCache(libraryHierarchyNode, width, height, out fileName))
+                    if (this.IsCached(libraryHierarchyNode, width, height, out fileName))
                     {
                         var imageSource = this.ImageLoader.Load(fileName, 0, 0, false, true);
 #if NET40
@@ -135,6 +135,17 @@ namespace FoxTunes
                 Logger.Write(this, LogLevel.Error, "Error creating image source: {0}", e.Message);
                 return null;
             }
+        }
+
+        public bool IsCached(LibraryHierarchyNode libraryHierarchyNode, int width, int height)
+        {
+            var fileName = default(string);
+            return this.IsCached(libraryHierarchyNode, width, height, out fileName);
+        }
+
+        public bool IsCached(LibraryHierarchyNode libraryHierarchyNode, int width, int height, out string fileName)
+        {
+            return this.ReadFromCache(libraryHierarchyNode, width, height, out fileName);
         }
 
         private async Task<ImageSource> CreateImageSourceCore(LibraryHierarchyNode libraryHierarchyNode, Func<Task<MetaDataItem[]>> metaDataItems, int width, int height, LibraryBrowserImageMode mode, bool cache)
