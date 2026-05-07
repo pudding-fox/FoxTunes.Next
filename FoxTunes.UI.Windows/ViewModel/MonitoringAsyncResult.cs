@@ -71,7 +71,14 @@ namespace FoxTunes.ViewModel
         {
             if (e is PropertyChangedEventArgs propertyChangedEventArgs && string.IsNullOrEmpty(propertyChangedEventArgs.PropertyName))
             {
-                this.Tasks.Add(this.Scheduler.StartNew(this.Run));
+                if (this.Scheduler != null)
+                {
+                    this.Tasks.Add(this.Scheduler.StartNew(this.Run));
+                }
+                else
+                {
+                    this.Dispatch(this.Run);
+                }
             }
             return true;
         }

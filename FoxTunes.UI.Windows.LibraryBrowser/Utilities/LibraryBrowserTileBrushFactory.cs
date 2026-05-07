@@ -119,7 +119,7 @@ namespace FoxTunes
             if (cache)
             {
                 var value = this.Store.GetOrAdd(new Tuple<LibraryHierarchyNode, LibraryBrowserImageMode>(libraryHierarchyNode, libraryBrowserTile.Mode), libraryBrowserTile.Width, libraryBrowserTile.Height, false, factory);
-                if (this.LibraryBrowserTileProvider.IsCached(libraryHierarchyNode, libraryBrowserTile.Width, libraryBrowserTile.Height, libraryBrowserTile.Mode))
+                if (this.LibraryBrowserTileProvider.IsCached(libraryHierarchyNode, libraryBrowserTile.Width, libraryBrowserTile.Height, libraryBrowserTile.Mode) || !this.LibraryBrowserTileProvider.IsRendered(libraryHierarchyNode, libraryBrowserTile.Mode))
                 {
                     return new MonitoringAsyncResult<ImageBrush>(libraryHierarchyNode, placeholder, value);
                 }

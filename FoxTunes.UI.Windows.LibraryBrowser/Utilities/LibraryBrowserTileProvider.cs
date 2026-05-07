@@ -148,6 +148,22 @@ namespace FoxTunes
             return this.ReadFromCache(libraryHierarchyNode, width, height, mode, out fileName);
         }
 
+        public bool IsRendered(LibraryHierarchyNode libraryHierarchyNode, LibraryBrowserImageMode mode)
+        {
+            switch (mode)
+            {
+                case LibraryBrowserImageMode.Auto:
+                    var libraryHierarchyLevel = this.LibraryHierarchyBrowser.GetLevel(libraryHierarchyNode.LibraryHierarchyLevelId);
+                    switch (libraryHierarchyLevel.Hints)
+                    {
+                        case LibraryHierarchyLevelHints.Artist:
+                            return true;
+                    }
+                    break;
+            }
+            return false;
+        }
+
         private async Task<ImageSource> CreateImageSourceCore(LibraryHierarchyNode libraryHierarchyNode, Func<Task<MetaDataItem[]>> metaDataItems, int width, int height, LibraryBrowserImageMode mode, bool cache)
         {
             var metaData = await metaDataItems().ConfigureAwait(false);
