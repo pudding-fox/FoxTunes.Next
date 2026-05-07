@@ -35,6 +35,16 @@ namespace FoxTunes
             }
         }
 
+        public Task StartNew(Func<Task> task)
+        {
+            return Task.Factory.StartNew(
+                () => task().GetAwaiter().GetResult(),
+                global::System.Threading.CancellationToken.None,
+                TaskCreationOptions.DenyChildAttach | TaskCreationOptions.HideScheduler,
+                this
+            );
+        }
+
         protected override void QueueTask(Task task)
         {
             lock (this.Tasks)
@@ -65,9 +75,8 @@ namespace FoxTunes
                                 this.Count--;
                                 break;
                             }
-
-                            item = this.Tasks.First.Value;
-                            this.Tasks.RemoveFirst();
+                            item = this.Tasks.Last.Value;
+                            this.Tasks.RemoveLast();
                         }
                         base.TryExecuteTask(item);
                     }

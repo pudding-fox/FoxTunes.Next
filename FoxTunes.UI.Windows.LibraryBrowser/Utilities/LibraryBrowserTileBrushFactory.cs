@@ -28,7 +28,7 @@ namespace FoxTunes
 
         public IConfiguration Configuration { get; private set; }
 
-        public TaskFactory Factory { get; private set; }
+        public TaskScheduler Scheduler { get; private set; }
 
         public AsyncImageBrushCache<Tuple<LibraryHierarchyNode, LibraryBrowserImageMode>> Store { get; private set; }
 
@@ -44,7 +44,7 @@ namespace FoxTunes
             this.Configuration.GetElement<IntegerConfigurationElement>(
                 ImageBehaviourConfiguration.SECTION,
                 ImageLoaderConfiguration.THREADS
-            ).ConnectValue(value => this.CreateTaskFactory(value));
+            ).ConnectValue(value => this.CreateTaskScheduler(value));
             this.Configuration.GetElement<IntegerConfigurationElement>(
                 ImageBehaviourConfiguration.SECTION,
                 ImageLoaderConfiguration.CACHE_SIZE
@@ -118,17 +118,10 @@ namespace FoxTunes
             });
             if (cache)
             {
-                var value = new Func<Task<ImageBrush>>(
-                    () => this.Store.GetOrAdd(new Tuple<LibraryHierarchyNode, LibraryBrowserImageMode>(libraryHierarchyNode, libraryBrowserTile.Mode), libraryBrowserTile.Width, libraryBrowserTile.Height, false, factory)
-                );
-                var brush = default(Task<ImageBrush>);
-                if (this.Store.TryGetValue(new Tuple<LibraryHierarchyNode, LibraryBrowserImageMode>(libraryHierarchyNode, libraryBrowserTile.Mode), libraryBrowserTile.Width, libraryBrowserTile.Height, false, out brush))
-                {
-                    return new MonitoringAsyncResult<ImageBrush>(libraryHierarchyNode, brush, value);
-                }
-                return new MonitoringAsyncResult<ImageBrush>(libraryHierarchyNode, placeholder, value);
+                var value = this.Store.GetOrAdd(new Tuple<LibraryHierarchyNode, LibraryBrowserImageMode>(libraryHierarchyNode, libraryBrowserTile.Mode), libraryBrowserTile.Width, libraryBrowserTile.Height, false, factory);
+                return new MonitoringAsyncResult<ImageBrush>(this.Scheduler, libraryHierarchyNode, placeholder, value);
             }
-            return new MonitoringAsyncResult<ImageBrush>(libraryHierarchyNode, placeholder, factory);
+            return new MonitoringAsyncResult<ImageBrush>(this.Scheduler, libraryHierarchyNode, placeholder, factory);
         }
 
         protected virtual async Task<ImageBrush> Create(LibraryHierarchyNode libraryHierarchyNode, Func<Task<MetaDataItem[]>> metaDataItems, int width, int height, LibraryBrowserImageMode mode, bool cache)
@@ -157,13 +150,13 @@ namespace FoxTunes
             return brush;
         }
 
-        protected virtual void CreateTaskFactory(int threads)
+        protected virtual void CreateTaskScheduler(int threads)
         {
-            Logger.Write(this, LogLevel.Debug, "Creating task factory for {0} threads.", threads);
-            this.Factory = new TaskFactory(new TaskScheduler(new ParallelOptions()
+            Logger.Write(this, LogLevel.Debug, "Creating task scheduler for {0} threads.", threads);
+            this.Scheduler = new TaskScheduler(new ParallelOptions()
             {
                 MaxDegreeOfParallelism = threads
-            }));
+            });
         }
 
         protected virtual void CreateCache(int capacity)

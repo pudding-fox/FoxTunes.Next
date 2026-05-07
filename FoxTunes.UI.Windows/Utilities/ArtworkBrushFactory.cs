@@ -102,11 +102,7 @@ namespace FoxTunes
             }
             return new AsyncResult<ImageBrush>(
                 placeholder,
-#if NET40
-                TaskEx.Run(() => this.Create(fileName, width, height, preserveAspectRatio, true))
-#else
-                Task.Run(() => this.Create(fileName, width, height, preserveAspectRatio, true))
-#endif
+                this.Factory.StartNew(() => this.Create(fileName, width, height, preserveAspectRatio, true))
             );
         }
 

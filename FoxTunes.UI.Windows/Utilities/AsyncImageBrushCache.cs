@@ -8,18 +8,18 @@ namespace FoxTunes
     {
         public AsyncImageBrushCache(int capacity)
         {
-            this.Store = new CappedDictionary<ImageBrushCache<T>.Key, Task<ImageBrush>>(capacity);
+            this.Store = new CappedDictionary<ImageBrushCache<T>.Key, Func<Task<ImageBrush>>>(capacity);
         }
 
-        public CappedDictionary<ImageBrushCache<T>.Key, Task<ImageBrush>> Store { get; private set; }
+        public CappedDictionary<ImageBrushCache<T>.Key, Func<Task<ImageBrush>>> Store { get; private set; }
 
-        public bool TryGetValue(T value, int width, int height, bool preserveAspectRatio, out Task<ImageBrush> brush)
+        public bool TryGetValue(T value, int width, int height, bool preserveAspectRatio, out Func<Task<ImageBrush>> brush)
         {
             var key = new ImageBrushCache<T>.Key(value, width, height, preserveAspectRatio);
             return this.Store.TryGetValue(key, out brush);
         }
 
-        public Task<ImageBrush> GetOrAdd(T value, int width, int height, bool preserveAspectRatio, Func<Task<ImageBrush>> factory)
+        public Func<Task<ImageBrush>> GetOrAdd(T value, int width, int height, bool preserveAspectRatio, Func<Task<ImageBrush>> factory)
         {
             var key = new ImageBrushCache<T>.Key(value, width, height, preserveAspectRatio);
             return this.Store.GetOrAdd(key, factory);
