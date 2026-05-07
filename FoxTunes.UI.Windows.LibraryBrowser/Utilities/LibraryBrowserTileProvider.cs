@@ -118,7 +118,7 @@ namespace FoxTunes
                 if (cache)
                 {
                     var fileName = default(string);
-                    if (this.IsCached(libraryHierarchyNode, width, height, out fileName))
+                    if (this.IsCached(libraryHierarchyNode, width, height, mode, out fileName))
                     {
                         var imageSource = this.ImageLoader.Load(fileName, 0, 0, false, true);
 #if NET40
@@ -137,15 +137,15 @@ namespace FoxTunes
             }
         }
 
-        public bool IsCached(LibraryHierarchyNode libraryHierarchyNode, int width, int height)
+        public bool IsCached(LibraryHierarchyNode libraryHierarchyNode, int width, int height, LibraryBrowserImageMode mode)
         {
             var fileName = default(string);
-            return this.IsCached(libraryHierarchyNode, width, height, out fileName);
+            return this.IsCached(libraryHierarchyNode, width, height, mode, out fileName);
         }
 
-        public bool IsCached(LibraryHierarchyNode libraryHierarchyNode, int width, int height, out string fileName)
+        public bool IsCached(LibraryHierarchyNode libraryHierarchyNode, int width, int height, LibraryBrowserImageMode mode, out string fileName)
         {
-            return this.ReadFromCache(libraryHierarchyNode, width, height, out fileName);
+            return this.ReadFromCache(libraryHierarchyNode, width, height, mode, out fileName);
         }
 
         private async Task<ImageSource> CreateImageSourceCore(LibraryHierarchyNode libraryHierarchyNode, Func<Task<MetaDataItem[]>> metaDataItems, int width, int height, LibraryBrowserImageMode mode, bool cache)
@@ -159,7 +159,7 @@ namespace FoxTunes
             switch (mode)
             {
                 case LibraryBrowserImageMode.Auto:
-                    return await this.CreateImageSource0(libraryHierarchyNode, fileNames, width, height, cache).ConfigureAwait(false);
+                    return await this.CreateImageSource0(libraryHierarchyNode, fileNames, width, height, mode, cache).ConfigureAwait(false);
                 case LibraryBrowserImageMode.First:
                     switch (fileNames.Length)
                     {
@@ -177,16 +177,16 @@ namespace FoxTunes
                         case 1:
                             return this.CreateImageSource1(libraryHierarchyNode, fileNames, width, height);
                         case 2:
-                            return this.CreateImageSource2(libraryHierarchyNode, fileNames, width, height, cache);
+                            return this.CreateImageSource2(libraryHierarchyNode, fileNames, width, height, mode, cache);
                         case 3:
-                            return this.CreateImageSource3(libraryHierarchyNode, fileNames, width, height, cache);
+                            return this.CreateImageSource3(libraryHierarchyNode, fileNames, width, height, mode, cache);
                         default:
-                            return this.CreateImageSource4(libraryHierarchyNode, fileNames, width, height, cache);
+                            return this.CreateImageSource4(libraryHierarchyNode, fileNames, width, height, mode, cache);
                     }
             }
         }
 
-        private async Task<ImageSource> CreateImageSource0(LibraryHierarchyNode libraryHierarchyNode, string[] fileNames, int width, int height, bool cache)
+        private async Task<ImageSource> CreateImageSource0(LibraryHierarchyNode libraryHierarchyNode, string[] fileNames, int width, int height, LibraryBrowserImageMode mode, bool cache)
         {
             var libraryHierarchyLevel = this.LibraryHierarchyBrowser.GetLevel(libraryHierarchyNode.LibraryHierarchyLevelId);
             if (libraryHierarchyLevel != null)
@@ -205,7 +205,7 @@ namespace FoxTunes
                         ).ConfigureAwait(false);
                         if (newFileNames.Any() && !string.IsNullOrEmpty(newFileNames.First()))
                         {
-                            return this.CreateImageSource0(libraryHierarchyNode, newFileNames.First(), width, height, cache);
+                            return this.CreateImageSource0(libraryHierarchyNode, newFileNames.First(), width, height, mode, cache);
                         }
                         break;
                     default:
@@ -215,7 +215,7 @@ namespace FoxTunes
             return null;
         }
 
-        private ImageSource CreateImageSource0(LibraryHierarchyNode libraryHierarchyNode, string fileName, int width, int height, bool cache)
+        private ImageSource CreateImageSource0(LibraryHierarchyNode libraryHierarchyNode, string fileName, int width, int height, LibraryBrowserImageMode mode, bool cache)
         {
             var visual = new DrawingVisual();
             using (var context = visual.RenderOpen())
@@ -248,7 +248,7 @@ namespace FoxTunes
                     height / 2
                 );
             }
-            return this.Render(libraryHierarchyNode, visual, width, height, cache);
+            return this.Render(libraryHierarchyNode, visual, width, height, mode, cache);
         }
 
         private ImageSource CreateImageSource1(LibraryHierarchyNode libraryHierarchyNode, string[] fileNames, int width, int height)
@@ -256,7 +256,7 @@ namespace FoxTunes
             return this.ImageLoader.Load(fileNames[0], width, height, false, true);
         }
 
-        private ImageSource CreateImageSource2(LibraryHierarchyNode libraryHierarchyNode, string[] fileNames, int width, int height, bool cache)
+        private ImageSource CreateImageSource2(LibraryHierarchyNode libraryHierarchyNode, string[] fileNames, int width, int height, LibraryBrowserImageMode mode, bool cache)
         {
             var visual = new DrawingVisual();
             using (var context = visual.RenderOpen())
@@ -264,10 +264,10 @@ namespace FoxTunes
                 this.DrawImage(fileNames[0], context, 0, 2, width, height);
                 this.DrawImage(fileNames[1], context, 1, 2, width, height);
             }
-            return this.Render(libraryHierarchyNode, visual, width, height, cache);
+            return this.Render(libraryHierarchyNode, visual, width, height, mode, cache);
         }
 
-        private ImageSource CreateImageSource3(LibraryHierarchyNode libraryHierarchyNode, string[] fileNames, int width, int height, bool cache)
+        private ImageSource CreateImageSource3(LibraryHierarchyNode libraryHierarchyNode, string[] fileNames, int width, int height, LibraryBrowserImageMode mode, bool cache)
         {
             var visual = new DrawingVisual();
             using (var context = visual.RenderOpen())
@@ -276,10 +276,10 @@ namespace FoxTunes
                 this.DrawImage(fileNames[1], context, 1, 3, width, height);
                 this.DrawImage(fileNames[2], context, 2, 3, width, height);
             }
-            return this.Render(libraryHierarchyNode, visual, width, height, cache);
+            return this.Render(libraryHierarchyNode, visual, width, height, mode, cache);
         }
 
-        private ImageSource CreateImageSource4(LibraryHierarchyNode libraryHierarchyNode, string[] fileNames, int width, int height, bool cache)
+        private ImageSource CreateImageSource4(LibraryHierarchyNode libraryHierarchyNode, string[] fileNames, int width, int height, LibraryBrowserImageMode mode, bool cache)
         {
             var visual = new DrawingVisual();
             using (var context = visual.RenderOpen())
@@ -289,7 +289,7 @@ namespace FoxTunes
                 this.DrawImage(fileNames[2], context, 2, 4, width, height);
                 this.DrawImage(fileNames[3], context, 3, 4, width, height);
             }
-            return this.Render(libraryHierarchyNode, visual, width, height, cache);
+            return this.Render(libraryHierarchyNode, visual, width, height, mode, cache);
         }
 
         private void DrawImage(string fileName, DrawingContext context, int position, int count, int width, int height)
@@ -377,7 +377,7 @@ namespace FoxTunes
             );
         }
 
-        private ImageSource Render(LibraryHierarchyNode libraryHierarchyNode, DrawingVisual visual, int width, int height, bool cache)
+        private ImageSource Render(LibraryHierarchyNode libraryHierarchyNode, DrawingVisual visual, int width, int height, LibraryBrowserImageMode mode, bool cache)
         {
             var target = new RenderTargetBitmap(width, height, DPIX, DPIY, PixelFormats.Pbgra32);
             target.Render(visual);
@@ -389,7 +389,7 @@ namespace FoxTunes
                 {
                     encoder.Save(stream);
                     stream.Seek(0, SeekOrigin.Begin);
-                    this.WriteToCache(libraryHierarchyNode, width, height, stream);
+                    this.WriteToCache(libraryHierarchyNode, width, height, mode, stream);
                 }
             }
             if (target.CanFreeze)
@@ -408,27 +408,32 @@ namespace FoxTunes
             return Path.Combine(PREFIX, Math.Abs(hashCode).ToString());
         }
 
-        private string GetCacheId(int width, int height)
+        private string GetCacheId(int width, int height, LibraryBrowserImageMode mode)
         {
-            return Math.Abs(
-                (width * height).GetHashCode()
-            ).ToString();
+            var hashCode = 17;
+            unchecked
+            {
+                hashCode = (hashCode * 23) + width.GetHashCode();
+                hashCode = (hashCode * 23) + height.GetHashCode();
+                hashCode = (hashCode * 23) + mode.GetHashCode();
+            }
+            return Math.Abs(hashCode).ToString();
         }
 
-        private bool ReadFromCache(LibraryHierarchyNode libraryHierarchyNode, int width, int height, out string fileName)
+        private bool ReadFromCache(LibraryHierarchyNode libraryHierarchyNode, int width, int height, LibraryBrowserImageMode mode, out string fileName)
         {
             return FileMetaDataStore.Exists(
                 this.GetCachePrefix(libraryHierarchyNode),
-                this.GetCacheId(width, height),
+                this.GetCacheId(width, height, mode),
                 out fileName
             );
         }
 
-        private void WriteToCache(LibraryHierarchyNode libraryHierarchyNode, int width, int height, Stream stream)
+        private void WriteToCache(LibraryHierarchyNode libraryHierarchyNode, int width, int height, LibraryBrowserImageMode mode, Stream stream)
         {
             FileMetaDataStore.Write(
                 this.GetCachePrefix(libraryHierarchyNode),
-                this.GetCacheId(width, height),
+                this.GetCacheId(width, height, mode),
                 stream
             );
         }
