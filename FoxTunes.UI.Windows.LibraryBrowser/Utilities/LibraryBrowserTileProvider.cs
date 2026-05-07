@@ -192,11 +192,13 @@ namespace FoxTunes
                             MetaDataUpdateType.System
                             )
                         ).ConfigureAwait(false);
-                        if (newFileNames.Any())
+                        if (newFileNames.Any() && !string.IsNullOrEmpty(newFileNames.First()))
                         {
                             return this.CreateImageSource0(libraryHierarchyNode, newFileNames.First(), width, height, cache);
                         }
                         break;
+                    default:
+                        return this.CreateImageSource1(libraryHierarchyNode, fileNames, width, height);
                 }
             }
             return null;

@@ -23,6 +23,22 @@ namespace FoxTunes
 
         public IList<OnDemandMetaDataValue> Values { get; private set; }
 
+        public override bool Visible
+        {
+            get
+            {
+                return true;
+            }
+        }
+
+        public override bool Cancellable
+        {
+            get
+            {
+                return true;
+            }
+        }
+
         public IMetaDataManager MetaDataManager { get; private set; }
 
         public override void InitializeComponent(ICore core)
