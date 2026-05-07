@@ -148,7 +148,7 @@ namespace FoxTunes
             switch (mode)
             {
                 case LibraryBrowserImageMode.Auto:
-                    return await this.CreateImageSource0(libraryHierarchyNode, fileNames, width, height).ConfigureAwait(false);
+                    return await this.CreateImageSource0(libraryHierarchyNode, fileNames, width, height, cache).ConfigureAwait(false);
                 case LibraryBrowserImageMode.First:
                     switch (fileNames.Length)
                     {
@@ -175,7 +175,7 @@ namespace FoxTunes
             }
         }
 
-        private async Task<ImageSource> CreateImageSource0(LibraryHierarchyNode libraryHierarchyNode, string[] fileNames, int width, int height)
+        private async Task<ImageSource> CreateImageSource0(LibraryHierarchyNode libraryHierarchyNode, string[] fileNames, int width, int height, bool cache)
         {
             var libraryHierarchyLevel = this.LibraryHierarchyBrowser.GetLevel(libraryHierarchyNode.LibraryHierarchyLevelId);
             if (libraryHierarchyLevel != null)
@@ -194,7 +194,7 @@ namespace FoxTunes
                         ).ConfigureAwait(false);
                         if (newFileNames.Any())
                         {
-                            return this.CreateImageSource1(libraryHierarchyNode, newFileNames.ToArray(), width, height);
+                            return this.CreateImageSource0(libraryHierarchyNode, newFileNames.First(), width, height, cache);
                         }
                         break;
                 }
@@ -206,6 +206,43 @@ namespace FoxTunes
                 default:
                     return this.CreateImageSource1(libraryHierarchyNode, fileNames, width, height);
             }
+        }
+
+        private ImageSource CreateImageSource0(LibraryHierarchyNode libraryHierarchyNode, string fileName, int width, int height, bool cache)
+        {
+            var visual = new DrawingVisual();
+            using (var context = visual.RenderOpen())
+            {
+                var source = new BitmapImage();
+                source.BeginInit();
+                source.CacheOption = BitmapCacheOption.OnLoad;
+                //TODO: This is much faster than using UriSource.
+                //TODO: See: https://referencesource.microsoft.com/#PresentationCore/Core/CSharp/System/Windows/Media/Imaging/BitmapDecoder.cs,cd1c67c55a73f984
+                using (source.StreamSource = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.Read))
+                {
+                    source.DecodePixelWidth = width;
+                    source.DecodePixelHeight = height;
+                    source.EndInit();
+                    if (source.CanFreeze)
+                    {
+                        source.Freeze();
+                    }
+                }
+                var brush = new ImageBrush(source)
+                {
+                    Stretch = Stretch.UniformToFill,
+                    AlignmentX = AlignmentX.Center,
+                    AlignmentY = AlignmentY.Center
+                };
+                context.DrawEllipse(
+                    brush,
+                    null,
+                    new Point(width / 2, height / 2),
+                    width / 2,
+                    height / 2
+                );
+            }
+            return this.Render(libraryHierarchyNode, visual, width, height, cache);
         }
 
         private ImageSource CreateImageSource1(LibraryHierarchyNode libraryHierarchyNode, string[] fileNames, int width, int height)
