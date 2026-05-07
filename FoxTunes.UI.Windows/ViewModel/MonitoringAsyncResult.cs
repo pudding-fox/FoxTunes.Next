@@ -1,5 +1,6 @@
 ﻿using FoxTunes.Interfaces;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Threading.Tasks;
 using System.Windows;
@@ -10,7 +11,7 @@ namespace FoxTunes.ViewModel
     {
         private MonitoringAsyncResult()
         {
-
+            this.Tasks = new List<Task>();
         }
 
         public MonitoringAsyncResult(TaskScheduler scheduler, IObservable source, params Func<Task<T>>[] factories) : this()
@@ -19,7 +20,7 @@ namespace FoxTunes.ViewModel
             this.Source = source;
             PropertyChangedEventManager.AddListener(source, this, string.Empty);
             this.Factories = factories;
-            this.Scheduler.StartNew(this.Run);
+            this.Tasks.Add(this.Scheduler.StartNew(this.Run));
         }
 
         public MonitoringAsyncResult(TaskScheduler scheduler, IObservable source, T value, params Func<Task<T>>[] factories) : this()
@@ -29,8 +30,10 @@ namespace FoxTunes.ViewModel
             PropertyChangedEventManager.AddListener(source, this, string.Empty);
             this.Value = value;
             this.Factories = factories;
-            this.Scheduler.StartNew(this.Run);
+            this.Tasks.Add(this.Scheduler.StartNew(this.Run));
         }
+
+        public List<Task> Tasks { get; private set; }
 
         public TaskScheduler Scheduler { get; private set; }
 
@@ -51,13 +54,17 @@ namespace FoxTunes.ViewModel
         {
             if (e is PropertyChangedEventArgs propertyChangedEventArgs && string.IsNullOrEmpty(propertyChangedEventArgs.PropertyName))
             {
-                this.Scheduler.StartNew(this.Run);
+                this.Tasks.Add(this.Scheduler.StartNew(this.Run));
             }
             return true;
         }
 
         protected override void OnDisposing()
         {
+            foreach (var task in this.Tasks)
+            {
+                this.Scheduler.Cancel(task);
+            }
             PropertyChangedEventManager.RemoveListener(this.Source, this, string.Empty);
             base.OnDisposing();
         }

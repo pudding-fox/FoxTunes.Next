@@ -28,6 +28,13 @@ namespace FoxTunes
                         //Nothing can be done.
                     }
                 }
+                if (flags.HasFlag(UIDisposerFlags.DataContext))
+                {
+                    if (element.DataContext is IDisposable dataContext)
+                    {
+                        dataContext.Dispose();
+                    }
+                }
                 if (element.ContextMenu is IDisposable contextMenu)
                 {
                     contextMenu.Dispose();
@@ -88,7 +95,8 @@ namespace FoxTunes
         None,
         VisualTree,
         LogicalTree,
+        DataContext,
         Default = VisualTree,
-        All = VisualTree | LogicalTree
+        All = VisualTree | LogicalTree,
     }
 }

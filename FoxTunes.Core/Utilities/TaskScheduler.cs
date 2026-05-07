@@ -45,6 +45,14 @@ namespace FoxTunes
             );
         }
 
+        public void Cancel(Task task)
+        {
+            lock (this.Tasks)
+            {
+                this.Tasks.Remove(task);
+            }
+        }
+
         protected override void QueueTask(Task task)
         {
             lock (this.Tasks)
@@ -75,8 +83,8 @@ namespace FoxTunes
                                 this.Count--;
                                 break;
                             }
-                            item = this.Tasks.Last.Value;
-                            this.Tasks.RemoveLast();
+                            item = this.Tasks.First.Value;
+                            this.Tasks.RemoveFirst();
                         }
                         base.TryExecuteTask(item);
                     }

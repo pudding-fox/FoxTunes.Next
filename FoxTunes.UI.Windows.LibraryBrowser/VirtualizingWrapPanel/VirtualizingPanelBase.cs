@@ -372,6 +372,11 @@ namespace FoxTunes
                     }
                     else
                     {
+                        var container = ((ItemContainerGenerator)this.ItemContainerGenerator).ContainerFromIndex(itemIndex);
+                        if (container is FrameworkElement element)
+                        {
+                            UIDisposer.Dispose(element, UIDisposerFlags.Default | UIDisposerFlags.DataContext);
+                        }
                         ItemContainerGenerator.Remove(generatorPosition, 1);
                     }
                     RemoveInternalChildRange(childIndex, 1);
