@@ -38,7 +38,7 @@
                     Grid.Row="0" 
                     ItemsSource="{Binding Windows, Source={StaticResource ViewModel}}" 
                     SelectedValue="{Binding SelectedWindow, Source={StaticResource ViewModel}}"
-                    DisplayMemberPath="Title">
+                    DisplayMemberPath="Configuration.Title">
             </ListBox>
             <StackPanel Grid.Column="0" Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right">
                 <Button Width="70" Height="30" Margin="7,7,0,0" Command="{Binding AddCommand, Source={StaticResource ViewModel}}">New</Button>

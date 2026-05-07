@@ -731,6 +731,7 @@ namespace FoxTunes
 
         protected virtual void OnComponentChanged()
         {
+            this.OnTitleChanged();
             if (this.ComponentChanged != null)
             {
                 this.ComponentChanged(this, EventArgs.Empty);
