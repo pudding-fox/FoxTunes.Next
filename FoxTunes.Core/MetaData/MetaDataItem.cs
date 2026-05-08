@@ -244,7 +244,6 @@ namespace FoxTunes
         None = 0,
         WriteToFiles = 1,
         ShowReport = 2,
-        RefreshHierarchies = 4,
-        All = WriteToFiles | ShowReport | RefreshHierarchies
+        All = WriteToFiles | ShowReport
     }
 }

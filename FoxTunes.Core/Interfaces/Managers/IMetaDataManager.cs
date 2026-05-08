@@ -5,7 +5,7 @@ namespace FoxTunes.Interfaces
 {
     public interface IMetaDataManager : IStandardManager
     {
-        Task Rescan(IEnumerable<IFileData> fileDatas, MetaDataUpdateFlags flags);
+        Task Rescan(IEnumerable<IFileData> fileDatas);
 
         Task Save(IEnumerable<IFileData> fileDatas, IEnumerable<string> names, MetaDataUpdateType updateType, MetaDataUpdateFlags flags);
 

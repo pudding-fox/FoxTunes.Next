@@ -75,7 +75,12 @@ namespace FoxTunes
                 task.InitializeComponent(this.Core);
                 await this.BackgroundTaskEmitter.Send(task).ConfigureAwait(false);
                 await task.Run().ConfigureAwait(false);
-                return new OnDemandMetaDataValues(task.Values, MetaDataUpdateFlags.None);
+                var flags = MetaDataUpdateFlags.None;
+                if (this.Behaviour.WriteTags.Value)
+                {
+                    flags |= MetaDataUpdateFlags.WriteToFiles;
+                }
+                return new OnDemandMetaDataValues(task.Values, flags);
             }
         }
     }

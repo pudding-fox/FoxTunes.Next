@@ -27,7 +27,7 @@ namespace FoxTunes
             base.InitializeComponent(core);
         }
 
-        public async Task Rescan(IEnumerable<IFileData> fileDatas, MetaDataUpdateFlags flags)
+        public async Task Rescan(IEnumerable<IFileData> fileDatas)
         {
             var libraryItems = fileDatas.OfType<LibraryItem>().ToArray();
             var playlistItems = fileDatas.OfType<PlaylistItem>().ToArray();

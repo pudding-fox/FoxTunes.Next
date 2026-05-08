@@ -107,7 +107,7 @@ namespace FoxTunes
                 return;
             }
             await this.Open(libraryItems).ConfigureAwait(false);
-            await this.MetaDataManager.Rescan(libraryItems, MetaDataUpdateFlags.RefreshHierarchies).ConfigureAwait(false);
+            await this.MetaDataManager.Rescan(libraryItems).ConfigureAwait(false);
         }
 
         protected virtual async Task OpenPlaylist()
@@ -126,7 +126,7 @@ namespace FoxTunes
                 return;
             }
             await this.Open(playlistItems).ConfigureAwait(false);
-            await this.MetaDataManager.Rescan(playlistItems, MetaDataUpdateFlags.RefreshHierarchies).ConfigureAwait(false);
+            await this.MetaDataManager.Rescan(playlistItems).ConfigureAwait(false);
         }
 
         protected virtual Task Open(IEnumerable<IFileData> items)
