@@ -46,23 +46,31 @@ namespace FoxTunes
 
         public async Task<Artist> GetArtist(string name)
         {
-            var url = this.GetArtistUrl1(name);
-            var result = await Store.GetOrAdd(url, async () =>
+            try
             {
-                Logger.Write(this, LogLevel.Debug, "Querying the API: {0}", url);
-                var request = this.CreateRequest(url);
-                using (var response = (HttpWebResponse)request.GetResponse())
+                var url = this.GetArtistUrl1(name);
+                var result = await Store.GetOrAdd(url, async () =>
                 {
-                    if (response.StatusCode != HttpStatusCode.OK)
+                    Logger.Write(this, LogLevel.Debug, "Querying the API: {0}", url);
+                    var request = this.CreateRequest(url);
+                    using (var response = (HttpWebResponse)request.GetResponse())
                     {
-                        Logger.Write(this, LogLevel.Warn, "Status code does not indicate success.");
-                        return default(Artist);
+                        if (response.StatusCode != HttpStatusCode.OK)
+                        {
+                            Logger.Write(this, LogLevel.Warn, "Status code does not indicate success.");
+                            return default(Artist);
+                        }
+                        var artist = await this.GetArtist1(response.GetResponseStream()).ConfigureAwait(false);
+                        return artist;
                     }
-                    var artist = await this.GetArtist1(response.GetResponseStream()).ConfigureAwait(false);
-                    return artist;
-                }
-            });
-            return result as Artist;
+                });
+                return result as Artist;
+            }
+            catch (Exception e)
+            {
+                Logger.Write(this, LogLevel.Error, "Error while querying the API: {0}", e.Message);
+                return null;
+            }
         }
 
         protected virtual async Task<Artist> GetArtist1(Stream stream)
@@ -134,23 +142,31 @@ namespace FoxTunes
 
         public async Task<IEnumerable<Release>> GetReleases(ReleaseLookup releaseLookup, bool master)
         {
-            var url = this.GetUrl(releaseLookup, master);
-            var result = await Store.GetOrAdd(url, async () =>
+            try
             {
-                Logger.Write(this, LogLevel.Debug, "Querying the API: {0}", url);
-                var request = this.CreateRequest(url);
-                using (var response = (HttpWebResponse)request.GetResponse())
+                var url = this.GetUrl(releaseLookup, master);
+                var result = await Store.GetOrAdd(url, async () =>
                 {
-                    if (response.StatusCode != HttpStatusCode.OK)
+                    Logger.Write(this, LogLevel.Debug, "Querying the API: {0}", url);
+                    var request = this.CreateRequest(url);
+                    using (var response = (HttpWebResponse)request.GetResponse())
                     {
-                        Logger.Write(this, LogLevel.Warn, "Status code does not indicate success.");
-                        return Enumerable.Empty<Release>();
+                        if (response.StatusCode != HttpStatusCode.OK)
+                        {
+                            Logger.Write(this, LogLevel.Warn, "Status code does not indicate success.");
+                            return Enumerable.Empty<Release>();
+                        }
+                        var releases = await this.GetReleases(response.GetResponseStream()).ConfigureAwait(false);
+                        return releases.ToArray();
                     }
-                    var releases = await this.GetReleases(response.GetResponseStream()).ConfigureAwait(false);
-                    return releases.ToArray();
-                }
-            });
-            return result as IEnumerable<Release>;
+                });
+                return result as IEnumerable<Release>;
+            }
+            catch(Exception e)
+            {
+                Logger.Write(this, LogLevel.Error, "Error while querying the API: {0}", e.Message);
+                return null;
+            }
         }
 
         protected virtual async Task<IEnumerable<Release>> GetReleases(Stream stream)
