@@ -210,18 +210,21 @@ namespace FoxTunes
                 switch (libraryHierarchyLevel.Hints)
                 {
                     case LibraryHierarchyLevelHints.Artist:
-                        var libraryItems = this.LibraryHierarchyBrowser.GetItems(libraryHierarchyNode);
-                        var newFileNames = await this.OnDemandMetaDataProvider.GetMetaData(
-                            libraryItems,
-                            new OnDemandMetaDataRequest(
-                            CommonImageTypes.Artist,
-                            MetaDataItemType.Image,
-                            MetaDataUpdateType.System
-                            )
-                        ).ConfigureAwait(false);
-                        if (newFileNames.Any() && !string.IsNullOrEmpty(newFileNames.First()))
+                        if (!string.Equals(libraryHierarchyNode.Value, "Various Artists", StringComparison.OrdinalIgnoreCase))
                         {
-                            return this.CreateImageSource0(libraryHierarchyNode, newFileNames.First(), width, height, mode, cache);
+                            var libraryItems = this.LibraryHierarchyBrowser.GetItems(libraryHierarchyNode);
+                            var newFileNames = await this.OnDemandMetaDataProvider.GetMetaData(
+                                libraryItems,
+                                new OnDemandMetaDataRequest(
+                                    CommonImageTypes.Artist,
+                                    MetaDataItemType.Image,
+                                    MetaDataUpdateType.System
+                                )
+                            ).ConfigureAwait(false);
+                            if (newFileNames.Any() && !string.IsNullOrEmpty(newFileNames.First()))
+                            {
+                                return this.CreateImageSource0(libraryHierarchyNode, newFileNames.First(), width, height, mode, cache);
+                            }
                         }
                         break;
                     default:
@@ -243,7 +246,6 @@ namespace FoxTunes
                 //TODO: See: https://referencesource.microsoft.com/#PresentationCore/Core/CSharp/System/Windows/Media/Imaging/BitmapDecoder.cs,cd1c67c55a73f984
                 using (source.StreamSource = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.Read))
                 {
-                    source.DecodePixelWidth = width;
                     source.EndInit();
                     if (source.CanFreeze)
                     {

@@ -9,8 +9,6 @@ namespace FoxTunes
     [ComponentDependency(Slot = ComponentSlots.UserInterface)]
     public class OnDemandMetaDataProvider : StandardComponent, IOnDemandMetaDataProvider
     {
-        public static readonly KeyLock<string> KeyLock = new KeyLock<string>(StringComparer.OrdinalIgnoreCase);
-
         public OnDemandMetaDataProvider()
         {
             this.Sources = new List<IOnDemandMetaDataSource>();
@@ -40,42 +38,12 @@ namespace FoxTunes
 
         public async Task<IEnumerable<string>> GetMetaData(IEnumerable<IFileData> fileDatas, OnDemandMetaDataRequest request)
         {
-            using (await KeyLock.LockAsync(request.Name).ConfigureAwait(false))
+            var values = this.GetCurrentMetaData(fileDatas, request);
+            var queue = new HashSet<IFileData>(fileDatas.Except(values.Keys));
+            if (queue.Any())
             {
-                var values = this.GetCurrentMetaData(fileDatas, request);
-                var queue = new HashSet<IFileData>(fileDatas.Except(values.Keys));
-                if (queue.Any())
-                {
-                    var sources = this.GetSources(request.Name, request.ItemType);
-                    foreach (var source in sources)
-                    {
-                        var result = await source.GetValues(
-                            queue.Where(fileData => source.CanGetValue(fileData, request)).ToArray(),
-                            request
-                        ).ConfigureAwait(false);
-                        if (result != null && result.Values.Any())
-                        {
-                            foreach (var value in result.Values)
-                            {
-                                this.AddMetaData(request, value);
-                                values[value.FileData] = value.Value;
-                                queue.Remove(value.FileData);
-                            }
-                            this.Dispatch(() => this.SaveMetaData(request, result));
-                        }
-                    }
-                }
-                return new HashSet<string>(values.Values, StringComparer.OrdinalIgnoreCase);
-            }
-        }
-
-        public async Task<IEnumerable<string>> GetMetaData(IOnDemandMetaDataSource source, IEnumerable<IFileData> fileDatas, OnDemandMetaDataRequest request)
-        {
-            using (await KeyLock.LockAsync(request.Name).ConfigureAwait(false))
-            {
-                var values = this.GetCurrentMetaData(fileDatas, request);
-                var queue = new HashSet<IFileData>(fileDatas.Except(values.Keys));
-                if (queue.Any())
+                var sources = this.GetSources(request.Name, request.ItemType);
+                foreach (var source in sources)
                 {
                     var result = await source.GetValues(
                         queue.Where(fileData => source.CanGetValue(fileData, request)).ToArray(),
@@ -92,8 +60,32 @@ namespace FoxTunes
                         this.Dispatch(() => this.SaveMetaData(request, result));
                     }
                 }
-                return new HashSet<string>(values.Values, StringComparer.OrdinalIgnoreCase);
             }
+            return new HashSet<string>(values.Values, StringComparer.OrdinalIgnoreCase);
+        }
+
+        public async Task<IEnumerable<string>> GetMetaData(IOnDemandMetaDataSource source, IEnumerable<IFileData> fileDatas, OnDemandMetaDataRequest request)
+        {
+            var values = this.GetCurrentMetaData(fileDatas, request);
+            var queue = new HashSet<IFileData>(fileDatas.Except(values.Keys));
+            if (queue.Any())
+            {
+                var result = await source.GetValues(
+                    queue.Where(fileData => source.CanGetValue(fileData, request)).ToArray(),
+                    request
+                ).ConfigureAwait(false);
+                if (result != null && result.Values.Any())
+                {
+                    foreach (var value in result.Values)
+                    {
+                        this.AddMetaData(request, value);
+                        values[value.FileData] = value.Value;
+                        queue.Remove(value.FileData);
+                    }
+                    this.Dispatch(() => this.SaveMetaData(request, result));
+                }
+            }
+            return new HashSet<string>(values.Values, StringComparer.OrdinalIgnoreCase);
         }
 
         public string GetCurrentMetaData(IFileData fileData, OnDemandMetaDataRequest request)

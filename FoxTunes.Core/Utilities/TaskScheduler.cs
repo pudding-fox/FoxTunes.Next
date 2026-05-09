@@ -31,7 +31,7 @@ namespace FoxTunes
         {
             get
             {
-                return this.Options.MaxDegreeOfParallelism;
+                return Math.Max(this.Options.MaxDegreeOfParallelism, 0);
             }
         }
 
@@ -57,7 +57,7 @@ namespace FoxTunes
         {
             lock (this.Tasks)
             {
-                this.Tasks.AddLast(task);
+                this.Tasks.AddFirst(task);
                 if (this.Count < this.MaximumConcurrencyLevel)
                 {
                     this.Count++;
