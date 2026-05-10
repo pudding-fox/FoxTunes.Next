@@ -5,7 +5,7 @@
 	FROM [LibraryHierarchyItems]
 	WHERE ((@parentId IS NULL AND [Parent_Id] IS NULL) OR [Parent_Id] = @parentId)
 		AND [LibraryHierarchy_Id] = @libraryHierarchyId
-		AND [LibraryHierarchyLevel_Id] = @libraryHierarchyLevelId
+		AND (@libraryHierarchyLevelId IS NULL OR [LibraryHierarchyLevel_Id] = @libraryHierarchyLevelId)
 		AND [Value] = @value
 		AND [IsLeaf] = @isLeaf
 )
@@ -21,7 +21,7 @@ WITH
 	FROM [LibraryHierarchyItems]
 	WHERE ((@parentId IS NULL AND [Parent_Id] IS NULL) OR [Parent_Id] = @parentId)
 		AND [LibraryHierarchy_Id] = @libraryHierarchyId
-		AND [LibraryHierarchyLevel_Id] = @libraryHierarchyLevelId
+		AND (@libraryHierarchyLevelId IS NULL OR [LibraryHierarchyLevel_Id] = @libraryHierarchyLevelId)
 		AND [Value] = @value
 		AND [IsLeaf] = @isLeaf
 )
@@ -43,7 +43,7 @@ WITH
 	FROM [LibraryHierarchyItems]
 	WHERE ((@parentId IS NULL AND [Parent_Id] IS NULL) OR [Parent_Id] = @parentId)
 		AND [LibraryHierarchy_Id] = @libraryHierarchyId
-		AND [LibraryHierarchyLevel_Id] = @libraryHierarchyLevelId
+		AND (@libraryHierarchyLevelId IS NULL OR [LibraryHierarchyLevel_Id] = @libraryHierarchyLevelId)
 		AND [Value] = @value
 		AND [IsLeaf] = @isLeaf
 )
