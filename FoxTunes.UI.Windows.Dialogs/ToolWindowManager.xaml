@@ -92,7 +92,7 @@
                     <Label Grid.Column="0" Grid.Row="7" Content="{x:Static Windows:StringResources.ToolWindowManager_ApplyTransparency}"/>
                     <CheckBox Grid.Column="1" Grid.Row="7" VerticalAlignment="Center" IsChecked="{Binding Configuration.ApplyTransparency}"></CheckBox>
                     <Label Grid.Column="0" Grid.Row="8" Content="{x:Static Windows:StringResources.ToolWindowManager_SizeToContent}"/>
-                    <ComboBox Grid.Column="1" Grid.Row="8" VerticalAlignment="Center" SelectedValue="{Binding Configuration.SizeToContent}" ItemsSource="{Binding Source={StaticResource SizeToContents}}" ></ComboBox>
+                    <ComboBox Grid.Column="1" Grid.Row="8" VerticalAlignment="Center" SelectedValue="{Binding Configuration.SizeToContent}" ItemsSource="{Binding Source={StaticResource SizeToContents}}" Margin="0,0,0,5"></ComboBox>
                     <StackPanel Grid.Column="1" Grid.Row="9" HorizontalAlignment="Right" Orientation="Horizontal">
                         <Button Width="120" Height="30" Margin="0,0,5,0" HorizontalAlignment="Right" Click="OnEditLayoutXMLClick" Content="{x:Static Windows:StringResources.ToolWindowManager_EditLayoutXML}"/>
                         <Button Width="120" Height="30" HorizontalAlignment="Right" Click="OnCopyLayoutToMainClick" Content="{x:Static Windows:StringResources.ToolWindowManager_CopyToMain}"/>

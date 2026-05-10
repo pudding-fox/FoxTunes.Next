@@ -124,7 +124,7 @@
     <value>File Id</value>
   </data>
   <data name="AIBehaviourConfiguration.Section" xml:space="preserve">
-    <value>AI</value>
+    <value>Artificial Intelligence</value>
   </data>
   <data name="EnqueueNextItemBehaviourConfiguration.Count" xml:space="preserve">
     <value>Queue Size</value>

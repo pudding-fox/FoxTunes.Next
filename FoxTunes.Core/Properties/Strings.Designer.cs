@@ -125,7 +125,7 @@ namespace FoxTunes {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to AI.
+        ///   Looks up a localized string similar to Artificial Intelligence.
         /// </summary>
         internal static string AIBehaviourConfiguration_Section {
             get {
