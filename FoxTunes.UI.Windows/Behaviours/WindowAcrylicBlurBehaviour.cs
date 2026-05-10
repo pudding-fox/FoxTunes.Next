@@ -2,6 +2,7 @@
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using System.Windows.Interop;
 using System.Windows.Media;
 
@@ -43,14 +44,14 @@ namespace FoxTunes
 
         protected virtual void OnChanged(object sender, EventArgs e)
         {
-            this.Refresh();
+            var task = this.Refresh();
         }
 
-        protected override void OnEnabled()
+        protected override async Task OnEnabled()
         {
             foreach (var window in WindowBase.Active)
             {
-                if (!WindowExtensions.GetAllowsTransparency(window))
+                if (!await this.GetAllowsTransparency(window).ConfigureAwait(false))
                 {
                     continue;
                 }
@@ -61,11 +62,11 @@ namespace FoxTunes
             }
         }
 
-        protected override void OnDisabled()
+        protected override async Task OnDisabled()
         {
             foreach (var window in WindowBase.Active)
             {
-                if (!WindowExtensions.GetAllowsTransparency(window))
+                if (!await this.GetAllowsTransparency(window).ConfigureAwait(false))
                 {
                     continue;
                 }

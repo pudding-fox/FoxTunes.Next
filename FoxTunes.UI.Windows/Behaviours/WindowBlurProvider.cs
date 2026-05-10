@@ -2,8 +2,8 @@
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Interop;
 
 namespace FoxTunes
 {
@@ -51,27 +51,38 @@ namespace FoxTunes
 
         protected virtual void OnActiveChanged(object sender, EventArgs e)
         {
-            this.Refresh();
+            var task = this.Refresh();
         }
 
         protected virtual void OnValueChanged(object sender, EventArgs e)
         {
-            this.Refresh();
+            var task = this.Refresh();
         }
 
-        public void Refresh()
+        public Task Refresh()
         {
             var enabled = this.Transparency.Value && string.Equals(this.Provider.Value.Id, this.Id, StringComparison.OrdinalIgnoreCase);
             if (!enabled)
             {
-                return;
+#if NET40
+                return TaskEx.FromResult(false);
+#else
+                return Task.CompletedTask;
+#endif
             }
-            this.OnEnabled();
+            return this.OnEnabled();
         }
 
-        protected abstract void OnEnabled();
+        protected abstract Task OnEnabled();
 
-        protected abstract void OnDisabled();
+        protected abstract Task OnDisabled();
+
+        protected virtual async Task<bool> GetAllowsTransparency(Window window)
+        {
+            var allowsTransparency = default(bool);
+            await Windows.Invoke(() => allowsTransparency = WindowExtensions.GetAllowsTransparency(window)).ConfigureAwait(false);
+            return allowsTransparency;
+        }
 
         public abstract IEnumerable<ConfigurationSection> GetConfigurationSections();
 
