@@ -153,11 +153,14 @@ namespace FoxTunes
             switch (mode)
             {
                 case LibraryBrowserImageMode.Auto:
-                    var libraryHierarchyLevel = this.LibraryHierarchyBrowser.GetLevel(libraryHierarchyNode.LibraryHierarchyLevelId);
-                    switch (libraryHierarchyLevel.Hints)
+                    if (libraryHierarchyNode.LibraryHierarchyLevelId.HasValue)
                     {
-                        case LibraryHierarchyLevelHints.Artist:
-                            return true;
+                        var libraryHierarchyLevel = this.LibraryHierarchyBrowser.GetLevel(libraryHierarchyNode.LibraryHierarchyLevelId.Value);
+                        switch (libraryHierarchyLevel.Hints)
+                        {
+                            case LibraryHierarchyLevelHints.Artist:
+                                return true;
+                        }
                     }
                     break;
             }
@@ -175,7 +178,12 @@ namespace FoxTunes
             switch (mode)
             {
                 case LibraryBrowserImageMode.Auto:
-                    return await this.CreateImageSource0(libraryHierarchyNode, fileNames, width, height, mode, cache).ConfigureAwait(false);
+                    var result = await this.CreateImageSource0(libraryHierarchyNode, fileNames, width, height, mode, cache).ConfigureAwait(false);
+                    if (result != null)
+                    {
+                        return result;
+                    }
+                    goto compound;
                 case LibraryBrowserImageMode.First:
                     switch (fileNames.Length)
                     {
@@ -186,6 +194,7 @@ namespace FoxTunes
                     }
                 default:
                 case LibraryBrowserImageMode.Compound:
+                compound:
                     switch (fileNames.Length)
                     {
                         case 0:
@@ -204,31 +213,32 @@ namespace FoxTunes
 
         private async Task<ImageSource> CreateImageSource0(LibraryHierarchyNode libraryHierarchyNode, string[] fileNames, int width, int height, LibraryBrowserImageMode mode, bool cache)
         {
-            var libraryHierarchyLevel = this.LibraryHierarchyBrowser.GetLevel(libraryHierarchyNode.LibraryHierarchyLevelId);
-            if (libraryHierarchyLevel != null)
+            if (libraryHierarchyNode.LibraryHierarchyLevelId.HasValue)
             {
-                switch (libraryHierarchyLevel.Hints)
+                var libraryHierarchyLevel = this.LibraryHierarchyBrowser.GetLevel(libraryHierarchyNode.LibraryHierarchyLevelId.Value);
+                if (libraryHierarchyLevel != null)
                 {
-                    case LibraryHierarchyLevelHints.Artist:
-                        if (!string.Equals(libraryHierarchyNode.Value, "Various Artists", StringComparison.OrdinalIgnoreCase))
-                        {
-                            var libraryItems = this.LibraryHierarchyBrowser.GetItems(libraryHierarchyNode);
-                            var newFileNames = await this.OnDemandMetaDataProvider.GetMetaData(
-                                libraryItems,
-                                new OnDemandMetaDataRequest(
-                                    CommonImageTypes.Artist,
-                                    MetaDataItemType.Image,
-                                    MetaDataUpdateType.System
-                                )
-                            ).ConfigureAwait(false);
-                            if (newFileNames.Any() && !string.IsNullOrEmpty(newFileNames.First()))
+                    switch (libraryHierarchyLevel.Hints)
+                    {
+                        case LibraryHierarchyLevelHints.Artist:
+                            if (!string.Equals(libraryHierarchyNode.Value, "Various Artists", StringComparison.OrdinalIgnoreCase))
                             {
-                                return this.CreateImageSource0(libraryHierarchyNode, newFileNames.First(), width, height, mode, cache);
+                                var libraryItems = this.LibraryHierarchyBrowser.GetItems(libraryHierarchyNode);
+                                var newFileNames = await this.OnDemandMetaDataProvider.GetMetaData(
+                                    libraryItems,
+                                    new OnDemandMetaDataRequest(
+                                        CommonImageTypes.Artist,
+                                        MetaDataItemType.Image,
+                                        MetaDataUpdateType.System
+                                    )
+                                ).ConfigureAwait(false);
+                                if (newFileNames.Any() && !string.IsNullOrEmpty(newFileNames.First()))
+                                {
+                                    return this.CreateImageSource0(libraryHierarchyNode, newFileNames.First(), width, height, mode, cache);
+                                }
                             }
-                        }
-                        break;
-                    default:
-                        return this.CreateImageSource1(libraryHierarchyNode, fileNames, width, height);
+                            break;
+                    }
                 }
             }
             return null;

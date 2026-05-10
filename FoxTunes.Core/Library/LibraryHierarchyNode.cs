@@ -18,7 +18,7 @@ namespace FoxTunes
         public int LibraryHierarchyId { get; set; }
 
         [Column(Name = "LibraryHierarchyLevel_Id")]
-        public int LibraryHierarchyLevelId { get; set; }
+        public int? LibraryHierarchyLevelId { get; set; }
 
         public string Value { get; set; }
 
