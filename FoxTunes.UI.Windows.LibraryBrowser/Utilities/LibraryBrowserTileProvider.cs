@@ -237,6 +237,11 @@ namespace FoxTunes
                                     return this.CreateImageSource0(libraryHierarchyNode, newFileNames.First(), width, height, mode, cache);
                                 }
                             }
+                            //Fall back to first image.
+                            if (fileNames.Any())
+                            {
+                                return this.CreateImageSource0(libraryHierarchyNode, fileNames.First(), width, height, mode, cache);
+                            }
                             break;
                     }
                 }
