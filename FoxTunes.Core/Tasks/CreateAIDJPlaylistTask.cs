@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using static FoxTunes.PLSHelper;
 
 namespace FoxTunes
 {
@@ -157,7 +158,6 @@ namespace FoxTunes
         private async Task<string> GetListeningHistory()
         {
             var builder = new StringBuilder();
-            builder.AppendLine("\"FileName\",\"Artist\",\"Album\",\"Title\",\"LastPlayed\",\"PlayCount\"");
             using (var transaction = this.Database.BeginTransaction(this.Database.PreferredIsolationLevel))
             {
                 using (var reader = this.GetListeningHistory(transaction))
@@ -167,17 +167,15 @@ namespace FoxTunes
                         while (await sequence.MoveNextAsync().ConfigureAwait(false))
                         {
                             var row = string.Concat(
-                                "\"",
-                                this.Escape(sequence.Current.Get<string>("FileName")),
-                                "\",\"",
-                                this.Escape(sequence.Current.Get<string>("Album")),
-                                "\",\"",
-                                this.Escape(sequence.Current.Get<string>("Title")),
-                                "\",\"",
-                                this.Escape(sequence.Current.Get<string>("LastPlayed")),
-                                "\",\"",
-                                this.Escape(sequence.Current.Get<string>("PlayCount")),
-                                "\""
+                                "{\"FileName\":\"",
+                                this.Safe(sequence.Current.Get<string>("FileName")),
+                                "\",\"Artist\":\"",
+                                this.Safe(sequence.Current.Get<string>("Artist")),
+                                "\",\"Album\":\"",
+                                this.Safe(sequence.Current.Get<string>("Album")),
+                                "\",\"Title\":\"",
+                                this.Safe(sequence.Current.Get<string>("Title")),
+                                "\"}"
                             );
                             builder.AppendLine(row);
                         }
@@ -205,13 +203,29 @@ namespace FoxTunes
             }, transaction);
         }
 
-        protected virtual string Escape(string value)
+        private string Safe(string value)
         {
             if (string.IsNullOrEmpty(value))
             {
-                return value;
+                return "Unknown";
             }
-            return value.Replace("\"", "\"\"");
+            var builder = new StringBuilder(value.Length + 16);
+            foreach (var character in value)
+            {
+                switch (character)
+                {
+                    case '\\':
+                        builder.Append("\\\\");
+                        break;
+                    case '"':
+                        builder.Append("\\\"");
+                        break;
+                    default:
+                        builder.Append(character);
+                        break;
+                }
+            }
+            return builder.ToString();
         }
 
         protected virtual async Task<IEnumerable<string>> GetPathsFromResponse(string response)

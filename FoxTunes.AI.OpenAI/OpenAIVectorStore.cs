@@ -20,7 +20,7 @@ namespace FoxTunes
 
         public override async Task<string> Create(string name, CancellationToken cancellationToken)
         {
-            const int TIMEOUT = 300;
+            const int TIMEOUT = 1000;
             var id = default(string);
             {
                 Logger.Write(this, LogLevel.Debug, "Creating vectore store.");
@@ -95,7 +95,6 @@ namespace FoxTunes
             Logger.Write(this, LogLevel.Debug, "Deleting vectore store: {0}", vectorStoreId);
             var result = await this.Client.DeleteVectorStoreAsync(vectorStoreId).ConfigureAwait(false);
             Logger.Write(this, LogLevel.Debug, "Deleted vectore store: {0}", vectorStoreId);
-            //Nothing to do.
         }
     }
 }

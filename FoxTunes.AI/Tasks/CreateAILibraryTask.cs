@@ -2,6 +2,7 @@
 using FoxTunes.Interfaces;
 using System;
 using System.IO;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace FoxTunes.AI.Tasks
@@ -121,7 +122,6 @@ namespace FoxTunes.AI.Tasks
         {
             var stream = new MemoryStream();
             var writer = new StreamWriter(stream);
-            await writer.WriteLineAsync("\"FileName\",\"Artist\",\"Album\",\"Track\",\"Title\",\"Genre\",\"Year\",\"Like\",\"Rating\"").ConfigureAwait(false);
             using (var database = this.DatabaseFactory.Create())
             {
                 using (var transaction = database.BeginTransaction(database.PreferredIsolationLevel))
@@ -133,25 +133,19 @@ namespace FoxTunes.AI.Tasks
                             while (await sequence.MoveNextAsync().ConfigureAwait(false))
                             {
                                 var row = string.Concat(
-                                    "\"",
-                                    this.Escape(sequence.Current.Get<string>("FileName")),
-                                    "\",\"",
-                                    this.Escape(sequence.Current.Get<string>("Artist")),
-                                    "\",\"",
-                                    this.Escape(sequence.Current.Get<string>("Album")),
-                                    "\",\"",
-                                    this.Escape(sequence.Current.Get<string>("Track")),
-                                    "\",\"",
-                                    this.Escape(sequence.Current.Get<string>("Title")),
-                                    "\",\"",
-                                    this.Escape(sequence.Current.Get<string>("Genre")),
-                                    "\",\"",
-                                    this.Escape(sequence.Current.Get<string>("Year")),
-                                    "\",\"",
-                                    this.Escape(sequence.Current.Get<string>("Like")),
-                                    "\",\"",
-                                    this.Escape(sequence.Current.Get<string>("Rating")),
-                                    "\""
+                                    "{\"FileName\":\"",
+                                    this.Safe(sequence.Current.Get<string>("FileName")),
+                                    "\",\"Artist\":\"",
+                                    this.Safe(sequence.Current.Get<string>("Artist")),
+                                    "\",\"Album\":\"",
+                                    this.Safe(sequence.Current.Get<string>("Album")),
+                                    "\",\"Title\":\"",
+                                    this.Safe(sequence.Current.Get<string>("Title")),
+                                    "\",\"Genre\":\"",
+                                    this.Safe(sequence.Current.Get<string>("Genre")),
+                                    "\",\"Year\":\"",
+                                    this.Safe(sequence.Current.Get<string>("Year")),
+                                    "\"}"
                                 );
                                 writer.WriteLine(row);
                             }
@@ -184,13 +178,29 @@ namespace FoxTunes.AI.Tasks
             }, transaction);
         }
 
-        protected virtual string Escape(string value)
+        private string Safe(string value)
         {
             if (string.IsNullOrEmpty(value))
             {
-                return value;
+                return "Unknown";
             }
-            return value.Replace("\"", "\"\"");
+            var builder = new StringBuilder(value.Length + 16);
+            foreach (var character in value)
+            {
+                switch (character)
+                {
+                    case '\\':
+                        builder.Append("\\\\");
+                        break;
+                    case '"':
+                        builder.Append("\\\"");
+                        break;
+                    default:
+                        builder.Append(character);
+                        break;
+                }
+            }
+            return builder.ToString();
         }
     }
 }

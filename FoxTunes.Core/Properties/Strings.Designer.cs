@@ -61,15 +61,21 @@ namespace FoxTunes {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Here is my listening history:
-        ///```csv
+        ///   Looks up a localized string similar to You are an expert music curator.
+        ///
+        ///Generate a playlist based on the following request:
+        ///
+        ///USER LISTENING HISTORY:
         ///{0}
-        ///```
-        ///Use my library to create a playlist containing {1} tracks.
-        ///Ensure at most 5 unique tracks per artist.
-        ///Ensure a random order.
-        ///Respect momentum (don&apos;t jump from heavy music to soft ambient abruptly).
-        ///Ensure that the output is in valid CSV format containing only the file path without headers..
+        ///
+        ///Requirements:
+        ///- Playlist length: {1} tracks
+        ///- Track artist usage counts internally.
+        ///- Before adding a track, check the current artist count.
+        ///- If the limit of 5 is reached, choose another artist.
+        ///- If artists are exhaused, relax the previous requirement.
+        ///- Randomize the resulting tracks.
+        ///- Ensure that the output is in valid CSV format containing only the file path without headers [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string AIBehaviourConfiguration_DefaultDJPromptTemplate {
             get {
@@ -78,9 +84,21 @@ namespace FoxTunes {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Use my library to create a playlist containing {1} tracks.
-        ///Use the prompt: &quot;{0}&quot;. 
-        ///Ensure that the output is in valid CSV format containing only the file path without headers..
+        ///   Looks up a localized string similar to You are an expert music curator.
+        ///
+        ///Generate a playlist based on the following request:
+        ///
+        ///USER REQUEST:
+        ///&quot;{0}&quot;
+        ///
+        ///Requirements:
+        ///- Playlist length: {1} tracks
+        ///- Track artist usage counts internally.
+        ///- Before adding a track, check the current artist count.
+        ///- If the limit of 5 is reached, choose another artist.
+        ///- If artists are exhaused, relax the previous requirement.
+        ///- Randomize the resulting tracks.
+        ///- Ensure that the output is in valid CSV format containing only the file path without headers..
         /// </summary>
         internal static string AIBehaviourConfiguration_DefaultPlaylistGenerationPromptTemplate {
             get {

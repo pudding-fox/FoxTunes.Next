@@ -34,7 +34,6 @@ namespace FoxTunes
             Logger.Write(this, LogLevel.Debug, "Deleting file: {0}", fileId);
             var result = await this.Client.DeleteFileAsync(fileId).ConfigureAwait(false);
             Logger.Write(this, LogLevel.Debug, "Deleted file: {0}", fileId);
-            //Nothing to do.
         }
     }
 }
