@@ -75,7 +75,8 @@ namespace FoxTunes {
         ///- If the limit of 5 is reached, choose another artist.
         ///- If artists are exhaused, relax the previous requirement.
         ///- Randomize the resulting tracks.
-        ///- Ensure that the output is in valid CSV format containing only the file path without headers [rest of string was truncated]&quot;;.
+        ///- Output only file paths
+        ///- No extra text.
         /// </summary>
         internal static string AIBehaviourConfiguration_DefaultDJPromptTemplate {
             get {
@@ -98,7 +99,8 @@ namespace FoxTunes {
         ///- If the limit of 5 is reached, choose another artist.
         ///- If artists are exhaused, relax the previous requirement.
         ///- Randomize the resulting tracks.
-        ///- Ensure that the output is in valid CSV format containing only the file path without headers..
+        ///- Output only file paths
+        ///- No extra text.
         /// </summary>
         internal static string AIBehaviourConfiguration_DefaultPlaylistGenerationPromptTemplate {
             get {
