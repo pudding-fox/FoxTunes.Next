@@ -75,7 +75,7 @@ namespace FoxTunes {
         ///- If the limit of 5 is reached, choose another artist.
         ///- If artists are exhaused, relax the previous requirement.
         ///- Randomize the resulting tracks.
-        ///- Output only file paths
+        ///- Output only file paths and the reason for selection delimited by a tab.
         ///- No extra text.
         /// </summary>
         internal static string AIBehaviourConfiguration_DefaultDJPromptTemplate {
@@ -99,7 +99,7 @@ namespace FoxTunes {
         ///- If the limit of 5 is reached, choose another artist.
         ///- If artists are exhaused, relax the previous requirement.
         ///- Randomize the resulting tracks.
-        ///- Output only file paths
+        ///- Output only file paths and the reason for selection delimited by a tab.
         ///- No extra text.
         /// </summary>
         internal static string AIBehaviourConfiguration_DefaultPlaylistGenerationPromptTemplate {
@@ -159,6 +159,33 @@ namespace FoxTunes {
         internal static string AIBehaviourConfiguration_VectoreStoreId {
             get {
                 return ResourceManager.GetString("AIBehaviourConfiguration.VectoreStoreId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to AI Playlist.
+        /// </summary>
+        internal static string AIPlaylistReport_Name {
+            get {
+                return ResourceManager.GetString("AIPlaylistReport.Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reason.
+        /// </summary>
+        internal static string AIPlaylistReport_Reason {
+            get {
+                return ResourceManager.GetString("AIPlaylistReport.Reason", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Track.
+        /// </summary>
+        internal static string AIPlaylistReport_Track {
+            get {
+                return ResourceManager.GetString("AIPlaylistReport.Track", resourceCulture);
             }
         }
         

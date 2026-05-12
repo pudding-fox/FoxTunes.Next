@@ -351,7 +351,7 @@ Requirements:
 - If the limit of 5 is reached, choose another artist.
 - If artists are exhaused, relax the previous requirement.
 - Randomize the resulting tracks.
-- Output only file paths
+- Output only file paths and the reason for selection delimited by a tab.
 - No extra text</value>
   </data>
   <data name="AIBehaviourConfiguration.Enabled" xml:space="preserve">
@@ -372,10 +372,19 @@ Requirements:
 - If the limit of 5 is reached, choose another artist.
 - If artists are exhaused, relax the previous requirement.
 - Randomize the resulting tracks.
-- Output only file paths
+- Output only file paths and the reason for selection delimited by a tab.
 - No extra text</value>
   </data>
   <data name="AIBehaviourConfiguration.DJPromptTemplate" xml:space="preserve">
     <value>AI DJ Prompt Template</value>
+  </data>
+  <data name="AIPlaylistReport.Name" xml:space="preserve">
+    <value>AI Playlist</value>
+  </data>
+  <data name="AIPlaylistReport.Reason" xml:space="preserve">
+    <value>Reason</value>
+  </data>
+  <data name="AIPlaylistReport.Track" xml:space="preserve">
+    <value>Track</value>
   </data>
 </root>

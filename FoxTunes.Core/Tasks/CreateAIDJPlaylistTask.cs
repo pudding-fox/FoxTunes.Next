@@ -1,16 +1,13 @@
 ﻿using FoxDb.Interfaces;
 using FoxTunes.Interfaces;
 using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace FoxTunes
 {
-    public class CreateAIDJPlaylistTask : PlaylistTaskBase
+    public class CreateAIDJPlaylistTask : AIPlaylistTaskBase
     {
         public CreateAIDJPlaylistTask(Playlist playlist, int history, int limit) : base(playlist, 0)
         {
@@ -211,27 +208,6 @@ namespace FoxTunes
                 }
             }
             return builder.ToString();
-        }
-
-        protected virtual async Task<IEnumerable<string>> GetPathsFromResponse(string response)
-        {
-            Logger.Write(this, LogLevel.Debug, "Extracting tracks from response.");
-            var paths = new List<string>();
-            var regex = new Regex(@"[a-z]:[\\\/](?:[a-z0-9]+[\\\/])*[a-z0-9]+", RegexOptions.IgnoreCase | RegexOptions.Compiled);
-            using (var reader = new StringReader(response))
-            {
-                var line = default(string);
-                while ((line = await reader.ReadLineAsync().ConfigureAwait(false)) != null)
-                {
-                    if (regex.IsMatch(line))
-                    {
-                        var fileName = line.Trim(' ', '"');
-                        Logger.Write(this, LogLevel.Debug, "Got file name from response: {0}", fileName);
-                        paths.Add(fileName);
-                    }
-                }
-            }
-            return paths.Distinct();
         }
     }
 }
