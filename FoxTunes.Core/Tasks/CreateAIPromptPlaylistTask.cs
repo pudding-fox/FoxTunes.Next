@@ -156,7 +156,7 @@ namespace FoxTunes
                     }
                 }
             }
-            return paths;
+            return paths.Distinct();
         }
     }
 }

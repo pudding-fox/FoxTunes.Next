@@ -85,5 +85,38 @@ namespace FoxTunes {
                 return ResourceManager.GetString("Database", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to WITH &quot;MetaData&quot;
+        ///AS (
+        ///    SELECT 
+        ///        &quot;LibraryItems&quot;.&quot;FileName&quot;,
+        ///        MAX(CASE WHEN &quot;MetaDataItems&quot;.&quot;Name&quot; = @artist THEN &quot;MetaDataItems&quot;.&quot;Value&quot; END) AS &quot;Artist&quot;,
+        ///        MAX(CASE WHEN &quot;MetaDataItems&quot;.&quot;Name&quot; = @album THEN &quot;MetaDataItems&quot;.&quot;Value&quot; END) AS &quot;Album&quot;,
+        ///        MAX(CASE WHEN &quot;MetaDataItems&quot;.&quot;Name&quot; = @track THEN &quot;MetaDataItems&quot;.&quot;Value&quot; END) AS &quot;Track&quot;,
+        ///        MAX(CASE WHEN &quot;MetaDataItems&quot;.&quot;Name&quot; = @title THEN &quot;MetaDataItems&quot;.&quot;Value&quot; END) AS &quot;Title&quot;,
+        ///        MAX(CASE WHEN &quot;MetaDataIte [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string GetEntireLibrary {
+            get {
+                return ResourceManager.GetString("GetEntireLibrary", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to WITH &quot;MetaData&quot; AS (
+        ///    SELECT 
+        ///        &quot;LibraryItems&quot;.&quot;FileName&quot;,
+        ///        MAX(CASE WHEN &quot;MetaDataItems&quot;.&quot;Name&quot; = @artist THEN &quot;MetaDataItems&quot;.&quot;Value&quot; END) AS &quot;Artist&quot;,
+        ///        MAX(CASE WHEN &quot;MetaDataItems&quot;.&quot;Name&quot; = @album THEN &quot;MetaDataItems&quot;.&quot;Value&quot; END) AS &quot;Album&quot;,
+        ///        MAX(CASE WHEN &quot;MetaDataItems&quot;.&quot;Name&quot; = @title THEN &quot;MetaDataItems&quot;.&quot;Value&quot; END) AS &quot;Title&quot;,
+        ///        MAX(CASE WHEN &quot;MetaDataItems&quot;.&quot;Name&quot; = @lastPlayed THEN &quot;MetaDataItems&quot;.&quot;Value&quot; END) AS &quot;LastPlayed&quot;,
+        ///        SUM(CASE WHEN &quot;MetaDataI [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string GetListeningHistory {
+            get {
+                return ResourceManager.GetString("GetListeningHistory", resourceCulture);
+            }
+        }
     }
 }
