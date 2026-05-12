@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 
 namespace FoxTunes
@@ -170,7 +171,31 @@ namespace FoxTunes
         protected virtual List<Token> Tokenize(string input)
         {
             var tokens = new List<Token>();
-            var parts = input.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            var parts = new List<string>();
+            var builder = new StringBuilder();
+            var quoted = false;
+            foreach (var character in input)
+            {
+                if (character == '"')
+                {
+                    quoted = !quoted;
+                    continue;
+                }
+                if (char.IsWhiteSpace(character) && !quoted)
+                {
+                    if (builder.Length > 0)
+                    {
+                        parts.Add(builder.ToString());
+                        builder.Clear();
+                    }
+                    continue;
+                }
+                builder.Append(character);
+            }
+            if (builder.Length > 0)
+            {
+                parts.Add(builder.ToString());
+            }
             foreach (var part in parts)
             {
                 if (part.EndsWith("*"))
@@ -259,7 +284,7 @@ namespace FoxTunes
         {
             if (op == ":")
             {
-                return "*" + value + "*";
+                return "*" + value.Replace(' ', '*') + "*";
             }
             return value;
         }
