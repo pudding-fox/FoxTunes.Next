@@ -74,7 +74,6 @@ namespace FoxTunes {
         ///- Before adding a track, check the current artist count.
         ///- If the limit of 5 is reached, choose another artist.
         ///- If artists are exhaused, relax the previous requirement.
-        ///- Randomize the resulting tracks.
         ///- Output only file paths and the reason for selection delimited by a tab.
         ///- No extra text.
         /// </summary>
@@ -98,7 +97,6 @@ namespace FoxTunes {
         ///- Before adding a track, check the current artist count.
         ///- If the limit of 5 is reached, choose another artist.
         ///- If artists are exhaused, relax the previous requirement.
-        ///- Randomize the resulting tracks.
         ///- Output only file paths and the reason for selection delimited by a tab.
         ///- No extra text.
         /// </summary>
