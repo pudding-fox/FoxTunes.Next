@@ -30,7 +30,7 @@ namespace FoxTunes
                     Logger.Write(typeof(ComponentActivator), LogLevel.Warn, "Failed to locate constructor for component {0}.", type.Name);
                     return default(T);
                 }
-                if (FastActivator.Instance.Activate(type) is T component)
+                if (Activator.CreateInstance(type) is T component)
                 {
                     return component;
                 }

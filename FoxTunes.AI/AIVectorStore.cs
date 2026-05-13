@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace FoxTunes
 {
-    public abstract class AIVectorStore : StandardComponent, IAIVectorStore
+    public abstract class AIVectorStore : BaseComponent, IAIVectorStore
     {
         public abstract Task<string> Create(string name, CancellationToken cancellationToken);
 
