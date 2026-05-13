@@ -23,14 +23,14 @@ WITH "MetaData" AS (
 )
 
 SELECT 
-	"FileName",
+    "FileName",
     "Artist",
     "Album",
 	"Title",
-   "LastPlayed",
-   "PlayCount"
+    "LastPlayed",
+    "PlayCount"
 FROM "Ranked"
 WHERE "RowNumber" = 1
     AND "LastPlayed" > '1990/01/01 00:00:00'
-ORDER BY RANDOM()
+ORDER BY "LastPlayed" DESC
 LIMIT @limit
