@@ -2,12 +2,8 @@
 {
     public interface IAssemblyResolver
     {
-        void EnableExecution();
+        void Enable();
 
-        void EnableReflectionOnly();
-
-        void DisableExecution();
-
-        void DisableReflectionOnly();
+        void Disable();
     }
 }

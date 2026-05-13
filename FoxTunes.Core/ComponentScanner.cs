@@ -65,7 +65,7 @@ namespace FoxTunes
             var assembly = default(Assembly);
             try
             {
-                assembly = AssemblyRegistry.Instance.GetOrLoadReflectionAssembly(fileName);
+                assembly = AssemblyRegistry.Instance.GetOrLoadAssembly(fileName);
             }
             catch
             {

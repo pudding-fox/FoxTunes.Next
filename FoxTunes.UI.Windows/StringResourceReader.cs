@@ -51,10 +51,6 @@ namespace FoxTunes
                     {
                         return null;
                     }
-                    if (type.Assembly.ReflectionOnly)
-                    {
-                        type = AssemblyRegistry.Instance.GetExecutableType(type);
-                    }
                     var property = type.GetProperty(nameof(Strings.ResourceManager), BindingFlags.Static | BindingFlags.NonPublic);
                     if (property == null)
                     {

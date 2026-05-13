@@ -25,10 +25,6 @@ namespace FoxTunes
         {
             try
             {
-                if (type.Assembly.ReflectionOnly)
-                {
-                    type = AssemblyRegistry.Instance.GetExecutableType(type);
-                }
                 if (type.GetConstructor(new Type[] { }) == null)
                 {
                     Logger.Write(typeof(ComponentActivator), LogLevel.Warn, "Failed to locate constructor for component {0}.", type.Name);

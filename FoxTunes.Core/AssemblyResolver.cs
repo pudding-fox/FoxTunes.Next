@@ -25,24 +25,14 @@ namespace FoxTunes
 
         }
 
-        public void EnableExecution()
+        public void Enable()
         {
             AppDomain.CurrentDomain.AssemblyResolve += this.OnAssemblyResolve;
         }
 
-        public void EnableReflectionOnly()
-        {
-            AppDomain.CurrentDomain.ReflectionOnlyAssemblyResolve += this.OnReflectionOnlyAssemblyResolve;
-        }
-
-        public void DisableExecution()
+        public void Disable()
         {
             AppDomain.CurrentDomain.AssemblyResolve -= this.OnAssemblyResolve;
-        }
-
-        public void DisableReflectionOnly()
-        {
-            AppDomain.CurrentDomain.ReflectionOnlyAssemblyResolve -= this.OnReflectionOnlyAssemblyResolve;
         }
 
         protected virtual Assembly OnAssemblyResolve(object sender, ResolveEventArgs args)
@@ -55,42 +45,6 @@ namespace FoxTunes
             return null;
         }
 
-        protected virtual Assembly OnReflectionOnlyAssemblyResolve(object sender, ResolveEventArgs args)
-        {
-            try
-            {
-                return Assembly.ReflectionOnlyLoad(args.Name);
-            }
-            catch
-            {
-                //Nothing to do.
-            }
-            var fileName = default(string);
-            //TODO: We're setting the tryLoad parameter to true.
-            //TODO: If the resolve fails for some reason a standard Assembly.Load will be attempted.
-            //TODO: As we're trying to do a reflection only load this is obviously wrong.
-            //TODO: It happens that the only libs that fall into this trap are framework assemblies so it's OK for now.
-            if (this.TryResolve(Location, args.Name, true, out fileName))
-            {
-                var assembly = AssemblyRegistry.Instance.GetOrLoadReflectionAssembly(fileName);
-                //Load immidiate references.
-                foreach (var reference in assembly.GetReferencedAssemblies())
-                {
-                    try
-                    {
-                        Assembly.ReflectionOnlyLoad(reference.FullName);
-                    }
-                    catch
-                    {
-                        //Nothing to do.
-                    }
-                }
-                return assembly;
-            }
-            //Failed to resolve, perhaps somebody else will succeed.
-            return null;
-        }
-
         protected virtual bool TryResolve(string directoryName, string name, bool tryLoad, out string result)
         {
             foreach (var fileName in FileSystemHelper.EnumerateFiles(directoryName, "*.dll", SEARCH_OPTIONS))
@@ -100,10 +54,6 @@ namespace FoxTunes
                 {
                     continue;
                 }
-                //if (!string.Equals(assemblyName.FullName, name, StringComparison.OrdinalIgnoreCase))
-                //{
-                //    continue;
-                //}
                 if (!name.StartsWith(string.Concat(assemblyName.Name, ","), StringComparison.OrdinalIgnoreCase))
                 {
                     continue;

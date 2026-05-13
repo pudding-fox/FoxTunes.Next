@@ -28,15 +28,6 @@ namespace FoxTunes
 
         public static bool HasCustomAttribute<T>(this Type type, bool inherit, out T attribute) where T : Attribute
         {
-            if (type.Assembly.ReflectionOnly)
-            {
-                if (!type.HasCustomAttributeData<T>(inherit))
-                {
-                    attribute = default(T);
-                    return false;
-                }
-                type = AssemblyRegistry.Instance.GetExecutableType(type);
-            }
             return (attribute = type.GetCustomAttribute<T>(inherit)) != null;
         }
 
@@ -47,15 +38,6 @@ namespace FoxTunes
 
         public static bool HasCustomAttributes<T>(this Type type, bool inherit, out IEnumerable<T> attributes) where T : Attribute
         {
-            if (type.Assembly.ReflectionOnly)
-            {
-                if (!type.HasCustomAttributeData<T>(inherit))
-                {
-                    attributes = default(IEnumerable<T>);
-                    return false;
-                }
-                type = AssemblyRegistry.Instance.GetExecutableType(type);
-            }
             return (attributes = type.GetCustomAttributes<T>(inherit)).Any();
         }
 

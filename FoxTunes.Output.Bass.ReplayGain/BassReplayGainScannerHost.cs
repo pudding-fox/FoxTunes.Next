@@ -42,8 +42,7 @@ namespace FoxTunes
                     DateTime.UtcNow.ToFileTime()
                 )
             );
-            AssemblyResolver.Instance.EnableExecution();
-            AssemblyResolver.Instance.EnableReflectionOnly();
+            AssemblyResolver.Instance.Enable();
         }
 
         public static int Scan()
