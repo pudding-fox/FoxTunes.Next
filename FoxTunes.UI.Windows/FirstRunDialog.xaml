@@ -11,70 +11,111 @@
     <UserControl.Resources>
         <ViewModel:FirstRun x:Key="ViewModel"></ViewModel:FirstRun>
     </UserControl.Resources>
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto"></ColumnDefinition>
-            <ColumnDefinition></ColumnDefinition>
-        </Grid.ColumnDefinitions>
+    <Grid Grid.IsSharedSizeScope="True">
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"></RowDefinition>
-            <RowDefinition Height="Auto"></RowDefinition>
             <RowDefinition Height="Auto"></RowDefinition>
             <RowDefinition Height="Auto"></RowDefinition>
             <RowDefinition Height="Auto"></RowDefinition>
             <RowDefinition></RowDefinition>
         </Grid.RowDefinitions>
-        <TextBlock Grid.Column="0" Grid.Row="0" Foreground="{DynamicResource TextBrush}" Text="{Binding Theme.Name, Source={StaticResource ViewModel}}" VerticalAlignment="Center" Margin="0,0,4,0"></TextBlock>
-        <ComboBox Grid.Column="1" Grid.Row="0" Margin="0,0,0,4" ItemsSource="{Binding Theme.Options, Source={StaticResource ViewModel}}" SelectedValue="{Binding Theme.Value, Source={StaticResource ViewModel}}" DisplayMemberPath="Name"></ComboBox>
-        <TextBlock Grid.Column="0" Grid.Row="1" Foreground="{DynamicResource TextBrush}" Text="{Binding Layout.Name, Source={StaticResource ViewModel}}" VerticalAlignment="Center" Margin="0,0,4,0"></TextBlock>
-        <ComboBox Grid.Column="1" Grid.Row="1" Margin="0,0,0,4" ItemsSource="{Binding Layout.Options, Source={StaticResource ViewModel}}" SelectedValue="{Binding Layout.Value, Source={StaticResource ViewModel}}" DisplayMemberPath="Name"></ComboBox>
-        <TextBlock Grid.Column="0" Grid.Row="2" Foreground="{DynamicResource TextBrush}" Text="Preset" VerticalAlignment="Center" Margin="0,0,4,0"></TextBlock>
-        <ContentControl Grid.Column="1" Grid.Row="2">
-            <ContentControl.Style>
-                <Style TargetType="{x:Type ContentControl}">
-                    <Setter Property="Content" Value="{Binding LayoutProvider.PresetSelector, Mode=OneWay, Source={StaticResource ViewModel}}"></Setter>
-                    <Style.Triggers>
-                        <DataTrigger Binding="{Binding LayoutProvider.PresetSelector, Mode=OneWay, Source={StaticResource ViewModel}}" Value="{x:Null}">
-                            <Setter Property="Content">
-                                <Setter.Value>
-                                    <TextBlock Foreground="{DynamicResource TextBrush}">Not applicable.</TextBlock>
-                                </Setter.Value>
-                            </Setter>
-                        </DataTrigger>
-                    </Style.Triggers>
-                </Style>
-            </ContentControl.Style>
-        </ContentControl>
-        <TextBlock Grid.Column="0" Grid.Row="3" Foreground="{DynamicResource TextBrush}" Text="{Binding Transparency.Name, Source={StaticResource ViewModel}}" VerticalAlignment="Center" Margin="0,0,4,0"></TextBlock>
-        <CheckBox Grid.Column="1" Grid.Row="3" Margin="0,0,0,4" IsChecked="{Binding Transparency.Value, Source={StaticResource ViewModel}}"></CheckBox>
-        <TextBlock Grid.Column="0" Grid.Row="4" Foreground="{DynamicResource TextBrush}" Text="{Binding TransparencyProvider.Name, Source={StaticResource ViewModel}}" VerticalAlignment="Center" Margin="0,0,4,0">
-            <TextBlock.Style>
-                <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource {x:Type TextBlock}}">
-                    <Style.Setters>
-                        <Setter Property="Visibility" Value="Collapsed"></Setter>
-                    </Style.Setters>
-                    <Style.Triggers>
-                        <DataTrigger Binding="{Binding Transparency.Value, Source={StaticResource ViewModel}}" Value="True">
-                            <Setter Property="Visibility" Value="Visible"></Setter>
-                        </DataTrigger>
-                    </Style.Triggers>
-                </Style>
-            </TextBlock.Style>
-        </TextBlock>
-        <ComboBox Grid.Column="1" Grid.Row="4" Margin="0,0,0,4" ItemsSource="{Binding TransparencyProvider.Options, Source={StaticResource ViewModel}}" SelectedValue="{Binding TransparencyProvider.Value, Source={StaticResource ViewModel}}" DisplayMemberPath="Name">
-            <ComboBox.Style>
-                <Style TargetType="{x:Type ComboBox}" BasedOn="{StaticResource {x:Type ComboBox}}">
-                    <Style.Setters>
-                        <Setter Property="Visibility" Value="Collapsed"></Setter>
-                    </Style.Setters>
-                    <Style.Triggers>
-                        <DataTrigger Binding="{Binding Transparency.Value, Source={StaticResource ViewModel}}" Value="True">
-                            <Setter Property="Visibility" Value="Visible"></Setter>
-                        </DataTrigger>
-                    </Style.Triggers>
-                </Style>
-            </ComboBox.Style>
-        </ComboBox>
-        <Button Grid.Column="1" Grid.Row="5" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="70" Height="30" Click="OnClose">Save</Button>
+        <GroupBox Grid.Row="0" Header="{x:Static ViewModel:StringResources.WindowsUserInterfaceConfiguration_Section}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition SharedSizeGroup="Name" Width="Auto"></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Column="0" Grid.Row="0" Foreground="{DynamicResource TextBrush}" Text="{Binding Theme.Name, Source={StaticResource ViewModel}}" VerticalAlignment="Center" Margin="0,0,4,0"></TextBlock>
+                <ComboBox Grid.Column="1" Grid.Row="0" Margin="0,0,0,4" ItemsSource="{Binding Theme.Options, Source={StaticResource ViewModel}}" SelectedValue="{Binding Theme.Value, Source={StaticResource ViewModel}}" DisplayMemberPath="Name"></ComboBox>
+                <TextBlock Grid.Column="0" Grid.Row="1" Foreground="{DynamicResource TextBrush}" Text="{Binding Layout.Name, Source={StaticResource ViewModel}}" VerticalAlignment="Center" Margin="0,0,4,0"></TextBlock>
+                <ComboBox Grid.Column="1" Grid.Row="1" Margin="0,0,0,4" ItemsSource="{Binding Layout.Options, Source={StaticResource ViewModel}}" SelectedValue="{Binding Layout.Value, Source={StaticResource ViewModel}}" DisplayMemberPath="Name"></ComboBox>
+                <TextBlock Grid.Column="0" Grid.Row="2" Foreground="{DynamicResource TextBrush}" Text="Preset" VerticalAlignment="Center" Margin="0,0,4,0"></TextBlock>
+                <ContentControl Grid.Column="1" Grid.Row="2" Margin="0,0,0,4">
+                    <ContentControl.Style>
+                        <Style TargetType="{x:Type ContentControl}">
+                            <Setter Property="Content" Value="{Binding LayoutProvider.PresetSelector, Mode=OneWay, Source={StaticResource ViewModel}}"></Setter>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding LayoutProvider.PresetSelector, Mode=OneWay, Source={StaticResource ViewModel}}" Value="{x:Null}">
+                                    <Setter Property="Content">
+                                        <Setter.Value>
+                                            <TextBlock Foreground="{DynamicResource TextBrush}">Not applicable.</TextBlock>
+                                        </Setter.Value>
+                                    </Setter>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ContentControl.Style>
+                </ContentControl>
+                <TextBlock Grid.Column="0" Grid.Row="3" Foreground="{DynamicResource TextBrush}" Text="{Binding Transparency.Name, Source={StaticResource ViewModel}}" VerticalAlignment="Center" Margin="0,0,4,0"></TextBlock>
+                <CheckBox Grid.Column="1" Grid.Row="3" Margin="0,0,0,4" IsChecked="{Binding Transparency.Value, Source={StaticResource ViewModel}}"></CheckBox>
+                <TextBlock Grid.Column="0" Grid.Row="4" Foreground="{DynamicResource TextBrush}" Text="{Binding TransparencyProvider.Name, Source={StaticResource ViewModel}}" VerticalAlignment="Center" Margin="0,0,4,0">
+                    <TextBlock.Style>
+                        <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource {x:Type TextBlock}}">
+                            <Style.Setters>
+                                <Setter Property="Visibility" Value="Collapsed"></Setter>
+                            </Style.Setters>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Transparency.Value, Source={StaticResource ViewModel}}" Value="True">
+                                    <Setter Property="Visibility" Value="Visible"></Setter>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
+                <ComboBox Grid.Column="1" Grid.Row="4" Margin="0,0,0,4" ItemsSource="{Binding TransparencyProvider.Options, Source={StaticResource ViewModel}}" SelectedValue="{Binding TransparencyProvider.Value, Source={StaticResource ViewModel}}" DisplayMemberPath="Name">
+                    <ComboBox.Style>
+                        <Style TargetType="{x:Type ComboBox}" BasedOn="{StaticResource {x:Type ComboBox}}">
+                            <Style.Setters>
+                                <Setter Property="Visibility" Value="Collapsed"></Setter>
+                            </Style.Setters>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Transparency.Value, Source={StaticResource ViewModel}}" Value="True">
+                                    <Setter Property="Visibility" Value="Visible"></Setter>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ComboBox.Style>
+                </ComboBox>
+            </Grid>
+        </GroupBox>
+        <GroupBox Grid.Row="1" Header="Playlist">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition SharedSizeGroup="Name" Width="Auto"></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Column="0" Grid.Row="0" Foreground="{DynamicResource TextBrush}" Text="Ratings" VerticalAlignment="Center" Margin="0,0,4,0"></TextBlock>
+                <CheckBox Grid.Column="1" Grid.Row="0" Margin="0,0,0,4" IsChecked="{Binding Ratings, Source={StaticResource ViewModel}}"></CheckBox>
+                <TextBlock Grid.Column="0" Grid.Row="1" Foreground="{DynamicResource TextBrush}" Text="Likes" VerticalAlignment="Center" Margin="0,0,4,0"></TextBlock>
+                <CheckBox Grid.Column="1" Grid.Row="1" Margin="0,0,0,4" IsChecked="{Binding Likes, Source={StaticResource ViewModel}}"></CheckBox>
+            </Grid>
+        </GroupBox>
+        <GroupBox Grid.Row="2" Header="Services">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition SharedSizeGroup="Name" Width="Auto"></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Column="0" Grid.Row="0" Foreground="{DynamicResource TextBrush}" Text="Discogs" VerticalAlignment="Center" Margin="0,0,4,0"></TextBlock>
+                <CheckBox Grid.Column="1" Grid.Row="0" Margin="0,0,0,4" IsChecked="{Binding Discogs, Source={StaticResource ViewModel}}"></CheckBox>
+                <TextBlock Grid.Column="0" Grid.Row="1" Foreground="{DynamicResource TextBrush}" Text="Lyrics" VerticalAlignment="Center" Margin="0,0,4,0"></TextBlock>
+                <CheckBox Grid.Column="1" Grid.Row="1" Margin="0,0,0,4" IsChecked="{Binding Lyrics, Source={StaticResource ViewModel}}"></CheckBox>
+            </Grid>
+        </GroupBox>
+        <Button Grid.Row="3" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="70" Height="30" Click="OnClose">Save</Button>
     </Grid>
 </UserControl>

@@ -6,6 +6,14 @@
     /// </summary>
     public static class StringResources
     {
+        public static string WindowsUserInterfaceConfiguration_Section
+        {
+            get
+            {
+                return Strings.WindowsUserInterfaceConfiguration_Section;
+            }
+        }
+
         public static string EqualizerWindow_Title
         {
             get
