@@ -17,6 +17,8 @@ namespace FoxTunes
 
         public const string DJ_PROMPT_TEMPLATE = "DDDD65F6-C915-4FA0-A28A-824D2E0331E8";
 
+        public const string REPORT = "DDEEEC43-6B54-4F63-B8A2-0A8A1FDEDF6C";
+
         public static IEnumerable<ConfigurationSection> GetConfigurationSections()
         {
             yield return new ConfigurationSection(SECTION, Strings.AIBehaviourConfiguration_Section)
@@ -34,6 +36,9 @@ namespace FoxTunes
                 .WithElement(new TextConfigurationElement(DJ_PROMPT_TEMPLATE, Strings.AIBehaviourConfiguration_DJPromptTemplate)
                     .WithValue(Strings.AIBehaviourConfiguration_DefaultDJPromptTemplate)
                     .WithFlags(ConfigurationElementFlags.MultiLine)
+                    .DependsOn(SECTION, ENABLED))
+                .WithElement(new BooleanConfigurationElement(REPORT, Strings.AIBehaviourConfiguration_Report)
+                    .WithValue(true)
                     .DependsOn(SECTION, ENABLED));
         }
     }

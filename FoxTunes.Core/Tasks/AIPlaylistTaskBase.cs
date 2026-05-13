@@ -17,10 +17,16 @@ namespace FoxTunes
 
         public IReportEmitter ReportEmitter { get; private set; }
 
+        public BooleanConfigurationElement Report { get; private set; }
+
         public override void InitializeComponent(ICore core)
         {
-            this.ReportEmitter = core.Components.ReportEmitter;
             base.InitializeComponent(core);
+            this.ReportEmitter = core.Components.ReportEmitter;
+            this.Report = core.Components.Configuration.GetElement<BooleanConfigurationElement>(
+                AIBehaviourConfiguration.SECTION,
+                AIBehaviourConfiguration.REPORT
+            );
         }
 
         protected virtual async Task<IEnumerable<string>> GetPathsFromResponse(string response)
@@ -47,7 +53,10 @@ namespace FoxTunes
                         paths[fileName] = reason;
                     }
                 }
-                this.Dispatch(() => this.ReportEmitter.Send(new AIPlaylistReport(paths)));
+                if (this.Report.Value)
+                {
+                    this.Dispatch(() => this.ReportEmitter.Send(new AIPlaylistReport(paths)));
+                }
                 return paths.Keys.Cast<string>();
             }
         }

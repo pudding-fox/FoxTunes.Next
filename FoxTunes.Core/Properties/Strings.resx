@@ -387,4 +387,7 @@ Requirements:
   <data name="AIPlaylistReport.Track" xml:space="preserve">
     <value>Track</value>
   </data>
+  <data name="AIBehaviourConfiguration.Report" xml:space="preserve">
+    <value>Report</value>
+  </data>
 </root>

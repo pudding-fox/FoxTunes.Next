@@ -145,6 +145,15 @@ namespace FoxTunes {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Report.
+        /// </summary>
+        internal static string AIBehaviourConfiguration_Report {
+            get {
+                return ResourceManager.GetString("AIBehaviourConfiguration.Report", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Artificial Intelligence.
         /// </summary>
         internal static string AIBehaviourConfiguration_Section {
