@@ -22,8 +22,8 @@ namespace FoxTunes
 
         public BassFfmpegStreamProvider()
         {
-            BassLoader.AddPath(Path.Combine(Location, Environment.Is64BitProcess ? "x64" : "x86", BassLoader.DIRECTORY_NAME_ADDON));
-            BassLoader.AddPath(Path.Combine(Location, Environment.Is64BitProcess ? "x64" : "x86", "bass_ffmpeg.dll"));
+            BassLoader.AddPath(Path.Combine(Location, Environment.Is64BitProcess ? "x64" : "x86", BassLoader.DIRECTORY_NAME_ADDON), BassLoader.PRIORITY_LOW);
+            BassLoader.AddPath(Path.Combine(Location, Environment.Is64BitProcess ? "x64" : "x86", "bass_ffmpeg.dll"), BassLoader.PRIORITY_LOW);
         }
 
         public IConfiguration Configuration { get; private set; }

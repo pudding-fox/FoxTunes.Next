@@ -12,6 +12,12 @@ namespace FoxTunes
 {
     public class BassLoader : StandardComponent, IBassLoader
     {
+        public const byte PRIORITY_HIGH = 0;
+
+        public const byte PRIORITY_NORMAL = 100;
+
+        public const byte PRIORITY_LOW = 255;
+
         public const string DIRECTORY_NAME_ADDON = "Addon";
 
         public const string FILE_NAME_MASK = "bass*.dll";
@@ -35,10 +41,10 @@ namespace FoxTunes
             "nfo"
         }, StringComparer.OrdinalIgnoreCase);
 
-        public static readonly HashSet<string> PATHS = new HashSet<string>(new[]
+        public static readonly HashSet<BassLoaderPath> PATHS = new HashSet<BassLoaderPath>(new[]
         {
-            Path.Combine(Location, Environment.Is64BitProcess ? "x64" : "x86", "Addon")
-        }, StringComparer.OrdinalIgnoreCase);
+            new BassLoaderPath( Path.Combine(Location, Environment.Is64BitProcess ? "x64" : "x86", "Addon"))
+        }, BassLoaderPathComparer.Instance);
 
         public static object SyncRoot = new object();
 
@@ -59,11 +65,11 @@ namespace FoxTunes
             EXTENSIONS.Add(extension);
         }
 
-        public static bool AddPath(string path)
+        public static bool AddPath(string path, byte priority = BassLoader.PRIORITY_NORMAL)
         {
             if (Directory.Exists(path) || File.Exists(path))
             {
-                return PATHS.Add(path);
+                return PATHS.Add(new BassLoaderPath(path, priority));
             }
             return false;
         }
@@ -161,13 +167,13 @@ namespace FoxTunes
                 return;
             }
             var failures = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-            foreach (var path in PATHS)
+            foreach (var path in PATHS.OrderBy(_path => _path.Priority).ThenBy(_path => _path.Path.ToLower()/*Maintain compatibility.*/))
             {
-                if (File.Exists(path))
+                if (File.Exists(path.Path))
                 {
                     try
                     {
-                        if (this.Load(path))
+                        if (this.Load(path.Path))
                         {
                             continue;
                         }
@@ -176,11 +182,11 @@ namespace FoxTunes
                     {
                         Logger.Write(this, LogLevel.Warn, "Failed to load plugin \"{0}\": {1}", path, e.Message);
                     }
-                    failures.Add(path);
+                    failures.Add(path.Path);
                 }
-                else if (Directory.Exists(path))
+                else if (Directory.Exists(path.Path))
                 {
-                    foreach (var fileName in Directory.EnumerateFiles(path, FILE_NAME_MASK))
+                    foreach (var fileName in Directory.EnumerateFiles(path.Path, FILE_NAME_MASK))
                     {
                         try
                         {
@@ -384,5 +390,47 @@ namespace FoxTunes
                 return !(a == b);
             }
         }
+    }
+
+    public class BassLoaderPath
+    {
+        public BassLoaderPath(string path, byte priority = BassLoader.PRIORITY_NORMAL)
+        {
+            this.Path = path;
+            this.Priority = priority;
+        }
+
+        public string Path { get; private set; }
+
+        public byte Priority { get; private set; }
+    }
+
+    public class BassLoaderPathComparer : IEqualityComparer<BassLoaderPath>
+    {
+        public bool Equals(BassLoaderPath x, BassLoaderPath y)
+        {
+            if (object.ReferenceEquals(x, y))
+            {
+                return true;
+            }
+            if (!string.Equals(x.Path, y.Path, StringComparison.OrdinalIgnoreCase))
+            {
+                return false;
+            }
+            return true;
+        }
+
+        public int GetHashCode(BassLoaderPath obj)
+        {
+            var hashCode = default(int);
+            unchecked
+            {
+                hashCode += obj.Path.ToLower().GetHashCode();
+            }
+            return hashCode;
+        }
+
+        public static readonly BassLoaderPathComparer Instance = new BassLoaderPathComparer();
+
     }
 }
