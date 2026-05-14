@@ -33,6 +33,10 @@ namespace FoxTunes.ViewModel
 
         public BooleanConfigurationElement LyricsAutoLookup { get; private set; }
 
+        public SelectionConfigurationElement Input { get; private set; }
+
+        public SelectionConfigurationElement Output { get; private set; }
+
         protected virtual void OnLayoutProviderChanged()
         {
             if (this.LayoutProviderChanged != null)
@@ -77,6 +81,14 @@ namespace FoxTunes.ViewModel
             this.LyricsAutoLookup = this.Configuration.GetElement<BooleanConfigurationElement>(
                 "42FB4DBD-E28C-4E42-B64F-6921CFCEF924",
                 "BBBB3698-E26A-4D6C-9BBF-E845B0F9D150"
+            );
+            this.Input = this.Configuration.GetElement<SelectionConfigurationElement>(
+                "8399D051-81BC-41A6-940D-36E6764213D2",
+                "MMNN52A1-79E9-43AA-BC17-C9DB335AFC9C"
+            );
+            this.Output = this.Configuration.GetElement<SelectionConfigurationElement>(
+                "8399D051-81BC-41A6-940D-36E6764213D2",
+                "NNNN6B39-2F8A-4667-9C03-9742FF2D1EA7"
             );
             base.InitializeComponent(core);
         }
