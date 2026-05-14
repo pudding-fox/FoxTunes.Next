@@ -159,6 +159,12 @@ namespace FoxTunes
                 rate,
                 channels
             );
+            switch (BassWasapiDevice.Info.Format)
+            {
+                case WasapiFormat.Float:
+                    flags |= BassFlags.Float;
+                    break;
+            }
         }
 
         protected virtual bool StartWASAPI()
@@ -201,9 +207,9 @@ namespace FoxTunes
             var _channels = default(int);
             var _flags = default(BassFlags);
             previous.GetFormat(out _rate, out _channels, out _flags);
-            if (rate != _rate || channels != _channels)
+            if (rate != _rate || channels != _channels || flags != _flags)
             {
-                //Stream rate or channel count differs from device.
+                //Stream rate, channel count or flags differ from device.
                 return true;
             }
             return false;
