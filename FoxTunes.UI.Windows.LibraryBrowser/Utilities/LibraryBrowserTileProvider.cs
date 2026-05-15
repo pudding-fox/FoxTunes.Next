@@ -221,7 +221,12 @@ namespace FoxTunes
                     switch (libraryHierarchyLevel.Hints)
                     {
                         case LibraryHierarchyLevelHints.Artist:
-                            if (!string.Equals(libraryHierarchyNode.Value, "Various Artists", StringComparison.OrdinalIgnoreCase))
+                            var skip = new[]
+                            {
+                                "No Artist",
+                                "Various Artists"
+                            };
+                            if (!skip.Any(_skip => string.Equals(libraryHierarchyNode.Value, _skip, StringComparison.OrdinalIgnoreCase)))
                             {
                                 var libraryItems = this.LibraryHierarchyBrowser.GetItems(libraryHierarchyNode);
                                 var newFileNames = await this.OnDemandMetaDataProvider.GetMetaData(
