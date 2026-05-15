@@ -1,9 +1,11 @@
 ﻿using FoxTunes.Interfaces;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Media;
 
 namespace FoxTunes.ViewModel
 {
@@ -70,7 +72,7 @@ namespace FoxTunes.ViewModel
             var items = global::FoxTunes.BackgroundTask.Active
                 .Where(backgroundTask => backgroundTask.Visible)
                 .Select(backgroundTask => new BackgroundTask(backgroundTask))
-                .ToArray();
+                .ToHashSet(BackgroundTaskComparer.Instance);
             return Windows.Invoke(() => this.Items = new ObservableCollection<BackgroundTask>(items));
         }
 
@@ -83,6 +85,25 @@ namespace FoxTunes.ViewModel
         protected override Freezable CreateInstanceCore()
         {
             return new BackgroundTasks();
+        }
+
+        public class BackgroundTaskComparer : IEqualityComparer<BackgroundTask>
+        {
+            public bool Equals(BackgroundTask x, BackgroundTask y)
+            {
+                if (object.ReferenceEquals(x, y))
+                {
+                    return true;
+                }
+                return string.Equals(x.InnerBackgroundTask.Id, y.InnerBackgroundTask.Id, StringComparison.OrdinalIgnoreCase);
+            }
+
+            public int GetHashCode(BackgroundTask obj)
+            {
+                return obj.InnerBackgroundTask.Id.ToLower().GetHashCode();
+            }
+
+            public static IEqualityComparer<BackgroundTask> Instance = new BackgroundTaskComparer();
         }
     }
 }

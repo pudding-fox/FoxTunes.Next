@@ -162,6 +162,8 @@ namespace FoxTunes
                         }
                     }
                     break;
+                case LibraryBrowserImageMode.Compound:
+                    return true;
             }
             return false;
         }
