@@ -114,7 +114,7 @@ namespace FoxTunes.ViewModel
         {
             get
             {
-                return this.Count == 0;
+                return this.Count <= 1;
             }
         }
 
