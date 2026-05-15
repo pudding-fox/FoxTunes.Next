@@ -15,7 +15,7 @@
              d:DesignHeight="300" d:DesignWidth="300" AllowDrop="True">
     <UserControl.Resources>
         <LocalViewModel:LibraryBrowser x:Key="ViewModel"></LocalViewModel:LibraryBrowser>
-        <LocalViewModel:LibraryBrowserImageConverter x:Key="LibraryBrowserImageConverter" Width="{Binding TileSize, Source={StaticResource ViewModel}}" Height="{Binding TileSize, Source={StaticResource ViewModel}}" Mode="{Binding ImageMode, Source={StaticResource ViewModel}}"></LocalViewModel:LibraryBrowserImageConverter>
+        <LocalViewModel:LibraryBrowserImageConverter x:Key="LibraryBrowserImageConverter"></LocalViewModel:LibraryBrowserImageConverter>
         <ViewModel:LibraryHierarchyNodeConverter x:Key="LibraryHierarchyNodeConverter"></ViewModel:LibraryHierarchyNodeConverter>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"></BooleanToVisibilityConverter>
         <System:Boolean x:Key="True">True</System:Boolean>

@@ -1,95 +1,14 @@
-﻿using System;
+﻿using FoxTunes.Interfaces;
+using System;
 using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
 
 namespace FoxTunes.ViewModel
 {
-    public class LibraryBrowserImageConverter : ViewModelBase, IValueConverter
+    public class LibraryBrowserImageConverter : ViewModelBase, IValueConverter, IConfigurationTarget
     {
         public static readonly LibraryBrowserTileBrushFactory Factory = ComponentRegistry.Instance.GetComponent<LibraryBrowserTileBrushFactory>();
-
-        public static readonly DependencyProperty WidthProperty = DependencyProperty.Register(
-            "Width",
-            typeof(double),
-            typeof(LibraryBrowserImageConverter),
-            new PropertyMetadata(new PropertyChangedCallback(OnWidthChanged))
-        );
-
-        public static double GetWidth(ViewModelBase source)
-        {
-            return global::System.Convert.ToDouble(source.GetValue(WidthProperty));
-        }
-
-        public static void SetWidth(ViewModelBase source, double value)
-        {
-            source.SetValue(WidthProperty, value);
-        }
-
-        public static void OnWidthChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
-        {
-            var libraryBrowserImageConverter = sender as LibraryBrowserImageConverter;
-            if (libraryBrowserImageConverter == null)
-            {
-                return;
-            }
-            libraryBrowserImageConverter.OnWidthChanged();
-        }
-
-
-        public static readonly DependencyProperty HeightProperty = DependencyProperty.Register(
-            "Height",
-            typeof(double),
-            typeof(LibraryBrowserImageConverter),
-            new PropertyMetadata(new PropertyChangedCallback(OnHeightChanged))
-        );
-
-        public static double GetHeight(ViewModelBase source)
-        {
-            return global::System.Convert.ToDouble(source.GetValue(HeightProperty));
-        }
-
-        public static void SetHeight(ViewModelBase source, double value)
-        {
-            source.SetValue(HeightProperty, value);
-        }
-
-        public static void OnHeightChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
-        {
-            var libraryBrowserImageConverter = sender as LibraryBrowserImageConverter;
-            if (libraryBrowserImageConverter == null)
-            {
-                return;
-            }
-            libraryBrowserImageConverter.OnHeightChanged();
-        }
-
-        public static readonly DependencyProperty ModeProperty = DependencyProperty.Register(
-            "Mode",
-            typeof(LibraryBrowserImageMode),
-            typeof(LibraryBrowserImageConverter),
-            new PropertyMetadata(new PropertyChangedCallback(OnModeChanged))
-        );
-
-        public static LibraryBrowserImageMode GetMode(ViewModelBase source)
-        {
-            return (LibraryBrowserImageMode)source.GetValue(ModeProperty);
-        }
-
-        public static void SetMode(ViewModelBase source, LibraryBrowserImageMode value)
-        {
-            source.SetValue(ModeProperty, value);
-        }
-
-        public static void OnModeChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
-        {
-            var libraryBrowserImageConverter = sender as LibraryBrowserImageConverter;
-            if (libraryBrowserImageConverter == null)
-            {
-                return;
-            }
-            libraryBrowserImageConverter.OnModeChanged();
-        }
 
         public LibraryBrowserImageConverter()
         {
@@ -98,77 +17,96 @@ namespace FoxTunes.ViewModel
 
         public LibraryBrowserTileBrushFactory.LibraryBrowserTile LibraryBrowserTile { get; private set; }
 
-        public double Width
+        private int _TileSize { get; set; }
+
+        public int TileSize
         {
             get
             {
-                return global::System.Convert.ToDouble(this.GetValue(WidthProperty));
+                return this._TileSize;
             }
             set
             {
-                this.SetValue(WidthProperty, value);
+                this._TileSize = value;
+                this.OnTileSizeChanged();
             }
         }
 
-        protected virtual void OnWidthChanged()
+        protected virtual void OnTileSizeChanged()
         {
-            this.LibraryBrowserTile.Update(this.Width, this.Height, this.Mode);
-            if (this.WidthChanged != null)
+            this.LibraryBrowserTile.Update(this.TileSize, this.TileSize, this.ImageMode);
+            if (this.TileSizeChanged != null)
             {
-                this.WidthChanged(this, EventArgs.Empty);
+                this.TileSizeChanged(this, EventArgs.Empty);
             }
-            this.OnPropertyChanged("Width");
+            this.OnPropertyChanged("TileSize");
         }
 
-        public event EventHandler WidthChanged;
+        public event EventHandler TileSizeChanged;
 
-        public double Height
+        private LibraryBrowserImageMode _ImageMode { get; set; }
+
+        public LibraryBrowserImageMode ImageMode
         {
             get
             {
-                return global::System.Convert.ToDouble(this.GetValue(HeightProperty));
+                return this._ImageMode;
             }
             set
             {
-                this.SetValue(HeightProperty, value);
+                this._ImageMode = value;
+                this.OnImageModeChanged();
             }
         }
 
-        protected virtual void OnHeightChanged()
+        protected virtual void OnImageModeChanged()
         {
-            this.LibraryBrowserTile.Update(this.Width, this.Height, this.Mode);
-            if (this.HeightChanged != null)
+            this.LibraryBrowserTile.Update(this.TileSize, this.TileSize, this.ImageMode);
+            if (this.ImageModeChanged != null)
             {
-                this.HeightChanged(this, EventArgs.Empty);
+                this.ImageModeChanged(this, EventArgs.Empty);
             }
-            this.OnPropertyChanged("Height");
+            this.OnPropertyChanged("ImageMode");
         }
 
-        public event EventHandler HeightChanged;
+        public event EventHandler ImageModeChanged;
 
-        public LibraryBrowserImageMode Mode
+        private IConfiguration _Configuration { get; set; }
+
+        public IConfiguration Configuration
         {
             get
             {
-                return (LibraryBrowserImageMode)this.GetValue(ModeProperty);
+                return this._Configuration;
             }
             set
             {
-                this.SetValue(ModeProperty, value);
+                this._Configuration = value;
+                this.OnConfigurationChanged();
             }
         }
 
-        protected virtual void OnModeChanged()
+        protected virtual void OnConfigurationChanged()
         {
-            this.LibraryBrowserTile.Update(this.Width, this.Height, this.Mode);
-            if (this.ModeChanged != null)
+            if (this.Configuration != null)
             {
-                this.ModeChanged(this, EventArgs.Empty);
+                this.Configuration.GetElement<IntegerConfigurationElement>(
+                    LibraryBrowserBaseConfiguration.SECTION,
+                    LibraryBrowserBaseConfiguration.TILE_SIZE
+                ).ConnectValue(value => this.TileSize = value);
+                this.Configuration.GetElement<SelectionConfigurationElement>(
+                    LibraryBrowserBaseConfiguration.SECTION,
+                    LibraryBrowserBaseConfiguration.TILE_IMAGE
+                ).ConnectValue(value => this.ImageMode = LibraryBrowserBaseConfiguration.GetLibraryImage(value));
             }
-            this.OnPropertyChanged("Mode");
+            if (this.ConfigurationChanged != null)
+            {
+                this.ConfigurationChanged(this, EventArgs.Empty);
+            }
+            this.OnPropertyChanged("Configuration");
         }
 
-        public event EventHandler ModeChanged;
+        public event EventHandler ConfigurationChanged;
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {

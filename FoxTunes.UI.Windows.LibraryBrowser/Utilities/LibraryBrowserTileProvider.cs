@@ -108,7 +108,6 @@ namespace FoxTunes
 
         public Task<ImageSource> CreateImageSource(LibraryHierarchyNode libraryHierarchyNode, Func<Task<MetaDataItem[]>> metaDataItems, int width, int height, LibraryBrowserImageMode mode, bool cache)
         {
-            //We only support caching for compound images.
             if (mode == LibraryBrowserImageMode.First)
             {
                 cache = false;
