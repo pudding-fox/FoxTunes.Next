@@ -15,8 +15,6 @@ namespace FoxTunes
 
         public BooleanConfigurationElement AutoLookup { get; private set; }
 
-        public SelectionConfigurationElement AutoLookupProvider { get; private set; }
-
         public override void InitializeComponent(Interfaces.ICore core)
         {
             this.Behaviour = ComponentRegistry.Instance.GetComponent<LyricsBehaviour>();
@@ -24,10 +22,6 @@ namespace FoxTunes
             this.AutoLookup = this.Configuration.GetElement<BooleanConfigurationElement>(
                 LyricsBehaviourConfiguration.SECTION,
                 LyricsBehaviourConfiguration.AUTO_LOOKUP
-            );
-            this.AutoLookupProvider = this.Configuration.GetElement<SelectionConfigurationElement>(
-                LyricsBehaviourConfiguration.SECTION,
-                LyricsBehaviourConfiguration.AUTO_LOOKUP_PROVIDER
             );
             base.InitializeComponent(core);
         }
@@ -58,25 +52,23 @@ namespace FoxTunes
 
         public bool CanGetValue(IFileData fileData, OnDemandMetaDataRequest request)
         {
-            var provider = request.State as ILyricsProvider ?? this.GetAutoLookupProvider();
-            if (provider == null)
-            {
-                return false;
-            }
             if (request.UpdateType.HasFlag(MetaDataUpdateType.User))
             {
                 //User requests are always processed.
                 return true;
             }
-            lock (fileData.MetaDatas)
+            foreach (var provider in this.Behaviour.Providers)
             {
-                var metaDataItem = fileData.MetaDatas.FirstOrDefault(
-                    element => string.Equals(element.Name, CustomMetaData.LyricsRelease, StringComparison.OrdinalIgnoreCase) && element.Type == MetaDataItemType.Tag
-                );
-                if (metaDataItem != null && string.Equals(metaDataItem.Value, provider.None, StringComparison.OrdinalIgnoreCase))
+                lock (fileData.MetaDatas)
                 {
-                    //We have previously attempted a lookup and it failed, don't try again (automatically).
-                    return false;
+                    var metaDataItem = fileData.MetaDatas.FirstOrDefault(
+                        element => string.Equals(element.Name, CustomMetaData.LyricsRelease, StringComparison.OrdinalIgnoreCase) && element.Type == MetaDataItemType.Tag
+                    );
+                    if (metaDataItem != null && string.Equals(metaDataItem.Value, provider.None, StringComparison.OrdinalIgnoreCase))
+                    {
+                        //We have previously attempted a lookup and it failed, don't try again (automatically).
+                        return false;
+                    }
                 }
             }
             return true;
@@ -84,23 +76,21 @@ namespace FoxTunes
 
         public async Task<OnDemandMetaDataValues> GetValues(IEnumerable<IFileData> fileDatas, OnDemandMetaDataRequest request)
         {
-            var provider = request.State as ILyricsProvider ?? this.GetAutoLookupProvider();
-            if (provider == null)
-            {
-                return null;
-            }
             var values = new List<OnDemandMetaDataValue>();
-            foreach (var fileData in fileDatas)
+            foreach (var provider in this.Behaviour.Providers)
             {
-                Logger.Write(this, LogLevel.Debug, "Looking up lyrics for file \"{0}\"..", fileData.FileName);
-                var result = await provider.Lookup(fileData).ConfigureAwait(false);
-                if (!result.Success)
+                foreach (var fileData in fileDatas)
                 {
-                    Logger.Write(this, LogLevel.Warn, "Failed to look up lyrics for file \"{0}\".", fileData.FileName);
-                    continue;
+                    Logger.Write(this, LogLevel.Debug, "Looking up lyrics for file \"{0}\"..", fileData.FileName);
+                    var result = await provider.Lookup(fileData).ConfigureAwait(false);
+                    if (!result.Success)
+                    {
+                        Logger.Write(this, LogLevel.Warn, "Failed to look up lyrics for file \"{0}\".", fileData.FileName);
+                        continue;
+                    }
+                    Logger.Write(this, LogLevel.Debug, "Looking up lyrics for file \"{0}\": OK.", fileData.FileName);
+                    values.Add(new OnDemandMetaDataValue(fileData, result.Lyrics));
                 }
-                Logger.Write(this, LogLevel.Debug, "Looking up lyrics for file \"{0}\": OK.", fileData.FileName);
-                values.Add(new OnDemandMetaDataValue(fileData, result.Lyrics));
             }
             var flags = MetaDataUpdateFlags.None;
             if (this.Behaviour.WriteTags.Value)
@@ -108,27 +98,6 @@ namespace FoxTunes
                 flags |= MetaDataUpdateFlags.WriteToFiles;
             }
             return new OnDemandMetaDataValues(values, flags);
-        }
-
-        protected virtual ILyricsProvider GetAutoLookupProvider()
-        {
-            var provider = default(ILyricsProvider);
-            if (this.AutoLookupProvider.Value != null)
-            {
-                provider = this.Behaviour.Providers.FirstOrDefault(
-                   _provider => string.Equals(_provider.Id, this.AutoLookupProvider.Value.Id, StringComparison.OrdinalIgnoreCase)
-               );
-            }
-            if (provider == null)
-            {
-                Logger.Write(this, LogLevel.Warn, "Failed to determine the preferred provider.");
-                provider = this.Behaviour.Providers.FirstOrDefault();
-            }
-            if (provider == null)
-            {
-                Logger.Write(this, LogLevel.Warn, "No providers.");
-            }
-            return provider;
         }
     }
 }

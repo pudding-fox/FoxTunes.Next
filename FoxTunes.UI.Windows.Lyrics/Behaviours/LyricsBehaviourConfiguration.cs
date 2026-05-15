@@ -10,8 +10,6 @@ namespace FoxTunes
 
         public const string AUTO_LOOKUP = "BBBB3698-E26A-4D6C-9BBF-E845B0F9D150";
 
-        public const string AUTO_LOOKUP_PROVIDER = "BBCC07C6-5584-4E7E-9526-EB60F9F72E49";
-
         public const string WRITE_TAGS = "EEEE4CCA-250F-4892-9B00-CB0C22D094D3";
 
         public const string SYNCED_ROWS = "FFFFCB57-EE0F-4C05-B204-36000AECE975";
@@ -29,8 +27,6 @@ namespace FoxTunes
                     .WithValue(true))
                 .WithElement(new BooleanConfigurationElement(AUTO_LOOKUP, Strings.LyricsBehaviourConfiguration_AutoLookup)
                     .WithValue(false))
-                .WithElement(new SelectionConfigurationElement(AUTO_LOOKUP_PROVIDER, Strings.LyricsBehaviourConfiguration_AutoLookupProvider)
-                    .DependsOn(SECTION, AUTO_LOOKUP))
                 .WithElement(new BooleanConfigurationElement(WRITE_TAGS, Strings.LyricsBehaviourConfiguration_WriteTags)
                     .WithValue(true))
                 .WithElement(new IntegerConfigurationElement(SYNCED_ROWS, Strings.LyricsBehaviourConfiguration_SyncedRows)

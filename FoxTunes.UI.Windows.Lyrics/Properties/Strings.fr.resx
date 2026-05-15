@@ -117,23 +117,11 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="ChartLyrics" xml:space="preserve">
-    <value>Chart Lyrics</value>
-  </data>
-  <data name="ChartLyricsProviderConfiguration.BaseUrl" xml:space="preserve">
-    <value>URL de base</value>
-  </data>
-  <data name="ChartLyricsProviderConfiguration.MinConfidence" xml:space="preserve">
-    <value>Confiance minimale</value>
-  </data>
   <data name="Lyrics.Name" xml:space="preserve">
     <value>Paroles</value>
   </data>
   <data name="LyricsBehaviourConfiguration.AutoLookup" xml:space="preserve">
     <value>Recherche automatique</value>
-  </data>
-  <data name="LyricsBehaviourConfiguration.AutoLookupProvider" xml:space="preserve">
-    <value>Fournisseur de recherche</value>
   </data>
   <data name="LyricsBehaviourConfiguration.AutoScroll" xml:space="preserve">
     <value>Défilement automatique</value>
@@ -143,5 +131,14 @@
   </data>
   <data name="LyricsBehaviourConfiguration.WriteTags" xml:space="preserve">
     <value>Écrire les tags</value>
+  </data>
+  <data name="ChartLyrics" xml:space="preserve">
+    <value>Chart Lyrics</value>
+  </data>
+  <data name="ChartLyricsProviderConfiguration.BaseUrl" xml:space="preserve">
+    <value>URL de base</value>
+  </data>
+  <data name="ChartLyricsProviderConfiguration.MinConfidence" xml:space="preserve">
+    <value>Confiance minimale</value>
   </data>
 </root>
