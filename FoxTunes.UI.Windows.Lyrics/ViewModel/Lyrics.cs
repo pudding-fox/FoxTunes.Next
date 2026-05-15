@@ -14,7 +14,7 @@ namespace FoxTunes.ViewModel
     {
         public static readonly Regex SYNCED_TAG = new Regex(@"\[\w+:\w+\]", RegexOptions.Compiled);
 
-        public static readonly Regex SYNCED_LYRICS = new Regex(@"\[(\d{1,2}:\d{1,2}\.\d{1,2})\]\s+?(.+)?", RegexOptions.Compiled);
+        public static readonly Regex SYNCED_LYRICS = new Regex(@"\[(\d{1,2}:\d{1,2}\.\d{1,2})\]\s*?(.+)?", RegexOptions.Compiled);
 
         public static readonly string PADDING = string.Join(string.Empty, Enumerable.Repeat(Environment.NewLine, 10));
 
