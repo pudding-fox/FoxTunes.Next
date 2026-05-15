@@ -83,6 +83,7 @@ namespace FoxTunes
         {
             var fileName = this.GetFileName(playlistItem, advice);
             var channelHandle = default(int);
+            flags &= ~BassFlags.Float;
             if (this.Behaviour != null && this.Behaviour.Memory)
             {
                 Logger.Write(this, LogLevel.Debug, "Creating memory stream for file: {0}", fileName);
