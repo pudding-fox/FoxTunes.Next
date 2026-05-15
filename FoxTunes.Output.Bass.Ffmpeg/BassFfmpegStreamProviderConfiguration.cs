@@ -11,7 +11,7 @@ namespace FoxTunes
         public static IEnumerable<ConfigurationSection> GetConfigurationSections()
         {
             yield return new ConfigurationSection(SECTION, Strings.BassFfmpegStreamProviderConfiguration_Section)
-                .WithElement(new TextConfigurationElement(EXTENSIONS, Strings.BassFfmpegStreamProviderConfiguration_Extensions));
+                .WithElement(new TextConfigurationElement(EXTENSIONS, Strings.BassFfmpegStreamProviderConfiguration_Extensions).WithValue(".mka"));
         }
     }
 }
