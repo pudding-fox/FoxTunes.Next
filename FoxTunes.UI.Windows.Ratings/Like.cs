@@ -20,7 +20,7 @@ namespace FoxTunes
         );
 
         public Like()
-        {            
+        {
             //TODO: I can't work out how to make the star paths size to fit their parent.
             //TODO: This is a common size and will look OK in most cases.
             this.MaxHeight = 30;
@@ -91,11 +91,11 @@ namespace FoxTunes
         {
             if (e.FileData is LibraryItem libraryItem)
             {
-                var task = LikeManager.SetLike(new[] { libraryItem }, e.Value);
+                LikeManager.SetLike(new[] { libraryItem }, e.Value);
             }
             else if (e.FileData is PlaylistItem playlistItem)
             {
-                var task = LikeManager.SetLike(new[] { playlistItem }, e.Value);
+                LikeManager.SetLike(new[] { playlistItem }, e.Value);
             }
             base.OnValueChanged(sender, e);
         }

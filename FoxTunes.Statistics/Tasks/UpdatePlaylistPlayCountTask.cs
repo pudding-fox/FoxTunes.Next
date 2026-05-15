@@ -46,12 +46,12 @@ namespace FoxTunes
             {
                 flags |= MetaDataUpdateFlags.WriteToFiles;
             }
-            await this.MetaDataManager.Save(
+            var task = this.MetaDataManager.Save(
                 new[] { this.PlaylistItem },
                 new[] { CommonStatistics.PlayCount, CommonStatistics.LastPlayed },
                 MetaDataUpdateType.System,
                 flags
-            ).ConfigureAwait(false);
+            );
         }
 
         protected virtual void UpdatePlayCount(IDictionary<string, MetaDataItem> metaDatas)

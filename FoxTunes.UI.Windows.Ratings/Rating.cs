@@ -90,11 +90,11 @@ namespace FoxTunes
         {
             if (e.FileData is LibraryItem libraryItem)
             {
-                var task = RatingManager.SetRating(new[] { libraryItem }, e.Value);
+                RatingManager.SetRating(new[] { libraryItem }, e.Value);
             }
             else if (e.FileData is PlaylistItem playlistItem)
             {
-                var task = RatingManager.SetRating(new[] { playlistItem }, e.Value);
+                RatingManager.SetRating(new[] { playlistItem }, e.Value);
             }
             base.OnValueChanged(sender, e);
         }

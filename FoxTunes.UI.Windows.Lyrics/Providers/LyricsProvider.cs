@@ -35,7 +35,7 @@ namespace FoxTunes
 
         public abstract Task<LyricsResult> Lookup(IFileData fileData);
 
-        protected virtual async Task SaveMetaData(IFileData fileData, string releaseId)
+        protected virtual void SaveMetaData(IFileData fileData, string releaseId)
         {
             lock (fileData.MetaDatas)
             {
@@ -49,12 +49,12 @@ namespace FoxTunes
                 }
                 metaDataItem.Value = releaseId;
             }
-            await this.MetaDataManager.Save(
+            var task = this.MetaDataManager.Save(
                 new[] { fileData },
                 new[] { CustomMetaData.LyricsRelease },
                 MetaDataUpdateType.System,
                 MetaDataUpdateFlags.None
-            ).ConfigureAwait(false);
+            );
         }
     }
 }

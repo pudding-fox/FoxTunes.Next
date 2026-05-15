@@ -112,7 +112,7 @@ namespace FoxTunes
                 finally
                 {
                     //Save the DiscogsRelease tag (either the actual release id or none).
-                    await this.SaveMetaData(releaseLookup).ConfigureAwait(false);
+                    this.SaveMetaData(releaseLookup);
                 }
                 this.Position++;
             }
@@ -196,7 +196,7 @@ namespace FoxTunes
 
         protected abstract Task<bool> OnLookupSuccess(Discogs.ReleaseLookup releaseLookup);
 
-        protected virtual async Task SaveMetaData(Discogs.ReleaseLookup releaseLookup)
+        protected virtual void SaveMetaData(Discogs.ReleaseLookup releaseLookup)
         {
             var value = default(string);
             if (releaseLookup.Release != null)
@@ -215,12 +215,12 @@ namespace FoxTunes
                 }
                 Logger.Write(this, LogLevel.Debug, "Discogs release: {0} => {1}", fileData.FileName, value);
             }
-            await this.MetaDataManager.Save(
+            var task = this.MetaDataManager.Save(
                 releaseLookup.FileDatas,
                 new[] { CustomMetaData.DiscogsRelease },
                 MetaDataUpdateType.System,
                 MetaDataUpdateFlags.None
-            ).ConfigureAwait(false);
+            );
         }
     }
 }

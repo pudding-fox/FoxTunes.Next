@@ -17,6 +17,6 @@ namespace FoxTunes.Interfaces
 
         IDictionary<IFileData, string> GetCurrentMetaData(IEnumerable<IFileData> fileDatas, OnDemandMetaDataRequest request);
 
-        Task SetMetaData(OnDemandMetaDataRequest request, OnDemandMetaDataValues result);
+        void SetMetaData(OnDemandMetaDataRequest request, OnDemandMetaDataValues result);
     }
 }

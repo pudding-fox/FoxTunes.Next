@@ -68,7 +68,7 @@ namespace FoxTunes
             return true;
         }
 
-        protected virtual Task UpdateMetaData(PlaylistItem playlistItem, TimeSpan leadIn, TimeSpan leadOut)
+        protected virtual void UpdateMetaData(PlaylistItem playlistItem, TimeSpan leadIn, TimeSpan leadOut)
         {
             Logger.Write(this, LogLevel.Debug, "Updating lead in/out meta data for file \"{0}\".", playlistItem.FileName);
 
@@ -96,7 +96,7 @@ namespace FoxTunes
                 leadInMetaDataItem.Value = string.Format("{0}:{1}", this.Behaviour.Threshold, leadIn);
                 leadOutMetaDataItem.Value = string.Format("{0}:{1}", this.Behaviour.Threshold, leadOut);
             }
-            return this.MetaDataManager.Save(
+            var task = this.MetaDataManager.Save(
                 new[] { playlistItem },
                 new[] { CustomMetaData.LeadIn, CustomMetaData.LeadOut },
                 MetaDataUpdateType.System,

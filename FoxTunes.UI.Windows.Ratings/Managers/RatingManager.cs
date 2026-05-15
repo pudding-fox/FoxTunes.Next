@@ -20,7 +20,7 @@ namespace FoxTunes
             base.InitializeComponent(core);
         }
 
-        public async Task SetRating(IEnumerable<IFileData> fileDatas, byte rating)
+        public void SetRating(IEnumerable<IFileData> fileDatas, byte rating)
         {
             var count = fileDatas.Count();
             if (count > 1)
@@ -37,12 +37,12 @@ namespace FoxTunes
                     fileData.AddOrUpdate(CommonStatistics.Rating, MetaDataItemType.Tag, Convert.ToString(rating));
                 }
             }
-            await this.MetaDataManager.Save(
+            var task = this.MetaDataManager.Save(
                 fileDatas,
                 new[] { CommonStatistics.Rating },
                 MetaDataUpdateType.User,
                 MetaDataUpdateFlags.All
-            ).ConfigureAwait(false);
+            );
         }
     }
 }

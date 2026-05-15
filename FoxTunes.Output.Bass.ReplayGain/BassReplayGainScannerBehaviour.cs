@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Threading.Tasks;
 
 namespace FoxTunes
@@ -119,9 +120,11 @@ namespace FoxTunes
                     switch (component.Category)
                     {
                         case InvocationComponent.CATEGORY_LIBRARY:
-                            return this.ClearLibrary(MetaDataUpdateType.User);
+                            this.ClearLibrary(MetaDataUpdateType.User);
+                            break;
                         case InvocationComponent.CATEGORY_PLAYLIST:
-                            return this.ClearPlaylist(MetaDataUpdateType.User);
+                            this.ClearPlaylist(MetaDataUpdateType.User);
+                            break;
                     }
                     break;
             }
@@ -192,51 +195,35 @@ namespace FoxTunes
             }
         }
 
-        public Task ClearLibrary(MetaDataUpdateType updateType)
+        public void ClearLibrary(MetaDataUpdateType updateType)
         {
             if (this.LibraryManager == null || this.LibraryManager.SelectedItem == null)
             {
-#if NET40
-                return TaskEx.FromResult(false);
-#else
-                return Task.CompletedTask;
-#endif
+                return;
             }
             var libraryItems = this.LibraryHierarchyBrowser.GetItems(this.LibraryManager.SelectedItem);
             if (!libraryItems.Any())
             {
-#if NET40
-                return TaskEx.FromResult(false);
-#else
-                return Task.CompletedTask;
-#endif
+                return;
             }
-            return this.Clear(libraryItems, updateType);
+            this.Clear(libraryItems, updateType);
         }
 
-        public Task ClearPlaylist(MetaDataUpdateType updateType)
+        public void ClearPlaylist(MetaDataUpdateType updateType)
         {
             if (this.PlaylistManager.SelectedItems == null)
             {
-#if NET40
-                return TaskEx.FromResult(false);
-#else
-                return Task.CompletedTask;
-#endif
+                return;
             }
             var playlistItems = this.PlaylistManager.SelectedItems.ToArray();
             if (!playlistItems.Any())
             {
-#if NET40
-                return TaskEx.FromResult(false);
-#else
-                return Task.CompletedTask;
-#endif
+                return;
             }
-            return this.Clear(playlistItems, updateType);
+            this.Clear(playlistItems, updateType);
         }
 
-        public async Task Clear(IFileData[] fileDatas, MetaDataUpdateType updateType)
+        public void Clear(IFileData[] fileDatas, MetaDataUpdateType updateType)
         {
             var names = new[]
             {
@@ -265,12 +252,12 @@ namespace FoxTunes
             {
                 flags |= MetaDataUpdateFlags.WriteToFiles;
             }
-            await this.MetaDataManager.Save(
+            var task = this.MetaDataManager.Save(
                fileDatas,
                names,
                updateType,
                flags
-            ).ConfigureAwait(false);
+            );
         }
 
         protected virtual void OnReport(IFileData[] fileDatas, ScannerItem[] scannerItems)
@@ -350,13 +337,14 @@ namespace FoxTunes
                 Logger.Write(this, LogLevel.Debug, "Scanner completed successfully.");
             }
 
-            protected override async Task OnCompleted()
+            protected override Task OnCompleted()
             {
-                await base.OnCompleted().ConfigureAwait(false);
-                await this.WriteTags().ConfigureAwait(false);
+                this.WriteTags();
+                return base.OnCompleted();
+
             }
 
-            protected virtual async Task WriteTags()
+            protected virtual void WriteTags()
             {
                 var names = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
                 foreach (var scannerItem in this.ScannerItems)
@@ -423,12 +411,12 @@ namespace FoxTunes
                     {
                         flags |= MetaDataUpdateFlags.WriteToFiles;
                     }
-                    await this.Behaviour.MetaDataManager.Save(
+                    var task = this.Behaviour.MetaDataManager.Save(
                         fileDatas,
                         names,
                         MetaDataUpdateType.System,
                         flags
-                    ).ConfigureAwait(false);
+                    );
                 }
             }
 

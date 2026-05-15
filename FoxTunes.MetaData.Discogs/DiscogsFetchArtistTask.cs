@@ -81,7 +81,7 @@ namespace FoxTunes
         protected virtual async Task FetchData(string artist, IEnumerable<IFileData> fileDatas)
         {
             var result = await this.Discogs.GetArtist(artist);
-            await this.SaveMetaData(result).ConfigureAwait(false);
+            this.SaveMetaData(result);
             if (result != null)
             {
                 foreach (var fileData in fileDatas)
@@ -107,7 +107,7 @@ namespace FoxTunes
             return fileName;
         }
 
-        protected virtual async Task SaveMetaData(Discogs.Artist artist)
+        protected virtual void SaveMetaData(Discogs.Artist artist)
         {
             var value = default(string);
             if (artist != null)
@@ -127,12 +127,12 @@ namespace FoxTunes
                 }
                 Logger.Write(this, LogLevel.Debug, "Discogs artist: {0} => {1}", fileData.FileName, value);
             }
-            await this.MetaDataManager.Save(
+            var task = this.MetaDataManager.Save(
                 this.FileDatas,
                 new[] { CustomMetaData.DiscogsArtist },
                 MetaDataUpdateType.System,
                 MetaDataUpdateFlags.None
-            ).ConfigureAwait(false);
+            );
         }
     }
 }

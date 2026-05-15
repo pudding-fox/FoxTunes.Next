@@ -20,7 +20,7 @@ namespace FoxTunes
             base.InitializeComponent(core);
         }
 
-        public async Task SetLike(IEnumerable<IFileData> fileDatas, bool like)
+        public void SetLike(IEnumerable<IFileData> fileDatas, bool like)
         {
             var count = fileDatas.Count();
             if (count > 1)
@@ -37,12 +37,12 @@ namespace FoxTunes
                     fileData.AddOrUpdate(CommonStatistics.Like, MetaDataItemType.Tag, Convert.ToString(like));
                 }
             }
-            await this.MetaDataManager.Save(
+            var task = this.MetaDataManager.Save(
                 fileDatas,
                 new[] { CommonStatistics.Like },
                 MetaDataUpdateType.User,
                 MetaDataUpdateFlags.All
-            ).ConfigureAwait(false);
+            );
         }
     }
 }

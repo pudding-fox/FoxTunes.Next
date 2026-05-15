@@ -113,13 +113,13 @@ namespace FoxTunes
             return values;
         }
 
-        public Task SetMetaData(OnDemandMetaDataRequest request, OnDemandMetaDataValues result)
+        public void SetMetaData(OnDemandMetaDataRequest request, OnDemandMetaDataValues result)
         {
             foreach (var value in result.Values)
             {
                 this.AddMetaData(request, value);
             }
-            return this.SaveMetaData(request, result);
+            this.SaveMetaData(request, result);
         }
 
         protected virtual IEnumerable<IOnDemandMetaDataSource> GetSources(string name, MetaDataItemType type)
@@ -149,10 +149,15 @@ namespace FoxTunes
             }
         }
 
-        protected virtual Task SaveMetaData(OnDemandMetaDataRequest request, OnDemandMetaDataValues result)
+        protected virtual void SaveMetaData(OnDemandMetaDataRequest request, OnDemandMetaDataValues result)
         {
             var fileDatas = result.Values.Select(value => value.FileData).ToArray();
-            return this.MetaDataManager.Save(fileDatas, new[] { request.Name }, request.UpdateType, result.Flags);
+            var task = this.MetaDataManager.Save(
+                fileDatas,
+                new[] { request.Name },
+                request.UpdateType,
+                result.Flags
+            );
         }
     }
 }

@@ -176,14 +176,14 @@ namespace FoxTunes
             }
             var releaseLookups = await this.FetchReleases(libraryItems, updateType).ConfigureAwait(false);
             this.OnReport(releaseLookups);
-            await this.OnDemandMetaDataProvider.SetMetaData(
+            this.OnDemandMetaDataProvider.SetMetaData(
                 new OnDemandMetaDataRequest(
                     CommonImageTypes.FrontCover,
                     MetaDataItemType.Image,
                     updateType
                 ),
                 this.GetMetaDataValues(releaseLookups, CommonImageTypes.FrontCover, true)
-            ).ConfigureAwait(false);
+            );
         }
 
         public async Task FetchArtworkPlaylist(MetaDataUpdateType updateType)
@@ -199,14 +199,14 @@ namespace FoxTunes
             }
             var releaseLookups = await this.FetchReleases(playlistItems, updateType).ConfigureAwait(false);
             this.OnReport(releaseLookups);
-            await this.OnDemandMetaDataProvider.SetMetaData(
+            this.OnDemandMetaDataProvider.SetMetaData(
                 new OnDemandMetaDataRequest(
                     CommonImageTypes.FrontCover,
                     MetaDataItemType.Image,
                     updateType
                 ),
                 this.GetMetaDataValues(releaseLookups, CommonImageTypes.FrontCover, true)
-            ).ConfigureAwait(false);
+            );
         }
 
         public async Task<IEnumerable<Discogs.ReleaseLookup>> FetchReleases(IEnumerable<IFileData> fileDatas, MetaDataUpdateType updateType)

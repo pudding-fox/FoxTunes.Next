@@ -218,9 +218,11 @@ namespace FoxTunes
             switch (component.Id)
             {
                 case SET_LIBRARY_RATING:
-                    return this.SetLibraryRating(component.Name);
+                    this.SetLibraryRating(component.Name);
+                    break;
                 case SET_PLAYLIST_RATING:
-                    return this.SetPlaylistRating(component.Name);
+                    this.SetPlaylistRating(component.Name);
+                    break;
             }
 #if NET40
             return TaskEx.FromResult(false);
@@ -311,7 +313,7 @@ namespace FoxTunes
             }
         }
 
-        protected virtual Task SetLibraryRating(string name)
+        protected virtual void SetLibraryRating(string name)
         {
             var rating = default(byte);
             if (string.Equals(name, Strings.RatingBehaviour_Reset, StringComparison.OrdinalIgnoreCase))
@@ -320,25 +322,17 @@ namespace FoxTunes
             }
             else if (string.IsNullOrEmpty(name) || !byte.TryParse(name.Split(' ').FirstOrDefault(), out rating))
             {
-#if NET40
-                return TaskEx.FromResult(false);
-#else
-                return Task.CompletedTask;
-#endif
+                return;
             }
             var libraryItems = this.LibraryHierarchyBrowser.GetItems(this.LibraryManager.SelectedItem);
             if (!libraryItems.Any())
             {
-#if NET40
-                return TaskEx.FromResult(false);
-#else
-                return Task.CompletedTask;
-#endif
+                return;
             }
-            return this.RatingManager.SetRating(libraryItems, rating);
+            this.RatingManager.SetRating(libraryItems, rating);
         }
 
-        protected virtual Task SetPlaylistRating(string name)
+        protected virtual void SetPlaylistRating(string name)
         {
             var rating = default(byte);
             if (string.Equals(name, Strings.RatingBehaviour_Reset, StringComparison.OrdinalIgnoreCase))
@@ -347,13 +341,9 @@ namespace FoxTunes
             }
             else if (string.IsNullOrEmpty(name) || !byte.TryParse(name.Split(' ').FirstOrDefault(), out rating))
             {
-#if NET40
-                return TaskEx.FromResult(false);
-#else
-                return Task.CompletedTask;
-#endif
+                return;
             }
-            return this.RatingManager.SetRating(this.PlaylistManager.SelectedItems, rating);
+            this.RatingManager.SetRating(this.PlaylistManager.SelectedItems, rating);
         }
 
         private static class TemplateFactory

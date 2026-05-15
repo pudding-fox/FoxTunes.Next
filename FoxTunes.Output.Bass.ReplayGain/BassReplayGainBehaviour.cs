@@ -277,7 +277,7 @@ namespace FoxTunes
             return false;
         }
 
-        protected virtual async Task UpdateMetaData(BassOutputStream stream, float gain, float peak, ReplayGainMode mode)
+        protected virtual void UpdateMetaData(BassOutputStream stream, float gain, float peak, ReplayGainMode mode)
         {
             var names = new HashSet<string>();
             lock (stream.PlaylistItem.MetaDatas)
@@ -330,12 +330,12 @@ namespace FoxTunes
             {
                 flags |= MetaDataUpdateFlags.WriteToFiles;
             }
-            await this.MetaDataManager.Save(
+            var task = this.MetaDataManager.Save(
                 new[] { stream.PlaylistItem },
                 names,
                 MetaDataUpdateType.System,
                 flags
-            ).ConfigureAwait(false);
+            );
         }
 
         public IEnumerable<ConfigurationSection> GetConfigurationSections()

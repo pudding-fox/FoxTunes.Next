@@ -261,13 +261,13 @@ namespace FoxTunes
             {
                 return;
             }
-            await this.LikeManager.SetLike(libraryItems, !like).ConfigureAwait(false);
+            this.LikeManager.SetLike(libraryItems, !like);
         }
 
         protected virtual async Task SetPlaylistLike()
         {
             var like = await this.GetPlaylistLike(this.PlaylistManager.SelectedItems).ConfigureAwait(false);
-            await this.LikeManager.SetLike(this.PlaylistManager.SelectedItems, !like).ConfigureAwait(false);
+            this.LikeManager.SetLike(this.PlaylistManager.SelectedItems, !like);
         }
 
         private static class TemplateFactory

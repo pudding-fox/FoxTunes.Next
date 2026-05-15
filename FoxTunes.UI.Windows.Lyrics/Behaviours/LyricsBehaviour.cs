@@ -190,7 +190,7 @@ namespace FoxTunes
                 {
                     flags |= MetaDataUpdateFlags.WriteToFiles;
                 }
-                await this.OnDemandMetaDataProvider.SetMetaData(
+                this.OnDemandMetaDataProvider.SetMetaData(
                     new OnDemandMetaDataRequest(
                         CommonMetaData.Lyrics,
                         MetaDataItemType.Tag,
@@ -203,7 +203,7 @@ namespace FoxTunes
                         },
                         flags
                     )
-                ).ConfigureAwait(false);
+                );
             }
             finally
             {

@@ -63,7 +63,12 @@ namespace FoxTunes
                 {
                     flags |= MetaDataUpdateFlags.WriteToFiles;
                 }
-                await this.MetaDataManager.Save(releaseLookup.FileDatas, names, this.UpdateType, flags).ConfigureAwait(false);
+                var task = this.MetaDataManager.Save(
+                    releaseLookup.FileDatas, 
+                    names, 
+                    this.UpdateType, 
+                    flags
+                );
             }
             return true;
         }

@@ -90,11 +90,11 @@ namespace FoxTunes
                 var id = default(string);
                 if (result != null && result.TryGetValue("id", out id) && !string.IsNullOrEmpty(id))
                 {
-                    await this.SaveMetaData(fileData, id).ConfigureAwait(false);
+                    this.SaveMetaData(fileData, id);
                 }
                 else
                 {
-                    await this.SaveMetaData(fileData, this.None).ConfigureAwait(false);
+                    this.SaveMetaData(fileData, this.None);
                 }
             }
             return LyricsResult.Fail;
