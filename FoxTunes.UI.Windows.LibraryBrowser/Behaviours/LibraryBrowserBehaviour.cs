@@ -57,6 +57,10 @@ namespace FoxTunes
                     var libraryHierarchyNodes = this.LibraryHierarchyBrowser.GetNodes(libraryHierarchy);
                     foreach (var libraryHierarchyNode in libraryHierarchyNodes)
                     {
+                        if (this.IsDisposed)
+                        {
+                            return;
+                        }
                         if (!libraryHierarchyNode.LibraryHierarchyLevelId.HasValue)
                         {
                             continue;
@@ -93,7 +97,10 @@ namespace FoxTunes
             }
             finally
             {
-                this.Semaphore.Release();
+                if (!this.IsDisposed)
+                {
+                    this.Semaphore.Release();
+                }
             }
         }
 
