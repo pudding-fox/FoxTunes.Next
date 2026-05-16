@@ -1,5 +1,6 @@
 ﻿using FoxTunes.Interfaces;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -344,8 +345,21 @@ namespace FoxTunes
 
             public IFilterParserResult Convert(FilterNode node)
             {
-                var groups = Visit(node).ToArray();
-                return new FilterParserResult(groups);
+                var result = new ConcurrentDictionary<string, IFilterParserResultGroup>(StringComparer.OrdinalIgnoreCase);
+                var sequence = Visit(node).ToArray();
+                //Group by entry name, this turns multiple filters on the same meta data name into an OR rather than AND.
+                foreach (var element in sequence)
+                {
+                    foreach (var entry in element.Entries)
+                    {
+                        result.AddOrUpdate(
+                            entry.Name,
+                            key => new FilterParserResultGroup(entry),
+                            (key, group) => new FilterParserResultGroup(group.Entries.Concat(new[] { entry }))
+                        );
+                    }
+                }
+                return new FilterParserResult(result.Values);
             }
 
             private IEnumerable<IFilterParserResultGroup> Visit(FilterNode node)
@@ -477,12 +491,17 @@ namespace FoxTunes
 
     public class FilterParserResultGroup : IFilterParserResultGroup
     {
-        public FilterParserResultGroup(IFilterParserResultEntry entry)
+        public FilterParserResultGroup()
+        {
+
+        }
+
+        public FilterParserResultGroup(IFilterParserResultEntry entry) : this()
         {
             this.Entries = new[] { entry };
         }
 
-        public FilterParserResultGroup(IEnumerable<IFilterParserResultEntry> entries)
+        public FilterParserResultGroup(IEnumerable<IFilterParserResultEntry> entries) : this()
         {
             this.Entries = entries;
         }

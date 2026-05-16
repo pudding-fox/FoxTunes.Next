@@ -69,7 +69,7 @@ namespace FoxTunes
             {
                 foreach (var genre in genres.Split('\t'))
                 {
-                    this.Append(builder, string.Concat("genre:", genre));
+                    this.Append(builder, string.Concat("genre:\"", genre, "\" "));
                 }
             }
             if (like)
