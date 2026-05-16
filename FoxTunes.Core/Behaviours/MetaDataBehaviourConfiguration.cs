@@ -96,7 +96,7 @@ namespace FoxTunes
                 .WithElement(
                     new BooleanConfigurationElement(READ_POPULARIMETER_TAGS, Strings.MetaDataBehaviourConfiguration_Popularimeter).WithValue(Publication.ReleaseType == ReleaseType.Default))
                 .WithElement(
-                    new BooleanConfigurationElement(READ_WINDOWS_MEDIA_TAGS, Strings.MetaDataBehaviourConfiguration_WindowsMedia).WithValue(false))
+                    new BooleanConfigurationElement(READ_WINDOWS_MEDIA_TAGS, Strings.MetaDataBehaviourConfiguration_WindowsMedia).WithValue(true))
                 .WithElement(
                     new BooleanConfigurationElement(READ_DOCUMENTS, Strings.MetaDataBehaviourConfiguration_Documents).WithValue(false))
                 .WithElement(
