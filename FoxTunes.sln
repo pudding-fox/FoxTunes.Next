@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 18
-VisualStudioVersion = 18.5.11723.231 stable
+VisualStudioVersion = 18.5.11723.231
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FoxTunes.Core", "FoxTunes.Core\FoxTunes.Core.csproj", "{62CD8F70-8415-4C15-B672-CB18475ABD7E}"
 EndProject
@@ -131,6 +131,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FoxTunes.Output.Bass.Ffmpeg
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8EC462FD-D22E-90A8-E5CE-7E832BA40C5D}"
 	ProjectSection(SolutionItems) = preProject
+		Common.Net.props = Common.Net.props
 		FoxTunes.Manifest.xml = FoxTunes.Manifest.xml
 		NuGet.config = NuGet.config
 		README.md = README.md
