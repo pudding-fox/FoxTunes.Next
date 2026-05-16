@@ -15,7 +15,9 @@ namespace FoxTunes
 
         public const string NOW_PLAYING_SCRIPT = "BBBB78F3-B32F-4A8C-B566-9A8B39A896C7";
 
-        public const string PLAYLIST_SCRIPT = "HHHHD917-2172-421D-9E22-F549B17CE0C8";
+        public const string PLAYLIST_SCRIPT_SHORT = "HHHHD917-2172-421D-9E22-F549B17CE0C8";
+
+        public const string PLAYLIST_SCRIPT_LONG = "HHHI8FCD-7A31-43A3-8076-23D55FA52162";
 
         public const string PLAYLIST_ARTWORK = "HHIIE00C-16A8-4994-830C-1B7264B55BAC";
 
@@ -33,8 +35,12 @@ namespace FoxTunes
                     .WithValue(Resources.NowPlaying)
                     .WithFlags(ConfigurationElementFlags.MultiLine | ConfigurationElementFlags.Script))
                 .WithElement(
-                    new TextConfigurationElement(PLAYLIST_SCRIPT, Strings.MiniPlayerBehaviourConfiguration_PlaylistScript, path: Strings.MiniPlayerBehaviourConfiguration_Advanced)
-                    .WithValue(Resources.Playlist)
+                    new TextConfigurationElement(PLAYLIST_SCRIPT_SHORT, Strings.MiniPlayerBehaviourConfiguration_PlaylistScript_Short, path: Strings.MiniPlayerBehaviourConfiguration_Advanced)
+                    .WithValue(Resources.Playlist_Short)
+                    .WithFlags(ConfigurationElementFlags.MultiLine | ConfigurationElementFlags.Script))
+                .WithElement(
+                    new TextConfigurationElement(PLAYLIST_SCRIPT_LONG, Strings.MiniPlayerBehaviourConfiguration_PlaylistScript_Long, path: Strings.MiniPlayerBehaviourConfiguration_Advanced)
+                    .WithValue(Resources.Playlist_Long)
                     .WithFlags(ConfigurationElementFlags.MultiLine | ConfigurationElementFlags.Script))
                 .WithElement(
                     new BooleanConfigurationElement(PLAYLIST_ARTWORK, Strings.MiniPlayerBehaviourConfiguration_PlaylistArtwork).WithValue(false))

@@ -144,8 +144,11 @@
   <data name="MiniPlayerBehaviourConfiguration.PlaylistArtwork" xml:space="preserve">
     <value>Playlist Artwork</value>
   </data>
-  <data name="MiniPlayerBehaviourConfiguration.PlaylistScript" xml:space="preserve">
-    <value>Playlist Script</value>
+  <data name="MiniPlayerBehaviourConfiguration.PlaylistScript.Long" xml:space="preserve">
+    <value>Playlist Script (Long)</value>
+  </data>
+  <data name="MiniPlayerBehaviourConfiguration.PlaylistScript.Short" xml:space="preserve">
+    <value>Playlist Script (Short)</value>
   </data>
   <data name="MiniPlayerBehaviourConfiguration.Section" xml:space="preserve">
     <value>Mini Player</value>

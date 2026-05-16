@@ -19,7 +19,7 @@ namespace FoxTunes {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "18.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Resources {
@@ -110,9 +110,33 @@ namespace FoxTunes {
         ///    return parts.join(&quot; - &quot;);
         ///})().
         /// </summary>
-        internal static string Playlist {
+        internal static string Playlist_Long {
             get {
-                return ResourceManager.GetString("Playlist", resourceCulture);
+                return ResourceManager.GetString("Playlist.Long", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to (function () {
+        ///    var parts = [];
+        ///    if (tag.disccount != 1 &amp;&amp; tag.disc) {
+        ///        parts.push(tag.disc);
+        ///    }
+        ///    if (tag.track) {
+        ///        parts.push(zeropad2(tag.track, tag.trackcount, 2));
+        ///    }
+        ///    if (tag.title) {
+        ///        parts.push(tag.title);
+        ///    }
+        ///    else {
+        ///        parts.push(filename(file));
+        ///    }
+        ///    return parts.join(&quot; - &quot;);
+        ///})().
+        /// </summary>
+        internal static string Playlist_Short {
+            get {
+                return ResourceManager.GetString("Playlist.Short", resourceCulture);
             }
         }
     }

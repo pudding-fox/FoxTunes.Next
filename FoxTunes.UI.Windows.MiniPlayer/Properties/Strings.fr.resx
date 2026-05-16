@@ -129,7 +129,7 @@
   <data name="MiniPlayerBehaviourConfiguration.NowPlayingScript" xml:space="preserve">
     <value>Scénario de lecture</value>
   </data>
-  <data name="MiniPlayerBehaviourConfiguration.PlaylistScript" xml:space="preserve">
+  <data name="MiniPlayerBehaviourConfiguration.PlaylistScript.Short" xml:space="preserve">
     <value>Scénario de lecture</value>
   </data>
   <data name="MiniPlayerBehaviourConfiguration.Section" xml:space="preserve">

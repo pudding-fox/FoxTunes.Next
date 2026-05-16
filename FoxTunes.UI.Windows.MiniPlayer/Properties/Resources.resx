@@ -121,7 +121,10 @@
   <data name="NowPlaying" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\resources\nowplaying.js;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
-  <data name="Playlist" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\resources\playlist.js;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  <data name="Playlist.Long" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\PlaylistLong.js;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="Playlist.Short" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\PlaylistShort.js;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
 </root>

@@ -67,33 +67,61 @@ namespace FoxTunes.ViewModel
 
         public event EventHandler SelectedItemChanged;
 
-        private string _Script { get; set; }
+        private string _ShortScript { get; set; }
 
-        public string Script
+        public string ShortScript
         {
             get
             {
-                return this._Script;
+                return this._ShortScript;
             }
         }
 
-        public Task SetScript(string value)
+        public Task SetShortScript(string value)
         {
-            this._Script = value;
-            return this.OnScriptChanged();
+            this._ShortScript = value;
+            return this.OnShortScriptChanged();
         }
 
-        protected virtual async Task OnScriptChanged()
+        protected virtual async Task OnShortScriptChanged()
         {
             await this.Refresh().ConfigureAwait(false);
-            if (this.ScriptChanged != null)
+            if (this.ShortScriptChanged != null)
             {
-                this.ScriptChanged(this, EventArgs.Empty);
+                this.ShortScriptChanged(this, EventArgs.Empty);
             }
-            this.OnPropertyChanged("Script");
+            this.OnPropertyChanged("ShortScript");
         }
 
-        public event EventHandler ScriptChanged;
+        public event EventHandler ShortScriptChanged;
+
+        private string _LongScript { get; set; }
+
+        public string LongScript
+        {
+            get
+            {
+                return this._LongScript;
+            }
+        }
+
+        public Task SetLongScript(string value)
+        {
+            this._LongScript = value;
+            return this.OnLongScriptChanged();
+        }
+
+        protected virtual async Task OnLongScriptChanged()
+        {
+            await this.Refresh().ConfigureAwait(false);
+            if (this.LongScriptChanged != null)
+            {
+                this.LongScriptChanged(this, EventArgs.Empty);
+            }
+            this.OnPropertyChanged("LongScript");
+        }
+
+        public event EventHandler LongScriptChanged;
 
         private bool _ShowArtwork { get; set; }
 
@@ -139,8 +167,12 @@ namespace FoxTunes.ViewModel
             this.Configuration = core.Components.Configuration;
             this.Configuration.GetElement<TextConfigurationElement>(
                 MiniPlayerBehaviourConfiguration.SECTION,
-                MiniPlayerBehaviourConfiguration.PLAYLIST_SCRIPT
-            ).ConnectValue(async value => await this.SetScript(value).ConfigureAwait(false));
+                MiniPlayerBehaviourConfiguration.PLAYLIST_SCRIPT_SHORT
+            ).ConnectValue(async value => await this.SetShortScript(value).ConfigureAwait(false));
+            this.Configuration.GetElement<TextConfigurationElement>(
+                MiniPlayerBehaviourConfiguration.SECTION,
+                MiniPlayerBehaviourConfiguration.PLAYLIST_SCRIPT_LONG
+            ).ConnectValue(async value => await this.SetLongScript(value).ConfigureAwait(false));
             this.Configuration.GetElement<BooleanConfigurationElement>(
                 MiniPlayerBehaviourConfiguration.SECTION,
                 MiniPlayerBehaviourConfiguration.PLAYLIST_ARTWORK
@@ -320,7 +352,16 @@ namespace FoxTunes.ViewModel
             {
                 return null;
             }
-            var playlistItemScriptRunner = new PlaylistItemScriptRunner(this.ScriptingContext, playlistItem, this.Script);
+            var script = default(string);
+            if (this.ShowArtwork)
+            {
+                script = this.LongScript;
+            }
+            else
+            {
+                script = this.ShortScript;
+            }
+            var playlistItemScriptRunner = new PlaylistItemScriptRunner(this.ScriptingContext, playlistItem, script);
             playlistItemScriptRunner.Prepare();
             return playlistItemScriptRunner.Run();
         }

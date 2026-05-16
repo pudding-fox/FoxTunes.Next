@@ -142,11 +142,20 @@ namespace FoxTunes {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Playlist Script.
+        ///   Looks up a localized string similar to Playlist Script (Long).
         /// </summary>
-        internal static string MiniPlayerBehaviourConfiguration_PlaylistScript {
+        internal static string MiniPlayerBehaviourConfiguration_PlaylistScript_Long {
             get {
-                return ResourceManager.GetString("MiniPlayerBehaviourConfiguration.PlaylistScript", resourceCulture);
+                return ResourceManager.GetString("MiniPlayerBehaviourConfiguration.PlaylistScript.Long", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Playlist Script (Short).
+        /// </summary>
+        internal static string MiniPlayerBehaviourConfiguration_PlaylistScript_Short {
+            get {
+                return ResourceManager.GetString("MiniPlayerBehaviourConfiguration.PlaylistScript.Short", resourceCulture);
             }
         }
         
