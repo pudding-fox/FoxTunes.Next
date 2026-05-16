@@ -350,13 +350,20 @@ namespace FoxTunes
                 //Group by entry name, this turns multiple filters on the same meta data name into an OR rather than AND.
                 foreach (var element in sequence)
                 {
-                    foreach (var entry in element.Entries)
+                    if (element.Entries.Count() == 1)
                     {
-                        result.AddOrUpdate(
-                            entry.Name,
-                            key => new FilterParserResultGroup(entry),
-                            (key, group) => new FilterParserResultGroup(group.Entries.Concat(new[] { entry }))
-                        );
+                        foreach (var entry in element.Entries)
+                        {
+                            result.AddOrUpdate(
+                                entry.Name,
+                                key => new FilterParserResultGroup(entry),
+                                (key, group) => new FilterParserResultGroup(group.Entries.Concat(new[] { entry }))
+                            );
+                        }
+                    }
+                    else
+                    {
+                        result[Guid.NewGuid().ToString("d")] = element;
                     }
                 }
                 return new FilterParserResult(result.Values);
