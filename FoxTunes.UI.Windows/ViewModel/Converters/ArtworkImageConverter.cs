@@ -246,7 +246,12 @@ namespace FoxTunes.ViewModel
                     this.PreserveAspectRatio
                 );
             }
-            return null;
+            return Factory.Create(
+                default(string),
+                global::System.Convert.ToInt32(this.Width),
+                global::System.Convert.ToInt32(this.Height),
+                this.PreserveAspectRatio
+            );
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
