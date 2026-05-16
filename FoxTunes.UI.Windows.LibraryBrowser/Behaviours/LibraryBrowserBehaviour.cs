@@ -1,12 +1,20 @@
 ﻿using FoxTunes.Interfaces;
 using System;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace FoxTunes
 {
     public class LibraryBrowserBehaviour : StandardBehaviour, IDisposable
     {
+        public LibraryBrowserBehaviour()
+        {
+            this.Semaphore = new SemaphoreSlim(1, 1);
+        }
+
+        public SemaphoreSlim Semaphore { get; private set; }
+
         public ILibraryHierarchyBrowser LibraryHierarchyBrowser { get; private set; }
 
         public IOnDemandMetaDataProvider OnDemandMetaDataProvider { get; private set; }
@@ -38,39 +46,54 @@ namespace FoxTunes
 
         protected virtual async Task Refresh()
         {
-            foreach (var libraryHierarchy in this.LibraryHierarchyBrowser.GetHierarchies())
+            if (!await this.Semaphore.WaitAsync(0).ConfigureAwait(false))
             {
-                var libraryHierarchyNodes = this.LibraryHierarchyBrowser.GetNodes(libraryHierarchy);
-                foreach (var libraryHierarchyNode in libraryHierarchyNodes)
+                return;
+            }
+            try
+            {
+                foreach (var libraryHierarchy in this.LibraryHierarchyBrowser.GetHierarchies())
                 {
-                    var libraryHierarchyLevel = this.LibraryHierarchyBrowser.GetLevel(libraryHierarchyNode.LibraryHierarchyLevelId.Value);
-                    if (libraryHierarchyLevel != null)
+                    var libraryHierarchyNodes = this.LibraryHierarchyBrowser.GetNodes(libraryHierarchy);
+                    foreach (var libraryHierarchyNode in libraryHierarchyNodes)
                     {
-                        switch (libraryHierarchyLevel.Hints)
+                        if (!libraryHierarchyNode.LibraryHierarchyLevelId.HasValue)
                         {
-                            case LibraryHierarchyLevelHints.Artist:
-                                var skip = new[]
-                                {
-                                    "No Artist",
-                                    "Various Artists"
-                                };
-                                if (!skip.Any(_skip => string.Equals(libraryHierarchyNode.Value, _skip, StringComparison.OrdinalIgnoreCase)))
-                                {
-                                    var libraryItems = this.LibraryHierarchyBrowser.GetItems(libraryHierarchyNode);
-                                    await this.OnDemandMetaDataProvider.GetMetaData(
-                                        libraryItems,
-                                        new OnDemandMetaDataRequest(
-                                            CommonImageTypes.Artist,
-                                            MetaDataItemType.Image,
-                                            MetaDataUpdateType.System
-                                        )
-                                    ).ConfigureAwait(false);
-                                }
-                                await Task.Delay(100).ConfigureAwait(false);
-                                break;
+                            continue;
+                        }
+                        var libraryHierarchyLevel = this.LibraryHierarchyBrowser.GetLevel(libraryHierarchyNode.LibraryHierarchyLevelId.Value);
+                        if (libraryHierarchyLevel != null)
+                        {
+                            switch (libraryHierarchyLevel.Hints)
+                            {
+                                case LibraryHierarchyLevelHints.Artist:
+                                    var skip = new[]
+                                    {
+                                        "No Artist",
+                                        "Various Artists"
+                                    };
+                                    if (!skip.Any(_skip => string.Equals(libraryHierarchyNode.Value, _skip, StringComparison.OrdinalIgnoreCase)))
+                                    {
+                                        var libraryItems = this.LibraryHierarchyBrowser.GetItems(libraryHierarchyNode);
+                                        await this.OnDemandMetaDataProvider.GetMetaData(
+                                            libraryItems,
+                                            new OnDemandMetaDataRequest(
+                                                CommonImageTypes.Artist,
+                                                MetaDataItemType.Image,
+                                                MetaDataUpdateType.System
+                                            )
+                                        ).ConfigureAwait(false);
+                                    }
+                                    await Task.Delay(100).ConfigureAwait(false);
+                                    break;
+                            }
                         }
                     }
                 }
+            }
+            finally
+            {
+                this.Semaphore.Release();
             }
         }
 
@@ -94,6 +117,10 @@ namespace FoxTunes
 
         protected virtual void OnDisposing()
         {
+            if (this.Semaphore != null)
+            {
+                this.Semaphore.Dispose();
+            }
             if (this.SignalEmitter != null)
             {
                 this.SignalEmitter.Signal -= this.OnSignal;
