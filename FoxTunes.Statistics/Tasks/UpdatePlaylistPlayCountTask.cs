@@ -33,7 +33,7 @@ namespace FoxTunes
             base.InitializeComponent(core);
         }
 
-        protected override async Task OnRun()
+        protected override Task OnRun()
         {
             lock (this.PlaylistItem.MetaDatas)
             {
@@ -52,6 +52,11 @@ namespace FoxTunes
                 MetaDataUpdateType.System,
                 flags
             );
+#if NET40
+            return TaskEx.FromResult(false);
+#else
+            return Task.CompletedTask;
+#endif
         }
 
         protected virtual void UpdatePlayCount(IDictionary<string, MetaDataItem> metaDatas)
