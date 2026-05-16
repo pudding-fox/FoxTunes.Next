@@ -6,9 +6,9 @@ namespace FoxTunes
     {
         public const string SECTION = BassEncoderBehaviourConfiguration.SECTION;
 
-        public const string ENABLED_ELEMENT = BassEncoderBehaviourConfiguration.ENABLED_ELEMENT;
+        public const string ENABLED = BassEncoderBehaviourConfiguration.ENABLED;
 
-        public const string BITRATE_ELEMENT = "AAAAD40F-27B5-4D3D-AF42-D1DBA114EFEB";
+        public const string BITRATE = "AAAAD40F-27B5-4D3D-AF42-D1DBA114EFEB";
 
         public const string BITRATE_65_OPTION = "65";
 
@@ -35,9 +35,9 @@ namespace FoxTunes
         public static IEnumerable<ConfigurationSection> GetConfigurationSections(IBassEncoderSettings settings)
         {
             yield return new ConfigurationSection(SECTION)
-                .WithElement(new SelectionConfigurationElement(BITRATE_ELEMENT, "Bitrate", path: settings.Name)
+                .WithElement(new SelectionConfigurationElement(BITRATE, "Bitrate", path: settings.Name)
                     .WithOptions(GetBitrateOptions())
-                    .DependsOn(SECTION, ENABLED_ELEMENT)
+                    .DependsOn(SECTION, ENABLED)
             );
         }
 

@@ -61,7 +61,7 @@ namespace FoxTunes
             this.Configuration = core.Components.Configuration;
             this.Sort = this.Configuration.GetElement<TextConfigurationElement>(
                 PlaylistBehaviourConfiguration.SECTION,
-                PlaylistBehaviourConfiguration.PRE_SORT_ORDER_ELEMENT
+                PlaylistBehaviourConfiguration.PRE_SORT_ORDER
             );
             base.InitializeComponent(core);
         }

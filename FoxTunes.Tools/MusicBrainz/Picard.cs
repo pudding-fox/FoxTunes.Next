@@ -38,11 +38,11 @@ namespace FoxTunes
             this.Configuration = core.Components.Configuration;
             this.Enabled = this.Configuration.GetElement<BooleanConfigurationElement>(
                 PicardConfiguration.SECTION,
-                PicardConfiguration.ENABLED_ELEMENT
+                PicardConfiguration.ENABLED
             );
             this.Path = this.Configuration.GetElement<TextConfigurationElement>(
                 PicardConfiguration.SECTION,
-                PicardConfiguration.PATH_ELEMENT
+                PicardConfiguration.PATH
             );
             base.InitializeComponent(core);
         }

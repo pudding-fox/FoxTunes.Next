@@ -7,9 +7,9 @@ namespace FoxTunes
     {
         public const string SECTION = "6D2403BD-7CBD-4690-A119-90F4A45B00CD";
 
-        public const string ENABLED_ELEMENT = "AAAA5DDB-106C-4C5F-9262-58396C18DDCC";
+        public const string ENABLED = "AAAA5DDB-106C-4C5F-9262-58396C18DDCC";
 
-        public const string LEVEL_ELEMENT = "BBBB16BC-719C-4786-BB34-E2EE4F5C6491";
+        public const string LEVEL = "BBBB16BC-719C-4786-BB34-E2EE4F5C6491";
 
         public const string FATAL_OPTION = "AAAA1EBB-289E-413F-A990-70691184829B";
 
@@ -23,7 +23,7 @@ namespace FoxTunes
 
         public const string TRACE_OPTION = "FFFF9D19-17DE-40FC-A8DB-C2D5407F12BD";
 
-        public const string OPEN_ELEMENT = "CCCC7035-7960-472E-A6E8-58F6AA0918F1";
+        public const string OPEN = "CCCC7035-7960-472E-A6E8-58F6AA0918F1";
 
         public static IEnumerable<ConfigurationSection> GetConfigurationSections()
         {
@@ -33,14 +33,14 @@ namespace FoxTunes
             var enabled = false;
 #endif
             yield return new ConfigurationSection(SECTION, Strings.LoggingBehaviourConfiguration_Section)
-                .WithElement(new BooleanConfigurationElement(ENABLED_ELEMENT, Strings.LoggingBehaviourConfiguration_Enabled)
+                .WithElement(new BooleanConfigurationElement(ENABLED, Strings.LoggingBehaviourConfiguration_Enabled)
                     .WithValue(enabled))
-                .WithElement(new SelectionConfigurationElement(LEVEL_ELEMENT, Strings.LoggingBehaviourConfiguration_Level)
+                .WithElement(new SelectionConfigurationElement(LEVEL, Strings.LoggingBehaviourConfiguration_Level)
                     .WithOptions(GetLevelOptions())
-                    .DependsOn(SECTION, ENABLED_ELEMENT))
-                .WithElement(new CommandConfigurationElement(OPEN_ELEMENT, Strings.LoggingBehaviourConfiguration_Open)
+                    .DependsOn(SECTION, ENABLED))
+                .WithElement(new CommandConfigurationElement(OPEN, Strings.LoggingBehaviourConfiguration_Open)
                     .WithAsyncHandler(LogManager.Open)
-                    .DependsOn(SECTION, ENABLED_ELEMENT));
+                    .DependsOn(SECTION, ENABLED));
         }
 
         private static IEnumerable<SelectionConfigurationOption> GetLevelOptions()

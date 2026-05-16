@@ -119,7 +119,7 @@ namespace FoxTunes.ViewModel
             this.Configuration = core.Components.Configuration;
             this.ShowCounters = this.Configuration.GetElement<BooleanConfigurationElement>(
                 StreamPositionBehaviourConfiguration.SECTION,
-                StreamPositionBehaviourConfiguration.SHOW_COUNTERS_ELEMENT
+                StreamPositionBehaviourConfiguration.SHOW_COUNTERS
             );
             this.Dispatch(this.Refresh);
             base.InitializeComponent(core);

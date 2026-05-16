@@ -358,15 +358,15 @@ namespace FoxTunes
                 this.Configuration = core.Components.Configuration;
                 this.Configuration.GetElement<SelectionConfigurationElement>(
                     BassOutputConfiguration.SECTION,
-                    BassResamplerStreamComponentConfiguration.QUALITY_ELEMENT
+                    BassResamplerStreamComponentConfiguration.QUALITY
                 ).ConnectValue(value => this.Quality = BassResamplerStreamComponentConfiguration.GetQuality(value));
                 this.Configuration.GetElement<SelectionConfigurationElement>(
                     BassOutputConfiguration.SECTION,
-                    BassResamplerStreamComponentConfiguration.PHASE_ELEMENT
+                    BassResamplerStreamComponentConfiguration.PHASE
                 ).ConnectValue(value => this.Phase = BassResamplerStreamComponentConfiguration.GetPhase(value));
                 this.Configuration.GetElement<BooleanConfigurationElement>(
                     BassOutputConfiguration.SECTION,
-                    BassResamplerStreamComponentConfiguration.STEEP_FILTER_ELEMENT
+                    BassResamplerStreamComponentConfiguration.STEEP_FILTER
                 ).ConnectValue(value => this.SteepFilter = value);
                 this.Configuration.GetElement<IntegerConfigurationElement>(
                     BassOutputConfiguration.SECTION,
@@ -374,7 +374,7 @@ namespace FoxTunes
                 ).ConnectValue(value => this.InputBufferLength = value);
                 this.Configuration.GetElement<IntegerConfigurationElement>(
                     BassOutputConfiguration.SECTION,
-                    BassResamplerStreamComponentConfiguration.PLAYBACK_BUFFER_LENGTH_ELEMENT
+                    BassResamplerStreamComponentConfiguration.PLAYBACK_BUFFER_LENGTH
                 ).ConnectValue(value => this.PlaybackBufferLength = value);
                 base.InitializeComponent(core);
             }

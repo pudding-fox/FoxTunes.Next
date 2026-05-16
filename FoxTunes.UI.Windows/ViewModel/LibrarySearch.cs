@@ -108,11 +108,11 @@ namespace FoxTunes.ViewModel
             this.Configuration = core.Components.Configuration;
             this.Configuration.GetElement<IntegerConfigurationElement>(
                 SearchBehaviourConfiguration.SECTION,
-                SearchBehaviourConfiguration.SEARCH_INTERVAL_ELEMENT
+                SearchBehaviourConfiguration.SEARCH_INTERVAL
             ).ConnectValue(value => this.SearchInterval = value);
             this.Configuration.GetElement<SelectionConfigurationElement>(
                SearchBehaviourConfiguration.SECTION,
-               SearchBehaviourConfiguration.SEARCH_COMMIT_ELEMENT
+               SearchBehaviourConfiguration.SEARCH_COMMIT
            ).ConnectValue(option => this.SearchCommitBehaviour = SearchBehaviourConfiguration.GetCommitBehaviour(option));
             base.InitializeComponent(core);
         }

@@ -90,15 +90,15 @@ namespace FoxTunes
             this.Configuration = core.Components.Configuration;
             this.Configuration.GetElement<SelectionConfigurationElement>(
                 BassOutputConfiguration.SECTION,
-                BassDsdBehaviourConfiguration.DSD_RATE_ELEMENT
+                BassDsdBehaviourConfiguration.DSD_RATE
             ).ConnectValue(value => this.Rate = BassDsdBehaviourConfiguration.GetRate(value));
             this.Configuration.GetElement<IntegerConfigurationElement>(
                 BassOutputConfiguration.SECTION,
-                BassDsdBehaviourConfiguration.DSD_GAIN_ELEMENT
+                BassDsdBehaviourConfiguration.DSD_GAIN
             ).ConnectValue(value => this.Gain = value);
             this.Configuration.GetElement<BooleanConfigurationElement>(
                 BassOutputConfiguration.SECTION,
-                BassDsdBehaviourConfiguration.DSD_MEMORY_ELEMENT
+                BassDsdBehaviourConfiguration.DSD_MEMORY
             ).ConnectValue(value => this.Memory = value);
             base.InitializeComponent(core);
         }

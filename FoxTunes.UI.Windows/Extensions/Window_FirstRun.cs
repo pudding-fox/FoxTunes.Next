@@ -45,7 +45,7 @@ namespace FoxTunes
                 this.Window = window;
                 this.FirstRun = Core.Instance.Components.Configuration.GetElement<BooleanConfigurationElement>(
                     WindowsUserInterfaceConfiguration.SECTION,
-                    WindowsUserInterfaceConfiguration.FIRST_RUN_ELEMENT
+                    WindowsUserInterfaceConfiguration.FIRST_RUN
                 );
                 if (this.FirstRun.Value)
                 {

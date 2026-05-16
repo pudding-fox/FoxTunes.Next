@@ -22,7 +22,7 @@ namespace FoxTunes
         {
             ComponentRegistry.Instance.GetComponent<IConfiguration>().GetElement<IntegerConfigurationElement>(
                 BassEncoderBehaviourConfiguration.SECTION,
-                BassEncoderBehaviourConfiguration.THREADS_ELEMENT
+                BassEncoderBehaviourConfiguration.THREADS
             ).ConnectValue(value => this.Threads = value);
             base.InitializeComponent(core);
         }

@@ -33,7 +33,7 @@ namespace FoxTunes
             this.Configuration = core.Components.Configuration;
             this.Configuration.GetElement<BooleanConfigurationElement>(
                 BassArchiveStreamProviderBehaviourConfiguration.SECTION,
-                BassArchiveStreamProviderBehaviourConfiguration.ENABLED_ELEMENT
+                BassArchiveStreamProviderBehaviourConfiguration.ENABLED
             ).ConnectValue(value =>
             {
                 if (value)

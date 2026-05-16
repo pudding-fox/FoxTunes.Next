@@ -8,7 +8,7 @@ namespace FoxTunes
     {
         public const string SECTION = UWPConfiguration.SECTION;
 
-        public const string ENABLED_ELEMENT = "AAAA69E1-80B1-46BD-BE24-BC56C5A04141";
+        public const string ENABLED = "AAAA69E1-80B1-46BD-BE24-BC56C5A04141";
 
         /// <summary>
         /// Although the system media transport controls are supposed to be a Windows 10 feature it's actually available on 2016.
@@ -49,7 +49,7 @@ namespace FoxTunes
             if (IsPlatformSupported)
             {
                 yield return new ConfigurationSection(SECTION, "Windows 10")
-                    .WithElement(new BooleanConfigurationElement(ENABLED_ELEMENT, "System Media Controls").WithValue(Publication.ReleaseType == ReleaseType.Default)
+                    .WithElement(new BooleanConfigurationElement(ENABLED, "System Media Controls").WithValue(Publication.ReleaseType == ReleaseType.Default)
                 );
             }
         }

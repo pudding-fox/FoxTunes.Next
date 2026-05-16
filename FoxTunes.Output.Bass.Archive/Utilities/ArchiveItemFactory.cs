@@ -33,7 +33,7 @@ namespace FoxTunes
             this.Configuration = core.Components.Configuration;
             this.MetaData = this.Configuration.GetElement<BooleanConfigurationElement>(
                 BassArchiveStreamProviderBehaviourConfiguration.SECTION,
-                BassArchiveStreamProviderBehaviourConfiguration.METADATA_ELEMENT
+                BassArchiveStreamProviderBehaviourConfiguration.METADATA
             );
             base.InitializeComponent(core);
         }

@@ -6,9 +6,9 @@ namespace FoxTunes
     {
         public const string SECTION = BassEncoderBehaviourConfiguration.SECTION;
 
-        public const string ENABLED_ELEMENT = BassEncoderBehaviourConfiguration.ENABLED_ELEMENT;
+        public const string ENABLED = BassEncoderBehaviourConfiguration.ENABLED;
 
-        public const string DEPTH_ELEMENT = "AAAAF597-9BC4-45AD-AEA6-AEB20E515247";
+        public const string DEPTH = "AAAAF597-9BC4-45AD-AEA6-AEB20E515247";
 
         public const string DEPTH_AUTO_OPTION = "BBBBDEFA-1E12-4F2B-82B2-D45CBDEBE2C9";
 
@@ -18,15 +18,15 @@ namespace FoxTunes
 
         public const string DEPTH_32_OPTION = "GGGG7F39-C56E-4F70-8567-40D293E59823";
 
-        public const string COMPRESSION_ELEMENT = "FFFF4CA0-28E0-4C63-B395-2774BC313229";
+        public const string COMPRESSION = "FFFF4CA0-28E0-4C63-B395-2774BC313229";
 
-        public const string PROCESSING_ELEMENT = "GGGG7D83-BA6A-4FA6-A3F5-786435C8146B";
+        public const string PROCESSING = "GGGG7D83-BA6A-4FA6-A3F5-786435C8146B";
 
-        public const string HYBRID_ELEMENT = "HHHH6694-AEE2-4623-8B4B-5928B37FB1B2";
+        public const string HYBRID = "HHHH6694-AEE2-4623-8B4B-5928B37FB1B2";
 
-        public const string BITRATE_ELEMENT = "IIII00E7-2F19-46E4-A31E-8CBCFD50372A";
+        public const string BITRATE = "IIII00E7-2F19-46E4-A31E-8CBCFD50372A";
 
-        public const string CORRECTION_ELEMENT = "JJJJ78CE-A87C-4AC3-886D-3BBE6178BFEB";
+        public const string CORRECTION = "JJJJ78CE-A87C-4AC3-886D-3BBE6178BFEB";
 
         public const int DEFAULT_DEPTH = 16;
 
@@ -51,27 +51,27 @@ namespace FoxTunes
         public static IEnumerable<ConfigurationSection> GetConfigurationSections(IBassEncoderSettings settings)
         {
             yield return new ConfigurationSection(SECTION)
-                .WithElement(new SelectionConfigurationElement(DEPTH_ELEMENT, "Depth", path: settings.Name)
+                .WithElement(new SelectionConfigurationElement(DEPTH, "Depth", path: settings.Name)
                     .WithOptions(GetDepthOptions())
-                    .DependsOn(SECTION, ENABLED_ELEMENT))
-                .WithElement(new IntegerConfigurationElement(COMPRESSION_ELEMENT, "Compression Level", path: settings.Name)
+                    .DependsOn(SECTION, ENABLED))
+                .WithElement(new IntegerConfigurationElement(COMPRESSION, "Compression Level", path: settings.Name)
                     .WithValue(DEFAULT_COMPRESSION)
                     .WithValidationRule(new IntegerValidationRule(MIN_COMPRESSION, MAX_COMPRESSION))
-                    .DependsOn(SECTION, ENABLED_ELEMENT))
-                .WithElement(new IntegerConfigurationElement(PROCESSING_ELEMENT, "Additional Processing", path: settings.Name)
+                    .DependsOn(SECTION, ENABLED))
+                .WithElement(new IntegerConfigurationElement(PROCESSING, "Additional Processing", path: settings.Name)
                     .WithValue(DEFAULT_PROCESSING)
                     .WithValidationRule(new IntegerValidationRule(MIN_PROCESSING, MAX_PROCESSING))
-                    .DependsOn(SECTION, ENABLED_ELEMENT))
-                .WithElement(new BooleanConfigurationElement(HYBRID_ELEMENT, "Hybrid Lossy", path: settings.Name)
+                    .DependsOn(SECTION, ENABLED))
+                .WithElement(new BooleanConfigurationElement(HYBRID, "Hybrid Lossy", path: settings.Name)
                     .WithValue(false)
-                    .DependsOn(SECTION, ENABLED_ELEMENT))
-                .WithElement(new BooleanConfigurationElement(CORRECTION_ELEMENT, "Correction File", path: settings.Name)
-                    .WithValue(false).DependsOn(SECTION, HYBRID_ELEMENT)
-                    .DependsOn(SECTION, ENABLED_ELEMENT))
-                .WithElement(new IntegerConfigurationElement(BITRATE_ELEMENT, "Bitrate", path: settings.Name)
-                    .WithValue(DEFAULT_BITRATE).DependsOn(SECTION, HYBRID_ELEMENT)
+                    .DependsOn(SECTION, ENABLED))
+                .WithElement(new BooleanConfigurationElement(CORRECTION, "Correction File", path: settings.Name)
+                    .WithValue(false).DependsOn(SECTION, HYBRID)
+                    .DependsOn(SECTION, ENABLED))
+                .WithElement(new IntegerConfigurationElement(BITRATE, "Bitrate", path: settings.Name)
+                    .WithValue(DEFAULT_BITRATE).DependsOn(SECTION, HYBRID)
                     .WithValidationRule(new IntegerValidationRule(MIN_BITRATE, MAX_BITRATE))
-                    .DependsOn(SECTION, ENABLED_ELEMENT)
+                    .DependsOn(SECTION, ENABLED)
                 );
         }
 

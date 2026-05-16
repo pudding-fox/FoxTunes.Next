@@ -20,11 +20,11 @@ namespace FoxTunes
             this.FileSystemBrowser = core.Components.FileSystemBrowser;
             core.Components.Configuration.GetElement<SelectionConfigurationElement>(
                 BassEncoderBehaviourConfiguration.SECTION,
-                BassEncoderBehaviourConfiguration.DESTINATION_ELEMENT
+                BassEncoderBehaviourConfiguration.DESTINATION
             ).ConnectValue(value => this.Destination = BassEncoderBehaviourConfiguration.GetDestination(value));
             core.Components.Configuration.GetElement<TextConfigurationElement>(
                 BassEncoderBehaviourConfiguration.SECTION,
-                BassEncoderBehaviourConfiguration.DESTINATION_LOCATION_ELEMENT
+                BassEncoderBehaviourConfiguration.DESTINATION_LOCATION
             ).ConnectValue(value => this.SpecificFolder = value);
             base.InitializeComponent(core);
         }

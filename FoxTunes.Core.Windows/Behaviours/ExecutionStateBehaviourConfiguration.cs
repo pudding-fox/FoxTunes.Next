@@ -7,7 +7,7 @@ namespace FoxTunes
     {
         public const string SECTION = "A01D8E9B-004B-48D5-B8A5-7ACCCC6D560F";
 
-        public const string SLEEP_ELEMENT = "FBD451E4-6DC4-411E-A02C-0B41FB641778";
+        public const string SLEEP = "FBD451E4-6DC4-411E-A02C-0B41FB641778";
 
         public const string SLEEP_NONE_OPTION = "AAAAB02F3-19B1-432F-AA0F-EEDD04820CC2";
 
@@ -15,16 +15,16 @@ namespace FoxTunes
 
         public const string SLEEP_DISPLAY_OPTION = "CCCC64A7-1884-484F-AA13-7C221B1EA128";
 
-        public const string ONLY_WHILE_PLAYING_ELEMENT = "GGGG5385-BECC-4111-894D-82A30A1AA3A0";
+        public const string ONLY_WHILE_PLAYING = "GGGG5385-BECC-4111-894D-82A30A1AA3A0";
 
         public static IEnumerable<ConfigurationSection> GetConfigurationSections()
         {
             yield return new ConfigurationSection(SECTION, Strings.ExecutionStateBehaviourConfiguration_Section)
-                .WithElement(new SelectionConfigurationElement(SLEEP_ELEMENT, Strings.ExecutionStateBehaviourConfiguration_Sleep)
+                .WithElement(new SelectionConfigurationElement(SLEEP, Strings.ExecutionStateBehaviourConfiguration_Sleep)
                     .WithOptions(GetSleepOptions()))
-                .WithElement(new BooleanConfigurationElement(ONLY_WHILE_PLAYING_ELEMENT, Strings.ExecutionStateBehaviourConfiguration_OnlyWhilePlaying)
+                .WithElement(new BooleanConfigurationElement(ONLY_WHILE_PLAYING, Strings.ExecutionStateBehaviourConfiguration_OnlyWhilePlaying)
                     .WithValue(true)
-                    .DependsOn(SECTION, SLEEP_ELEMENT, SLEEP_NONE_OPTION, true)
+                    .DependsOn(SECTION, SLEEP, SLEEP_NONE_OPTION, true)
                );
         }
 

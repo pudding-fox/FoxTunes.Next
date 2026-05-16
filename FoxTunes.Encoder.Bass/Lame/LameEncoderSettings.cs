@@ -48,7 +48,7 @@ namespace FoxTunes
         {
             core.Components.Configuration.GetElement<SelectionConfigurationElement>(
                 LameEncoderSettingsConfiguration.SECTION,
-                LameEncoderSettingsConfiguration.BITRATE_ELEMENT
+                LameEncoderSettingsConfiguration.BITRATE
             ).ConnectValue(option => this.Bitrate = LameEncoderSettingsConfiguration.GetBitrate(option));
             base.InitializeComponent(core);
         }

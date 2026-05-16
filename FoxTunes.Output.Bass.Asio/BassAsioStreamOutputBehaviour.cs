@@ -113,7 +113,7 @@ namespace FoxTunes
             this.Configuration = core.Components.Configuration;
             this.Configuration.GetElement<SelectionConfigurationElement>(
                 BassOutputConfiguration.SECTION,
-                BassOutputConfiguration.OUTPUT_ELEMENT
+                BassOutputConfiguration.OUTPUT
             ).ConnectValue(value => this.Enabled = string.Equals(value.Id, BassAsioStreamOutputConfiguration.OUTPUT_ASIO_OPTION, StringComparison.OrdinalIgnoreCase));
             this.Configuration.GetElement<SelectionConfigurationElement>(
                 BassOutputConfiguration.SECTION,
@@ -121,11 +121,11 @@ namespace FoxTunes
             ).ConnectValue(value => this.AsioDevice = BassAsioStreamOutputConfiguration.GetAsioDevice(value));
             this.Configuration.GetElement<BooleanConfigurationElement>(
                 BassOutputConfiguration.SECTION,
-                BassAsioStreamOutputConfiguration.DSD_RAW_ELEMENT
+                BassAsioStreamOutputConfiguration.DSD_RAW
             ).ConnectValue(value => this.DsdDirect = value);
             this.Configuration.GetElement<BooleanConfigurationElement>(
                 BassOutputConfiguration.SECTION,
-                BassAsioStreamOutputConfiguration.MIXER_ELEMENT
+                BassAsioStreamOutputConfiguration.MIXER
             ).ConnectValue(value => this.Mixer = value);
             this.BassStreamPipelineFactory = ComponentRegistry.Instance.GetComponent<IBassStreamPipelineFactory>();
             this.BassStreamPipelineFactory.QueryingPipeline += this.OnQueryingPipeline;

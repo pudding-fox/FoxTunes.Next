@@ -25,7 +25,7 @@ namespace FoxTunes
             this.Configuration = core.Components.Configuration;
             this.Manage = this.Configuration.GetElement<TextConfigurationElement>(
                 ToolWindowKeyBindingsBehaviourConfiguration.SECTION,
-                ToolWindowKeyBindingsBehaviourConfiguration.MANAGE_ELEMENT
+                ToolWindowKeyBindingsBehaviourConfiguration.MANAGE
             );
             if (this.Manage != null)
             {

@@ -347,35 +347,35 @@ namespace FoxTunes
             this.Configuration = core.Components.Configuration;
             this.Configuration.GetElement<SelectionConfigurationElement>(
                 BassOutputConfiguration.SECTION,
-                BassOutputConfiguration.RATE_ELEMENT
+                BassOutputConfiguration.RATE
             ).ConnectValue(value => this.Rate = BassOutputConfiguration.GetRate(value));
             this.Configuration.GetElement<BooleanConfigurationElement>(
                 BassOutputConfiguration.SECTION,
-                BassOutputConfiguration.ENFORCE_RATE_ELEMENT
+                BassOutputConfiguration.ENFORCE_RATE
             ).ConnectValue(value => this.EnforceRate = value);
             this.Configuration.GetElement<SelectionConfigurationElement>(
                 BassOutputConfiguration.SECTION,
-                BassOutputConfiguration.DEPTH_ELEMENT
+                BassOutputConfiguration.DEPTH
             ).ConnectValue(value => this.Float = BassOutputConfiguration.GetFloat(value));
             this.Configuration.GetElement<IntegerConfigurationElement>(
                 BassOutputConfiguration.SECTION,
-                BassOutputConfiguration.UPDATE_PERIOD_ELEMENT
+                BassOutputConfiguration.UPDATE_PERIOD
             ).ConnectValue(value => this.UpdatePeriod = value);
             this.Configuration.GetElement<IntegerConfigurationElement>(
                 BassOutputConfiguration.SECTION,
-                BassOutputConfiguration.UPDATE_THREADS_ELEMENT
+                BassOutputConfiguration.UPDATE_THREADS
             ).ConnectValue(value => this.UpdateThreads = value);
             this.Configuration.GetElement<IntegerConfigurationElement>(
                 BassOutputConfiguration.SECTION,
-                BassOutputConfiguration.BUFFER_LENGTH_ELEMENT
+                BassOutputConfiguration.BUFFER_LENGTH
             ).ConnectValue(value => this.BufferLength = value);
             this.Configuration.GetElement<IntegerConfigurationElement>(
                 BassOutputConfiguration.SECTION,
-                BassOutputConfiguration.MIXER_BUFFER_LENGTH_ELEMENT
+                BassOutputConfiguration.MIXER_BUFFER_LENGTH
             ).ConnectValue(value => this.MixerBufferLength = value);
             this.Configuration.GetElement<IntegerConfigurationElement>(
                 BassOutputConfiguration.SECTION,
-                BassOutputConfiguration.RESAMPLE_QUALITY_ELEMENT
+                BassOutputConfiguration.RESAMPLE_QUALITY
             ).ConnectValue(value => this.ResamplingQuality = value);
             this.Loader = ComponentRegistry.Instance.GetComponent<IBassLoader>();
             this.StreamFactory = ComponentRegistry.Instance.GetComponent<IBassStreamFactory>();

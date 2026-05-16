@@ -46,7 +46,7 @@ namespace FoxTunes
             this.Configuration = core.Components.Configuration;
             this.Enabled = this.Configuration.GetElement<BooleanConfigurationElement>(
                 BassEncoderBehaviourConfiguration.SECTION,
-                BassEncoderBehaviourConfiguration.ENABLED_ELEMENT
+                BassEncoderBehaviourConfiguration.ENABLED
             );
             this.CopyTags = this.Configuration.GetElement<BooleanConfigurationElement>(
                 BassEncoderBehaviourConfiguration.SECTION,

@@ -10,19 +10,19 @@ namespace FoxTunes
     {
         public const string SECTION = "1355A5DB-84D3-4582-B294-5B6EEC8B80D2";
 
-        public const string MODE_ELEMENT = "402DE29B-50AB-4345-89FB-174D87824F98";
+        public const string MODE = "402DE29B-50AB-4345-89FB-174D87824F98";
 
         public const string MODE_MONO_OPTION = "AAAA21C9-A9FF-4CFD-8EFB-96EE79455050";
 
         public const string MODE_SEPERATE_OPTION = "CCCC3286-5097-4977-A4CC-5CEDA5E2E099";
 
-        public const string RMS_ELEMENT = "ABBB7F57-6B6B-4A51-A75F-83F4735CE464";
+        public const string RMS = "ABBB7F57-6B6B-4A51-A75F-83F4735CE464";
 
-        public const string DB_ELEMENT = "BBBB7F57-6B6B-4A51-A75F-83F4735CE464";
+        public const string DB = "BBBB7F57-6B6B-4A51-A75F-83F4735CE464";
 
-        public const string SMOOTHING_ELEMENT = "BBCCC449-9B05-43E2-934D-7E27786B0E27";
+        public const string SMOOTHING = "BBCCC449-9B05-43E2-934D-7E27786B0E27";
 
-        public const string COLOR_PALETTE_ELEMENT = "CCCC7E5A-ECA1-4D45-92C1-82B9EF4F8228";
+        public const string COLOR_PALETTE = "CCCC7E5A-ECA1-4D45-92C1-82B9EF4F8228";
 
         public const string COLOR_PALETTE_RMS = "RMS";
 
@@ -43,11 +43,11 @@ namespace FoxTunes
         public static IEnumerable<ConfigurationSection> GetConfigurationSections()
         {
             yield return new ConfigurationSection(SECTION, Strings.WaveFormStreamPositionConfiguration_Section)
-                .WithElement(new SelectionConfigurationElement(MODE_ELEMENT, Strings.WaveFormStreamPositionConfiguration_Mode).WithOptions(GetModeOptions()))
-                .WithElement(new BooleanConfigurationElement(RMS_ELEMENT, Strings.WaveFormStreamPositionConfiguration_RMS).WithValue(true))
-                .WithElement(new BooleanConfigurationElement(DB_ELEMENT, Strings.WaveFormStreamPositionConfiguration_DB).WithValue(false))
-                .WithElement(new IntegerConfigurationElement(SMOOTHING_ELEMENT, Strings.WaveFormStreamPositionConfiguration_Smoothing).WithValue(SMOOTHING_DEFAULT).WithValidationRule(new IntegerValidationRule(SMOOTHING_MIN, SMOOTHING_MAX, 3)))
-                .WithElement(new TextConfigurationElement(COLOR_PALETTE_ELEMENT, Strings.WaveFormStreamPositionConfiguration_ColorPalette).WithValue(GetDefaultColorPalette()).WithFlags(ConfigurationElementFlags.MultiLine)
+                .WithElement(new SelectionConfigurationElement(MODE, Strings.WaveFormStreamPositionConfiguration_Mode).WithOptions(GetModeOptions()))
+                .WithElement(new BooleanConfigurationElement(RMS, Strings.WaveFormStreamPositionConfiguration_RMS).WithValue(true))
+                .WithElement(new BooleanConfigurationElement(DB, Strings.WaveFormStreamPositionConfiguration_DB).WithValue(false))
+                .WithElement(new IntegerConfigurationElement(SMOOTHING, Strings.WaveFormStreamPositionConfiguration_Smoothing).WithValue(SMOOTHING_DEFAULT).WithValidationRule(new IntegerValidationRule(SMOOTHING_MIN, SMOOTHING_MAX, 3)))
+                .WithElement(new TextConfigurationElement(COLOR_PALETTE, Strings.WaveFormStreamPositionConfiguration_ColorPalette).WithValue(GetDefaultColorPalette()).WithFlags(ConfigurationElementFlags.MultiLine)
             );
         }
 

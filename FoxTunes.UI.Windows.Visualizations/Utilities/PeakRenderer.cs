@@ -93,11 +93,11 @@ namespace FoxTunes
             {
                 this.ShowPeaks = this.Configuration.GetElement<BooleanConfigurationElement>(
                     PeakMeterConfiguration.SECTION,
-                    PeakMeterConfiguration.PEAKS_ELEMENT
+                    PeakMeterConfiguration.PEAKS
                  );
                 this.HoldInterval = this.Configuration.GetElement<IntegerConfigurationElement>(
                    PeakMeterConfiguration.SECTION,
-                   PeakMeterConfiguration.HOLD_ELEMENT
+                   PeakMeterConfiguration.HOLD
                 );
                 this.ColorPalette = this.Configuration.GetElement<TextConfigurationElement>(
                     PeakMeterConfiguration.SECTION,
@@ -117,7 +117,7 @@ namespace FoxTunes
                 );
                 this.FFTSize = this.Configuration.GetElement<SelectionConfigurationElement>(
                    EnhancedSpectrumConfiguration.SECTION,
-                   VisualizationBehaviourConfiguration.FFT_SIZE_ELEMENT
+                   VisualizationBehaviourConfiguration.FFT_SIZE
                 );
                 this.ShowPeaks.ValueChanged += this.OnValueChanged;
                 this.ColorPalette.ValueChanged += this.OnValueChanged;

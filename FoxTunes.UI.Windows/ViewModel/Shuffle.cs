@@ -58,7 +58,7 @@ namespace FoxTunes.ViewModel
             this.Configuration = core.Components.Configuration;
             this.Order = this.Configuration.GetElement<SelectionConfigurationElement>(
                 PlaylistBehaviourConfiguration.SECTION,
-                PlaylistBehaviourConfiguration.ORDER_ELEMENT
+                PlaylistBehaviourConfiguration.ORDER
             );
             this.Order.ValueChanged += this.OnValueChanged;
             this.OnEnabledChanged();

@@ -98,15 +98,15 @@ namespace FoxTunes
             {
                 this.Configuration.GetElement<BooleanConfigurationElement>(
                     NotifyIconConfiguration.SECTION,
-                    NotifyIconConfiguration.ENABLED_ELEMENT
+                    NotifyIconConfiguration.ENABLED
                 ).ConnectValue(value => this.Enabled = value);
                 this.Configuration.GetElement<BooleanConfigurationElement>(
                     NotifyIconConfiguration.SECTION,
-                    NotifyIconConfiguration.MINIMIZE_TO_TRAY_ELEMENT
+                    NotifyIconConfiguration.MINIMIZE_TO_TRAY
                 ).ConnectValue(value => this.MinimizeToTray = value);
                 this.Configuration.GetElement<BooleanConfigurationElement>(
                     NotifyIconConfiguration.SECTION,
-                    NotifyIconConfiguration.CLOSE_TO_TRAY_ELEMENT
+                    NotifyIconConfiguration.CLOSE_TO_TRAY
                 ).ConnectValue(value => this.CloseToTray = value);
             }
             base.InitializeComponent(core);

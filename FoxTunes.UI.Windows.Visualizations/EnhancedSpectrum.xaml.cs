@@ -45,27 +45,27 @@ namespace FoxTunes
             {
                 this.Bands = this.Configuration.GetElement<SelectionConfigurationElement>(
                    EnhancedSpectrumConfiguration.SECTION,
-                   EnhancedSpectrumConfiguration.BANDS_ELEMENT
+                   EnhancedSpectrumConfiguration.BANDS
                );
                 this.Peak = this.Configuration.GetElement<BooleanConfigurationElement>(
                     EnhancedSpectrumConfiguration.SECTION,
-                    EnhancedSpectrumConfiguration.PEAK_ELEMENT
+                    EnhancedSpectrumConfiguration.PEAK
                 );
                 this.Rms = this.Configuration.GetElement<BooleanConfigurationElement>(
                     EnhancedSpectrumConfiguration.SECTION,
-                    EnhancedSpectrumConfiguration.RMS_ELEMENT
+                    EnhancedSpectrumConfiguration.RMS
                 );
                 this.ColorPalette = this.Configuration.GetElement<TextConfigurationElement>(
                     EnhancedSpectrumConfiguration.SECTION,
-                    EnhancedSpectrumConfiguration.COLOR_PALETTE_ELEMENT
+                    EnhancedSpectrumConfiguration.COLOR_PALETTE
                 );
                 this.Duration = this.Configuration.GetElement<IntegerConfigurationElement>(
                     EnhancedSpectrumConfiguration.SECTION,
-                    EnhancedSpectrumConfiguration.DURATION_ELEMENT
+                    EnhancedSpectrumConfiguration.DURATION
                 );
                 this.Interval = this.Configuration.GetElement<IntegerConfigurationElement>(
                     VisualizationBehaviourConfiguration.SECTION,
-                    VisualizationBehaviourConfiguration.INTERVAL_ELEMENT
+                    VisualizationBehaviourConfiguration.INTERVAL
                 );
             }
             base.OnConfigurationChanged();

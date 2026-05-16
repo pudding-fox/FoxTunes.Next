@@ -30,7 +30,7 @@ namespace FoxTunes
 
         public const string MAX_IMAGE_SIZE = "EEFFD218-2EF5-4256-A6FE-A9266BBEEC72";
 
-        public const string COPY_IMAGES_ELEMENT = "FFFFA875-8195-49AF-A1A4-2EAB2294A6D8";
+        public const string COPY_IMAGES = "FFFFA875-8195-49AF-A1A4-2EAB2294A6D8";
 
         public const string READ_EXTENDED_TAGS = "GGGG9A48-2D0A-4FFA-9749-4592BDFFF5DE";
 
@@ -50,9 +50,9 @@ namespace FoxTunes
 
         public const string DETECT_COMPILATIONS = "JJKK150D-DB8D-4C64-99E4-10B453B26295";
 
-        public const string THREADS_ELEMENT = "KKKK16BD-B4A7-4F9D-B4DA-F81E932F6DD9";
+        public const string THREADS = "KKKK16BD-B4A7-4F9D-B4DA-F81E932F6DD9";
 
-        public const string WRITE_ELEMENT = "LLLLEBD5-2675-42E4-8C9A-6E851DAA4D86";
+        public const string WRITE = "LLLLEBD5-2675-42E4-8C9A-6E851DAA4D86";
 
         public const string WRITE_NONE_OPTION = "AAAA73B6-7263-42A3-8304-9EAD8FB82197";
 
@@ -60,7 +60,7 @@ namespace FoxTunes
 
         public const string WRITE_TAGS_AND_STATISTICS_OPTION = "CCCC75D8-4BCA-41E4-99A1-540F78B170EE";
 
-        public const string BACKGROUND_WRITE_ELEMENT = "MMMMF522-A8F2-42A9-8F48-6EE98775E34E";
+        public const string BACKGROUND_WRITE = "MMMMF522-A8F2-42A9-8F48-6EE98775E34E";
 
         public static IEnumerable<ConfigurationSection> GetConfigurationSections()
         {
@@ -84,7 +84,7 @@ namespace FoxTunes
                 .WithElement(
                     new IntegerConfigurationElement(MAX_IMAGE_SIZE, Strings.MetaDataBehaviourConfiguration_ImageSize, path: Strings.General_Advanced).WithValue(16).WithValidationRule(new IntegerValidationRule(1, 16)))
                 .WithElement(
-                    new BooleanConfigurationElement(COPY_IMAGES_ELEMENT, Strings.MetaDataBehaviourConfiguration_ImageCopy, path: Strings.General_Advanced).WithValue(true))
+                    new BooleanConfigurationElement(COPY_IMAGES, Strings.MetaDataBehaviourConfiguration_ImageCopy, path: Strings.General_Advanced).WithValue(true))
                 .WithElement(
                     new BooleanConfigurationElement(READ_EXTENDED_TAGS, Strings.MetaDataBehaviourConfiguration_Extended, path: Strings.General_Advanced).WithValue(false))
                 .WithElement(
@@ -104,11 +104,11 @@ namespace FoxTunes
                 .WithElement(
                     new BooleanConfigurationElement(DETECT_COMPILATIONS, Strings.MetaDataBehaviourConfiguration_DetectCompilations).WithValue(Publication.ReleaseType == ReleaseType.Default))
                 .WithElement(
-                    new IntegerConfigurationElement(THREADS_ELEMENT, Strings.MetaDataBehaviourConfiguration_Threads, path: Strings.General_Advanced).WithValue(Environment.ProcessorCount / 2).WithValidationRule(new IntegerValidationRule(1, 32)))
+                    new IntegerConfigurationElement(THREADS, Strings.MetaDataBehaviourConfiguration_Threads, path: Strings.General_Advanced).WithValue(Environment.ProcessorCount / 2).WithValidationRule(new IntegerValidationRule(1, 32)))
                 .WithElement(
-                    new SelectionConfigurationElement(WRITE_ELEMENT, Strings.MetaDataBehaviourConfiguration_Write, path: Strings.General_Advanced).WithOptions(GetWriteBehaviourOptions()))
+                    new SelectionConfigurationElement(WRITE, Strings.MetaDataBehaviourConfiguration_Write, path: Strings.General_Advanced).WithOptions(GetWriteBehaviourOptions()))
                 .WithElement(
-                    new BooleanConfigurationElement(BACKGROUND_WRITE_ELEMENT, Strings.MetaDataBehaviourConfiguration_WriteBackground, path: Strings.General_Advanced).WithValue(Publication.ReleaseType == ReleaseType.Default)
+                    new BooleanConfigurationElement(BACKGROUND_WRITE, Strings.MetaDataBehaviourConfiguration_WriteBackground, path: Strings.General_Advanced).WithValue(Publication.ReleaseType == ReleaseType.Default)
             );
         }
 

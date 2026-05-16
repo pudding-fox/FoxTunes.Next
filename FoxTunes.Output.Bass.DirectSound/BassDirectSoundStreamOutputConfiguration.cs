@@ -11,7 +11,7 @@ namespace FoxTunes
 
         public const string SECTION = BassOutputConfiguration.SECTION;
 
-        public const string OUTPUT_ELEMENT = BassOutputConfiguration.OUTPUT_ELEMENT;
+        public const string OUTPUT = BassOutputConfiguration.OUTPUT;
 
         public const string OUTPUT_DS_OPTION = "AAAA1348-069B-4763-89CF-5ACBE53E9F75";
 
@@ -22,18 +22,18 @@ namespace FoxTunes
         public static IEnumerable<ConfigurationSection> GetConfigurationSections()
         {
             yield return new ConfigurationSection(SECTION)
-                .WithElement(new SelectionConfigurationElement(OUTPUT_ELEMENT)
+                .WithElement(new SelectionConfigurationElement(OUTPUT)
                     .WithOptions(new[] { new SelectionConfigurationOption(OUTPUT_DS_OPTION, Strings.DirectSound) }))
                 .WithElement(new SelectionConfigurationElement(ELEMENT_DS_DEVICE, "Device", path: Strings.DirectSound)
                     .WithOptions(GetDSDevices())
-                    .DependsOn(SECTION, OUTPUT_ELEMENT, OUTPUT_DS_OPTION))
+                    .DependsOn(SECTION, OUTPUT, OUTPUT_DS_OPTION))
                 .WithElement(new CommandConfigurationElement(ELEMENT_REFRESH, "Refresh Devices", path: Strings.DirectSound)
                     .WithHandler(() =>
                     {
                         var selector = ComponentRegistry.Instance.GetComponent<BassDirectSoundOutputDeviceSelector>();
                         selector.Refresh();
                     })
-                    .DependsOn(SECTION, OUTPUT_ELEMENT, OUTPUT_DS_OPTION)
+                    .DependsOn(SECTION, OUTPUT, OUTPUT_DS_OPTION)
             );
         }
 

@@ -44,7 +44,7 @@ namespace FoxTunes
             {
                 this.Peaks = this.Configuration.GetElement<BooleanConfigurationElement>(
                     PeakMeterConfiguration.SECTION,
-                    PeakMeterConfiguration.PEAKS_ELEMENT
+                    PeakMeterConfiguration.PEAKS
                 );
                 this.ColorPalette = this.Configuration.GetElement<TextConfigurationElement>(
                     PeakMeterConfiguration.SECTION,
@@ -56,7 +56,7 @@ namespace FoxTunes
                 );
                 this.Interval = this.Configuration.GetElement<IntegerConfigurationElement>(
                     VisualizationBehaviourConfiguration.SECTION,
-                    VisualizationBehaviourConfiguration.INTERVAL_ELEMENT
+                    VisualizationBehaviourConfiguration.INTERVAL
                 );
             }
             base.OnConfigurationChanged();

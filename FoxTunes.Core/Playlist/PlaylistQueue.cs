@@ -59,7 +59,7 @@ namespace FoxTunes
             this.Configuration = core.Components.Configuration;
             this.Enabled = this.Configuration.GetElement<BooleanConfigurationElement>(
                 PlaylistBehaviourConfiguration.SECTION,
-                PlaylistBehaviourConfiguration.QUEUE_ELEMENT
+                PlaylistBehaviourConfiguration.QUEUE
             );
         }
 

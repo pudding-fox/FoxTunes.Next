@@ -8,23 +8,23 @@ namespace FoxTunes
     {
         public const string SECTION = BassOutputConfiguration.SECTION;
 
-        public const string INPUT_ELEMENT = BassOutputConfiguration.INPUT_ELEMENT;
+        public const string INPUT = BassOutputConfiguration.INPUT;
 
         public const string INPUT_CROSSFADE_OPTION = "BBBBFDE4-7361-456F-AB55-85364B51C2A2";
 
-        public const string MODE_ELEMENT = "AAAA0393-436D-4500-9E4C-D7A3CAE8AC28";
+        public const string MODE = "AAAA0393-436D-4500-9E4C-D7A3CAE8AC28";
 
         public const string MODE_ALWAYS_OPTION = "AAAA51B8-2F7B-46BB-BA0F-7D71316055A0";
 
         public const string MODE_MANUAL_OPTION = "BBBB2352-F7A9-40AF-A654-C76BB6C59A6B";
 
-        public const string PERIOD_IN_ELEMENT = "BBBB69B8-E637-4B00-B46C-37BEAA9873F8";
+        public const string PERIOD_IN = "BBBB69B8-E637-4B00-B46C-37BEAA9873F8";
 
-        public const string PERIOD_OUT_ELEMENT = "CCCC079C-98AB-4773-B55F-E2C91CDDE0BE";
+        public const string PERIOD_OUT = "CCCC079C-98AB-4773-B55F-E2C91CDDE0BE";
 
-        public const string TYPE_IN_ELEMENT = "DDDDD685-3F5A-44C3-8286-8ED88F5B385E";
+        public const string TYPE_IN = "DDDDD685-3F5A-44C3-8286-8ED88F5B385E";
 
-        public const string TYPE_OUT_ELEMENT = "EEEEB3EF-2B3A-4CB8-93B5-946A34F9FEF5";
+        public const string TYPE_OUT = "EEEEB3EF-2B3A-4CB8-93B5-946A34F9FEF5";
 
         public const string TYPE_LINEAR_OPTION = "AAAA6A54-B0D9-4CFA-9AEC-4AE730D62716";
 
@@ -36,53 +36,53 @@ namespace FoxTunes
 
         public const string TYPE_OUT_EXPO_OPTION = "EEEED4F2-9E6E-4499-8D36-F219AB45AC85";
 
-        public const string MIX_ELEMENT = "FFFF9C57-11C6-4D50-A0FF-BD38AE70EF0E";
+        public const string MIX = "FFFF9C57-11C6-4D50-A0FF-BD38AE70EF0E";
 
-        public const string START_ELEMENT = "EEEF1406-957D-493C-A520-FC999E525F8A";
+        public const string START = "EEEF1406-957D-493C-A520-FC999E525F8A";
 
-        public const string PAUSE_RESUME_ELEMENT = "EEEG5ABC-E0FC-43D1-8CD0-54D269FD809D";
+        public const string PAUSE_RESUME = "EEEG5ABC-E0FC-43D1-8CD0-54D269FD809D";
 
-        public const string STOP_ELEMENT = "EEEIB80E-222F-4A0A-8C83-AE8D03C3F479";
+        public const string STOP = "EEEIB80E-222F-4A0A-8C83-AE8D03C3F479";
 
-        public const string BUFFER_ELEMENT = "FFFF3EF8-AFA9-4870-A4F3-30CE4600750F";
+        public const string BUFFER = "FFFF3EF8-AFA9-4870-A4F3-30CE4600750F";
 
         public static IEnumerable<ConfigurationSection> GetConfigurationSections()
         {
             yield return new ConfigurationSection(SECTION)
-                .WithElement(new SelectionConfigurationElement(INPUT_ELEMENT)
+                .WithElement(new SelectionConfigurationElement(INPUT)
                     .WithOptions(new[] { new SelectionConfigurationOption(INPUT_CROSSFADE_OPTION, Strings.BassCrossfadeStreamInput_Name) }))
-                .WithElement(new SelectionConfigurationElement(MODE_ELEMENT, Strings.BassCrossfadeStreamInputConfiguration_Mode, path: Strings.BassCrossfadeStreamInputConfiguration_Path)
+                .WithElement(new SelectionConfigurationElement(MODE, Strings.BassCrossfadeStreamInputConfiguration_Mode, path: Strings.BassCrossfadeStreamInputConfiguration_Path)
                     .WithOptions(GetModeOptions())
-                    .DependsOn(SECTION, INPUT_ELEMENT, INPUT_CROSSFADE_OPTION))
-                .WithElement(new IntegerConfigurationElement(PERIOD_IN_ELEMENT, Strings.BassCrossfadeStreamInputConfiguration_PeriodIn, path: Strings.BassCrossfadeStreamInputConfiguration_Path)
+                    .DependsOn(SECTION, INPUT, INPUT_CROSSFADE_OPTION))
+                .WithElement(new IntegerConfigurationElement(PERIOD_IN, Strings.BassCrossfadeStreamInputConfiguration_PeriodIn, path: Strings.BassCrossfadeStreamInputConfiguration_Path)
                     .WithValue(100)
                     .WithValidationRule(new IntegerValidationRule(0, 5000, step: 100))
-                    .DependsOn(SECTION, INPUT_ELEMENT, INPUT_CROSSFADE_OPTION))
-                .WithElement(new IntegerConfigurationElement(PERIOD_OUT_ELEMENT, Strings.BassCrossfadeStreamInputConfiguration_PeriodOut, path: Strings.BassCrossfadeStreamInputConfiguration_Path)
+                    .DependsOn(SECTION, INPUT, INPUT_CROSSFADE_OPTION))
+                .WithElement(new IntegerConfigurationElement(PERIOD_OUT, Strings.BassCrossfadeStreamInputConfiguration_PeriodOut, path: Strings.BassCrossfadeStreamInputConfiguration_Path)
                     .WithValue(100)
                     .WithValidationRule(new IntegerValidationRule(0, 5000, step: 100))
-                    .DependsOn(SECTION, INPUT_ELEMENT, INPUT_CROSSFADE_OPTION))
-                .WithElement(new SelectionConfigurationElement(TYPE_IN_ELEMENT, Strings.BassCrossfadeStreamInputConfiguration_TypeIn, path: Strings.BassCrossfadeStreamInputConfiguration_Path)
+                    .DependsOn(SECTION, INPUT, INPUT_CROSSFADE_OPTION))
+                .WithElement(new SelectionConfigurationElement(TYPE_IN, Strings.BassCrossfadeStreamInputConfiguration_TypeIn, path: Strings.BassCrossfadeStreamInputConfiguration_Path)
                     .WithOptions(GetTypeOptions(TYPE_OUT_QUAD_OPTION))
-                    .DependsOn(SECTION, INPUT_ELEMENT, INPUT_CROSSFADE_OPTION))
-                .WithElement(new SelectionConfigurationElement(TYPE_OUT_ELEMENT, Strings.BassCrossfadeStreamInputConfiguration_TypeOut, path: Strings.BassCrossfadeStreamInputConfiguration_Path)
+                    .DependsOn(SECTION, INPUT, INPUT_CROSSFADE_OPTION))
+                .WithElement(new SelectionConfigurationElement(TYPE_OUT, Strings.BassCrossfadeStreamInputConfiguration_TypeOut, path: Strings.BassCrossfadeStreamInputConfiguration_Path)
                     .WithOptions(GetTypeOptions(TYPE_OUT_QUAD_OPTION))
-                    .DependsOn(SECTION, INPUT_ELEMENT, INPUT_CROSSFADE_OPTION))
-                .WithElement(new BooleanConfigurationElement(MIX_ELEMENT, Strings.BassCrossfadeStreamInputConfiguration_Mix, path: Strings.BassCrossfadeStreamInputConfiguration_Path)
+                    .DependsOn(SECTION, INPUT, INPUT_CROSSFADE_OPTION))
+                .WithElement(new BooleanConfigurationElement(MIX, Strings.BassCrossfadeStreamInputConfiguration_Mix, path: Strings.BassCrossfadeStreamInputConfiguration_Path)
                     .WithValue(false)
-                    .DependsOn(SECTION, INPUT_ELEMENT, INPUT_CROSSFADE_OPTION))
-                .WithElement(new BooleanConfigurationElement(START_ELEMENT, Strings.BassCrossfadeStreamInputConfiguration_Start, path: Strings.BassCrossfadeStreamInputConfiguration_Path)
+                    .DependsOn(SECTION, INPUT, INPUT_CROSSFADE_OPTION))
+                .WithElement(new BooleanConfigurationElement(START, Strings.BassCrossfadeStreamInputConfiguration_Start, path: Strings.BassCrossfadeStreamInputConfiguration_Path)
                     .WithValue(false)
-                    .DependsOn(SECTION, INPUT_ELEMENT, INPUT_CROSSFADE_OPTION))
-                .WithElement(new BooleanConfigurationElement(PAUSE_RESUME_ELEMENT, Strings.BassCrossfadeStreamInputConfiguration_PauseResume, path: Strings.BassCrossfadeStreamInputConfiguration_Path)
+                    .DependsOn(SECTION, INPUT, INPUT_CROSSFADE_OPTION))
+                .WithElement(new BooleanConfigurationElement(PAUSE_RESUME, Strings.BassCrossfadeStreamInputConfiguration_PauseResume, path: Strings.BassCrossfadeStreamInputConfiguration_Path)
                     .WithValue(false)
-                    .DependsOn(SECTION, INPUT_ELEMENT, INPUT_CROSSFADE_OPTION))
-                .WithElement(new BooleanConfigurationElement(STOP_ELEMENT, Strings.BassCrossfadeStreamInputConfiguration_Stop, path: Strings.BassCrossfadeStreamInputConfiguration_Path)
+                    .DependsOn(SECTION, INPUT, INPUT_CROSSFADE_OPTION))
+                .WithElement(new BooleanConfigurationElement(STOP, Strings.BassCrossfadeStreamInputConfiguration_Stop, path: Strings.BassCrossfadeStreamInputConfiguration_Path)
                     .WithValue(false)
-                    .DependsOn(SECTION, INPUT_ELEMENT, INPUT_CROSSFADE_OPTION))
-                .WithElement(new BooleanConfigurationElement(BUFFER_ELEMENT, Strings.BassCrossfadeStreamInputConfiguration_Buffer, path: Strings.BassCrossfadeStreamInputConfiguration_Path_Advanced)
+                    .DependsOn(SECTION, INPUT, INPUT_CROSSFADE_OPTION))
+                .WithElement(new BooleanConfigurationElement(BUFFER, Strings.BassCrossfadeStreamInputConfiguration_Buffer, path: Strings.BassCrossfadeStreamInputConfiguration_Path_Advanced)
                     .WithValue(false)
-                    .DependsOn(SECTION, INPUT_ELEMENT, INPUT_CROSSFADE_OPTION)
+                    .DependsOn(SECTION, INPUT, INPUT_CROSSFADE_OPTION)
             );
         }
 

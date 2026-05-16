@@ -214,7 +214,7 @@ namespace FoxTunes
             this.Configuration = core.Components.Configuration;
             this.Configuration.GetElement<SelectionConfigurationElement>(
                 BassOutputConfiguration.SECTION,
-                BassOutputConfiguration.OUTPUT_ELEMENT
+                BassOutputConfiguration.OUTPUT
             ).ConnectValue(value => this.Enabled = string.Equals(value.Id, BassWasapiStreamOutputConfiguration.OUTPUT_WASAPI_OPTION, StringComparison.OrdinalIgnoreCase));
             this.Configuration.GetElement<SelectionConfigurationElement>(
                 BassOutputConfiguration.SECTION,
@@ -238,15 +238,15 @@ namespace FoxTunes
             ).ConnectValue(value => this.Dither = value);
             this.Configuration.GetElement<BooleanConfigurationElement>(
                 BassOutputConfiguration.SECTION,
-                BassWasapiStreamOutputConfiguration.MIXER_ELEMENT
+                BassWasapiStreamOutputConfiguration.MIXER
             ).ConnectValue(value => this.Mixer = value);
             this.Configuration.GetElement<BooleanConfigurationElement>(
                 BassOutputConfiguration.SECTION,
-                BassWasapiStreamOutputConfiguration.DOUBLE_BUFFER_ELEMENT
+                BassWasapiStreamOutputConfiguration.DOUBLE_BUFFER
             ).ConnectValue(value => this.DoubleBuffer = value);
             this.Configuration.GetElement<DoubleConfigurationElement>(
                 BassOutputConfiguration.SECTION,
-                BassWasapiStreamOutputConfiguration.BUFFER_LENGTH_ELEMENT
+                BassWasapiStreamOutputConfiguration.BUFFER_LENGTH
             ).ConnectValue(value => this.BufferLength = Convert.ToSingle(value));
             this.Configuration.GetElement<BooleanConfigurationElement>(
                 BassOutputConfiguration.SECTION,

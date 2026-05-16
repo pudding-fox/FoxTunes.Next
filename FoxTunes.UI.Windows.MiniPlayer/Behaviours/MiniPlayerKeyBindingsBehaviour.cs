@@ -18,7 +18,7 @@ namespace FoxTunes
             this.Configuration = core.Components.Configuration;
             this.Toggle = this.Configuration.GetElement<TextConfigurationElement>(
                 MiniPlayerKeyBindingsBehaviourConfiguration.SECTION,
-                MiniPlayerKeyBindingsBehaviourConfiguration.TOGGLE_ELEMENT
+                MiniPlayerKeyBindingsBehaviourConfiguration.TOGGLE
             );
             if (this.Toggle != null)
             {

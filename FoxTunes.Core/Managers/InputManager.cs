@@ -41,7 +41,7 @@ namespace FoxTunes
             this.Configuration = core.Components.Configuration;
             this.Configuration.GetElement<BooleanConfigurationElement>(
                 InputManagerConfiguration.SECTION,
-                InputManagerConfiguration.ENABLED_ELEMENT
+                InputManagerConfiguration.ENABLED
             ).ConnectValue(value => this.Enabled = value);
             base.InitializeComponent(core);
         }

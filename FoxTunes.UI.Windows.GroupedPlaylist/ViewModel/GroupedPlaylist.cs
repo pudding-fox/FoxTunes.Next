@@ -40,7 +40,7 @@ namespace FoxTunes.ViewModel
             this.Configuration = core.Components.Configuration;
             this.Configuration.GetElement<TextConfigurationElement>(
                 PlaylistBehaviourConfiguration.SECTION,
-                PlaylistGroupingBehaviourConfiguration.GROUP_SCRIPT_ELEMENT
+                PlaylistGroupingBehaviourConfiguration.GROUP_SCRIPT
             ).ConnectValue(value => this.GroupingScript = value);
         }
 

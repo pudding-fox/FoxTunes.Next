@@ -47,7 +47,7 @@ namespace FoxTunes
             this.Configuration = core.Components.Configuration;
             this.Resolution = this.Configuration.GetElement<IntegerConfigurationElement>(
                 WaveFormGeneratorConfiguration.SECTION,
-                WaveFormGeneratorConfiguration.RESOLUTION_ELEMENT
+                WaveFormGeneratorConfiguration.RESOLUTION
             );
             base.InitializeComponent(core);
         }

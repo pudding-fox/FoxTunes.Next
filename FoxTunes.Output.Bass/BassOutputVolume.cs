@@ -63,12 +63,12 @@ namespace FoxTunes
             base.InitializeComponent(core);
             this.EnabledElement = this.Configuration.GetElement<BooleanConfigurationElement>(
                 BassOutputConfiguration.SECTION,
-                BassOutputConfiguration.VOLUME_ENABLED_ELEMENT
+                BassOutputConfiguration.VOLUME_ENABLED
             );
             this.EnabledElement.ValueChanged += this.OnEnabledChanged;
             this.ValueElement = this.Configuration.GetElement<DoubleConfigurationElement>(
                 BassOutputConfiguration.SECTION,
-                BassOutputConfiguration.VOLUME_ELEMENT
+                BassOutputConfiguration.VOLUME
             );
             this.ValueElement.ValueChanged += this.OnValueChanged;
         }

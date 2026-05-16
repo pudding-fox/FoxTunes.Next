@@ -56,11 +56,11 @@ namespace FoxTunes.ViewModel
             this.Configuration = core.Components.Configuration;
             this.Theme = this.Configuration.GetElement<SelectionConfigurationElement>(
                 WindowsUserInterfaceConfiguration.SECTION,
-                WindowsUserInterfaceConfiguration.THEME_ELEMENT
+                WindowsUserInterfaceConfiguration.THEME
             );
             this.Layout = this.Configuration.GetElement<SelectionConfigurationElement>(
                 WindowsUserInterfaceConfiguration.SECTION,
-                WindowsUserInterfaceConfiguration.LAYOUT_ELEMENT
+                WindowsUserInterfaceConfiguration.LAYOUT
             );
             this.Transparency = this.Configuration.GetElement<BooleanConfigurationElement>(
                 WindowsUserInterfaceConfiguration.SECTION,

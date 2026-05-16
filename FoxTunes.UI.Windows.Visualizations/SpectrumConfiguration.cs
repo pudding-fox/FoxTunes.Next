@@ -10,7 +10,7 @@ namespace FoxTunes
     {
         public const string SECTION = VisualizationBehaviourConfiguration.SECTION;
 
-        public const string BARS_ELEMENT = "AAAA0663-7CBF-4EE4-99C8-A0A096D4E876";
+        public const string BARS = "AAAA0663-7CBF-4EE4-99C8-A0A096D4E876";
 
         public const string BARS_16_OPTION = "AAAADF84-DC4C-463E-9A76-D9D424890D91";
 
@@ -28,9 +28,9 @@ namespace FoxTunes
 
         public const string BARS_1024_OPTION = "DDDD3900-E91F-4FAB-A687-EA23065F4ECA";
 
-        public const string PEAKS_ELEMENT = "DDDD7FCF-8A71-4367-8F48-4F8D8C89739C";
+        public const string PEAKS = "DDDD7FCF-8A71-4367-8F48-4F8D8C89739C";
 
-        public const string HOLD_ELEMENT = "EEEE64D9-FF15-49FB-BDF4-706958576FFC";
+        public const string HOLD = "EEEE64D9-FF15-49FB-BDF4-706958576FFC";
 
         public const int MIN_HOLD = 500;
 
@@ -38,7 +38,7 @@ namespace FoxTunes
 
         public const int DEFAULT_HOLD = 1000;
 
-        public const string COLOR_PALETTE_ELEMENT = "FFFF957D-5AEA-4706-B6D0-9C9065E76132";
+        public const string COLOR_PALETTE = "FFFF957D-5AEA-4706-B6D0-9C9065E76132";
 
         public const string COLOR_PALETTE_PEAK = "PEAK";
 
@@ -46,7 +46,7 @@ namespace FoxTunes
 
         public const string COLOR_PALETTE_BACKGROUND = "BACKGROUND";
 
-        public const string CUT_OFF_ELEMENT = "GGGGA5E8-4D2D-4039-A03B-305679402052";
+        public const string CUT_OFF = "GGGGA5E8-4D2D-4039-A03B-305679402052";
 
         public const int MIN_CUT_OFF = 0;
 
@@ -54,7 +54,7 @@ namespace FoxTunes
 
         public const int DEFAULT_CUT_OFF = 10;
 
-        public const string PRE_AMP_ELEMENT = "HHHH2DBD-8CA9-4F41-9F61-1BC5F5D79545";
+        public const string PRE_AMP = "HHHH2DBD-8CA9-4F41-9F61-1BC5F5D79545";
 
         public const int MIN_PRE_AMP = 0;
 
@@ -65,14 +65,14 @@ namespace FoxTunes
         public static IEnumerable<ConfigurationSection> GetConfigurationSections()
         {
             yield return new ConfigurationSection(SECTION, Strings.SpectrumConfiguration_Section)
-                .WithElement(new SelectionConfigurationElement(BARS_ELEMENT, Strings.SpectrumConfiguration_Bars).WithOptions(GetBarsOptions()))
-                .WithElement(new BooleanConfigurationElement(PEAKS_ELEMENT, Strings.SpectrumConfiguration_Peaks).WithValue(true))
-                .WithElement(new IntegerConfigurationElement(HOLD_ELEMENT, Strings.SpectrumConfiguration_Hold, path: Strings.General_Advanced).WithValue(DEFAULT_HOLD).WithValidationRule(new IntegerValidationRule(MIN_HOLD, MAX_HOLD)).DependsOn(SECTION, PEAKS_ELEMENT))
-                .WithElement(new TextConfigurationElement(COLOR_PALETTE_ELEMENT, Strings.SpectrumConfiguration_ColorPalette, path: Strings.General_Advanced).WithValue(GetDefaultColorPalette()).WithFlags(ConfigurationElementFlags.MultiLine))
-                .WithElement(new IntegerConfigurationElement(CUT_OFF_ELEMENT, Strings.SpectrumConfiguration_MaxFrequency, path: Strings.General_Advanced).WithValue(DEFAULT_CUT_OFF).WithValidationRule(new IntegerValidationRule(MIN_CUT_OFF, MAX_CUT_OFF)))
-                .WithElement(new IntegerConfigurationElement(PRE_AMP_ELEMENT, Strings.SpectrumConfiguration_PreAmp, path: Strings.General_Advanced).WithValue(DEFAULT_PRE_AMP).WithValidationRule(new IntegerValidationRule(MIN_PRE_AMP, MAX_PRE_AMP)))
-                .WithElement(new IntegerConfigurationElement(VisualizationBehaviourConfiguration.INTERVAL_ELEMENT, Strings.VisualizationBehaviourConfiguration_Interval, path: Strings.General_Advanced).WithValue(VisualizationBehaviourConfiguration.DEFAULT_INTERVAL).WithValidationRule(new IntegerValidationRule(VisualizationBehaviourConfiguration.MIN_INTERVAL, VisualizationBehaviourConfiguration.MAX_INTERVAL)))
-                .WithElement(new SelectionConfigurationElement(VisualizationBehaviourConfiguration.FFT_SIZE_ELEMENT, Strings.VisualizationBehaviourConfiguration_FFTSize, path: Strings.General_Advanced).WithOptions(VisualizationBehaviourConfiguration.GetFFTOptions(VisualizationBehaviourConfiguration.FFT_512_OPTION))
+                .WithElement(new SelectionConfigurationElement(BARS, Strings.SpectrumConfiguration_Bars).WithOptions(GetBarsOptions()))
+                .WithElement(new BooleanConfigurationElement(PEAKS, Strings.SpectrumConfiguration_Peaks).WithValue(true))
+                .WithElement(new IntegerConfigurationElement(HOLD, Strings.SpectrumConfiguration_Hold, path: Strings.General_Advanced).WithValue(DEFAULT_HOLD).WithValidationRule(new IntegerValidationRule(MIN_HOLD, MAX_HOLD)).DependsOn(SECTION, PEAKS))
+                .WithElement(new TextConfigurationElement(COLOR_PALETTE, Strings.SpectrumConfiguration_ColorPalette, path: Strings.General_Advanced).WithValue(GetDefaultColorPalette()).WithFlags(ConfigurationElementFlags.MultiLine))
+                .WithElement(new IntegerConfigurationElement(CUT_OFF, Strings.SpectrumConfiguration_MaxFrequency, path: Strings.General_Advanced).WithValue(DEFAULT_CUT_OFF).WithValidationRule(new IntegerValidationRule(MIN_CUT_OFF, MAX_CUT_OFF)))
+                .WithElement(new IntegerConfigurationElement(PRE_AMP, Strings.SpectrumConfiguration_PreAmp, path: Strings.General_Advanced).WithValue(DEFAULT_PRE_AMP).WithValidationRule(new IntegerValidationRule(MIN_PRE_AMP, MAX_PRE_AMP)))
+                .WithElement(new IntegerConfigurationElement(VisualizationBehaviourConfiguration.INTERVAL, Strings.VisualizationBehaviourConfiguration_Interval, path: Strings.General_Advanced).WithValue(VisualizationBehaviourConfiguration.DEFAULT_INTERVAL).WithValidationRule(new IntegerValidationRule(VisualizationBehaviourConfiguration.MIN_INTERVAL, VisualizationBehaviourConfiguration.MAX_INTERVAL)))
+                .WithElement(new SelectionConfigurationElement(VisualizationBehaviourConfiguration.FFT_SIZE, Strings.VisualizationBehaviourConfiguration_FFTSize, path: Strings.General_Advanced).WithOptions(VisualizationBehaviourConfiguration.GetFFTOptions(VisualizationBehaviourConfiguration.FFT_512_OPTION))
             );
         }
 

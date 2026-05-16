@@ -48,27 +48,27 @@ namespace FoxTunes
             {
                 this.Mode = this.Configuration.GetElement<SelectionConfigurationElement>(
                     WaveFormStreamPositionConfiguration.SECTION,
-                    WaveFormStreamPositionConfiguration.MODE_ELEMENT
+                    WaveFormStreamPositionConfiguration.MODE
                 );
                 this.Resolution = this.Configuration.GetElement<IntegerConfigurationElement>(
                     WaveFormGeneratorConfiguration.SECTION,
-                    WaveFormGeneratorConfiguration.RESOLUTION_ELEMENT
+                    WaveFormGeneratorConfiguration.RESOLUTION
                 );
                 this.Rms = this.Configuration.GetElement<BooleanConfigurationElement>(
                     WaveFormStreamPositionConfiguration.SECTION,
-                    WaveFormStreamPositionConfiguration.RMS_ELEMENT
+                    WaveFormStreamPositionConfiguration.RMS
                 );
                 this.Logarithmic = this.Configuration.GetElement<BooleanConfigurationElement>(
                     WaveFormStreamPositionConfiguration.SECTION,
-                    WaveFormStreamPositionConfiguration.DB_ELEMENT
+                    WaveFormStreamPositionConfiguration.DB
                 );
                 this.Smoothing = this.Configuration.GetElement<IntegerConfigurationElement>(
                     WaveFormStreamPositionConfiguration.SECTION,
-                    WaveFormStreamPositionConfiguration.SMOOTHING_ELEMENT
+                    WaveFormStreamPositionConfiguration.SMOOTHING
                 );
                 this.ColorPalette = this.Configuration.GetElement<TextConfigurationElement>(
                     WaveFormStreamPositionConfiguration.SECTION,
-                    WaveFormStreamPositionConfiguration.COLOR_PALETTE_ELEMENT
+                    WaveFormStreamPositionConfiguration.COLOR_PALETTE
                 );
                 this.Mode.ValueChanged += this.OnValueChanged;
                 this.Resolution.ValueChanged += this.OnValueChanged;

@@ -139,11 +139,11 @@ namespace FoxTunes.ViewModel
             this.Configuration = core.Components.Configuration;
             this.Configuration.GetElement<TextConfigurationElement>(
                 MiniPlayerBehaviourConfiguration.SECTION,
-                MiniPlayerBehaviourConfiguration.PLAYLIST_SCRIPT_ELEMENT
+                MiniPlayerBehaviourConfiguration.PLAYLIST_SCRIPT
             ).ConnectValue(async value => await this.SetScript(value).ConfigureAwait(false));
             this.Configuration.GetElement<BooleanConfigurationElement>(
                 MiniPlayerBehaviourConfiguration.SECTION,
-                MiniPlayerBehaviourConfiguration.PLAYLIST_ARTWORK_ELEMENT
+                MiniPlayerBehaviourConfiguration.PLAYLIST_ARTWORK
             ).ConnectValue(value => { var task = Windows.Invoke(() => this.ShowArtwork = value); });
         }
 

@@ -57,11 +57,11 @@ namespace FoxTunes
             this.Configuration = core.Components.Configuration;
             this.EnabledElement = this.Configuration.GetElement<BooleanConfigurationElement>(
                 BassOutputConfiguration.SECTION,
-                BassOutputConfiguration.DEVICE_MONITOR_ELEMENT
+                BassOutputConfiguration.DEVICE_MONITOR
             );
             this.OutputElement = this.Configuration.GetElement<SelectionConfigurationElement>(
                 BassOutputConfiguration.SECTION,
-                BassOutputConfiguration.OUTPUT_ELEMENT
+                BassOutputConfiguration.OUTPUT
             );
             base.InitializeComponent(core);
         }

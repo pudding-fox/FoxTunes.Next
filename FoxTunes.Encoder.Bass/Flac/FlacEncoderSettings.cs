@@ -53,15 +53,15 @@ namespace FoxTunes
         {
             core.Components.Configuration.GetElement<SelectionConfigurationElement>(
                 FlacEncoderSettingsConfiguration.SECTION,
-                FlacEncoderSettingsConfiguration.DEPTH_ELEMENT
+                FlacEncoderSettingsConfiguration.DEPTH
             ).ConnectValue(option => this.Depth = FlacEncoderSettingsConfiguration.GetDepth(option));
             core.Components.Configuration.GetElement<IntegerConfigurationElement>(
                 FlacEncoderSettingsConfiguration.SECTION,
-                FlacEncoderSettingsConfiguration.COMPRESSION_ELEMENT
+                FlacEncoderSettingsConfiguration.COMPRESSION
             ).ConnectValue(value => this.Compression = value);
             core.Components.Configuration.GetElement<BooleanConfigurationElement>(
                 FlacEncoderSettingsConfiguration.SECTION,
-                FlacEncoderSettingsConfiguration.IGNORE_ERRORS_ELEMENT
+                FlacEncoderSettingsConfiguration.IGNORE_ERRORS
             ).ConnectValue(value => this.IgnoreErrors = value);
             base.InitializeComponent(core);
         }

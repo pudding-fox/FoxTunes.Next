@@ -47,7 +47,7 @@ namespace FoxTunes
             this.Configuration = core.Components.Configuration;
             this.Resolution = this.Configuration.GetElement<IntegerConfigurationElement>(
                 MoodBarGeneratorConfiguration.SECTION,
-                MoodBarGeneratorConfiguration.RESOLUTION_ELEMENT
+                MoodBarGeneratorConfiguration.RESOLUTION
             );
             base.InitializeComponent(core);
         }

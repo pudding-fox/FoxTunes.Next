@@ -56,11 +56,11 @@ namespace FoxTunes.ViewModel
             {
                 this.BandsElement = this.Configuration.GetElement<SelectionConfigurationElement>(
                     EnhancedSpectrumConfiguration.SECTION,
-                    EnhancedSpectrumConfiguration.BANDS_ELEMENT
+                    EnhancedSpectrumConfiguration.BANDS
                 );
                 this.CustomElement = this.Configuration.GetElement<TextConfigurationElement>(
                     EnhancedSpectrumConfiguration.SECTION,
-                    EnhancedSpectrumConfiguration.BANDS_CUSTOM_ELEMENT
+                    EnhancedSpectrumConfiguration.BANDS_CUSTOM
                 );
                 this.BandsElement.ValueChanged += this.OnValueChanged;
                 this.CustomElement.ValueChanged += this.OnValueChanged;

@@ -83,7 +83,7 @@ namespace FoxTunes
             this.Configuration = core.Components.Configuration;
             this.Enabled = this.Configuration.GetElement<BooleanConfigurationElement>(
                 TaskbarProgressBehaviourConfiguration.SECTION,
-                TaskbarProgressBehaviourConfiguration.ENABLED_ELEMENT
+                TaskbarProgressBehaviourConfiguration.ENABLED
             );
             this.Enabled.ConnectValue(value =>
             {

@@ -30,27 +30,27 @@ namespace FoxTunes
             {
                 this.Mode = this.Configuration.GetElement<SelectionConfigurationElement>(
                     SpectrogramConfiguration.SECTION,
-                    SpectrogramConfiguration.MODE_ELEMENT
+                    SpectrogramConfiguration.MODE
                 );
                 this.Scale = this.Configuration.GetElement<SelectionConfigurationElement>(
                     SpectrogramConfiguration.SECTION,
-                    SpectrogramConfiguration.SCALE_ELEMENT
+                    SpectrogramConfiguration.SCALE
                 );
                 this.Smoothing = this.Configuration.GetElement<IntegerConfigurationElement>(
                     SpectrogramConfiguration.SECTION,
-                    SpectrogramConfiguration.SMOOTHING_ELEMENT
+                    SpectrogramConfiguration.SMOOTHING
                 );
                 this.ColorPalette = this.Configuration.GetElement<TextConfigurationElement>(
                     SpectrogramConfiguration.SECTION,
-                    SpectrogramConfiguration.COLOR_PALETTE_ELEMENT
+                    SpectrogramConfiguration.COLOR_PALETTE
                 );
                 this.History = this.Configuration.GetElement<IntegerConfigurationElement>(
                    SpectrogramConfiguration.SECTION,
-                   SpectrogramConfiguration.HISTORY_ELEMENT
+                   SpectrogramConfiguration.HISTORY
                 );
                 this.FFTSize = this.Configuration.GetElement<SelectionConfigurationElement>(
                    SpectrogramConfiguration.SECTION,
-                   VisualizationBehaviourConfiguration.FFT_SIZE_ELEMENT
+                   VisualizationBehaviourConfiguration.FFT_SIZE
                 );
                 this.Mode.ValueChanged += this.OnValueChanged;
                 this.Scale.ValueChanged += this.OnValueChanged;

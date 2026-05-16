@@ -60,7 +60,7 @@ namespace FoxTunes
             this.Configuration = core.Components.Configuration;
             this.Threads = this.Configuration.GetElement<IntegerConfigurationElement>(
                 MetaDataBehaviourConfiguration.SECTION,
-                MetaDataBehaviourConfiguration.THREADS_ELEMENT
+                MetaDataBehaviourConfiguration.THREADS
             );
             base.InitializeComponent(core);
         }

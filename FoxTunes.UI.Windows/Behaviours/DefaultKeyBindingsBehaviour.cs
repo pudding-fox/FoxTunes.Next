@@ -64,35 +64,35 @@ namespace FoxTunes
             this.Configuration = core.Components.Configuration;
             this.Play = this.Configuration.GetElement<TextConfigurationElement>(
                 DefaultKeyBindingsBehaviourConfiguration.SECTION,
-                DefaultKeyBindingsBehaviourConfiguration.PLAY_ELEMENT
+                DefaultKeyBindingsBehaviourConfiguration.PLAY
             );
             this.Previous = this.Configuration.GetElement<TextConfigurationElement>(
                 DefaultKeyBindingsBehaviourConfiguration.SECTION,
-                DefaultKeyBindingsBehaviourConfiguration.PREVIOUS_ELEMENT
+                DefaultKeyBindingsBehaviourConfiguration.PREVIOUS
             );
             this.Next = this.Configuration.GetElement<TextConfigurationElement>(
                 DefaultKeyBindingsBehaviourConfiguration.SECTION,
-                DefaultKeyBindingsBehaviourConfiguration.NEXT_ELEMENT
+                DefaultKeyBindingsBehaviourConfiguration.NEXT
             );
             this.Stop = this.Configuration.GetElement<TextConfigurationElement>(
                 DefaultKeyBindingsBehaviourConfiguration.SECTION,
-                DefaultKeyBindingsBehaviourConfiguration.STOP_ELEMENT
+                DefaultKeyBindingsBehaviourConfiguration.STOP
             );
             this.Settings = this.Configuration.GetElement<TextConfigurationElement>(
                 DefaultKeyBindingsBehaviourConfiguration.SECTION,
-                DefaultKeyBindingsBehaviourConfiguration.SETTINGS_ELEMENT
+                DefaultKeyBindingsBehaviourConfiguration.SETTINGS
             );
             this.Search = this.Configuration.GetElement<TextConfigurationElement>(
                 DefaultKeyBindingsBehaviourConfiguration.SECTION,
-                DefaultKeyBindingsBehaviourConfiguration.SEARCH_ELEMENT
+                DefaultKeyBindingsBehaviourConfiguration.SEARCH
             );
             this.Equalizer = this.Configuration.GetElement<TextConfigurationElement>(
                 DefaultKeyBindingsBehaviourConfiguration.SECTION,
-                DefaultKeyBindingsBehaviourConfiguration.EQUALIZER_ELEMENT
+                DefaultKeyBindingsBehaviourConfiguration.EQUALIZER
             );
             this.FullScreen = this.Configuration.GetElement<TextConfigurationElement>(
                 DefaultKeyBindingsBehaviourConfiguration.SECTION,
-                DefaultKeyBindingsBehaviourConfiguration.FULL_SCREEN_ELEMENT
+                DefaultKeyBindingsBehaviourConfiguration.FULL_SCREEN
             );
             this.PlaylistManager = this.Configuration.GetElement<TextConfigurationElement>(
                 DefaultKeyBindingsBehaviourConfiguration.SECTION,

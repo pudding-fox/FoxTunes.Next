@@ -59,27 +59,27 @@ namespace FoxTunes
         {
             core.Components.Configuration.GetElement<SelectionConfigurationElement>(
                 WavPackSettingsConfiguration.SECTION,
-                WavPackSettingsConfiguration.DEPTH_ELEMENT
+                WavPackSettingsConfiguration.DEPTH
             ).ConnectValue(option => this.Depth = WavPackSettingsConfiguration.GetDepth(option));
             core.Components.Configuration.GetElement<IntegerConfigurationElement>(
                 WavPackSettingsConfiguration.SECTION,
-                WavPackSettingsConfiguration.COMPRESSION_ELEMENT
+                WavPackSettingsConfiguration.COMPRESSION
             ).ConnectValue(value => this.Compression = value);
             core.Components.Configuration.GetElement<IntegerConfigurationElement>(
                 WavPackSettingsConfiguration.SECTION,
-                WavPackSettingsConfiguration.PROCESSING_ELEMENT
+                WavPackSettingsConfiguration.PROCESSING
             ).ConnectValue(value => this.Processing = value);
             core.Components.Configuration.GetElement<IntegerConfigurationElement>(
                 WavPackSettingsConfiguration.SECTION,
-                WavPackSettingsConfiguration.BITRATE_ELEMENT
+                WavPackSettingsConfiguration.BITRATE
             ).ConnectValue(value => this.Bitrate = value);
             core.Components.Configuration.GetElement<BooleanConfigurationElement>(
                 WavPackSettingsConfiguration.SECTION,
-                WavPackSettingsConfiguration.HYBRID_ELEMENT
+                WavPackSettingsConfiguration.HYBRID
             ).ConnectValue(value => this.Hybrid = value);
             core.Components.Configuration.GetElement<BooleanConfigurationElement>(
                 WavPackSettingsConfiguration.SECTION,
-                WavPackSettingsConfiguration.CORRECTION_ELEMENT
+                WavPackSettingsConfiguration.CORRECTION
             ).ConnectValue(value => this.Correction = value);
             base.InitializeComponent(core);
         }

@@ -27,11 +27,11 @@ namespace FoxTunes
             this.MetaDataManager = core.Managers.MetaData;
             this.Enabled = core.Components.Configuration.GetElement<BooleanConfigurationElement>(
                 MetaDataBehaviourConfiguration.SECTION,
-                MetaDataBehaviourConfiguration.BACKGROUND_WRITE_ELEMENT
+                MetaDataBehaviourConfiguration.BACKGROUND_WRITE
             );
             this.Write = core.Components.Configuration.GetElement<SelectionConfigurationElement>(
                 MetaDataBehaviourConfiguration.SECTION,
-                MetaDataBehaviourConfiguration.WRITE_ELEMENT
+                MetaDataBehaviourConfiguration.WRITE
             );
             this.Enabled.ValueChanged += this.OnValueChanged;
             this.Write.ValueChanged += this.OnValueChanged;

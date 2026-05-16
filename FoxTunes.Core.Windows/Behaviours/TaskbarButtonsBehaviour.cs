@@ -100,7 +100,7 @@ namespace FoxTunes
             this.Configuration = core.Components.Configuration;
             this.Enabled = this.Configuration.GetElement<BooleanConfigurationElement>(
                 TaskbarButtonsBehaviourConfiguration.SECTION,
-                TaskbarButtonsBehaviourConfiguration.ENABLED_ELEMENT
+                TaskbarButtonsBehaviourConfiguration.ENABLED
             );
             this.Enabled.ConnectValue(value =>
             {

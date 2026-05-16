@@ -50,7 +50,7 @@ namespace FoxTunes
         {
             core.Components.Configuration.GetElement<IntegerConfigurationElement>(
                 OpusEncoderSettingsConfiguration.SECTION,
-                OpusEncoderSettingsConfiguration.BITRATE_ELEMENT
+                OpusEncoderSettingsConfiguration.BITRATE
             ).ConnectValue(value => this.Bitrate = value);
             base.InitializeComponent(core);
         }

@@ -6,9 +6,9 @@ namespace FoxTunes
     {
         public const string SECTION = BassEncoderBehaviourConfiguration.SECTION;
 
-        public const string ENABLED_ELEMENT = BassEncoderBehaviourConfiguration.ENABLED_ELEMENT;
+        public const string ENABLED = BassEncoderBehaviourConfiguration.ENABLED;
 
-        public const string QUALITY_ELEMENT = "AAAA4AE0-3259-40F8-8C64-D1FBF075DD3E";
+        public const string QUALITY = "AAAA4AE0-3259-40F8-8C64-D1FBF075DD3E";
 
         public const int MIN_QUALITY = 1;
 
@@ -19,10 +19,10 @@ namespace FoxTunes
         public static IEnumerable<ConfigurationSection> GetConfigurationSections(IBassEncoderSettings settings)
         {
             yield return new ConfigurationSection(SECTION)
-                .WithElement(new IntegerConfigurationElement(QUALITY_ELEMENT, "Quality", path: settings.Name)
+                .WithElement(new IntegerConfigurationElement(QUALITY, "Quality", path: settings.Name)
                     .WithValue(DEFAULT_QUALITY)
                     .WithValidationRule(new IntegerValidationRule(MIN_QUALITY, MAX_QUALITY))
-                    .DependsOn(SECTION, ENABLED_ELEMENT)
+                    .DependsOn(SECTION, ENABLED)
             );
         }
     }

@@ -28,7 +28,7 @@ namespace FoxTunes
             this.Configuration = core.Components.Configuration;
             this.Write = this.Configuration.GetElement<SelectionConfigurationElement>(
                 MetaDataBehaviourConfiguration.SECTION,
-                MetaDataBehaviourConfiguration.WRITE_ELEMENT
+                MetaDataBehaviourConfiguration.WRITE
             );
             base.InitializeComponent(core);
         }

@@ -7,17 +7,17 @@ namespace FoxTunes
     {
         public const string SECTION = "99797338-186F-4F4E-A6A1-C39546D2C047";
 
-        public const string SEARCH_INTERVAL_ELEMENT = "AAAA9662-3EA7-427E-86A4-74ADFE44F097";
+        public const string SEARCH_INTERVAL = "AAAA9662-3EA7-427E-86A4-74ADFE44F097";
 
-        public const string SEARCH_COMMIT_ELEMENT = "BBBBA37-0407-4EA5-B44E-C0AE5E267B41";
+        public const string SEARCH_COMMIT = "BBBBA37-0407-4EA5-B44E-C0AE5E267B41";
 
         public static IEnumerable<ConfigurationSection> GetConfigurationSections()
         {
             yield return new ConfigurationSection(SECTION, Strings.SearchBehaviourConfiguration_Section)
                 .WithElement(
-                    new IntegerConfigurationElement(SEARCH_INTERVAL_ELEMENT, Strings.SearchBehaviourConfiguration_Interval).WithValue(1000).WithValidationRule(new IntegerValidationRule(100, 1000, 100)))
+                    new IntegerConfigurationElement(SEARCH_INTERVAL, Strings.SearchBehaviourConfiguration_Interval).WithValue(1000).WithValidationRule(new IntegerValidationRule(100, 1000, 100)))
                 .WithElement(
-                    new SelectionConfigurationElement(SEARCH_COMMIT_ELEMENT, Strings.SearchBehaviourConfiguration_Commit).WithOptions(GetCommitBehaviourOptions())
+                    new SelectionConfigurationElement(SEARCH_COMMIT, Strings.SearchBehaviourConfiguration_Commit).WithOptions(GetCommitBehaviourOptions())
             );
         }
 

@@ -14,14 +14,14 @@ namespace FoxTunes
 
         public const string AREA_MULTI_CHANNEL = "BBBBFA1F-75B0-4593-B74F-B70BB09D5333";
 
-        public const string CLEANUP_ELEMENT = "ZZZZ2AB1-B938-4B57-9989-AADADC4ACEFD";
+        public const string CLEANUP = "ZZZZ2AB1-B938-4B57-9989-AADADC4ACEFD";
 
         public static IEnumerable<ConfigurationSection> GetConfigurationSections()
         {
             yield return new ConfigurationSection(SECTION, Strings.BassSacdBehaviourConfiguration_Section)
                 .WithElement(new BooleanConfigurationElement(ENABLED, Strings.BassSacdBehaviourConfiguration_Enabled))
                 .WithElement(new SelectionConfigurationElement(AREA, Strings.BassSacdBehaviourConfiguration_Area).WithOptions(GetAreaOptions()).DependsOn(SECTION, ENABLED))
-                .WithElement(new CommandConfigurationElement(CLEANUP_ELEMENT, Strings.BassSacdBehaviourConfiguration_Cleanup).WithHandler(() => SacdPlaylistItemFactory.Cleanup()).DependsOn(SECTION, ENABLED));
+                .WithElement(new CommandConfigurationElement(CLEANUP, Strings.BassSacdBehaviourConfiguration_Cleanup).WithHandler(() => SacdPlaylistItemFactory.Cleanup()).DependsOn(SECTION, ENABLED));
         }
 
         private static IEnumerable<SelectionConfigurationOption> GetAreaOptions()

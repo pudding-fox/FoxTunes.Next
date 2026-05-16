@@ -311,7 +311,7 @@ namespace FoxTunes
             this.Configuration.Saving += this.OnSaving;
             this.Layout = this.Configuration.GetElement<SelectionConfigurationElement>(
                 WindowsUserInterfaceConfiguration.SECTION,
-                WindowsUserInterfaceConfiguration.LAYOUT_ELEMENT
+                WindowsUserInterfaceConfiguration.LAYOUT
             );
             this.Element = this.Configuration.GetElement<TextConfigurationElement>(
                 ToolWindowBehaviourConfiguration.SECTION,

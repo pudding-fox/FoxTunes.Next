@@ -77,7 +77,7 @@ namespace FoxTunes
             {
                 this.Configuration.GetElement<IntegerConfigurationElement>(
                    VisualizationBehaviourConfiguration.SECTION,
-                   VisualizationBehaviourConfiguration.INTERVAL_ELEMENT
+                   VisualizationBehaviourConfiguration.INTERVAL
                 ).ConnectValue(value => this.UpdateInterval = value);
             }
             base.OnConfigurationChanged();

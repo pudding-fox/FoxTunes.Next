@@ -50,31 +50,31 @@ namespace FoxTunes
             {
                 this.Bands = this.Configuration.GetElement<SelectionConfigurationElement>(
                    EnhancedSpectrumConfiguration.SECTION,
-                   EnhancedSpectrumConfiguration.BANDS_ELEMENT
+                   EnhancedSpectrumConfiguration.BANDS
                );
                 this.Custom = this.Configuration.GetElement<TextConfigurationElement>(
                    EnhancedSpectrumConfiguration.SECTION,
-                   EnhancedSpectrumConfiguration.BANDS_CUSTOM_ELEMENT
+                   EnhancedSpectrumConfiguration.BANDS_CUSTOM
                 );
                 this.ShowPeak = this.Configuration.GetElement<BooleanConfigurationElement>(
                     EnhancedSpectrumConfiguration.SECTION,
-                    EnhancedSpectrumConfiguration.PEAK_ELEMENT
+                    EnhancedSpectrumConfiguration.PEAK
                  );
                 this.ShowRms = this.Configuration.GetElement<BooleanConfigurationElement>(
                     EnhancedSpectrumConfiguration.SECTION,
-                    EnhancedSpectrumConfiguration.RMS_ELEMENT
+                    EnhancedSpectrumConfiguration.RMS
                  );
                 this.ColorPalette = this.Configuration.GetElement<TextConfigurationElement>(
                     EnhancedSpectrumConfiguration.SECTION,
-                    EnhancedSpectrumConfiguration.COLOR_PALETTE_ELEMENT
+                    EnhancedSpectrumConfiguration.COLOR_PALETTE
                 );
                 this.Duration = this.Configuration.GetElement<IntegerConfigurationElement>(
                     EnhancedSpectrumConfiguration.SECTION,
-                    EnhancedSpectrumConfiguration.DURATION_ELEMENT
+                    EnhancedSpectrumConfiguration.DURATION
                 );
                 this.FFTSize = this.Configuration.GetElement<SelectionConfigurationElement>(
                    EnhancedSpectrumConfiguration.SECTION,
-                   VisualizationBehaviourConfiguration.FFT_SIZE_ELEMENT
+                   VisualizationBehaviourConfiguration.FFT_SIZE
                 );
                 this.Bands.ValueChanged += this.OnValueChanged;
                 this.Custom.ValueChanged += this.OnValueChanged;

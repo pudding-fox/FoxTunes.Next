@@ -34,19 +34,19 @@ namespace FoxTunes
             {
                 this.Mode = this.Configuration.GetElement<SelectionConfigurationElement>(
                     OscilloscopeConfiguration.SECTION,
-                    OscilloscopeConfiguration.MODE_ELEMENT
+                    OscilloscopeConfiguration.MODE
                 );
                 this.Window = this.Configuration.GetElement<IntegerConfigurationElement>(
                     OscilloscopeConfiguration.SECTION,
-                    OscilloscopeConfiguration.WINDOW_ELEMENT
+                    OscilloscopeConfiguration.WINDOW
                 );
                 this.Duration = this.Configuration.GetElement<IntegerConfigurationElement>(
                     OscilloscopeConfiguration.SECTION,
-                    OscilloscopeConfiguration.DURATION_ELEMENT
+                    OscilloscopeConfiguration.DURATION
                 );
                 this.Interval = this.Configuration.GetElement<IntegerConfigurationElement>(
                     VisualizationBehaviourConfiguration.SECTION,
-                    VisualizationBehaviourConfiguration.INTERVAL_ELEMENT
+                    VisualizationBehaviourConfiguration.INTERVAL
                 );
             }
             base.OnConfigurationChanged();

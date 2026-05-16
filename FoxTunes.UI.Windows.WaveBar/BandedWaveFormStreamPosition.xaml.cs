@@ -43,19 +43,19 @@ namespace FoxTunes
             {
                 this.Logarithmic = this.Configuration.GetElement<BooleanConfigurationElement>(
                     BandedWaveFormStreamPositionConfiguration.SECTION,
-                    BandedWaveFormStreamPositionConfiguration.DB_ELEMENT
+                    BandedWaveFormStreamPositionConfiguration.DB
                 );
                 this.Smoothing = this.Configuration.GetElement<IntegerConfigurationElement>(
                     BandedWaveFormStreamPositionConfiguration.SECTION,
-                    BandedWaveFormStreamPositionConfiguration.SMOOTHING_ELEMENT
+                    BandedWaveFormStreamPositionConfiguration.SMOOTHING
                 );
                 this.Mode = this.Configuration.GetElement<SelectionConfigurationElement>(
                     BandedWaveFormStreamPositionConfiguration.SECTION,
-                    BandedWaveFormStreamPositionConfiguration.MODE_ELEMENT
+                    BandedWaveFormStreamPositionConfiguration.MODE
                 );
                 this.ColorPalette = this.Configuration.GetElement<TextConfigurationElement>(
                     BandedWaveFormStreamPositionConfiguration.SECTION,
-                    BandedWaveFormStreamPositionConfiguration.COLOR_PALETTE_ELEMENT
+                    BandedWaveFormStreamPositionConfiguration.COLOR_PALETTE
                 );
             }
             base.OnConfigurationChanged();

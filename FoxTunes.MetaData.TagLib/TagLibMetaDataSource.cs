@@ -87,7 +87,7 @@ namespace FoxTunes
             );
             this.CopyImages = this.Configuration.GetElement<BooleanConfigurationElement>(
                 MetaDataBehaviourConfiguration.SECTION,
-                MetaDataBehaviourConfiguration.COPY_IMAGES_ELEMENT
+                MetaDataBehaviourConfiguration.COPY_IMAGES
             );
             this.MaxTagSize = this.Configuration.GetElement<IntegerConfigurationElement>(
                 MetaDataBehaviourConfiguration.SECTION,
@@ -127,7 +127,7 @@ namespace FoxTunes
             );
             this.Write = this.Configuration.GetElement<SelectionConfigurationElement>(
                 MetaDataBehaviourConfiguration.SECTION,
-                MetaDataBehaviourConfiguration.WRITE_ELEMENT
+                MetaDataBehaviourConfiguration.WRITE
             );
             base.InitializeComponent(core);
         }

@@ -57,7 +57,7 @@ namespace FoxTunes
             this.Configuration = core.Components.Configuration;
             this.Configuration.GetElement<SelectionConfigurationElement>(
                 BassOutputConfiguration.SECTION,
-                BassOutputConfiguration.INPUT_ELEMENT
+                BassOutputConfiguration.INPUT
             ).ConnectValue(value => this.Enabled = string.Equals(value.Id, BassGaplessStreamInputConfiguration.INPUT_GAPLESS_OPTION, StringComparison.OrdinalIgnoreCase));
             this.BassStreamPipelineFactory = ComponentRegistry.Instance.GetComponent<IBassStreamPipelineFactory>();
             this.BassStreamPipelineFactory.CreatingPipeline += this.OnCreatingPipeline;

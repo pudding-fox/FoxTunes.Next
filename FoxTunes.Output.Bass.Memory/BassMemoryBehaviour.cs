@@ -58,7 +58,7 @@ namespace FoxTunes
             this.Configuration = core.Components.Configuration;
             this.Configuration.GetElement<BooleanConfigurationElement>(
                 BassOutputConfiguration.SECTION,
-                BassMemoryBehaviourConfiguration.ENABLED_ELEMENT
+                BassMemoryBehaviourConfiguration.ENABLED
             ).ConnectValue(value => this.Enabled = value);
             base.InitializeComponent(core);
         }

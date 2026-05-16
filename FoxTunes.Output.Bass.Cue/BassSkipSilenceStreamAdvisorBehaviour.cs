@@ -53,11 +53,11 @@ namespace FoxTunes
             this.Configuration = core.Components.Configuration;
             this.Configuration.GetElement<BooleanConfigurationElement>(
                 BassOutputConfiguration.SECTION,
-                BassSkipSilenceStreamAdvisorBehaviourConfiguration.ENABLED_ELEMENT
+                BassSkipSilenceStreamAdvisorBehaviourConfiguration.ENABLED
             ).ConnectValue(value => this.Enabled = value);
             this.Configuration.GetElement<SelectionConfigurationElement>(
                 BassOutputConfiguration.SECTION,
-                BassSkipSilenceStreamAdvisorBehaviourConfiguration.SENSITIVITY_ELEMENT
+                BassSkipSilenceStreamAdvisorBehaviourConfiguration.SENSITIVITY
             ).ConnectValue(option => this.Threshold = BassSkipSilenceStreamAdvisorBehaviourConfiguration.GetSensitivity(option));
             this.BassStreamPipelineFactory = ComponentRegistry.Instance.GetComponent<IBassStreamPipelineFactory>();
             this.BassStreamPipelineFactory.CreatingPipeline += this.OnCreatingPipeline;

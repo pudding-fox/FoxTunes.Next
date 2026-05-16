@@ -17,7 +17,7 @@ namespace FoxTunes
             this.Configuration = core.Components.Configuration;
             this.Order = this.Configuration.GetElement<SelectionConfigurationElement>(
                 PlaylistBehaviourConfiguration.SECTION,
-                PlaylistBehaviourConfiguration.ORDER_ELEMENT
+                PlaylistBehaviourConfiguration.ORDER
             );
             base.InitializeComponent(core);
         }

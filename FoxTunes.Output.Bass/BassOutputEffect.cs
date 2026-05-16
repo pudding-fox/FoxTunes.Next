@@ -26,7 +26,7 @@ namespace FoxTunes
             this.Configuration = core.Components.Configuration;
             this.Configuration.GetElement<SelectionConfigurationElement>(
                 BassOutputConfiguration.SECTION,
-                BassOutputConfiguration.DEPTH_ELEMENT
+                BassOutputConfiguration.DEPTH
             ).ConnectValue(value => this.Available = BassOutputConfiguration.GetFloat(value));
             base.InitializeComponent(core);
         }

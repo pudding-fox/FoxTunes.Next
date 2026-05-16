@@ -74,7 +74,7 @@ namespace FoxTunes.ViewModel
             this.Configuration = core.Components.Configuration;
             this.Configuration.GetElement<IntegerConfigurationElement>(
                 SearchBehaviourConfiguration.SECTION,
-                SearchBehaviourConfiguration.SEARCH_INTERVAL_ELEMENT
+                SearchBehaviourConfiguration.SEARCH_INTERVAL
             ).ConnectValue(value => this.SearchInterval = value);
             base.InitializeComponent(core);
         }

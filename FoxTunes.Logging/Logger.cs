@@ -73,11 +73,11 @@ namespace FoxTunes
             this.Configuration = core.Components.Configuration;
             this.Configuration.GetElement<BooleanConfigurationElement>(
                 LoggingBehaviourConfiguration.SECTION,
-                LoggingBehaviourConfiguration.ENABLED_ELEMENT
+                LoggingBehaviourConfiguration.ENABLED
             ).ConnectValue(value => this.Enabled = value);
             this.Configuration.GetElement<SelectionConfigurationElement>(
                 LoggingBehaviourConfiguration.SECTION,
-                LoggingBehaviourConfiguration.LEVEL_ELEMENT
+                LoggingBehaviourConfiguration.LEVEL
             ).ConnectValue(value => this.Level = LoggingBehaviourConfiguration.GetLogLevel(value));
             base.InitializeComponent(core);
         }

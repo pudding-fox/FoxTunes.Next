@@ -28,11 +28,11 @@ namespace FoxTunes
             {
                 this.Mode = this.Configuration.GetElement<SelectionConfigurationElement>(
                     OscilloscopeConfiguration.SECTION,
-                    OscilloscopeConfiguration.MODE_ELEMENT
+                    OscilloscopeConfiguration.MODE
                 );
                 this.Window = this.Configuration.GetElement<IntegerConfigurationElement>(
                     OscilloscopeConfiguration.SECTION,
-                    OscilloscopeConfiguration.WINDOW_ELEMENT
+                    OscilloscopeConfiguration.WINDOW
                 );
                 this.ColorPalette = this.Configuration.GetElement<TextConfigurationElement>(
                     OscilloscopeConfiguration.SECTION,
@@ -40,7 +40,7 @@ namespace FoxTunes
                 );
                 this.Duration = this.Configuration.GetElement<IntegerConfigurationElement>(
                     OscilloscopeConfiguration.SECTION,
-                    OscilloscopeConfiguration.DURATION_ELEMENT
+                    OscilloscopeConfiguration.DURATION
                 );
                 this.Mode.ValueChanged += this.OnValueChanged;
                 this.Window.ValueChanged += this.OnValueChanged;

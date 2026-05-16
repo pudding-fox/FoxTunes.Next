@@ -99,15 +99,15 @@ namespace FoxTunes
             this.Configuration = core.Components.Configuration;
             this.Topmost = this.Configuration.GetElement<BooleanConfigurationElement>(
                 MiniPlayerBehaviourConfiguration.SECTION,
-                MiniPlayerBehaviourConfiguration.TOPMOST_ELEMENT
+                MiniPlayerBehaviourConfiguration.TOPMOST
             );
             this.ShowArtwork = this.Configuration.GetElement<BooleanConfigurationElement>(
                 MiniPlayerBehaviourConfiguration.SECTION,
-                MiniPlayerBehaviourConfiguration.SHOW_ARTWORK_ELEMENT
+                MiniPlayerBehaviourConfiguration.SHOW_ARTWORK
             );
             this.ShowPlaylist = this.Configuration.GetElement<BooleanConfigurationElement>(
                 MiniPlayerBehaviourConfiguration.SECTION,
-                MiniPlayerBehaviourConfiguration.SHOW_PLAYLIST_ELEMENT
+                MiniPlayerBehaviourConfiguration.SHOW_PLAYLIST
             );
             base.InitializeComponent(core);
         }

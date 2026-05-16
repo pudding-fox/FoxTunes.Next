@@ -28,7 +28,7 @@ namespace FoxTunes
             this.Configuration = core.Components.Configuration;
             this.Enabled = this.Configuration.GetElement<BooleanConfigurationElement>(
                 WaveFormCacheConfiguration.SECTION,
-                WaveFormCacheConfiguration.CACHE_ELEMENT
+                WaveFormCacheConfiguration.CACHE
             );
             base.InitializeComponent(core);
         }

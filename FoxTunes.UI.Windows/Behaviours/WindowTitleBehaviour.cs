@@ -58,7 +58,7 @@ namespace FoxTunes
             this.Configuration = core.Components.Configuration;
             this.Configuration.GetElement<TextConfigurationElement>(
                 WindowsUserInterfaceConfiguration.SECTION,
-                WindowTitleBehaviourConfiguration.WINDOW_TITLE_SCRIPT_ELEMENT
+                WindowTitleBehaviourConfiguration.WINDOW_TITLE_SCRIPT
             ).ConnectValue(async value => await this.SetScript(value).ConfigureAwait(false));
             this.Dispatch(this.Refresh);
             base.InitializeComponent(core);

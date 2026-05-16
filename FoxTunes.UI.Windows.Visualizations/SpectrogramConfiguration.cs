@@ -10,19 +10,19 @@ namespace FoxTunes
     {
         public const string SECTION = VisualizationBehaviourConfiguration.SECTION;
 
-        public const string MODE_ELEMENT = "AAAA4D78-941A-42D3-A704-88E295D17324";
+        public const string MODE = "AAAA4D78-941A-42D3-A704-88E295D17324";
 
         public const string MODE_MONO_OPTION = "AAAABCAA-3545-4861-A4D0-F84475C09C6D";
 
         public const string MODE_SEPERATE_OPTION = "CCCC8D37-067D-4A43-8AE8-7AD000E3E176";
 
-        public const string SCALE_ELEMENT = "BBBB3A79-02DD-4D56-A4F9-4641CF2BA1C8";
+        public const string SCALE = "BBBB3A79-02DD-4D56-A4F9-4641CF2BA1C8";
 
         public const string SCALE_LINEAR_OPTION = "AAAA4A52-A0E5-40CA-888B-3D6A29EC0683";
 
         public const string SCALE_LOGARITHMIC_OPTION = "BBBB5C59-8888-4734-A191-954709375BD0";
 
-        public const string SMOOTHING_ELEMENT = "CCCC0B5F-C79E-410F-B302-704BF628DD57";
+        public const string SMOOTHING = "CCCC0B5F-C79E-410F-B302-704BF628DD57";
 
         public const int SMOOTHING_MIN = 0;
 
@@ -30,13 +30,13 @@ namespace FoxTunes
 
         public const int SMOOTHING_DEFAULT = 1;
 
-        public const string COLOR_PALETTE_ELEMENT = "DDDDBAFC-0C99-4329-9DA2-C041E674597E";
+        public const string COLOR_PALETTE = "DDDDBAFC-0C99-4329-9DA2-C041E674597E";
 
         public const string COLOR_PALETTE_VALUE = "VALUE";
 
         public const string COLOR_PALETTE_BACKGROUND = "BACKGROUND";
 
-        public const string HISTORY_ELEMENT = "EEEE2EBD-4483-4281-A4AD-E042E0367996";
+        public const string HISTORY = "EEEE2EBD-4483-4281-A4AD-E042E0367996";
 
         public const int HISTORY_MIN = 0;
 
@@ -47,13 +47,13 @@ namespace FoxTunes
         public static IEnumerable<ConfigurationSection> GetConfigurationSections()
         {
             yield return new ConfigurationSection(SECTION, Strings.SpectrogramConfiguration_Section)
-                .WithElement(new SelectionConfigurationElement(MODE_ELEMENT, Strings.SpectrogramConfiguration_Mode).WithOptions(GetModeOptions()))
-                .WithElement(new SelectionConfigurationElement(SCALE_ELEMENT, Strings.SpectrogramConfiguration_Scale).WithOptions(GetScaleOptions()))
-                .WithElement(new IntegerConfigurationElement(SMOOTHING_ELEMENT, Strings.SpectrogramConfiguration_Smoothing).WithValue(SMOOTHING_DEFAULT).WithValidationRule(new IntegerValidationRule(SMOOTHING_MIN, SMOOTHING_MAX)))
-                .WithElement(new TextConfigurationElement(COLOR_PALETTE_ELEMENT, Strings.SpectrogramConfiguration_ColorPalette, path: Strings.General_Advanced).WithFlags(ConfigurationElementFlags.MultiLine))
-                .WithElement(new IntegerConfigurationElement(HISTORY_ELEMENT, Strings.SpectrogramConfiguration_History, path: Strings.General_Advanced).WithValue(Publication.ReleaseType == ReleaseType.Default ? HISTORY_DEFAULT : HISTORY_MIN).WithValidationRule(new IntegerValidationRule(HISTORY_MIN, HISTORY_MAX)))
-                .WithElement(new IntegerConfigurationElement(VisualizationBehaviourConfiguration.INTERVAL_ELEMENT, Strings.VisualizationBehaviourConfiguration_Interval, path: Strings.General_Advanced).WithValue(VisualizationBehaviourConfiguration.DEFAULT_INTERVAL).WithValidationRule(new IntegerValidationRule(VisualizationBehaviourConfiguration.MIN_INTERVAL, VisualizationBehaviourConfiguration.MAX_INTERVAL)))
-                .WithElement(new SelectionConfigurationElement(VisualizationBehaviourConfiguration.FFT_SIZE_ELEMENT, Strings.VisualizationBehaviourConfiguration_FFTSize, path: Strings.General_Advanced).WithOptions(VisualizationBehaviourConfiguration.GetFFTOptions(VisualizationBehaviourConfiguration.FFT_512_OPTION))
+                .WithElement(new SelectionConfigurationElement(MODE, Strings.SpectrogramConfiguration_Mode).WithOptions(GetModeOptions()))
+                .WithElement(new SelectionConfigurationElement(SCALE, Strings.SpectrogramConfiguration_Scale).WithOptions(GetScaleOptions()))
+                .WithElement(new IntegerConfigurationElement(SMOOTHING, Strings.SpectrogramConfiguration_Smoothing).WithValue(SMOOTHING_DEFAULT).WithValidationRule(new IntegerValidationRule(SMOOTHING_MIN, SMOOTHING_MAX)))
+                .WithElement(new TextConfigurationElement(COLOR_PALETTE, Strings.SpectrogramConfiguration_ColorPalette, path: Strings.General_Advanced).WithFlags(ConfigurationElementFlags.MultiLine))
+                .WithElement(new IntegerConfigurationElement(HISTORY, Strings.SpectrogramConfiguration_History, path: Strings.General_Advanced).WithValue(Publication.ReleaseType == ReleaseType.Default ? HISTORY_DEFAULT : HISTORY_MIN).WithValidationRule(new IntegerValidationRule(HISTORY_MIN, HISTORY_MAX)))
+                .WithElement(new IntegerConfigurationElement(VisualizationBehaviourConfiguration.INTERVAL, Strings.VisualizationBehaviourConfiguration_Interval, path: Strings.General_Advanced).WithValue(VisualizationBehaviourConfiguration.DEFAULT_INTERVAL).WithValidationRule(new IntegerValidationRule(VisualizationBehaviourConfiguration.MIN_INTERVAL, VisualizationBehaviourConfiguration.MAX_INTERVAL)))
+                .WithElement(new SelectionConfigurationElement(VisualizationBehaviourConfiguration.FFT_SIZE, Strings.VisualizationBehaviourConfiguration_FFTSize, path: Strings.General_Advanced).WithOptions(VisualizationBehaviourConfiguration.GetFFTOptions(VisualizationBehaviourConfiguration.FFT_512_OPTION))
             );
         }
 

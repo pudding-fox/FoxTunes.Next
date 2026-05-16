@@ -20,7 +20,7 @@ namespace FoxTunes.UI.Windows.Themes
                 .WithElement(new IntegerConfigurationElement(OPACITY, Strings.TransparentThemeConfiguration_Opacity)
                     .WithValue(DEFAULT_OPACITY)
                     .WithValidationRule(new IntegerValidationRule(MIN_OPACITY, MAX_OPACITY))
-                    .DependsOn(WindowsUserInterfaceConfiguration.SECTION, WindowsUserInterfaceConfiguration.THEME_ELEMENT, TransparentTheme.ID));
+                    .DependsOn(WindowsUserInterfaceConfiguration.SECTION, WindowsUserInterfaceConfiguration.THEME, TransparentTheme.ID));
         }
     }
 }

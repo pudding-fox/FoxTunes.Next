@@ -42,7 +42,7 @@ namespace FoxTunes
             this.Enabled.ValueChanged += this.OnValueChanged;
             this.Write = this.Configuration.GetElement<SelectionConfigurationElement>(
                 MetaDataBehaviourConfiguration.SECTION,
-                MetaDataBehaviourConfiguration.WRITE_ELEMENT
+                MetaDataBehaviourConfiguration.WRITE
             );
             this.Refresh();
             base.InitializeComponent(core);

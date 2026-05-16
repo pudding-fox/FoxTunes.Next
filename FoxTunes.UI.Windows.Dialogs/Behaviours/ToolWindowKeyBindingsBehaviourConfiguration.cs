@@ -6,13 +6,13 @@ namespace FoxTunes
     {
         public const string SECTION = InputManagerConfiguration.SECTION;
 
-        public const string MANAGE_ELEMENT = "KKKKD258-38D5-4832-970F-DDB71F9EDBFD";
+        public const string MANAGE = "KKKKD258-38D5-4832-970F-DDB71F9EDBFD";
 
         public static IEnumerable<ConfigurationSection> GetConfigurationSections()
         {
             yield return new ConfigurationSection(SECTION)
                 .WithElement(
-                    new TextConfigurationElement(MANAGE_ELEMENT, Strings.ToolWindowKeyBindingsBehaviourConfiguration_Manage)
+                    new TextConfigurationElement(MANAGE, Strings.ToolWindowKeyBindingsBehaviourConfiguration_Manage)
                         .WithValue("Alt+D")
             );
         }

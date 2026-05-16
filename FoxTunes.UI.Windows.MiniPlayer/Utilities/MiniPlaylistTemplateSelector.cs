@@ -10,7 +10,7 @@ namespace FoxTunes
 
         public static readonly BooleanConfigurationElement ShowArtwork = Configuration.GetElement<BooleanConfigurationElement>(
             MiniPlayerBehaviourConfiguration.SECTION,
-            MiniPlayerBehaviourConfiguration.PLAYLIST_ARTWORK_ELEMENT
+            MiniPlayerBehaviourConfiguration.PLAYLIST_ARTWORK
         );
 
         public DataTemplate DefaultTemplate { get; set; }

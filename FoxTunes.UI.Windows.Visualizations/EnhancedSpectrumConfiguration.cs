@@ -11,7 +11,7 @@ namespace FoxTunes
     {
         public const string SECTION = VisualizationBehaviourConfiguration.SECTION;
 
-        public const string BANDS_ELEMENT = "AABBF573-83D3-498E-BEF8-F1DB5A329B9D";
+        public const string BANDS = "AABBF573-83D3-498E-BEF8-F1DB5A329B9D";
 
         public const string BANDS_10_OPTION = "AAAA058C-2C96-4540-9ABE-10A584A17CE4";
 
@@ -25,13 +25,13 @@ namespace FoxTunes
 
         public const string BANDS_CUSTOM_OPTION = "HHHH3A75-6409-45A1-9348-3CDC04BB8025";
 
-        public const string BANDS_CUSTOM_ELEMENT = "AABCE681-F05A-48DD-9C0F-FA5B9BB4A2A7";
+        public const string BANDS_CUSTOM = "AABCE681-F05A-48DD-9C0F-FA5B9BB4A2A7";
 
-        public const string PEAK_ELEMENT = "BBBBDCF0-8B24-4321-B7BE-74DADE59D4FA";
+        public const string PEAK = "BBBBDCF0-8B24-4321-B7BE-74DADE59D4FA";
 
-        public const string RMS_ELEMENT = "DDDEE2B6A-188E-4FF4-A277-37D140D49C45";
+        public const string RMS = "DDDEE2B6A-188E-4FF4-A277-37D140D49C45";
 
-        public const string COLOR_PALETTE_ELEMENT = "EEEE907A-5812-42CD-9844-89362C96C6AF";
+        public const string COLOR_PALETTE = "EEEE907A-5812-42CD-9844-89362C96C6AF";
 
         public const string COLOR_PALETTE_PEAK = "PEAK";
 
@@ -41,7 +41,7 @@ namespace FoxTunes
 
         public const string COLOR_PALETTE_BACKGROUND = "BACKGROUND";
 
-        public const string DURATION_ELEMENT = "FFFF965B-101C-4A09-9A9A-91BAB17575E6";
+        public const string DURATION = "FFFF965B-101C-4A09-9A9A-91BAB17575E6";
 
         public const int DURATION_MIN = 16;
 
@@ -52,14 +52,14 @@ namespace FoxTunes
         public static IEnumerable<ConfigurationSection> GetConfigurationSections()
         {
             yield return new ConfigurationSection(SECTION, Strings.EnhancedSpectrumConfiguration_Section)
-                .WithElement(new SelectionConfigurationElement(BANDS_ELEMENT, Strings.EnhancedSpectrumConfiguration_Bands).WithOptions(GetBandsOptions()))
-                .WithElement(new TextConfigurationElement(BANDS_CUSTOM_ELEMENT, Strings.EnhancedSpectrumConfiguration_Bands_Custom, description: Strings.EnhancedSpectrumConfiguration_Bands_Custom_Description).WithValue("50 20000 320 S").DependsOn(SECTION, BANDS_ELEMENT, BANDS_CUSTOM_OPTION))
-                .WithElement(new BooleanConfigurationElement(PEAK_ELEMENT, Strings.EnhancedSpectrumConfiguration_Peak).WithValue(true))
-                .WithElement(new BooleanConfigurationElement(RMS_ELEMENT, Strings.EnhancedSpectrumConfiguration_Rms).WithValue(true))
-                .WithElement(new TextConfigurationElement(COLOR_PALETTE_ELEMENT, Strings.EnhancedSpectrumConfiguration_ColorPalette, path: Strings.General_Advanced).WithValue(GetDefaultColorPalette()).WithFlags(ConfigurationElementFlags.MultiLine))
-                .WithElement(new IntegerConfigurationElement(DURATION_ELEMENT, Strings.EnhancedSpectrumConfiguration_Duration).WithValue(DURATION_DEFAULT).WithValidationRule(new IntegerValidationRule(DURATION_MIN, DURATION_MAX)))
-                .WithElement(new IntegerConfigurationElement(VisualizationBehaviourConfiguration.INTERVAL_ELEMENT, Strings.VisualizationBehaviourConfiguration_Interval, path: Strings.General_Advanced).WithValue(VisualizationBehaviourConfiguration.DEFAULT_INTERVAL).WithValidationRule(new IntegerValidationRule(VisualizationBehaviourConfiguration.MIN_INTERVAL, VisualizationBehaviourConfiguration.MAX_INTERVAL)))
-                .WithElement(new SelectionConfigurationElement(VisualizationBehaviourConfiguration.FFT_SIZE_ELEMENT, Strings.VisualizationBehaviourConfiguration_FFTSize, path: Strings.General_Advanced).WithOptions(VisualizationBehaviourConfiguration.GetFFTOptions(VisualizationBehaviourConfiguration.FFT_4096_OPTION))
+                .WithElement(new SelectionConfigurationElement(BANDS, Strings.EnhancedSpectrumConfiguration_Bands).WithOptions(GetBandsOptions()))
+                .WithElement(new TextConfigurationElement(BANDS_CUSTOM, Strings.EnhancedSpectrumConfiguration_Bands_Custom, description: Strings.EnhancedSpectrumConfiguration_Bands_Custom_Description).WithValue("50 20000 320 S").DependsOn(SECTION, BANDS, BANDS_CUSTOM_OPTION))
+                .WithElement(new BooleanConfigurationElement(PEAK, Strings.EnhancedSpectrumConfiguration_Peak).WithValue(true))
+                .WithElement(new BooleanConfigurationElement(RMS, Strings.EnhancedSpectrumConfiguration_Rms).WithValue(true))
+                .WithElement(new TextConfigurationElement(COLOR_PALETTE, Strings.EnhancedSpectrumConfiguration_ColorPalette, path: Strings.General_Advanced).WithValue(GetDefaultColorPalette()).WithFlags(ConfigurationElementFlags.MultiLine))
+                .WithElement(new IntegerConfigurationElement(DURATION, Strings.EnhancedSpectrumConfiguration_Duration).WithValue(DURATION_DEFAULT).WithValidationRule(new IntegerValidationRule(DURATION_MIN, DURATION_MAX)))
+                .WithElement(new IntegerConfigurationElement(VisualizationBehaviourConfiguration.INTERVAL, Strings.VisualizationBehaviourConfiguration_Interval, path: Strings.General_Advanced).WithValue(VisualizationBehaviourConfiguration.DEFAULT_INTERVAL).WithValidationRule(new IntegerValidationRule(VisualizationBehaviourConfiguration.MIN_INTERVAL, VisualizationBehaviourConfiguration.MAX_INTERVAL)))
+                .WithElement(new SelectionConfigurationElement(VisualizationBehaviourConfiguration.FFT_SIZE, Strings.VisualizationBehaviourConfiguration_FFTSize, path: Strings.General_Advanced).WithOptions(VisualizationBehaviourConfiguration.GetFFTOptions(VisualizationBehaviourConfiguration.FFT_4096_OPTION))
             );
         }
 

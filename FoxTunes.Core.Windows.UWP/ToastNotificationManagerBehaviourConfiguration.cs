@@ -7,11 +7,11 @@ namespace FoxTunes
     {
         public const string SECTION = UWPConfiguration.SECTION;
 
-        public const string ENABLED_ELEMENT = "AAAAD7EF-DFBF-4633-8B92-1F0047D3E9CC";
+        public const string ENABLED = "AAAAD7EF-DFBF-4633-8B92-1F0047D3E9CC";
 
-        public const string POPUP_ELEMENT = "BBBB8A9D-260D-4757-8D61-36E50BF8D3E0";
+        public const string POPUP = "BBBB8A9D-260D-4757-8D61-36E50BF8D3E0";
 
-        public const string LARGE_ARTWORK_ELEMENT = "CCCCC054-BFF2-48BD-B2D9-7471D003A4E3";
+        public const string LARGE_ARTWORK = "CCCCC054-BFF2-48BD-B2D9-7471D003A4E3";
 
         /// <summary>
         /// Although toast notifications are supposed to be a Windows 10 feature it's actually available on 2016.
@@ -52,9 +52,9 @@ namespace FoxTunes
             if (IsPlatformSupported)
             {
                 yield return new ConfigurationSection(SECTION, "Windows 10")
-                    .WithElement(new BooleanConfigurationElement(ENABLED_ELEMENT, "Notifications").WithValue(Publication.ReleaseType == ReleaseType.Default))
-                    .WithElement(new BooleanConfigurationElement(POPUP_ELEMENT, "Popup").WithValue(false).DependsOn(SECTION, ENABLED_ELEMENT))
-                    .WithElement(new BooleanConfigurationElement(LARGE_ARTWORK_ELEMENT, "Large Artwork").WithValue(false).DependsOn(SECTION, ENABLED_ELEMENT)
+                    .WithElement(new BooleanConfigurationElement(ENABLED, "Notifications").WithValue(Publication.ReleaseType == ReleaseType.Default))
+                    .WithElement(new BooleanConfigurationElement(POPUP, "Popup").WithValue(false).DependsOn(SECTION, ENABLED))
+                    .WithElement(new BooleanConfigurationElement(LARGE_ARTWORK, "Large Artwork").WithValue(false).DependsOn(SECTION, ENABLED)
                 );
             }
         }

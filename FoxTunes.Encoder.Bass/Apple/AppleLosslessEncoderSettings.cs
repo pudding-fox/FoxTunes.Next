@@ -49,7 +49,7 @@ namespace FoxTunes
         {
             core.Components.Configuration.GetElement<SelectionConfigurationElement>(
                 AppleLosslessEncoderSettingsConfiguration.SECTION,
-                AppleLosslessEncoderSettingsConfiguration.DEPTH_ELEMENT
+                AppleLosslessEncoderSettingsConfiguration.DEPTH
             ).ConnectValue(option => this.Depth = AppleLosslessEncoderSettingsConfiguration.GetDepth(option));
             base.InitializeComponent(core);
         }

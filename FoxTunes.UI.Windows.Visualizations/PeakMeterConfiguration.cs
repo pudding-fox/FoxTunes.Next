@@ -10,9 +10,9 @@ namespace FoxTunes
     {
         public const string SECTION = VisualizationBehaviourConfiguration.SECTION;
 
-        public const string PEAKS_ELEMENT = "AAAA3C5D-D292-4CD2-B258-A7652DBC77C6";
+        public const string PEAKS = "AAAA3C5D-D292-4CD2-B258-A7652DBC77C6";
 
-        public const string HOLD_ELEMENT = "BBBBD8E3-C38C-4B44-A080-DAE2E859D444";
+        public const string HOLD = "BBBBD8E3-C38C-4B44-A080-DAE2E859D444";
 
         public const int MIN_HOLD = 500;
 
@@ -55,14 +55,14 @@ namespace FoxTunes
         public static IEnumerable<ConfigurationSection> GetConfigurationSections()
         {
             yield return new ConfigurationSection(SECTION, Strings.PeakMeterConfiguration_Section)
-                .WithElement(new BooleanConfigurationElement(PEAKS_ELEMENT, Strings.PeakMeterConfiguration_Peaks).WithValue(true))
-                .WithElement(new IntegerConfigurationElement(HOLD_ELEMENT, Strings.PeakMeterConfiguration_Hold, path: Strings.General_Advanced).WithValue(DEFAULT_HOLD).WithValidationRule(new IntegerValidationRule(MIN_HOLD, MAX_HOLD)).DependsOn(SECTION, PEAKS_ELEMENT))
+                .WithElement(new BooleanConfigurationElement(PEAKS, Strings.PeakMeterConfiguration_Peaks).WithValue(true))
+                .WithElement(new IntegerConfigurationElement(HOLD, Strings.PeakMeterConfiguration_Hold, path: Strings.General_Advanced).WithValue(DEFAULT_HOLD).WithValidationRule(new IntegerValidationRule(MIN_HOLD, MAX_HOLD)).DependsOn(SECTION, PEAKS))
                 .WithElement(new TextConfigurationElement(COLOR_PALETTE, Strings.PeakMeterConfiguration_ColorPalette, path: Strings.General_Advanced).WithValue(GetDefaultColorPalette()).WithFlags(ConfigurationElementFlags.MultiLine))
                 .WithElement(new IntegerConfigurationElement(DURATION, Strings.PeakMeterConfiguration_Duration).WithValue(DURATION_DEFAULT).WithValidationRule(new IntegerValidationRule(DURATION_MIN, DURATION_MAX)))
                 .WithElement(new IntegerConfigurationElement(MIN_FREQUENCY, Strings.PeakMeterConfiguration_MinFrequency, path: Strings.General_Advanced).WithValue(MIN_FREQUENCY_DEFAULT).WithValidationRule(new IntegerValidationRule(MIN_FREQUENCY_MIN, MIN_FREQUENCY_MAX, 10)))
                 .WithElement(new IntegerConfigurationElement(MAX_FREQUENCY, Strings.PeakMeterConfiguration_MaxFrequency, path: Strings.General_Advanced).WithValue(MAX_FREQUENCY_DEFAULT).WithValidationRule(new IntegerValidationRule(MAX_FREQUENCY_MIN, MAX_FREQUENCY_MAX, 10)))
-                .WithElement(new IntegerConfigurationElement(VisualizationBehaviourConfiguration.INTERVAL_ELEMENT, Strings.VisualizationBehaviourConfiguration_Interval, path: Strings.General_Advanced).WithValue(VisualizationBehaviourConfiguration.DEFAULT_INTERVAL).WithValidationRule(new IntegerValidationRule(VisualizationBehaviourConfiguration.MIN_INTERVAL, VisualizationBehaviourConfiguration.MAX_INTERVAL)))
-                .WithElement(new SelectionConfigurationElement(VisualizationBehaviourConfiguration.FFT_SIZE_ELEMENT, Strings.VisualizationBehaviourConfiguration_FFTSize, path: Strings.General_Advanced).WithOptions(VisualizationBehaviourConfiguration.GetFFTOptions(VisualizationBehaviourConfiguration.FFT_512_OPTION))
+                .WithElement(new IntegerConfigurationElement(VisualizationBehaviourConfiguration.INTERVAL, Strings.VisualizationBehaviourConfiguration_Interval, path: Strings.General_Advanced).WithValue(VisualizationBehaviourConfiguration.DEFAULT_INTERVAL).WithValidationRule(new IntegerValidationRule(VisualizationBehaviourConfiguration.MIN_INTERVAL, VisualizationBehaviourConfiguration.MAX_INTERVAL)))
+                .WithElement(new SelectionConfigurationElement(VisualizationBehaviourConfiguration.FFT_SIZE, Strings.VisualizationBehaviourConfiguration_FFTSize, path: Strings.General_Advanced).WithOptions(VisualizationBehaviourConfiguration.GetFFTOptions(VisualizationBehaviourConfiguration.FFT_512_OPTION))
             );
         }
 

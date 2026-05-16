@@ -190,47 +190,47 @@ namespace FoxTunes
             this.Configuration = core.Components.Configuration;
             this.Configuration.GetElement<SelectionConfigurationElement>(
                 BassOutputConfiguration.SECTION,
-                BassOutputConfiguration.INPUT_ELEMENT
+                BassOutputConfiguration.INPUT
             ).ConnectValue(value => this.Enabled = string.Equals(value.Id, BassCrossfadeStreamInputConfiguration.INPUT_CROSSFADE_OPTION, StringComparison.OrdinalIgnoreCase));
             this.Configuration.GetElement<SelectionConfigurationElement>(
                 BassOutputConfiguration.SECTION,
-                BassCrossfadeStreamInputConfiguration.MODE_ELEMENT
+                BassCrossfadeStreamInputConfiguration.MODE
             ).ConnectValue(option => this.Mode = BassCrossfadeStreamInputConfiguration.GetMode(option));
             this.Configuration.GetElement<IntegerConfigurationElement>(
                 BassOutputConfiguration.SECTION,
-                BassCrossfadeStreamInputConfiguration.PERIOD_IN_ELEMENT
+                BassCrossfadeStreamInputConfiguration.PERIOD_IN
             ).ConnectValue(value => this.InPeriod = value);
             this.Configuration.GetElement<IntegerConfigurationElement>(
                 BassOutputConfiguration.SECTION,
-                BassCrossfadeStreamInputConfiguration.PERIOD_OUT_ELEMENT
+                BassCrossfadeStreamInputConfiguration.PERIOD_OUT
             ).ConnectValue(value => this.OutPeriod = value);
             this.Configuration.GetElement<SelectionConfigurationElement>(
                 BassOutputConfiguration.SECTION,
-                BassCrossfadeStreamInputConfiguration.TYPE_IN_ELEMENT
+                BassCrossfadeStreamInputConfiguration.TYPE_IN
             ).ConnectValue(option => this.InType = BassCrossfadeStreamInputConfiguration.GetType(option));
             this.Configuration.GetElement<SelectionConfigurationElement>(
                 BassOutputConfiguration.SECTION,
-                BassCrossfadeStreamInputConfiguration.TYPE_OUT_ELEMENT
+                BassCrossfadeStreamInputConfiguration.TYPE_OUT
             ).ConnectValue(option => this.OutType = BassCrossfadeStreamInputConfiguration.GetType(option));
             this.Configuration.GetElement<BooleanConfigurationElement>(
                 BassOutputConfiguration.SECTION,
-                BassCrossfadeStreamInputConfiguration.MIX_ELEMENT
+                BassCrossfadeStreamInputConfiguration.MIX
             ).ConnectValue(value => this.Mix = value);
             this.Configuration.GetElement<BooleanConfigurationElement>(
                 BassOutputConfiguration.SECTION,
-                BassCrossfadeStreamInputConfiguration.START_ELEMENT
+                BassCrossfadeStreamInputConfiguration.START
             ).ConnectValue(value => this.Start = value);
             this.Configuration.GetElement<BooleanConfigurationElement>(
                 BassOutputConfiguration.SECTION,
-                BassCrossfadeStreamInputConfiguration.PAUSE_RESUME_ELEMENT
+                BassCrossfadeStreamInputConfiguration.PAUSE_RESUME
             ).ConnectValue(value => this.PauseResume = value);
             this.Configuration.GetElement<BooleanConfigurationElement>(
                 BassOutputConfiguration.SECTION,
-                BassCrossfadeStreamInputConfiguration.STOP_ELEMENT
+                BassCrossfadeStreamInputConfiguration.STOP
             ).ConnectValue(value => this.Stop = value);
             this.Configuration.GetElement<BooleanConfigurationElement>(
                 BassOutputConfiguration.SECTION,
-                BassCrossfadeStreamInputConfiguration.BUFFER_ELEMENT
+                BassCrossfadeStreamInputConfiguration.BUFFER
             ).ConnectValue(value => this.Buffer = value);
             this.BassStreamPipelineFactory = ComponentRegistry.Instance.GetComponent<IBassStreamPipelineFactory>();
             this.BassStreamPipelineFactory.CreatingPipeline += this.OnCreatingPipeline;

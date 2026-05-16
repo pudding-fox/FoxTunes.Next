@@ -6,7 +6,7 @@ namespace FoxTunes
     {
         public const string SECTION = "B06236E7-F320-4D87-A1A6-9937E0B399BB";
 
-        public const string INTERVAL_ELEMENT = "FFFF5F0C-6574-472A-B9EB-2BDBC1F3C438";
+        public const string INTERVAL = "FFFF5F0C-6574-472A-B9EB-2BDBC1F3C438";
 
         public const int MIN_INTERVAL = 5;
 
@@ -14,7 +14,7 @@ namespace FoxTunes
 
         public const int DEFAULT_INTERVAL = 16;
 
-        public const string FFT_SIZE_ELEMENT = "GGGGAE69-551B-4E86-BE04-7EB00AD30099";
+        public const string FFT_SIZE = "GGGGAE69-551B-4E86-BE04-7EB00AD30099";
 
         public const string FFT_512_OPTION = "AAAA7106-4174-4A1E-9590-B1798B4187A3";
 

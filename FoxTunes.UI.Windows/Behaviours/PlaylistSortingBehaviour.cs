@@ -28,7 +28,7 @@ namespace FoxTunes
             this.Configuration = core.Components.Configuration;
             this.Sorting = this.Configuration.GetElement<BooleanConfigurationElement>(
                 PlaylistBehaviourConfiguration.SECTION,
-                PlaylistSortingBehaviourConfiguration.SORT_ENABLED_ELEMENT
+                PlaylistSortingBehaviourConfiguration.SORT_ENABLED
             );
             base.InitializeComponent(core);
         }

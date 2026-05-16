@@ -50,7 +50,7 @@ namespace FoxTunes
                 this.Configuration = core.Components.Configuration;
                 this.Configuration.GetElement<BooleanConfigurationElement>(
                     ToastNotificationManagerBehaviourConfiguration.SECTION,
-                    ToastNotificationManagerBehaviourConfiguration.ENABLED_ELEMENT
+                    ToastNotificationManagerBehaviourConfiguration.ENABLED
                 ).ConnectValue(value =>
                 {
                     if (value)
@@ -65,11 +65,11 @@ namespace FoxTunes
                 });
                 this.Configuration.GetElement<BooleanConfigurationElement>(
                     ToastNotificationManagerBehaviourConfiguration.SECTION,
-                    ToastNotificationManagerBehaviourConfiguration.POPUP_ELEMENT
+                    ToastNotificationManagerBehaviourConfiguration.POPUP
                 ).ConnectValue(value => this.Popup = value);
                 this.Configuration.GetElement<BooleanConfigurationElement>(
                     ToastNotificationManagerBehaviourConfiguration.SECTION,
-                    ToastNotificationManagerBehaviourConfiguration.LARGE_ARTWORK_ELEMENT
+                    ToastNotificationManagerBehaviourConfiguration.LARGE_ARTWORK
                 ).ConnectValue(value => this.LargeArtwork = value);
             }
             else

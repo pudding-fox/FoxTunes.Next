@@ -35,15 +35,15 @@ namespace FoxTunes.ViewModel
             {
                 this.Configuration.GetElement<TextConfigurationElement>(
                     new[] { NowPlayingConfiguration.SECTION, MiniPlayerBehaviourConfiguration.SECTION },
-                    new[] { NowPlayingConfiguration.NOW_PLAYING_SCRIPT_ELEMENT, MiniPlayerBehaviourConfiguration.NOW_PLAYING_SCRIPT_ELEMENT }
+                    new[] { NowPlayingConfiguration.NOW_PLAYING_SCRIPT, MiniPlayerBehaviourConfiguration.NOW_PLAYING_SCRIPT }
                 ).ConnectValue(async value => await this.SetScript(value).ConfigureAwait(false));
                 this.MarqueeInterval = this.Configuration.GetElement<IntegerConfigurationElement>(
                   MiniPlayerBehaviourConfiguration.SECTION,
-                  MiniPlayerBehaviourConfiguration.MARQUEE_INTERVAL_ELEMENT
+                  MiniPlayerBehaviourConfiguration.MARQUEE_INTERVAL
                 );
                 this.MarqueeStep = this.Configuration.GetElement<DoubleConfigurationElement>(
                   MiniPlayerBehaviourConfiguration.SECTION,
-                  MiniPlayerBehaviourConfiguration.MARQUEE_STEP_ELEMENT
+                  MiniPlayerBehaviourConfiguration.MARQUEE_STEP
                 );
                 this.Dispatch(this.Refresh);
             }

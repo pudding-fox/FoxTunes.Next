@@ -41,31 +41,31 @@ namespace FoxTunes
             {
                 this.Bars = this.Configuration.GetElement<SelectionConfigurationElement>(
                    SpectrumConfiguration.SECTION,
-                   SpectrumConfiguration.BARS_ELEMENT
+                   SpectrumConfiguration.BARS
                 );
                 this.ShowPeaks = this.Configuration.GetElement<BooleanConfigurationElement>(
                     SpectrumConfiguration.SECTION,
-                    SpectrumConfiguration.PEAKS_ELEMENT
+                    SpectrumConfiguration.PEAKS
                  );
                 this.HoldInterval = this.Configuration.GetElement<IntegerConfigurationElement>(
                    SpectrumConfiguration.SECTION,
-                   SpectrumConfiguration.HOLD_ELEMENT
+                   SpectrumConfiguration.HOLD
                 );
                 this.ColorPalette = this.Configuration.GetElement<TextConfigurationElement>(
                     SpectrumConfiguration.SECTION,
-                    SpectrumConfiguration.COLOR_PALETTE_ELEMENT
+                    SpectrumConfiguration.COLOR_PALETTE
                 );
                 this.CutOff = this.Configuration.GetElement<IntegerConfigurationElement>(
                     SpectrumConfiguration.SECTION,
-                    SpectrumConfiguration.CUT_OFF_ELEMENT
+                    SpectrumConfiguration.CUT_OFF
                 );
                 this.PreAmp = this.Configuration.GetElement<IntegerConfigurationElement>(
                     SpectrumConfiguration.SECTION,
-                    SpectrumConfiguration.PRE_AMP_ELEMENT
+                    SpectrumConfiguration.PRE_AMP
                 );
                 this.FFTSize = this.Configuration.GetElement<SelectionConfigurationElement>(
                    SpectrumConfiguration.SECTION,
-                   VisualizationBehaviourConfiguration.FFT_SIZE_ELEMENT
+                   VisualizationBehaviourConfiguration.FFT_SIZE
                 );
                 this.Bars.ValueChanged += this.OnValueChanged;
                 this.ShowPeaks.ValueChanged += this.OnValueChanged;

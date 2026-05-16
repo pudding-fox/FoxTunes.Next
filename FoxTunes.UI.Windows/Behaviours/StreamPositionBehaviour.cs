@@ -17,7 +17,7 @@ namespace FoxTunes
             this.Configuration = core.Components.Configuration;
             this.ShowCounters = this.Configuration.GetElement<BooleanConfigurationElement>(
                 StreamPositionBehaviourConfiguration.SECTION,
-                StreamPositionBehaviourConfiguration.SHOW_COUNTERS_ELEMENT
+                StreamPositionBehaviourConfiguration.SHOW_COUNTERS
             );
             base.InitializeComponent(core);
         }

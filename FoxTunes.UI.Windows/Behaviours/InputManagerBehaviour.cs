@@ -45,19 +45,19 @@ namespace FoxTunes
             this.Configuration = core.Components.Configuration;
             this.Play = this.Configuration.GetElement<TextConfigurationElement>(
                 InputManagerConfiguration.SECTION,
-                InputManagerConfiguration.PLAY_ELEMENT
+                InputManagerConfiguration.PLAY
             );
             this.Previous = this.Configuration.GetElement<TextConfigurationElement>(
                 InputManagerConfiguration.SECTION,
-                InputManagerConfiguration.PREVIOUS_ELEMENT
+                InputManagerConfiguration.PREVIOUS
             );
             this.Next = this.Configuration.GetElement<TextConfigurationElement>(
                 InputManagerConfiguration.SECTION,
-                InputManagerConfiguration.NEXT_ELEMENT
+                InputManagerConfiguration.NEXT
             );
             this.Stop = this.Configuration.GetElement<TextConfigurationElement>(
                 InputManagerConfiguration.SECTION,
-                InputManagerConfiguration.STOP_ELEMENT
+                InputManagerConfiguration.STOP
             );
             foreach (var element in new[] { this.Play, this.Previous, this.Next, this.Stop })
             {

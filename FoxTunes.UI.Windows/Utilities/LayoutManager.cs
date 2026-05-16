@@ -87,7 +87,7 @@ namespace FoxTunes
             this.Configuration = core.Components.Configuration;
             this.Layout = this.Configuration.GetElement<SelectionConfigurationElement>(
                 WindowsUserInterfaceConfiguration.SECTION,
-                WindowsUserInterfaceConfiguration.LAYOUT_ELEMENT
+                WindowsUserInterfaceConfiguration.LAYOUT
             );
             this.Layout.ConnectValue(value => this.UpdateProvider());
             base.InitializeComponent(core);

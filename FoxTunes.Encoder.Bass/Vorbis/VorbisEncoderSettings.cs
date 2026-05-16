@@ -49,7 +49,7 @@ namespace FoxTunes
         {
             core.Components.Configuration.GetElement<IntegerConfigurationElement>(
                 VorbisEncoderSettingsConfiguration.SECTION,
-                VorbisEncoderSettingsConfiguration.QUALITY_ELEMENT
+                VorbisEncoderSettingsConfiguration.QUALITY
             ).ConnectValue(value => this.Quality = value);
             base.InitializeComponent(core);
         }

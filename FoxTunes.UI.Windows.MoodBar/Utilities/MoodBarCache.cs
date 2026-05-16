@@ -28,7 +28,7 @@ namespace FoxTunes
             this.Configuration = core.Components.Configuration;
             this.Enabled = this.Configuration.GetElement<BooleanConfigurationElement>(
                 MoodBarCacheConfiguration.SECTION,
-                MoodBarCacheConfiguration.CACHE_ELEMENT
+                MoodBarCacheConfiguration.CACHE
             );
             base.InitializeComponent(core);
         }

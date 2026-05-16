@@ -124,19 +124,19 @@ namespace FoxTunes
             this.Configuration = core.Components.Configuration;
             this.Configuration.GetElement<IntegerConfigurationElement>(
                 BassArchiveStreamProviderBehaviourConfiguration.SECTION,
-                BassArchiveStreamProviderBehaviourConfiguration.BUFFER_MIN_ELEMENT
+                BassArchiveStreamProviderBehaviourConfiguration.BUFFER_MIN
             ).ConnectValue(value => this.BufferMin = value);
             this.Configuration.GetElement<IntegerConfigurationElement>(
                 BassArchiveStreamProviderBehaviourConfiguration.SECTION,
-                BassArchiveStreamProviderBehaviourConfiguration.BUFFER_TIMEOUT_ELEMENT
+                BassArchiveStreamProviderBehaviourConfiguration.BUFFER_TIMEOUT
             ).ConnectValue(value => this.BufferTimeout = value);
             this.Configuration.GetElement<BooleanConfigurationElement>(
                 BassArchiveStreamProviderBehaviourConfiguration.SECTION,
-                BassArchiveStreamProviderBehaviourConfiguration.DOUBLE_BUFFER_ELEMENT
+                BassArchiveStreamProviderBehaviourConfiguration.DOUBLE_BUFFER
             ).ConnectValue(value => this.DoubleBuffer = value);
             this.Configuration.GetElement<BooleanConfigurationElement>(
                 BassArchiveStreamProviderBehaviourConfiguration.SECTION,
-                BassArchiveStreamProviderBehaviourConfiguration.ENABLED_ELEMENT
+                BassArchiveStreamProviderBehaviourConfiguration.ENABLED
             ).ConnectValue(value => this.Enabled = value);
             base.InitializeComponent(core);
         }

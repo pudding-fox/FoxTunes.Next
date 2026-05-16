@@ -47,7 +47,7 @@ namespace FoxTunes
                 this.Configuration = core.Components.Configuration;
                 this.Enabled = this.Configuration.GetElement<BooleanConfigurationElement>(
                     SystemMediaTransportControlsBehaviourConfiguration.SECTION,
-                    SystemMediaTransportControlsBehaviourConfiguration.ENABLED_ELEMENT
+                    SystemMediaTransportControlsBehaviourConfiguration.ENABLED
                 );
                 this.Enabled.ValueChanged += this.OnValueChanged;
             }

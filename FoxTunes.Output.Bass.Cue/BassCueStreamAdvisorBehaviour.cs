@@ -75,7 +75,7 @@ namespace FoxTunes
             this.Configuration = core.Components.Configuration;
             this.Configuration.GetElement<BooleanConfigurationElement>(
                 BassCueStreamAdvisorBehaviourConfiguration.SECTION,
-                BassCueStreamAdvisorBehaviourConfiguration.ENABLED_ELEMENT
+                BassCueStreamAdvisorBehaviourConfiguration.ENABLED
             ).ConnectValue(value => this.Enabled = value);
             base.InitializeComponent(core);
         }

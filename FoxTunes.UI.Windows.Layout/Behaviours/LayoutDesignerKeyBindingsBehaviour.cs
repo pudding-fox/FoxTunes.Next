@@ -27,7 +27,7 @@ namespace FoxTunes
             this.Configuration = core.Components.Configuration;
             this.Edit = this.Configuration.GetElement<TextConfigurationElement>(
                 LayoutDesignerKeyBindingsBehaviourConfiguration.SECTION,
-                LayoutDesignerKeyBindingsBehaviourConfiguration.EDIT_ELEMENT
+                LayoutDesignerKeyBindingsBehaviourConfiguration.EDIT
             );
             if (this.Edit != null)
             {

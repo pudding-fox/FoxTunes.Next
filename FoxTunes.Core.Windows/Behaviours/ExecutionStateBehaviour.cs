@@ -53,11 +53,11 @@ namespace FoxTunes
             this.Configuration = core.Components.Configuration;
             this.Sleep = this.Configuration.GetElement<SelectionConfigurationElement>(
                 ExecutionStateBehaviourConfiguration.SECTION,
-                ExecutionStateBehaviourConfiguration.SLEEP_ELEMENT
+                ExecutionStateBehaviourConfiguration.SLEEP
             );
             this.OnlyWhilePlaying = this.Configuration.GetElement<BooleanConfigurationElement>(
                 ExecutionStateBehaviourConfiguration.SECTION,
-                ExecutionStateBehaviourConfiguration.ONLY_WHILE_PLAYING_ELEMENT
+                ExecutionStateBehaviourConfiguration.ONLY_WHILE_PLAYING
             );
             this.Sleep.ConnectValue(value =>
             {

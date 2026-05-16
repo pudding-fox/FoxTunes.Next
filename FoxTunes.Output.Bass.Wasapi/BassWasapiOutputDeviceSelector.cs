@@ -81,7 +81,7 @@ namespace FoxTunes
             this.Configuration = core.Components.Configuration;
             this.OutputElement = this.Configuration.GetElement<SelectionConfigurationElement>(
                 BassOutputConfiguration.SECTION,
-                BassOutputConfiguration.OUTPUT_ELEMENT
+                BassOutputConfiguration.OUTPUT
             );
             this.DeviceElement = this.Configuration.GetElement<SelectionConfigurationElement>(
                 BassOutputConfiguration.SECTION,

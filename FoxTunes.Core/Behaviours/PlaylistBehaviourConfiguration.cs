@@ -6,7 +6,7 @@ namespace FoxTunes
     {
         public const string SECTION = "11FAE8A9-8DF4-4DD5-B0C7-DFFCBABDC04A";
 
-        public const string ORDER_ELEMENT = "E666183E-486E-45B4-A7CB-CE225AB89A1F";
+        public const string ORDER = "E666183E-486E-45B4-A7CB-CE225AB89A1F";
 
         public const string ORDER_DEFAULT_OPTION = "AAAA3B37-7DD2-43BF-9917-8A11158E8DC3";
 
@@ -16,19 +16,19 @@ namespace FoxTunes
 
         public const string ORDER_SHUFFLE_ARTISTS = "DDDD150A-BE60-47EA-8C05-57219126BF5A";
 
-        public const string PRE_SORT_ORDER_ELEMENT = "FA40F96B-D6B6-42FB-BF95-B01A1F466AB0";
+        public const string PRE_SORT_ORDER = "FA40F96B-D6B6-42FB-BF95-B01A1F466AB0";
 
-        public const string QUEUE_ELEMENT = "GGGG2428-0E44-4EB7-B8C3-383D839C19EC";
+        public const string QUEUE = "GGGG2428-0E44-4EB7-B8C3-383D839C19EC";
 
         public static IEnumerable<ConfigurationSection> GetConfigurationSections()
         {
             yield return new ConfigurationSection(SECTION, Strings.PlaylistBehaviourConfiguration_Section)
                 .WithElement(
-                    new SelectionConfigurationElement(ORDER_ELEMENT, Strings.PlaylistBehaviourConfiguration_Order).WithOptions(GetOrderOptions()))
+                    new SelectionConfigurationElement(ORDER, Strings.PlaylistBehaviourConfiguration_Order).WithOptions(GetOrderOptions()))
                 .WithElement(
-                    new TextConfigurationElement(PRE_SORT_ORDER_ELEMENT, Strings.PlaylistBehaviourConfiguration_PreSort, path: Strings.General_Advanced).WithValue(Resources.PlaylistSequence).WithFlags(ConfigurationElementFlags.MultiLine))
+                    new TextConfigurationElement(PRE_SORT_ORDER, Strings.PlaylistBehaviourConfiguration_PreSort, path: Strings.General_Advanced).WithValue(Resources.PlaylistSequence).WithFlags(ConfigurationElementFlags.MultiLine))
                 .WithElement(
-                    new BooleanConfigurationElement(QUEUE_ELEMENT, Strings.PlaylistBehaviourConfiguration_Queue).WithValue(false)
+                    new BooleanConfigurationElement(QUEUE, Strings.PlaylistBehaviourConfiguration_Queue).WithValue(false)
             );
         }
 

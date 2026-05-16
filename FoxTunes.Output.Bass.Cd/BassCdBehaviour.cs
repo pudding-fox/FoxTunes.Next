@@ -107,15 +107,15 @@ namespace FoxTunes
             this.Configuration = core.Components.Configuration;
             this.Configuration.GetElement<BooleanConfigurationElement>(
                 BassCdStreamProviderBehaviourConfiguration.SECTION,
-                BassCdStreamProviderBehaviourConfiguration.ENABLED_ELEMENT
+                BassCdStreamProviderBehaviourConfiguration.ENABLED
             ).ConnectValue(value => this.Enabled = value);
             this.Configuration.GetElement<BooleanConfigurationElement>(
                 BassCdStreamProviderBehaviourConfiguration.SECTION,
-                BassCdStreamProviderBehaviourConfiguration.LOOKUP_ELEMENT
+                BassCdStreamProviderBehaviourConfiguration.LOOKUP
             ).ConnectValue(value => this.CdLookup = value);
             this.Configuration.GetElement<TextConfigurationElement>(
                 BassCdStreamProviderBehaviourConfiguration.SECTION,
-                BassCdStreamProviderBehaviourConfiguration.LOOKUP_HOST_ELEMENT
+                BassCdStreamProviderBehaviourConfiguration.LOOKUP_HOST
             ).ConnectValue(value =>
             {
                 if (!string.IsNullOrEmpty(value))

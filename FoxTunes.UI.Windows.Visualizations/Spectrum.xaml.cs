@@ -45,23 +45,23 @@ namespace FoxTunes
             {
                 this.Bars = this.Configuration.GetElement<SelectionConfigurationElement>(
                     SpectrumConfiguration.SECTION,
-                    SpectrumConfiguration.BARS_ELEMENT
+                    SpectrumConfiguration.BARS
                 );
                 this.Peaks = this.Configuration.GetElement<BooleanConfigurationElement>(
                     SpectrumConfiguration.SECTION,
-                    SpectrumConfiguration.PEAKS_ELEMENT
+                    SpectrumConfiguration.PEAKS
                 );
                 this.CutOff = this.Configuration.GetElement<IntegerConfigurationElement>(
                     SpectrumConfiguration.SECTION,
-                    SpectrumConfiguration.CUT_OFF_ELEMENT
+                    SpectrumConfiguration.CUT_OFF
                 );
                 this.ColorPalette = this.Configuration.GetElement<TextConfigurationElement>(
                     SpectrumConfiguration.SECTION,
-                    SpectrumConfiguration.COLOR_PALETTE_ELEMENT
+                    SpectrumConfiguration.COLOR_PALETTE
                 );
                 this.Interval = this.Configuration.GetElement<IntegerConfigurationElement>(
                     VisualizationBehaviourConfiguration.SECTION,
-                    VisualizationBehaviourConfiguration.INTERVAL_ELEMENT
+                    VisualizationBehaviourConfiguration.INTERVAL
                 );
             }
             base.OnConfigurationChanged();

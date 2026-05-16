@@ -8,7 +8,7 @@ namespace FoxTunes
     {
         public const string SECTION = WindowsUserInterfaceConfiguration.SECTION;
 
-        public const string LAYOUT = WindowsUserInterfaceConfiguration.LAYOUT_ELEMENT;
+        public const string LAYOUT = WindowsUserInterfaceConfiguration.LAYOUT;
 
         public const string MAIN_PRESET = "AAAA6555-FE8E-4E3D-908D-C6F7F19C475D";
 
