@@ -1,7 +1,9 @@
-﻿using FoxTunes.Interfaces;
+﻿using FoxDb;
+using FoxTunes.Interfaces;
 using FoxTunes.ViewModel;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -16,6 +18,8 @@ namespace FoxTunes
     //TODO: I hate the Factory, Manager, Behaviour and Component sub types and they should go away...
     public class ArtworkBrushFactory : StandardComponent, IDisposable
     {
+        public IArtworkProvider Provider { get; private set; }
+
         public PixelSizeConverter PixelSizeConverter { get; private set; }
 
         public ImageLoader ImageLoader { get; private set; }
@@ -32,6 +36,7 @@ namespace FoxTunes
 
         public override void InitializeComponent(ICore core)
         {
+            this.Provider = ComponentRegistry.Instance.GetComponent<IArtworkProvider>();
             this.PixelSizeConverter = ComponentRegistry.Instance.GetComponent<PixelSizeConverter>();
             this.ImageLoader = ComponentRegistry.Instance.GetComponent<ImageLoader>();
             this.PlaceholderBrushFactory = ComponentRegistry.Instance.GetComponent<ArtworkPlaceholderBrushFactory>();
@@ -106,6 +111,20 @@ namespace FoxTunes
             );
         }
 
+        public AsyncResult<ImageBrush> Create(IFileData fileData, int width, int height, bool preserveAspectRatio)
+        {
+            this.PixelSizeConverter.Convert(ref width, ref height);
+            var placeholder = this.PlaceholderBrushFactory.Create(width, height);
+            if (fileData == null)
+            {
+                return AsyncResult<ImageBrush>.FromValue(placeholder);
+            }
+            return new AsyncResult<ImageBrush>(
+                placeholder,
+                this.Create(fileData, width, height, preserveAspectRatio, true)
+            );
+        }
+
         public ImageBrush Create(string fileName, int width, int height, bool preserveAspectRatio, bool cache)
         {
             return this.Store.GetOrAdd(fileName, width, height, preserveAspectRatio, () =>
@@ -132,6 +151,25 @@ namespace FoxTunes
                 }
                 return brush;
             });
+        }
+
+        public async Task<ImageBrush> Create(IFileData fileData, int width, int height, bool preserveAspectRatio, bool cache)
+        {
+            var fileName = await this.Provider.Find(
+                fileData,
+                CommonImageTypes.FrontCover,
+                ArtworkType.FrontCover
+            ).ConfigureAwait(false);
+            if (string.IsNullOrEmpty(fileName))
+            {
+                return null;
+            }
+            var brush = default(ImageBrush);
+            if (this.Store.TryGetValue(fileName, width, height, preserveAspectRatio, out brush))
+            {
+                return brush;
+            }
+            return this.Create(fileName, width, height, preserveAspectRatio, cache);
         }
 
         protected virtual void CreateTaskFactory(int threads)

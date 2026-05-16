@@ -8,8 +8,6 @@ namespace FoxTunes.ViewModel
 {
     public class ArtworkImageConverter : ViewModelBase, IValueConverter
     {
-        public static readonly IArtworkProvider Provider = ComponentRegistry.Instance.GetComponent<IArtworkProvider>();
-
         public static readonly ArtworkBrushFactory Factory = ComponentRegistry.Instance.GetComponent<ArtworkBrushFactory>();
 
         public static readonly DependencyProperty WidthProperty = DependencyProperty.Register(
@@ -214,7 +212,7 @@ namespace FoxTunes.ViewModel
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (Provider == null || Factory == null)
+            if (Factory == null)
             {
                 return null;
             }
@@ -226,30 +224,29 @@ namespace FoxTunes.ViewModel
             {
                 return null;
             }
-            var fileName = default(string);
-            if (value is string)
+            if (value is string fileName)
             {
-                fileName = (string)value;
                 if (!this.ShowPlaceholder && !FileSystemHelper.IsLocalPath(fileName))
                 {
                     return null;
                 }
+                return Factory.Create(
+                    fileName,
+                    global::System.Convert.ToInt32(this.Width),
+                    global::System.Convert.ToInt32(this.Height),
+                    this.PreserveAspectRatio
+                );
             }
-            else if (value is IFileData)
+            else if (value is IFileData fileData)
             {
-                //TODO: Bad .Result
-                fileName = Provider.Find(
-                    (IFileData)value,
-                    CommonImageTypes.FrontCover,
-                    ArtworkType.FrontCover
-                ).Result;
+                return Factory.Create(
+                    fileData,
+                    global::System.Convert.ToInt32(this.Width),
+                    global::System.Convert.ToInt32(this.Height),
+                    this.PreserveAspectRatio
+                );
             }
-            return Factory.Create(
-                fileName,
-                global::System.Convert.ToInt32(this.Width),
-                global::System.Convert.ToInt32(this.Height),
-                this.PreserveAspectRatio
-            );
+            return null;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
