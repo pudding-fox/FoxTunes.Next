@@ -147,8 +147,11 @@ namespace FoxTunes
                 {
                     return result;
                 }
-                master = false;
-                goto retry;
+                else if (master)
+                {
+                    master = false;
+                    goto retry;
+                }
             }
             else
             {
