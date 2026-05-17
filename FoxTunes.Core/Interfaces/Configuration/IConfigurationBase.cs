@@ -1,8 +1,7 @@
-﻿using FoxTunes.Interfaces;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
-namespace FoxTunes
+namespace FoxTunes.Interfaces
 {
     public interface IConfigurationBase : IBaseComponent
     {

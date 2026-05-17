@@ -208,6 +208,11 @@ namespace FoxTunes.ViewModel
                     {
                         return Path.GetFileNameWithoutExtension(this._FileName);
                     }
+                    else
+                    {   //The actual version could be returned.
+                        //return Publication.Product + " " + Publication.Version;
+                        return "Fox Tunes";
+                    }
                 }
                 return this._Title;
             }
