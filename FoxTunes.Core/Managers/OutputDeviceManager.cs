@@ -148,7 +148,7 @@ namespace FoxTunes
 
         public void Restart()
         {
-            if (!this.Output.IsStarted)
+            if (this.Output == null || !this.Output.IsStarted)
             {
                 return;
             }

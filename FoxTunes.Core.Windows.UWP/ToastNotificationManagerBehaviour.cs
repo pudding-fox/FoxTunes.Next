@@ -154,7 +154,7 @@ namespace FoxTunes
             try
             {
                 var notification = await this.CreateNotification(outputStream).ConfigureAwait(false);
-                ToastNotificationHelper.Invoke(new Action(() => this.ToastNotifier.Show(notification)), null);
+                await ToastNotificationHelper.Invoke(new Action(() => this.ToastNotifier.Show(notification)), null).ConfigureAwait(false);
             }
             catch (Exception e)
             {

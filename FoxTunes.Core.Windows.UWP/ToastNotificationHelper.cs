@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 using System.Windows;
 
 namespace FoxTunes
@@ -116,14 +117,18 @@ namespace FoxTunes
             Registry.CurrentUser.DeleteSubKeyTree(NotificationActivator.RegistryPath);
         }
 
-        public static void Invoke(Delegate method, params object[] args)
+        public static Task Invoke(Delegate method, params object[] args)
         {
             if (Application.Current == null)
             {
                 //Probably shutting down, nothing can be done.
-                return;
+#if NET40
+                return TaskEx.FromResult(false);
+#else
+                return Task.CompletedTask;
+#endif
             }
-            Application.Current.Dispatcher.Invoke(method, args);
+            return Application.Current.Dispatcher.BeginInvoke(method, args).Task;
         }
 
         [ClassInterface(ClassInterfaceType.None)]
