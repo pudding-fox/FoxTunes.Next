@@ -25,11 +25,6 @@ namespace FoxTunes
         {
             try
             {
-                if (type.GetConstructor(new Type[] { }) == null)
-                {
-                    Logger.Write(typeof(ComponentActivator), LogLevel.Warn, "Failed to locate constructor for component {0}.", type.Name);
-                    return default(T);
-                }
                 if (Activator.CreateInstance(type) is T component)
                 {
                     return component;
