@@ -173,7 +173,7 @@ namespace FoxTunes.ViewModel
             base.InitializeComponent(core);
         }
 
-        protected virtual async void OnActiveChanged(object sender, EventArgs e)
+        protected virtual void OnActiveChanged(object sender, EventArgs e)
         {
             this.Dispatch(this.Refresh);
         }
