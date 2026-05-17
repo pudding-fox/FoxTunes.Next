@@ -13,7 +13,7 @@ namespace FoxTunes
 
         public static readonly RatingManager RatingManager = ComponentRegistry.Instance.GetComponent<RatingManager>();
 
-        public static readonly BooleanConfigurationElement Popularimeter = ComponentRegistry.Instance.GetComponent<IConfiguration>().GetElement<BooleanConfigurationElement>(
+        public static readonly BooleanConfigurationElement Popularimeter = ComponentRegistry.Instance.GetComponent<IConfigurationBase>().GetElement<BooleanConfigurationElement>(
             MetaDataBehaviourConfiguration.SECTION,
             MetaDataBehaviourConfiguration.READ_POPULARIMETER_TAGS
         );

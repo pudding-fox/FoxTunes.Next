@@ -65,7 +65,7 @@ namespace FoxTunes.ViewModel
 
         public IPlaylistManager PlaylistManager { get; private set; }
 
-        private IConfiguration Configuration { get; set; }
+        private IConfigurationBase Configuration { get; set; }
 
         protected override void InitializeComponent(ICore core)
         {

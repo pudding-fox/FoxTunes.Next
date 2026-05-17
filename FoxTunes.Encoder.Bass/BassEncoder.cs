@@ -20,7 +20,7 @@ namespace FoxTunes
 
         public override void InitializeComponent(ICore core)
         {
-            ComponentRegistry.Instance.GetComponent<IConfiguration>().GetElement<IntegerConfigurationElement>(
+            ComponentRegistry.Instance.GetComponent<IConfigurationBase>().GetElement<IntegerConfigurationElement>(
                 BassEncoderBehaviourConfiguration.SECTION,
                 BassEncoderBehaviourConfiguration.THREADS
             ).ConnectValue(value => this.Threads = value);

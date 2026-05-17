@@ -1,7 +1,7 @@
 ﻿namespace FoxTunes.Interfaces
 {
-    public interface IConfigurationTarget
+    public interface IConfigurationBaseTarget
     {
-        IConfiguration Configuration { get; set; }
+        IConfigurationBase Configuration { get; set; }
     }
 }

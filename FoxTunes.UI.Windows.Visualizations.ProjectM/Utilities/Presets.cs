@@ -9,7 +9,7 @@ namespace FoxTunes
 {
     public static class Presets
     {
-        public static readonly IConfiguration Configuration = ComponentRegistry.Instance.GetComponent<IConfiguration>();
+        public static readonly IConfigurationBase Configuration = ComponentRegistry.Instance.GetComponent<IConfigurationBase>();
 
         public static readonly BooleanConfigurationElement Low = Configuration.GetElement<BooleanConfigurationElement>(
             ProjectMBehaviourConfiguration.SECTION,

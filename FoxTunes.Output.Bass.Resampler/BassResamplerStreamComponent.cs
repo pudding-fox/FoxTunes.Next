@@ -216,7 +216,7 @@ namespace FoxTunes
         {
             public int ChannelHandle { get; set; }
 
-            public IConfiguration Configuration { get; private set; }
+            public IConfigurationBase Configuration { get; private set; }
 
             private SoxChannelQuality _Quality { get; set; }
 

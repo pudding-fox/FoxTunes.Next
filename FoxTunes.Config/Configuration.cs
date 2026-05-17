@@ -39,7 +39,7 @@ namespace FoxTunes
             }
         }
 
-        IEnumerable<ConfigurationSection> IConfiguration.Sections
+        IEnumerable<ConfigurationSection> IConfigurationBase.Sections
         {
             get
             {
@@ -49,7 +49,7 @@ namespace FoxTunes
 
         public IDictionary<string, ConfigurationSection> Sections { get; private set; }
 
-        public IConfiguration WithSection(ConfigurationSection section)
+        public IConfigurationBase WithSection(ConfigurationSection section)
         {
             if (this.Contains(section.Id))
             {

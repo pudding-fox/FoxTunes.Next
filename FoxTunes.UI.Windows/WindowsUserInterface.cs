@@ -72,7 +72,7 @@ namespace FoxTunes
 
         public ThemeLoader ThemeLoader { get; private set; }
 
-        public IConfiguration Configuration { get; private set; }
+        public IConfigurationBase Configuration { get; private set; }
 
         public override void InitializeComponent(ICore core)
         {
@@ -211,7 +211,7 @@ namespace FoxTunes
             return this.ShowSettings(title, this.Configuration, sections);
         }
 
-        public override async Task<bool> ShowSettings(string title, IConfiguration configuration, IEnumerable<string> sections)
+        public override async Task<bool> ShowSettings(string title, IConfigurationBase configuration, IEnumerable<string> sections)
         {
             var settings = default(ComponentSettingsDialog);
             await global::FoxTunes.Windows.Invoke(() =>

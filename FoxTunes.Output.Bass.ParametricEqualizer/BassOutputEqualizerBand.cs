@@ -136,7 +136,7 @@ namespace FoxTunes
 
         public event EventHandler ValueChanged;
 
-        public IConfiguration Configuration { get; private set; }
+        public IConfigurationBase Configuration { get; private set; }
 
         public DoubleConfigurationElement WidthElement { get; private set; }
 

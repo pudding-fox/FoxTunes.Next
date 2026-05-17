@@ -57,7 +57,7 @@ namespace FoxTunes.ViewModel
 
         public IErrorEmitter ErrorEmitter { get; private set; }
 
-        private IConfiguration Configuration { get; set; }
+        private IConfigurationBase Configuration { get; set; }
 
         private LibraryHierarchyNode[] _Items { get; set; }
 

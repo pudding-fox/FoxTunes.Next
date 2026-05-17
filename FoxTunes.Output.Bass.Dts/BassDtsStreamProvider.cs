@@ -27,7 +27,7 @@ namespace FoxTunes
             BassLoader.AddPath(Path.Combine(Location, Environment.Is64BitProcess ? "x64" : "x86", "bass_dts.dll"));
         }
 
-        public IConfiguration Configuration { get; private set; }
+        public IConfigurationBase Configuration { get; private set; }
 
         public BooleanConfigurationElement ProbeWavFiles { get; private set; }
 

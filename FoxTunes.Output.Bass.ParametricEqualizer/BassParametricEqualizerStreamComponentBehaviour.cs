@@ -13,7 +13,7 @@ namespace FoxTunes
 
         public IBassOutput Output { get; private set; }
 
-        public IConfiguration Configuration { get; private set; }
+        public IConfigurationBase Configuration { get; private set; }
 
         public IBassStreamPipelineFactory BassStreamPipelineFactory { get; private set; }
 

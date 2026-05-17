@@ -8,7 +8,7 @@ namespace FoxTunes
     [WindowsUserInterfaceDependency]
     public class LayoutDesignerKeyBindingsBehaviour : KeyBindingsBehaviourBase
     {
-        public IConfiguration Configuration { get; private set; }
+        public IConfigurationBase Configuration { get; private set; }
 
         public TextConfigurationElement Edit { get; private set; }
 

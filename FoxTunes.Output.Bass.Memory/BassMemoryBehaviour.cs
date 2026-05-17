@@ -29,7 +29,7 @@ namespace FoxTunes
 
         public IBassStreamPipelineFactory BassStreamPipelineFactory { get; private set; }
 
-        public IConfiguration Configuration { get; private set; }
+        public IConfigurationBase Configuration { get; private set; }
 
         new public bool IsInitialized { get; private set; }
 

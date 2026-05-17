@@ -53,7 +53,7 @@ namespace FoxTunes
 
             private FontFamilyBehaviour()
             {
-                this.Configuration = ComponentRegistry.Instance.GetComponent<IConfiguration>();
+                this.Configuration = ComponentRegistry.Instance.GetComponent<IConfigurationBase>();
             }
 
             public FontFamilyBehaviour(Window window) : this()
@@ -75,7 +75,7 @@ namespace FoxTunes
                 }
             }
 
-            public IConfiguration Configuration { get; private set; }
+            public IConfigurationBase Configuration { get; private set; }
 
             public string FontFamily { get; private set; }
 

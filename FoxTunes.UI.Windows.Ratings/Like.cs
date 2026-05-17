@@ -14,7 +14,7 @@ namespace FoxTunes
 
         public static readonly LikeManager LikeManager = ComponentRegistry.Instance.GetComponent<LikeManager>();
 
-        public static readonly BooleanConfigurationElement Popularimeter = ComponentRegistry.Instance.GetComponent<IConfiguration>().GetElement<BooleanConfigurationElement>(
+        public static readonly BooleanConfigurationElement Popularimeter = ComponentRegistry.Instance.GetComponent<IConfigurationBase>().GetElement<BooleanConfigurationElement>(
             MetaDataBehaviourConfiguration.SECTION,
             MetaDataBehaviourConfiguration.READ_POPULARIMETER_TAGS
         );

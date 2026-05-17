@@ -7,7 +7,7 @@ namespace FoxTunes.ViewModel
 {
     public class FontSizeConverter : IValueConverter
     {
-        public static readonly IConfiguration Configuration = ComponentRegistry.Instance.GetComponent<IConfiguration>();
+        public static readonly IConfigurationBase Configuration = ComponentRegistry.Instance.GetComponent<IConfigurationBase>();
 
         public static readonly DoubleConfigurationElement FontSize = Configuration.GetElement<DoubleConfigurationElement>(
             WindowsUserInterfaceConfiguration.SECTION,

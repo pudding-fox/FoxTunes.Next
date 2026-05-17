@@ -46,7 +46,7 @@ namespace FoxTunes
 
         public static IUserInterface UserInterface = ComponentRegistry.Instance.GetComponent<IUserInterface>();
 
-        public static IConfiguration Configuration = ComponentRegistry.Instance.GetComponent<IConfiguration>();
+        public static IConfigurationBase Configuration = ComponentRegistry.Instance.GetComponent<IConfigurationBase>();
 
         public static IntPtr Context { get; private set; }
 

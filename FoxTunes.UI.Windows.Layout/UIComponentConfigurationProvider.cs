@@ -2,11 +2,10 @@
 using FoxTunes.Interfaces;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace FoxTunes
 {
-    public class UIComponentConfigurationProvider : BaseComponent, IConfiguration, IDisposable
+    public class UIComponentConfigurationProvider : BaseComponent, IConfigurationBase, IDisposable
     {
         public const string PREFIX = "Configuration_";
 
@@ -19,31 +18,7 @@ namespace FoxTunes
 
         public UIComponentConfiguration Component { get; private set; }
 
-        public IEnumerable<string> AvailableProfiles
-        {
-            get
-            {
-                return Enumerable.Empty<string>();
-            }
-        }
-
-        public string Profile
-        {
-            get
-            {
-                return string.Empty;
-            }
-        }
-
-        public bool IsDefaultProfile
-        {
-            get
-            {
-                return true;
-            }
-        }
-
-        IEnumerable<ConfigurationSection> IConfiguration.Sections
+        IEnumerable<ConfigurationSection> IConfigurationBase.Sections
         {
             get
             {
@@ -55,7 +30,7 @@ namespace FoxTunes
 
         public IDictionary<string, ConfigurationElement> Elements { get; private set; }
 
-        public IConfiguration Configuration { get; private set; }
+        public IConfigurationBase Configuration { get; private set; }
 
         public override void InitializeComponent(ICore core)
         {
@@ -74,11 +49,6 @@ namespace FoxTunes
         }
 
         public void Load()
-        {
-            this.Load(this.Profile);
-        }
-
-        public void Load(string profile)
         {
             foreach (var pair in this.Sections)
             {
@@ -214,11 +184,6 @@ namespace FoxTunes
 
         public void Save()
         {
-            this.Save(this.Profile);
-        }
-
-        public void Save(string profile)
-        {
             this.OnSaving();
             Logger.Write(this, LogLevel.Debug, "Saving configuration.");
             try
@@ -262,7 +227,7 @@ namespace FoxTunes
             this.OnSaved();
         }
 
-        public IConfiguration WithSection(ConfigurationSection section)
+        public IConfigurationBase WithSection(ConfigurationSection section)
         {
             if (this.Contains(section.Id))
             {

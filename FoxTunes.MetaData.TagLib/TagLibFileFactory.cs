@@ -7,7 +7,7 @@ namespace FoxTunes
     [ComponentDependency(Slot = ComponentSlots.MetaData)]
     public class TagLibFileFactory : StandardFactory
     {
-        public IConfiguration Configuration { get; private set; }
+        public IConfigurationBase Configuration { get; private set; }
 
         public BooleanConfigurationElement WindowsMedia { get; private set; }
 

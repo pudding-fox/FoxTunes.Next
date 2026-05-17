@@ -26,7 +26,7 @@ namespace FoxTunes
             }
         }
 
-        public IConfiguration Configuration { get; private set; }
+        public IConfigurationBase Configuration { get; private set; }
 
         public BooleanConfigurationElement Transparency { get; private set; }
 

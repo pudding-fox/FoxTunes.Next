@@ -39,7 +39,7 @@ namespace FoxTunes
             }
         }
 
-        public IConfiguration Configuration { get; private set; }
+        public IConfigurationBase Configuration { get; private set; }
 
         public TextConfigurationElement Main { get; private set; }
 

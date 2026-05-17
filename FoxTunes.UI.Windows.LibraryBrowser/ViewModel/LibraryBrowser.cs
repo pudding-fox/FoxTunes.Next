@@ -8,11 +8,11 @@ using System.Windows.Input;
 
 namespace FoxTunes.ViewModel
 {
-    public class LibraryBrowser : LibraryBase, IConfigurationTarget
+    public class LibraryBrowser : LibraryBase, IConfigurationBaseTarget
     {
-        private IConfiguration _Configuration { get; set; }
+        private IConfigurationBase _Configuration { get; set; }
 
-        public IConfiguration Configuration
+        public IConfigurationBase Configuration
         {
             get
             {

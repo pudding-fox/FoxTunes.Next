@@ -15,7 +15,7 @@ namespace FoxTunes.ViewModel
 
         public IFileActionHandlerManager FileActionHandlerManager { get; private set; }
 
-        public IConfiguration Configuration { get; private set; }
+        public IConfigurationBase Configuration { get; private set; }
 
         private BooleanConfigurationElement _Topmost { get; set; }
 

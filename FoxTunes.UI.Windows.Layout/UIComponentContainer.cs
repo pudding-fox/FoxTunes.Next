@@ -13,7 +13,7 @@ using System.Windows.Shapes;
 
 namespace FoxTunes
 {
-    public class UIComponentContainer : DockPanel, IInvocableComponent, IUIComponent, IValueConverter, IConfigurationProvider
+    public class UIComponentContainer : DockPanel, IInvocableComponent, IUIComponent, IValueConverter, IConfigurationBaseProvider
     {
         public const string REPLACE = "WWWW";
 
@@ -389,7 +389,7 @@ namespace FoxTunes
             return Windows.Invoke(() => this.Configuration = new UIComponentConfiguration());
         }
 
-        public IConfiguration GetConfiguration(IConfigurableComponent component)
+        public IConfigurationBase GetConfiguration(IConfigurableComponent component)
         {
             var configuration = new UIComponentConfigurationProvider(this.Configuration);
             configuration.InitializeComponent(Core.Instance);

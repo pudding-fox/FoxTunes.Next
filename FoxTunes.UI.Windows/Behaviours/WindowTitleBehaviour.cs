@@ -15,7 +15,7 @@ namespace FoxTunes
 
         public IScriptingContext ScriptingContext { get; private set; }
 
-        public IConfiguration Configuration { get; private set; }
+        public IConfigurationBase Configuration { get; private set; }
 
         private string _Script { get; set; }
 

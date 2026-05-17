@@ -24,7 +24,7 @@ namespace FoxTunes
 
         public IBackgroundTaskEmitter BackgroundTaskEmitter { get; private set; }
 
-        public IConfiguration Configuration { get; private set; }
+        public IConfigurationBase Configuration { get; private set; }
 
         public BooleanConfigurationElement Enabled { get; private set; }
 

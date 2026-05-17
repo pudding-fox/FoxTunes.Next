@@ -12,7 +12,7 @@ namespace FoxTunes
     /// </summary>
     public partial class ToolWindowManager : UserControl
     {
-        public static readonly IConfiguration Configuration = ComponentRegistry.Instance.GetComponent<IConfiguration>();
+        public static readonly IConfigurationBase Configuration = ComponentRegistry.Instance.GetComponent<IConfigurationBase>();
 
         public ToolWindowManager()
         {

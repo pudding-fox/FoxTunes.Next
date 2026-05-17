@@ -57,7 +57,7 @@ namespace FoxTunes
 
         public INotifyIcon NotifyIcon { get; private set; }
 
-        public IConfiguration Configuration { get; private set; }
+        public IConfigurationBase Configuration { get; private set; }
 
         public bool _Enabled { get; private set; }
 

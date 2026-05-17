@@ -8,7 +8,7 @@ using System.Windows;
 
 namespace FoxTunes
 {
-    public abstract class ConfigurableUIComponentBase : UIComponentBase, IConfigurableComponent, IInvocableComponent, IConfigurationTarget, IDisposable
+    public abstract class ConfigurableUIComponentBase : UIComponentBase, IConfigurableComponent, IInvocableComponent, IConfigurationBaseTarget, IDisposable
     {
         public const string SETTINGS = "ZZZZ";
 
@@ -38,7 +38,7 @@ namespace FoxTunes
         protected virtual void ApplyConfiguration()
         {
             this.ApplyConfiguration(this);
-            var children = this.FindChildren<IConfigurationTarget>();
+            var children = this.FindChildren<IConfigurationBaseTarget>();
             foreach (var child in children)
             {
                 if (object.ReferenceEquals(this, child))
@@ -63,7 +63,7 @@ namespace FoxTunes
             {
                 return;
             }
-            foreach (var configurationTarget in element.Resources.Values.OfType<IConfigurationTarget>())
+            foreach (var configurationTarget in element.Resources.Values.OfType<IConfigurationBaseTarget>())
             {
                 if (!object.ReferenceEquals(configurationTarget.Configuration, this.Configuration))
                 {
@@ -80,9 +80,9 @@ namespace FoxTunes
             base.InitializeComponent(core);
         }
 
-        private IConfiguration _Configuration { get; set; }
+        private IConfigurationBase _Configuration { get; set; }
 
-        public IConfiguration Configuration
+        public IConfigurationBase Configuration
         {
             get
             {

@@ -26,7 +26,7 @@ namespace FoxTunes
                 var viewModel = default(global::FoxTunes.ViewModel.NowPlaying);
                 if (this.TryFindResource<global::FoxTunes.ViewModel.NowPlaying>("ViewModel", out viewModel))
                 {
-                    viewModel.Configuration = ComponentRegistry.Instance.GetComponent<IConfiguration>();
+                    viewModel.Configuration = ComponentRegistry.Instance.GetComponent<IConfigurationBase>();
                 }
             }
             base.OnLoaded(sender, e);

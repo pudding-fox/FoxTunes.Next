@@ -17,7 +17,7 @@ namespace FoxTunes
 
         public IOutputStreamDataSourceFactory Factory { get; private set; }
 
-        public IConfiguration Configuration { get; private set; }
+        public IConfigurationBase Configuration { get; private set; }
 
         public IntegerConfigurationElement Resolution { get; private set; }
 

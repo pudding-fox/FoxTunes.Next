@@ -3,16 +3,16 @@ using System;
 
 namespace FoxTunes.ViewModel
 {
-    public abstract class ConfigurableViewModelBase : ViewModelBase, IConfigurationTarget
+    public abstract class ConfigurableViewModelBase : ViewModelBase, IConfigurationBaseTarget
     {
         protected ConfigurableViewModelBase(bool initialize = true) : base(initialize)
         {
 
         }
 
-        private IConfiguration _Configuration { get; set; }
+        private IConfigurationBase _Configuration { get; set; }
 
-        public IConfiguration Configuration
+        public IConfigurationBase Configuration
         {
             get
             {

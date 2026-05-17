@@ -35,7 +35,7 @@ namespace FoxTunes
 
         public ISignalEmitter SignalEmitter { get; private set; }
 
-        public IConfiguration Configuration { get; private set; }
+        public IConfigurationBase Configuration { get; private set; }
 
         public BooleanConfigurationElement DetectCompilations { get; private set; }
 

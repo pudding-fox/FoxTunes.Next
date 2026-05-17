@@ -12,7 +12,7 @@ using System.Windows.Threading;
 
 namespace FoxTunes
 {
-    public abstract class RendererBase : FrameworkElement, IBaseComponent, IConfigurationTarget, INotifyPropertyChanged, IDisposable
+    public abstract class RendererBase : FrameworkElement, IBaseComponent, IConfigurationBaseTarget, INotifyPropertyChanged, IDisposable
     {
         public const int DB_MIN = -90;
 
@@ -22,7 +22,7 @@ namespace FoxTunes
 
         static RendererBase()
         {
-            ComponentRegistry.Instance.GetComponent<IConfiguration>().GetElement<SelectionConfigurationElement>(
+            ComponentRegistry.Instance.GetComponent<IConfigurationBase>().GetElement<SelectionConfigurationElement>(
                 RendererTargetFactoryConfiguration.SECTION,
                 RendererTargetFactoryConfiguration.PRIORITY
             ).ConnectValue(value =>
@@ -93,9 +93,9 @@ namespace FoxTunes
             }
         }
 
-        private IConfiguration _Configuration { get; set; }
+        private IConfigurationBase _Configuration { get; set; }
 
-        public IConfiguration Configuration
+        public IConfigurationBase Configuration
         {
             get
             {

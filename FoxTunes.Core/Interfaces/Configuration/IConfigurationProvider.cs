@@ -1,7 +1,7 @@
 ﻿namespace FoxTunes.Interfaces
 {
-    public interface IConfigurationProvider
+    public interface IConfigurationBaseProvider
     {
-        IConfiguration GetConfiguration(IConfigurableComponent component);
+        IConfigurationBase GetConfiguration(IConfigurableComponent component);
     }
 }

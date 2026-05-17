@@ -9,7 +9,7 @@ namespace FoxTunes
 
         public IMetaDataDecoratorFactory MetaDataDecoratorFactory { get; private set; }
 
-        public IConfiguration Configuration { get; private set; }
+        public IConfigurationBase Configuration { get; private set; }
 
         public abstract IEnumerable<KeyValuePair<string, MetaDataItemType>> Supported { get; }
 

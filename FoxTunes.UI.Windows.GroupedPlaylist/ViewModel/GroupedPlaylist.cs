@@ -32,7 +32,7 @@ namespace FoxTunes.ViewModel
 
         public event EventHandler GroupingScriptChanged;
 
-        public IConfiguration Configuration { get; private set; }
+        public IConfigurationBase Configuration { get; private set; }
 
         protected override void InitializeComponent(ICore core)
         {

@@ -47,7 +47,7 @@ namespace FoxTunes
 
         public IBassOutput Output { get; private set; }
 
-        public IConfiguration Configuration { get; private set; }
+        public IConfigurationBase Configuration { get; private set; }
 
         private bool _Enabled { get; set; }
 

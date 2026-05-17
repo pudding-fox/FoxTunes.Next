@@ -50,7 +50,7 @@ namespace FoxTunes
 
         public IUIComponentLayoutProviderPreset GetActivePreset(string category)
         {
-            var configuration = ComponentRegistry.Instance.GetComponent<IConfiguration>();
+            var configuration = ComponentRegistry.Instance.GetComponent<IConfigurationBase>();
             var presetElement = configuration.GetElement<SelectionConfigurationElement>(
                 UIComponentLayoutProviderPreset.GetSection(category),
                 UIComponentLayoutProviderPreset.GetPreset(category)
@@ -75,7 +75,7 @@ namespace FoxTunes
 
         public bool IsLoaded(IUIComponentLayoutProviderPreset preset)
         {
-            var configuration = ComponentRegistry.Instance.GetComponent<IConfiguration>();
+            var configuration = ComponentRegistry.Instance.GetComponent<IConfigurationBase>();
             var presetElement = configuration.GetElement<SelectionConfigurationElement>(
                 UIComponentLayoutProviderPreset.GetSection(preset.Category),
                 UIComponentLayoutProviderPreset.GetPreset(preset.Category)

@@ -57,7 +57,7 @@ namespace FoxTunes
             private AllowsTransparencyBehaviour()
             {
                 this.UserInterface = ComponentRegistry.Instance.GetComponent<IUserInterface>();
-                this.Configuration = ComponentRegistry.Instance.GetComponent<IConfiguration>();
+                this.Configuration = ComponentRegistry.Instance.GetComponent<IConfigurationBase>();
             }
 
             public AllowsTransparencyBehaviour(Window window) : this()
@@ -81,7 +81,7 @@ namespace FoxTunes
 
             public IUserInterface UserInterface { get; private set; }
 
-            public IConfiguration Configuration { get; private set; }
+            public IConfigurationBase Configuration { get; private set; }
 
             public bool Enabled { get; private set; }
 

@@ -16,7 +16,7 @@ namespace FoxTunes
 
         static SnappingHelper()
         {
-            var configuration = ComponentRegistry.Instance.GetComponent<IConfiguration>();
+            var configuration = ComponentRegistry.Instance.GetComponent<IConfigurationBase>();
             if (configuration != null)
             {
                 Proximity = configuration.GetElement<IntegerConfigurationElement>(

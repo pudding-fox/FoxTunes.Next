@@ -8,7 +8,7 @@ namespace FoxTunes
     {
         public global::FoxTunes.ViewModel.MiniPlayer _MiniPlayer { get; private set; }
 
-        public IConfiguration Configuration { get; private set; }
+        public IConfigurationBase Configuration { get; private set; }
 
         public TextConfigurationElement Toggle { get; private set; }
 

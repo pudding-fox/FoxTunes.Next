@@ -10,7 +10,7 @@ namespace FoxTunes
 
         public IPlaylistManager PlaylistManager { get; private set; }
 
-        public IConfiguration Configuration { get; private set; }
+        public IConfigurationBase Configuration { get; private set; }
 
         public BooleanConfigurationElement Wrap { get; private set; }
 

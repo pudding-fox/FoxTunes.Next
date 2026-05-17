@@ -17,7 +17,7 @@ namespace FoxTunes
 
         public IOutputStream OutputStream { get; private set; }
 
-        public IConfiguration Configuration { get; private set; }
+        public IConfigurationBase Configuration { get; private set; }
 
         public BooleanConfigurationElement Enabled { get; private set; }
 

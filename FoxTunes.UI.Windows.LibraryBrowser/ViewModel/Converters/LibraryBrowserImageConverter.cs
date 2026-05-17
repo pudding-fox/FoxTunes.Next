@@ -6,7 +6,7 @@ using System.Windows.Data;
 
 namespace FoxTunes.ViewModel
 {
-    public class LibraryBrowserImageConverter : ViewModelBase, IValueConverter, IConfigurationTarget
+    public class LibraryBrowserImageConverter : ViewModelBase, IValueConverter, IConfigurationBaseTarget
     {
         public static readonly LibraryBrowserTileBrushFactory Factory = ComponentRegistry.Instance.GetComponent<LibraryBrowserTileBrushFactory>();
 
@@ -71,9 +71,9 @@ namespace FoxTunes.ViewModel
 
         public event EventHandler ImageModeChanged;
 
-        private IConfiguration _Configuration { get; set; }
+        private IConfigurationBase _Configuration { get; set; }
 
-        public IConfiguration Configuration
+        public IConfigurationBase Configuration
         {
             get
             {

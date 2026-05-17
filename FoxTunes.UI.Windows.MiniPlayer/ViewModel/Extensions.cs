@@ -6,7 +6,7 @@ namespace FoxTunes
 {
     public static partial class Extensions
     {
-        public static T GetElement<T>(this IConfiguration configuration, IEnumerable<string> sectionIds, IEnumerable<string> elementIds) where T : ConfigurationElement
+        public static T GetElement<T>(this IConfigurationBase configuration, IEnumerable<string> sectionIds, IEnumerable<string> elementIds) where T : ConfigurationElement
         {
             var pairs = new[]
             {

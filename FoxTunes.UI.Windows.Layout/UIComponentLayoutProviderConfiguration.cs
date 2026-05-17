@@ -33,7 +33,7 @@ namespace FoxTunes
 
         public static void Refresh()
         {
-            var configuration = ComponentRegistry.Instance.GetComponent<IConfiguration>();
+            var configuration = ComponentRegistry.Instance.GetComponent<IConfigurationBase>();
             configuration.Save();
         }
     }

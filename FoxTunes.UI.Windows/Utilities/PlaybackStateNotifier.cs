@@ -11,7 +11,7 @@ namespace FoxTunes
 
         public static readonly IPlaybackManager PlaybackManager;
 
-        public static readonly IConfiguration Configuration;
+        public static readonly IConfigurationBase Configuration;
 
         public static readonly DispatcherTimer Timer;
 
@@ -94,7 +94,7 @@ namespace FoxTunes
         {
             Output = ComponentRegistry.Instance.GetComponent<IOutput>();
             PlaybackManager = ComponentRegistry.Instance.GetComponent<IPlaybackManager>();
-            Configuration = ComponentRegistry.Instance.GetComponent<IConfiguration>();
+            Configuration = ComponentRegistry.Instance.GetComponent<IConfigurationBase>();
             if (Output == null || PlaybackManager == null || Configuration == null)
             {
                 return;

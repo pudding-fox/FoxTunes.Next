@@ -10,7 +10,7 @@ namespace FoxTunes.ViewModel
     {
         public IPlaybackManager PlaybackManager { get; private set; }
 
-        public IConfiguration Configuration { get; private set; }
+        public IConfigurationBase Configuration { get; private set; }
 
         private BooleanConfigurationElement _ShowCounters { get; set; }
 

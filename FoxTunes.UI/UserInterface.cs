@@ -27,7 +27,7 @@ namespace FoxTunes
 
         public abstract Task<bool> ShowSettings(string title, IEnumerable<string> sections);
 
-        public abstract Task<bool> ShowSettings(string title, IConfiguration configuration, IEnumerable<string> sections);
+        public abstract Task<bool> ShowSettings(string title, IConfigurationBase configuration, IEnumerable<string> sections);
 
         public abstract void Restart();
 

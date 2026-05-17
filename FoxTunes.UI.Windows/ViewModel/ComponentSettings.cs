@@ -11,17 +11,17 @@ namespace FoxTunes.ViewModel
     {
         public static readonly DependencyProperty ConfigurationProperty = DependencyProperty.Register(
            "Configuration",
-           typeof(IConfiguration),
+           typeof(IConfigurationBase),
            typeof(ComponentSettings),
            new PropertyMetadata(null, new PropertyChangedCallback(OnConfigurationChanged))
        );
 
-        public static IConfiguration GetConfiguration(ComponentSettings source)
+        public static IConfigurationBase GetConfiguration(ComponentSettings source)
         {
-            return (IConfiguration)source.GetValue(ConfigurationProperty);
+            return (IConfigurationBase)source.GetValue(ConfigurationProperty);
         }
 
-        public static void SetConfiguration(ComponentSettings source, IConfiguration value)
+        public static void SetConfiguration(ComponentSettings source, IConfigurationBase value)
         {
             source.SetValue(ConfigurationProperty, value);
         }
@@ -68,7 +68,7 @@ namespace FoxTunes.ViewModel
             this.Pages = new ObservableCollection<ComponentSettingsPage>();
         }
 
-        public IConfiguration Configuration
+        public IConfigurationBase Configuration
         {
             get
             {

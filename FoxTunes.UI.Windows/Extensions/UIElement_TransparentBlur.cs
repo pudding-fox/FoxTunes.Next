@@ -51,7 +51,7 @@ namespace FoxTunes
 
             private TransparentBlurBehaviour()
             {
-                this.Configuration = ComponentRegistry.Instance.GetComponent<IConfiguration>();
+                this.Configuration = ComponentRegistry.Instance.GetComponent<IConfigurationBase>();
             }
 
             public TransparentBlurBehaviour(UIElement element) : this()
@@ -79,7 +79,7 @@ namespace FoxTunes
                 }
             }
 
-            public IConfiguration Configuration { get; private set; }
+            public IConfigurationBase Configuration { get; private set; }
 
             public UIElement Element { get; private set; }
 

@@ -53,7 +53,7 @@ namespace FoxTunes
 
             private FontSizeBehaviour()
             {
-                this.Configuration = ComponentRegistry.Instance.GetComponent<IConfiguration>();
+                this.Configuration = ComponentRegistry.Instance.GetComponent<IConfigurationBase>();
             }
 
             public FontSizeBehaviour(Window window) : this()
@@ -75,7 +75,7 @@ namespace FoxTunes
                 }
             }
 
-            public IConfiguration Configuration { get; private set; }
+            public IConfigurationBase Configuration { get; private set; }
 
             public double FontSize { get; private set; }
 

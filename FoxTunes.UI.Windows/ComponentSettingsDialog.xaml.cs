@@ -16,7 +16,7 @@ namespace FoxTunes
             this.InitializeComponent();
         }
 
-        public IConfiguration Configuration
+        public IConfigurationBase Configuration
         {
             get
             {

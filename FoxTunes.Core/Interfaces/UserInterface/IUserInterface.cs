@@ -26,7 +26,7 @@ namespace FoxTunes.Interfaces
 
         Task<bool> ShowSettings(string title, IEnumerable<string> sections);
 
-        Task<bool> ShowSettings(string title, IConfiguration configuration, IEnumerable<string> sections);
+        Task<bool> ShowSettings(string title, IConfigurationBase configuration, IEnumerable<string> sections);
 
         void Restart();
 

@@ -33,7 +33,7 @@ namespace FoxTunes
 
         public IFilterParser FilterParser { get; private set; }
 
-        public IConfiguration Configuration { get; private set; }
+        public IConfigurationBase Configuration { get; private set; }
 
         private string _Filter { get; set; }
 

@@ -9,7 +9,7 @@ namespace FoxTunes.ViewModel
     {
         public PlaylistSettings PlaylistSettings { get; private set; }
 
-        public IConfiguration Configuration { get; private set; }
+        public IConfigurationBase Configuration { get; private set; }
 
         public SelectionConfigurationElement Theme { get; private set; }
 

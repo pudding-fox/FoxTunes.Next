@@ -10,7 +10,7 @@ namespace FoxTunes
     {
         public IEnumerable<IRendererTargetBehaviour> Backends { get; private set; }
 
-        public IConfiguration Configuration { get; private set; }
+        public IConfigurationBase Configuration { get; private set; }
 
         public SelectionConfigurationElement Backend { get; private set; }
 

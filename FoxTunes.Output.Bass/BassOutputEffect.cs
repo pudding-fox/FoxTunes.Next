@@ -19,7 +19,7 @@ namespace FoxTunes
             }
         }
 
-        public IConfiguration Configuration { get; private set; }
+        public IConfigurationBase Configuration { get; private set; }
 
         public override void InitializeComponent(ICore core)
         {

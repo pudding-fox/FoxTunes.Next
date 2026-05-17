@@ -6,7 +6,7 @@ namespace FoxTunes
 {
     public class MiniPlaylistTemplateSelector : DataTemplateSelector
     {
-        public static readonly IConfiguration Configuration = ComponentRegistry.Instance.GetComponent<IConfiguration>();
+        public static readonly IConfigurationBase Configuration = ComponentRegistry.Instance.GetComponent<IConfigurationBase>();
 
         public static readonly BooleanConfigurationElement ShowArtwork = Configuration.GetElement<BooleanConfigurationElement>(
             MiniPlayerBehaviourConfiguration.SECTION,

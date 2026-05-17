@@ -27,7 +27,7 @@ namespace FoxTunes
         {
             //Perhaps we shouldn't Reset each time the output is started.
             //But what if the system config changes and the current device id isn't what we think it is?
-            //var configuration = ComponentRegistry.Instance.GetComponent<IConfiguration>();
+            //var configuration = ComponentRegistry.Instance.GetComponent<IConfigurationBase>();
             //configuration.GetElement<SelectionConfigurationElement>(
             //    BassOutputConfiguration.SECTION,
             //    BassWasapiStreamOutputConfiguration.ELEMENT_WASAPI_DEVICE

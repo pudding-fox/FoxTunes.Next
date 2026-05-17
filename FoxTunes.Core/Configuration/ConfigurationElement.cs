@@ -223,7 +223,7 @@ namespace FoxTunes
             return this;
         }
 
-        public void ConnectDependencies(IConfiguration configuration)
+        public void ConnectDependencies(IConfigurationBase configuration)
         {
             if (this.Dependencies == null)
             {

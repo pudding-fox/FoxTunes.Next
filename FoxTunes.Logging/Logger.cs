@@ -39,7 +39,7 @@ namespace FoxTunes
             this.Semaphore = new SemaphoreSlim(1, 1);
         }
 
-        public IConfiguration Configuration { get; private set; }
+        public IConfigurationBase Configuration { get; private set; }
 
         public bool Enabled
         {

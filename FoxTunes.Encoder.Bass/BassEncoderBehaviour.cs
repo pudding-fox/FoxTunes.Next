@@ -23,7 +23,7 @@ namespace FoxTunes
 
         public IReportEmitter ReportEmitter { get; private set; }
 
-        public IConfiguration Configuration { get; private set; }
+        public IConfigurationBase Configuration { get; private set; }
 
         public IEnumerable<string> Profiles { get; private set; }
 

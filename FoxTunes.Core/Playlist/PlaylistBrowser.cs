@@ -50,7 +50,7 @@ namespace FoxTunes
 
         public PlaylistNavigationStrategyFactory PlaylistNavigationStrategyFactory { get; private set; }
 
-        public IConfiguration Configuration { get; private set; }
+        public IConfigurationBase Configuration { get; private set; }
 
         public PlaylistNavigationStrategy NavigationStrategy { get; private set; }
 

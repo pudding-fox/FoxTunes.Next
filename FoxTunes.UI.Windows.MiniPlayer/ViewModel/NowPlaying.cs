@@ -7,7 +7,7 @@ using System.Windows;
 
 namespace FoxTunes.ViewModel
 {
-    public class NowPlaying : ViewModelBase, IConfigurationTarget
+    public class NowPlaying : ViewModelBase, IConfigurationBaseTarget
     {
         public IPlaybackManager PlaybackManager { get; private set; }
 
@@ -15,9 +15,9 @@ namespace FoxTunes.ViewModel
 
         public IScriptingContext ScriptingContext { get; private set; }
 
-        private IConfiguration _Configuration { get; set; }
+        private IConfigurationBase _Configuration { get; set; }
 
-        public IConfiguration Configuration
+        public IConfigurationBase Configuration
         {
             get
             {

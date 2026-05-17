@@ -7,7 +7,7 @@ namespace FoxTunes.ViewModel
 {
     public class Shuffle : ViewModelBase
     {
-        public IConfiguration Configuration { get; private set; }
+        public IConfigurationBase Configuration { get; private set; }
 
         public SelectionConfigurationElement Order { get; private set; }
 
