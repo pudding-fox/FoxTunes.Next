@@ -40,6 +40,20 @@ namespace FoxTunes
                     result = false;
                 }
             }
+            if (this.ShouldImportBackCover(releaseLookup))
+            {
+                var backCover = await this.ImportBackCover(releaseLookup).ConfigureAwait(false);
+                if (!string.IsNullOrEmpty(backCover))
+                {
+                    releaseLookup.MetaData[CommonImageTypes.BackCover] = backCover;
+                }
+                else
+                {
+                    Logger.Write(this, LogLevel.Warn, "Failed to download artwork for album {0} - {1}: Releases don't contain images or they count not be downloaded.", releaseLookup.Artist, releaseLookup.Album);
+                    releaseLookup.AddError(Strings.DiscogsFetchArtworkTask_NotFound);
+                    result = false;
+                }
+            }
             if (this.ShouldLookupArtist(releaseLookup))
             {
                 var artist = await this.ImportArtist(releaseLookup).ConfigureAwait(false);
@@ -60,6 +74,11 @@ namespace FoxTunes
         protected virtual bool ShouldImportFrontCover(Discogs.ReleaseLookup releaseLookup)
         {
             return !this.HasMetaData(releaseLookup.FileDatas, CommonImageTypes.FrontCover, MetaDataItemType.Image);
+        }
+
+        protected virtual bool ShouldImportBackCover(Discogs.ReleaseLookup releaseLookup)
+        {
+            return !this.HasMetaData(releaseLookup.FileDatas, CommonImageTypes.BackCover, MetaDataItemType.Image);
         }
 
         protected virtual bool ShouldLookupArtist(Discogs.ReleaseLookup releaseLookup)
@@ -94,6 +113,33 @@ namespace FoxTunes
                 releaseLookup.Release.ThumbUrl
             };
             return this.FetchData(releaseLookup, urls);
+        }
+
+        protected virtual async Task<string> ImportBackCover(Discogs.ReleaseLookup releaseLookup)
+        {
+            var release = default(Discogs.ReleaseDetails);
+            try
+            {
+                Logger.Write(this, LogLevel.Debug, "Fetching release details: {0}", releaseLookup.Release.ResourceUrl);
+                release = await this.Discogs.GetRelease(releaseLookup.Release).ConfigureAwait(false);
+                if (release == null)
+                {
+                    Logger.Write(this, LogLevel.Error, "Failed to fetch release details \"{0}\": Unknown error.", releaseLookup.Release.ResourceUrl);
+                    return null;
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.Write(this, LogLevel.Error, "Failed to fetch release details \"{0}\": {1}", releaseLookup.Release.ResourceUrl, e.Message);
+                releaseLookup.AddError(e.Message);
+                return null;
+            }
+            var urls = release.Images.Where(
+                image => string.Equals(image.Type, "secondary")
+            ).Select(
+                image => image.Uri
+            );
+            return await this.FetchData(releaseLookup, urls);
         }
 
         protected virtual async Task<string> ImportArtist(Discogs.ReleaseLookup releaseLookup)

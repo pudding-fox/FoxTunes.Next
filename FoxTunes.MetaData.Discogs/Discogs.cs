@@ -162,7 +162,7 @@ namespace FoxTunes
                 });
                 return result as IEnumerable<Release>;
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Logger.Write(this, LogLevel.Error, "Error while querying the API: {0}", e.Message);
                 return null;
@@ -853,6 +853,7 @@ namespace FoxTunes
                 const string ARTISTS = "artists";
                 const string GENRES = "genres";
                 const string TRACKLIST = "tracklist";
+                const string IMAGES = "images";
                 this.Id = Convert.ToString(data.GetValueOrDefault(ID));
                 this.Url = Convert.ToString(data.GetValueOrDefault(URI));
                 this.ResourceUrl = Convert.ToString(data.GetValueOrDefault(RESOURCE_URL));
@@ -861,6 +862,7 @@ namespace FoxTunes
                 this.Artists = ArtistDetails.FromResults(data.GetValueOrDefault(ARTISTS) as IList<object>).ToArray();
                 this.Genres = data.GetValueOrDefault(GENRES) is IList<object> genres ? genres.OfType<string>().ToArray() : new string[] { };
                 this.Tracks = TrackDetails.FromResults(data.GetValueOrDefault(TRACKLIST) as IList<object>).ToArray();
+                this.Images = ImageDetails.FromResults(data.GetValueOrDefault(IMAGES) as IList<object>).ToArray();
             }
 
             public string Id { get; private set; }
@@ -878,6 +880,8 @@ namespace FoxTunes
             public string[] Genres { get; private set; }
 
             public TrackDetails[] Tracks { get; private set; }
+
+            public ImageDetails[] Images { get; private set; }
         }
 
         public class ArtistDetails
@@ -948,6 +952,35 @@ namespace FoxTunes
                         if (result is IDictionary<string, object> data)
                         {
                             yield return new TrackDetails(data);
+                        }
+                    }
+                }
+            }
+        }
+
+        public class ImageDetails
+        {
+            private ImageDetails(IDictionary<string, object> data)
+            {
+                const string TYPE = "type";
+                const string URI = "uri";
+                this.Type = Convert.ToString(data.GetValueOrDefault(TYPE));
+                this.Uri = Convert.ToString(data.GetValueOrDefault(URI));
+            }
+
+            public string Type { get; private set; }
+
+            public string Uri { get; private set; }
+
+            public static IEnumerable<ImageDetails> FromResults(IList<object> results)
+            {
+                if (results != null)
+                {
+                    foreach (var result in results)
+                    {
+                        if (result is IDictionary<string, object> data)
+                        {
+                            yield return new ImageDetails(data);
                         }
                     }
                 }
