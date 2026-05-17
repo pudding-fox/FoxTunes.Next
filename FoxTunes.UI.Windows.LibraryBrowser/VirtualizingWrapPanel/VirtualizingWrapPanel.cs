@@ -16,43 +16,9 @@ namespace FoxTunes
     /// </summary>
     public class VirtualizingWrapPanel : VirtualizingPanelBase
     {
-        #region Deprecated properties
-
-        [Obsolete("Use SpacingMode")]
-        public static readonly DependencyProperty IsSpacingEnabledProperty = DependencyProperty.Register(nameof(IsSpacingEnabled), typeof(bool), typeof(VirtualizingWrapPanel), new FrameworkPropertyMetadata(true, FrameworkPropertyMetadataOptions.AffectsMeasure));
-
-        [Obsolete("Use IsSpacingEnabled")]
-        public bool SpacingEnabled { get => IsSpacingEnabled; set => IsSpacingEnabled = value; }
-
-        /// <summary>
-        ///  Gets or sets a value that specifies whether the items are distributed evenly across the width (horizontal orientation) 
-        ///  or height (vertical orientation). The default value is true.
-        /// </summary>
-        [Obsolete("Use SpacingMode")]
-        public bool IsSpacingEnabled { get => (bool)GetValue(IsSpacingEnabledProperty); set => SetValue(IsSpacingEnabledProperty, value); }
-
-        [Obsolete("Use ItemSize")]
-        public Size ChildrenSize { get => ItemSize; set => ItemSize = value; }
-
-        #endregion
-
-        public static readonly DependencyProperty SpacingModeProperty = DependencyProperty.Register(nameof(SpacingMode), typeof(SpacingMode), typeof(VirtualizingWrapPanel), new FrameworkPropertyMetadata(SpacingMode.Uniform, FrameworkPropertyMetadataOptions.AffectsMeasure));
-
-        public static readonly DependencyProperty OrientationProperty = DependencyProperty.Register(nameof(Orientation), typeof(Orientation), typeof(VirtualizingWrapPanel), new FrameworkPropertyMetadata(Orientation.Vertical, FrameworkPropertyMetadataOptions.AffectsMeasure, (obj, args) => ((VirtualizingWrapPanel)obj).Orientation_Changed()));
-
         public static readonly DependencyProperty ItemSizeProperty = DependencyProperty.Register(nameof(ItemSize), typeof(Size), typeof(VirtualizingWrapPanel), new FrameworkPropertyMetadata(Size.Empty, FrameworkPropertyMetadataOptions.AffectsMeasure));
 
         public static readonly DependencyProperty StretchItemsProperty = DependencyProperty.Register(nameof(StretchItems), typeof(bool), typeof(VirtualizingWrapPanel), new FrameworkPropertyMetadata(false, FrameworkPropertyMetadataOptions.AffectsArrange));
-
-        /// <summary>
-        /// Gets or sets the spacing mode used when arranging the items. The default value is <see cref="SpacingMode.Uniform"/>.
-        /// </summary>
-        public SpacingMode SpacingMode { get => (SpacingMode)GetValue(SpacingModeProperty); set => SetValue(SpacingModeProperty, value); }
-
-        /// <summary>
-        /// Gets or sets a value that specifies the orientation in which items are arranged. The default value is <see cref="Orientation.Vertical"/>.
-        /// </summary>
-        public Orientation Orientation { get => (Orientation)GetValue(OrientationProperty); set => SetValue(OrientationProperty, value); }
 
         /// <summary>
         /// Gets or sets a value that specifies the size of the items. The default value is <see cref="Size.Empty"/>. 
@@ -75,11 +41,6 @@ namespace FoxTunes
 
         protected int itemsPerRowCount;
 
-        private void Orientation_Changed()
-        {
-            MouseWheelScrollDirection = Orientation == Orientation.Vertical ? ScrollDirection.Vertical : ScrollDirection.Horizontal;
-        }
-
         protected override Size MeasureOverride(Size availableSize)
         {
             UpdateChildSize(availableSize);
@@ -88,21 +49,6 @@ namespace FoxTunes
 
         private void UpdateChildSize(Size availableSize)
         {
-            if (ItemsOwner is IHierarchicalVirtualizationAndScrollInfo groupItem
-                && VirtualizingPanel.GetIsVirtualizingWhenGrouping(ItemsControl))
-            {
-                if (Orientation == Orientation.Vertical)
-                {
-                    availableSize.Width = groupItem.Constraints.Viewport.Size.Width;
-                    availableSize.Width = Math.Max(availableSize.Width - (Margin.Left + Margin.Right), 0);
-                }
-                else
-                {
-                    availableSize.Height = groupItem.Constraints.Viewport.Size.Height;
-                    availableSize.Height = Math.Max(availableSize.Height - (Margin.Top + Margin.Bottom), 0);
-                }
-            }
-
             if (ItemSize != Size.Empty)
             {
                 childSize = ItemSize;
@@ -147,21 +93,9 @@ namespace FoxTunes
 
         protected override Size CalculateExtent(Size availableSize)
         {
-            double extentWidth = IsSpacingEnabled && SpacingMode != SpacingMode.None && !double.IsInfinity(GetWidth(availableSize))
+            double extentWidth = !double.IsInfinity(GetWidth(availableSize))
                 ? GetWidth(availableSize)
                 : GetWidth(childSize) * itemsPerRowCount;
-
-            if (ItemsOwner is IHierarchicalVirtualizationAndScrollInfo groupItem)
-            {
-                if (Orientation == Orientation.Vertical)
-                {
-                    extentWidth = Math.Max(extentWidth - (Margin.Left + Margin.Right), 0);
-                }
-                else
-                {
-                    extentWidth = Math.Max(extentWidth - (Margin.Top + Margin.Bottom), 0);
-                }
-            }
 
             double extentHeight = GetHeight(childSize) * rowCount;
             return CreateSize(extentWidth, extentHeight);
@@ -176,42 +110,13 @@ namespace FoxTunes
             double totalItemsWidth = Math.Min(GetWidth(childSize) * itemsPerRowCount, finalWidth);
             double unusedWidth = finalWidth - totalItemsWidth;
 
-            SpacingMode spacingMode = IsSpacingEnabled ? SpacingMode : SpacingMode.None;
-
-            switch (spacingMode)
-            {
-                case SpacingMode.Uniform:
-                    innerSpacing = outerSpacing = unusedWidth / (itemsPerRowCount + 1);
-                    break;
-
-                case SpacingMode.BetweenItemsOnly:
-                    innerSpacing = unusedWidth / Math.Max(itemsPerRowCount - 1, 1);
-                    outerSpacing = 0;
-                    break;
-
-                case SpacingMode.StartAndEndOnly:
-                    innerSpacing = 0;
-                    outerSpacing = unusedWidth / 2;
-                    break;
-
-                case SpacingMode.None:
-                default:
-                    innerSpacing = 0;
-                    outerSpacing = 0;
-                    break;
-            }
+            innerSpacing = outerSpacing = unusedWidth / (itemsPerRowCount + 1);
         }
 
         protected override Size ArrangeOverride(Size finalSize)
         {
             double offsetX = GetX(Offset);
             double offsetY = GetY(Offset);
-
-            /* When the items owner is a group item offset is handled by the parent panel. */
-            if (ItemsOwner is IHierarchicalVirtualizationAndScrollInfo groupItem)
-            {
-                offsetY = 0;
-            }
 
             Size childSize = CalculateChildArrangeSize(finalSize);
 
@@ -250,20 +155,10 @@ namespace FoxTunes
         {
             if (StretchItems)
             {
-                if (Orientation == Orientation.Vertical)
-                {
-                    double childMaxWidth = ReadItemContainerStyle(MaxWidthProperty, double.PositiveInfinity);
-                    double maxPossibleChildWith = finalSize.Width / itemsPerRowCount;
-                    double childWidth = Math.Min(maxPossibleChildWith, childMaxWidth);
-                    return new Size(childWidth, childSize.Height);
-                }
-                else
-                {
-                    double childMaxHeight = ReadItemContainerStyle(MaxHeightProperty, double.PositiveInfinity);
-                    double maxPossibleChildHeight = finalSize.Height / itemsPerRowCount;
-                    double childHeight = Math.Min(maxPossibleChildHeight, childMaxHeight);
-                    return new Size(childSize.Width, childHeight);
-                }
+                double childMaxWidth = ReadItemContainerStyle(MaxWidthProperty, double.PositiveInfinity);
+                double maxPossibleChildWith = finalSize.Width / itemsPerRowCount;
+                double childWidth = Math.Min(maxPossibleChildWith, childMaxWidth);
+                return new Size(childWidth, childSize.Height);
             }
             else
             {
@@ -288,81 +183,31 @@ namespace FoxTunes
             int startIndex;
             int endIndex;
 
-            if (ItemsOwner is IHierarchicalVirtualizationAndScrollInfo groupItem)
+            double viewportSartPos = GetY(Offset);
+            double viewportEndPos = GetY(Offset) + GetHeight(Viewport);
+
+            if (CacheLengthUnit == VirtualizationCacheLengthUnit.Pixel)
             {
-                if (!VirtualizingPanel.GetIsVirtualizingWhenGrouping(ItemsControl))
-                {
-                    return new ItemRange(0, Items.Count - 1);
-                }
-
-                var offset = new Point(Offset.X, groupItem.Constraints.Viewport.Location.Y);
-
-                int offsetRowIndex;
-                double offsetInPixel;
-
-                int rowCountInViewport;
-
-                if (ScrollUnit == ScrollUnit.Item)
-                {
-                    offsetRowIndex = GetY(offset) >= 1 ? (int)GetY(offset) - 1 : 0; // ignore header
-                    offsetInPixel = offsetRowIndex * GetHeight(childSize);
-                }
-                else
-                {
-                    offsetInPixel = Math.Min(Math.Max(GetY(offset) - GetHeight(groupItem.HeaderDesiredSizes.PixelSize), 0), GetHeight(Extent));
-                    offsetRowIndex = GetRowIndex(offsetInPixel);
-                }
-
-                double viewportHeight = Math.Min(GetHeight(Viewport), Math.Max(GetHeight(Extent) - offsetInPixel, 0));
-
-                rowCountInViewport = (int)Math.Ceiling((offsetInPixel + viewportHeight) / GetHeight(childSize)) - (int)Math.Floor(offsetInPixel / GetHeight(childSize));
-
-                startIndex = offsetRowIndex * itemsPerRowCount;
-                endIndex = Math.Min(((offsetRowIndex + rowCountInViewport) * itemsPerRowCount) - 1, Items.Count - 1);
-
-                if (CacheLengthUnit == VirtualizationCacheLengthUnit.Pixel)
-                {
-                    double cacheBeforeInPixel = Math.Min(CacheLength.CacheBeforeViewport, offsetInPixel);
-                    double cacheAfterInPixel = Math.Min(CacheLength.CacheAfterViewport, GetHeight(Extent) - viewportHeight - offsetInPixel);
-                    int rowCountInCacheBefore = (int)(cacheBeforeInPixel / GetHeight(childSize));
-                    int rowCountInCacheAfter = ((int)Math.Ceiling((offsetInPixel + viewportHeight + cacheAfterInPixel) / GetHeight(childSize))) - (int)Math.Ceiling((offsetInPixel + viewportHeight) / GetHeight(childSize));
-                    startIndex = Math.Max(startIndex - rowCountInCacheBefore * itemsPerRowCount, 0);
-                    endIndex = Math.Min(endIndex + rowCountInCacheAfter * itemsPerRowCount, Items.Count - 1);
-                }
-                else if (CacheLengthUnit == VirtualizationCacheLengthUnit.Item)
-                {
-                    startIndex = Math.Max(startIndex - (int)CacheLength.CacheBeforeViewport, 0);
-                    endIndex = Math.Min(endIndex + (int)CacheLength.CacheAfterViewport, Items.Count - 1);
-                }
+                viewportSartPos = Math.Max(viewportSartPos - CacheLength.CacheBeforeViewport, 0);
+                viewportEndPos = Math.Min(viewportEndPos + CacheLength.CacheAfterViewport, GetHeight(Extent));
             }
-            else
+
+            int startRowIndex = GetRowIndex(viewportSartPos);
+            startIndex = startRowIndex * itemsPerRowCount;
+
+            int endRowIndex = GetRowIndex(viewportEndPos);
+            endIndex = Math.Min(endRowIndex * itemsPerRowCount + (itemsPerRowCount - 1), Items.Count - 1);
+
+            if (CacheLengthUnit == VirtualizationCacheLengthUnit.Page)
             {
-                double viewportSartPos = GetY(Offset);
-                double viewportEndPos = GetY(Offset) + GetHeight(Viewport);
-
-                if (CacheLengthUnit == VirtualizationCacheLengthUnit.Pixel)
-                {
-                    viewportSartPos = Math.Max(viewportSartPos - CacheLength.CacheBeforeViewport, 0);
-                    viewportEndPos = Math.Min(viewportEndPos + CacheLength.CacheAfterViewport, GetHeight(Extent));
-                }
-
-                int startRowIndex = GetRowIndex(viewportSartPos);
-                startIndex = startRowIndex * itemsPerRowCount;
-
-                int endRowIndex = GetRowIndex(viewportEndPos);
-                endIndex = Math.Min(endRowIndex * itemsPerRowCount + (itemsPerRowCount - 1), Items.Count - 1);
-
-                if (CacheLengthUnit == VirtualizationCacheLengthUnit.Page)
-                {
-                    int itemsPerPage = endIndex - startIndex + 1;
-                    startIndex = Math.Max(startIndex - (int)CacheLength.CacheBeforeViewport * itemsPerPage, 0);
-                    endIndex = Math.Min(endIndex + (int)CacheLength.CacheAfterViewport * itemsPerPage, Items.Count - 1);
-                }
-                else if (CacheLengthUnit == VirtualizationCacheLengthUnit.Item)
-                {
-                    startIndex = Math.Max(startIndex - (int)CacheLength.CacheBeforeViewport, 0);
-                    endIndex = Math.Min(endIndex + (int)CacheLength.CacheAfterViewport, Items.Count - 1);
-                }
+                int itemsPerPage = endIndex - startIndex + 1;
+                startIndex = Math.Max(startIndex - (int)CacheLength.CacheBeforeViewport * itemsPerPage, 0);
+                endIndex = Math.Min(endIndex + (int)CacheLength.CacheAfterViewport * itemsPerPage, Items.Count - 1);
+            }
+            else if (CacheLengthUnit == VirtualizationCacheLengthUnit.Item)
+            {
+                startIndex = Math.Max(startIndex - (int)CacheLength.CacheBeforeViewport, 0);
+                endIndex = Math.Min(endIndex + (int)CacheLength.CacheAfterViewport, Items.Count - 1);
             }
 
             return new ItemRange(startIndex, endIndex);
@@ -389,14 +234,7 @@ namespace FoxTunes
 
             var offset = (index / itemsPerRowCount) * GetHeight(childSize);
 
-            if (Orientation == Orientation.Horizontal)
-            {
-                SetHorizontalOffset(offset);
-            }
-            else
-            {
-                SetVerticalOffset(offset);
-            }
+            SetVerticalOffset(offset);
         }
 
         protected override double GetLineUpScrollAmount()
@@ -461,14 +299,14 @@ namespace FoxTunes
 
         /* orientation aware helper methods */
 
-        protected double GetX(Point point) => Orientation == Orientation.Vertical ? point.X : point.Y;
-        protected double GetY(Point point) => Orientation == Orientation.Vertical ? point.Y : point.X;
+        protected double GetX(Point point) => point.X;
+        protected double GetY(Point point) => point.Y;
 
-        protected double GetWidth(Size size) => Orientation == Orientation.Vertical ? size.Width : size.Height;
-        protected double GetHeight(Size size) => Orientation == Orientation.Vertical ? size.Height : size.Width;
+        protected double GetWidth(Size size) => size.Width;
+        protected double GetHeight(Size size) => size.Height;
 
-        protected Size CreateSize(double width, double height) => Orientation == Orientation.Vertical ? new Size(width, height) : new Size(height, width);
-        protected Rect CreateRect(double x, double y, double width, double height) => Orientation == Orientation.Vertical ? new Rect(x, y, width, height) : new Rect(y, x, width, height);
+        protected Size CreateSize(double width, double height) => new Size(width, height);
+        protected Rect CreateRect(double x, double y, double width, double height) => new Rect(x, y, width, height);
     }
 }
 #endif

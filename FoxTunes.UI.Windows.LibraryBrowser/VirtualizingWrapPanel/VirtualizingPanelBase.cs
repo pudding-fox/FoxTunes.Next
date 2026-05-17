@@ -52,12 +52,6 @@ namespace FoxTunes
 
         protected ScrollUnit ScrollUnit => GetScrollUnit(ItemsControl);
 
-        /// <summary>
-        /// The direction in which the panel scrolls when user turns the mouse wheel.
-        /// </summary>
-        protected ScrollDirection MouseWheelScrollDirection { get; set; } = ScrollDirection.Vertical;
-
-
         protected bool IsVirtualizing => GetIsVirtualizing(ItemsControl);
 
         protected VirtualizationMode VirtualizationMode => GetVirtualizationMode(ItemsControl);
@@ -267,42 +261,18 @@ namespace FoxTunes
                 }
             }
 
-            var groupItem = ItemsOwner as IHierarchicalVirtualizationAndScrollInfo;
-
             Size extent;
             Size desiredSize;
 
-            if (groupItem != null)
-            {
-                /* If the ItemsOwner is a group item the availableSize is ifinity. 
-                 * Therfore the vieport size provided by the group item is used. */
-                var viewportSize = groupItem.Constraints.Viewport.Size;
-                var headerSize = groupItem.HeaderDesiredSizes.PixelSize;
-                double availableWidth = Math.Max(viewportSize.Width - 5, 0); // left margin of 5 dp
-                double availableHeight = Math.Max(viewportSize.Height - headerSize.Height, 0);
-                availableSize = new Size(availableWidth, availableHeight);
 
-                extent = CalculateExtent(availableSize);
+            extent = CalculateExtent(availableSize);
+            double desiredWidth = Math.Min(availableSize.Width, extent.Width);
+            double desiredHeight = Math.Min(availableSize.Height, extent.Height);
+            desiredSize = new Size(desiredWidth, desiredHeight);
 
-                desiredSize = new Size(extent.Width, extent.Height);
-
-                Extent = extent;
-                Offset = groupItem.Constraints.Viewport.Location;
-                Viewport = groupItem.Constraints.Viewport.Size;
-                CacheLength = groupItem.Constraints.CacheLength;
-                CacheLengthUnit = groupItem.Constraints.CacheLengthUnit; // can be Item or Pixel
-            }
-            else
-            {
-                extent = CalculateExtent(availableSize);
-                double desiredWidth = Math.Min(availableSize.Width, extent.Width);
-                double desiredHeight = Math.Min(availableSize.Height, extent.Height);
-                desiredSize = new Size(desiredWidth, desiredHeight);
-
-                UpdateScrollInfo(desiredSize, extent);
-                CacheLength = GetCacheLength(ItemsOwner);
-                CacheLengthUnit = GetCacheLengthUnit(ItemsOwner); // can be Page, Item or Pixel
-            }
+            UpdateScrollInfo(desiredSize, extent);
+            CacheLength = GetCacheLength(ItemsOwner);
+            CacheLengthUnit = GetCacheLengthUnit(ItemsOwner); // can be Page, Item or Pixel
 
             ItemRange = UpdateItemRange();
 
@@ -339,15 +309,6 @@ namespace FoxTunes
                         ItemContainerGenerator.PrepareItemContainer(child);
 
                         child.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
-                    }
-
-                    if (child is IHierarchicalVirtualizationAndScrollInfo groupItem)
-                    {
-                        groupItem.Constraints = new HierarchicalVirtualizationConstraints(
-                            new VirtualizationCacheLength(0),
-                            VirtualizationCacheLengthUnit.Item,
-                            new Rect(0, 0, ViewportWidth, ViewportHeight));
-                        child.Measure(new Size(ViewportWidth, ViewportHeight));
                     }
                 }
             }
@@ -441,26 +402,12 @@ namespace FoxTunes
 
         public void MouseWheelUp()
         {
-            if (MouseWheelScrollDirection == ScrollDirection.Vertical)
-            {
-                ScrollVertical(ScrollUnit == ScrollUnit.Pixel ? -MouseWheelDelta : GetMouseWheelUpScrollAmount());
-            }
-            else
-            {
-                MouseWheelLeft();
-            }
+            ScrollVertical(ScrollUnit == ScrollUnit.Pixel ? -MouseWheelDelta : GetMouseWheelUpScrollAmount());
         }
 
         public void MouseWheelDown()
         {
-            if (MouseWheelScrollDirection == ScrollDirection.Vertical)
-            {
-                ScrollVertical(ScrollUnit == ScrollUnit.Pixel ? MouseWheelDelta : GetMouseWheelDownScrollAmount());
-            }
-            else
-            {
-                MouseWheelRight();
-            }
+            ScrollVertical(ScrollUnit == ScrollUnit.Pixel ? MouseWheelDelta : GetMouseWheelDownScrollAmount());
         }
 
         public void MouseWheelLeft() => ScrollHorizontal(ScrollUnit == ScrollUnit.Pixel ? -MouseWheelDelta : GetMouseWheelLeftScrollAmount());
