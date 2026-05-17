@@ -14,16 +14,5 @@
         <LocalViewModel:NowPlaying x:Key="ViewModel"></LocalViewModel:NowPlaying>
         <ViewModel:TimeSpanConverter x:Key="TimeSpanConverter"></ViewModel:TimeSpanConverter>
     </UserControl.Resources>
-    <LocalWindows:Marquee Interval="{Binding MarqueeInterval.Value, Converter={StaticResource TimeSpanConverter}, Source={StaticResource ViewModel}}" Step="{Binding MarqueeStep.Value, Source={StaticResource ViewModel}}">
-        <LocalWindows:Marquee.Style>
-            <Style TargetType="{x:Type LocalWindows:Marquee}">
-                <Setter Property="Text" Value="{Binding Value, Source={StaticResource ViewModel}}"></Setter>
-                <Style.Triggers>
-                    <DataTrigger Binding="{Binding IsBuffering, Source={StaticResource ViewModel}}" Value="True">
-                        <Setter Property="Text" Value="Buffering.."></Setter>
-                    </DataTrigger>
-                </Style.Triggers>
-            </Style>
-        </LocalWindows:Marquee.Style>
-    </LocalWindows:Marquee>
+    <LocalWindows:Marquee Text="{Binding Value, Source={StaticResource ViewModel}}" Interval="{Binding MarqueeInterval.Value, Converter={StaticResource TimeSpanConverter}, Source={StaticResource ViewModel}}" Step="{Binding MarqueeStep.Value, Source={StaticResource ViewModel}}"></LocalWindows:Marquee>
 </Windows:ConfigurableUIComponentBase>

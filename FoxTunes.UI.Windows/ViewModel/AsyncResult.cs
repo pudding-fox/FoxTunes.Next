@@ -32,6 +32,10 @@ namespace FoxTunes.ViewModel
         public async Task Run()
         {
             var value = await this.Task.ConfigureAwait(false);
+            if (value == null)
+            {
+                return;
+            }
             await Windows.Invoke(() => this.Value = value).ConfigureAwait(false);
         }
 

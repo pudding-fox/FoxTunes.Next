@@ -1,6 +1,7 @@
 ﻿using FoxTunes.Interfaces;
 using System;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -108,32 +109,6 @@ namespace FoxTunes.ViewModel
 
         public event EventHandler MarqueeStepChanged;
 
-        private PlaylistItem _CurrentItem { get; set; }
-
-        public PlaylistItem CurrentItem
-        {
-            get
-            {
-                return this._CurrentItem;
-            }
-            private set
-            {
-                this._CurrentItem = value;
-                this.OnCurrentItemChanged();
-            }
-        }
-
-        protected virtual void OnCurrentItemChanged()
-        {
-            if (this.CurrentItemChanged != null)
-            {
-                this.CurrentItemChanged(this, EventArgs.Empty);
-            }
-            this.OnPropertyChanged("CurrentItem");
-        }
-
-        public event EventHandler CurrentItemChanged;
-
         private string _Script { get; set; }
 
         public string Script
@@ -188,32 +163,6 @@ namespace FoxTunes.ViewModel
 
         public event EventHandler ValueChanged;
 
-        private bool _IsBuffering { get; set; }
-
-        public bool IsBuffering
-        {
-            get
-            {
-                return this._IsBuffering;
-            }
-            set
-            {
-                this._IsBuffering = value;
-                this.OnIsBufferingChanged();
-            }
-        }
-
-        protected virtual void OnIsBufferingChanged()
-        {
-            if (this.IsBufferingChanged != null)
-            {
-                this.IsBufferingChanged(this, EventArgs.Empty);
-            }
-            this.OnPropertyChanged("IsBuffering");
-        }
-
-        public event EventHandler IsBufferingChanged;
-
         protected override void InitializeComponent(ICore core)
         {
             global::FoxTunes.BackgroundTask.ActiveChanged += this.OnActiveChanged;
@@ -226,18 +175,7 @@ namespace FoxTunes.ViewModel
 
         protected virtual async void OnActiveChanged(object sender, EventArgs e)
         {
-            //TODO: Might it be cleaner to expose this logic directly on the IsBuffering getter?
-            var tasks = global::FoxTunes.BackgroundTask.Active
-                .OfType<LoadOutputStreamTask>()
-                .Where(task => task.Visible);
-            if (tasks.Any())
-            {
-                await Windows.Invoke(() => this.IsBuffering = true).ConfigureAwait(false);
-            }
-            else if (this.IsBuffering)
-            {
-                await Windows.Invoke(() => this.IsBuffering = false).ConfigureAwait(false);
-            }
+            this.Dispatch(this.Refresh);
         }
 
         protected virtual void OnCurrentStreamChanged(object sender, EventArgs e)
@@ -248,26 +186,24 @@ namespace FoxTunes.ViewModel
 
         protected virtual Task Refresh()
         {
-            var outputStream = this.PlaybackManager.CurrentStream;
-            var runner = new PlaylistItemScriptRunner(
-                this.ScriptingContext,
-                outputStream != null ? outputStream.PlaylistItem : null,
-                this.Script
-            );
-            runner.Prepare();
-            var value = runner.Run();
-            return Windows.Invoke(() =>
+            var task = global::FoxTunes.BackgroundTask.Active.FirstOrDefault(_task => _task.Visible);
+            if (task != null && !string.IsNullOrEmpty(task.Name))
             {
-                if (outputStream != null)
-                {
-                    this.CurrentItem = outputStream.PlaylistItem;
-                }
-                else
-                {
-                    this.CurrentItem = null;
-                }
-                this.Value = value;
-            });
+                var value = task.Name;
+                return Windows.Invoke(() => this.Value = value);
+            }
+            else
+            {
+                var outputStream = this.PlaybackManager.CurrentStream;
+                var runner = new PlaylistItemScriptRunner(
+                    this.ScriptingContext,
+                    outputStream != null ? outputStream.PlaylistItem : null,
+                    this.Script
+                );
+                runner.Prepare();
+                var value = runner.Run();
+                return Windows.Invoke(() => this.Value = value);
+            }
         }
 
         protected override Freezable CreateInstanceCore()
