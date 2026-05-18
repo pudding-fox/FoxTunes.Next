@@ -73,33 +73,35 @@
                             <LocalWindows:LibraryBrowserTemplateSelector>
                                 <LocalWindows:LibraryBrowserTemplateSelector.UpTemplate>
                                     <DataTemplate DataType="{x:Type Core:LibraryHierarchyNode}">
-                                        <StackPanel Orientation="Horizontal" Margin="3,3,4,3">
-                                            <Viewbox  Width="{Binding TileSize, Source={StaticResource ViewModel}}" Height="{Binding TileSize, Source={StaticResource ViewModel}}" Stretch="Uniform">
-                                                <Canvas Width="48" Height="48">
-                                                    <Path>
-                                                        <Path.Data>
-                                                            <PathGeometry Figures="M0 0h48v48h-48z" FillRule="NonZero"/>
-                                                        </Path.Data>
-                                                    </Path>
-                                                    <Path Fill="{DynamicResource TextBrush}">
-                                                        <Path.Data>
-                                                            <PathGeometry Figures="M40 22h-24.34l11.17-11.17-2.83-2.83-16 16 16 16 2.83-2.83-11.17-11.17h24.34v-4z" FillRule="NonZero"/>
-                                                        </Path.Data>
-                                                    </Path>
-                                                </Canvas>
-                                            </Viewbox>
-                                            <TextBlock VerticalAlignment="Center" Text="Back" TextTrimming="CharacterEllipsis" Foreground="{DynamicResource TextBrush}" Margin="3,0,0,0"></TextBlock>
+                                        <StackPanel Orientation="Horizontal">
+                                            <Border Width="{Binding TileSize, Source={StaticResource ViewModel}}" Height="{Binding TileSize, Source={StaticResource ViewModel}}" BorderBrush="{DynamicResource TextBrush}" BorderThickness="1" Opacity=".50" Margin="0,0,4,0">
+                                                <Viewbox  Stretch="Uniform">
+                                                    <Canvas Width="48" Height="48">
+                                                        <Path>
+                                                            <Path.Data>
+                                                                <PathGeometry Figures="M0 0h48v48h-48z" FillRule="NonZero"/>
+                                                            </Path.Data>
+                                                        </Path>
+                                                        <Path Fill="{DynamicResource TextBrush}">
+                                                            <Path.Data>
+                                                                <PathGeometry Figures="M40 22h-24.34l11.17-11.17-2.83-2.83-16 16 16 16 2.83-2.83-11.17-11.17h24.34v-4z" FillRule="NonZero"/>
+                                                            </Path.Data>
+                                                        </Path>
+                                                    </Canvas>
+                                                </Viewbox>
+                                            </Border>
+                                            <TextBlock VerticalAlignment="Center" Text="Back" TextTrimming="CharacterEllipsis" Foreground="{DynamicResource TextBrush}"></TextBlock>
                                         </StackPanel>
                                     </DataTemplate>
                                 </LocalWindows:LibraryBrowserTemplateSelector.UpTemplate>
                                 <LocalWindows:LibraryBrowserTemplateSelector.DefaultTemplate>
                                     <DataTemplate DataType="{x:Type Core:LibraryHierarchyNode}">
-                                        <StackPanel Orientation="Horizontal" Margin="3,3,4,3">
-                                            <Grid>
+                                        <StackPanel Orientation="Horizontal">
+                                            <Grid Margin="0,0,4,0">
                                                 <Windows:AsyncImage DataContext="{Binding Converter={StaticResource LibraryBrowserImageConverter}, Mode=OneWay}" Width="{Binding TileSize, Source={StaticResource ViewModel}}" Height="{Binding TileSize, Source={StaticResource ViewModel}}" Source="{Binding Value, FallbackValue={StaticResource Transparent}}" MouseMove="OnMouseMove" MouseLeave="OnMouseLeave"></Windows:AsyncImage>
                                                 <Windows:AsyncImage x:Name="HoverImage" IsHitTestVisible="False" Width="{Binding TileSize, Source={StaticResource ViewModel}}" Height="{Binding TileSize, Source={StaticResource ViewModel}}"></Windows:AsyncImage>
                                             </Grid>
-                                            <TextBlock VerticalAlignment="Center" Text="{Binding Value}" TextTrimming="CharacterEllipsis" Foreground="{DynamicResource TextBrush}" Margin="3,0,0,0"></TextBlock>
+                                            <TextBlock VerticalAlignment="Center" Text="{Binding Value}" TextTrimming="CharacterEllipsis" Foreground="{DynamicResource TextBrush}"></TextBlock>
                                         </StackPanel>
                                     </DataTemplate>
                                 </LocalWindows:LibraryBrowserTemplateSelector.DefaultTemplate>
