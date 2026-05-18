@@ -73,6 +73,10 @@ namespace FoxTunes
                             if (!skip.Any(_skip => string.Equals(libraryHierarchyNode.Value, _skip, StringComparison.OrdinalIgnoreCase)))
                             {
                                 var libraryItems = this.LibraryHierarchyBrowser.GetItems(libraryHierarchyNode);
+                                if (!libraryItems.Any())
+                                {
+                                    continue;
+                                }
                                 await this.OnDemandMetaDataProvider.GetMetaData(
                                     libraryItems,
                                     new OnDemandMetaDataRequest(

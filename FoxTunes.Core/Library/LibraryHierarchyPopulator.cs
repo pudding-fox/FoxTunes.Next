@@ -148,6 +148,8 @@ namespace FoxTunes
                 libraryHierarchyNodes.GetOrAdd(id, () => new LibraryHierarchyNode()
                 {
                     Id = id,
+                    LibraryHierarchyId = libraryHierarchy.Id,
+                    LibraryHierarchyLevelId = libraryHierarchyLevel != null ? (int?)libraryHierarchyLevel.Id : null,
                     Parent = parent,
                     Value = value,
                     IsLeaf = isLeaf
