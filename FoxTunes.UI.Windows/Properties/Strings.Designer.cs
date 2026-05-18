@@ -637,6 +637,15 @@ namespace FoxTunes {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Import.
+        /// </summary>
+        internal static string LibrarySettingsDialog_Import {
+            get {
+                return ResourceManager.GetString("LibrarySettingsDialog.Import", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Levels.
         /// </summary>
         internal static string LibrarySettingsDialog_Levels {

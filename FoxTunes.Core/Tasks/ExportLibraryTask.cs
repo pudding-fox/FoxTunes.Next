@@ -38,7 +38,7 @@ namespace FoxTunes
             base.InitializeComponent(core);
         }
 
-        protected override async Task OnRun()
+        protected override Task OnRun()
         {
             this.Name = "Exporting..";
             using (var database = this.DatabaseFactory.Create())
@@ -49,15 +49,15 @@ namespace FoxTunes
                     this.Count = set.Count;
                     using (var stream = File.Create(this.FileName))
                     {
-                        await this.Export(set, stream).ConfigureAwait(false);
+                        Serializer.Save(stream, set.Select(libraryItem => this.Export(libraryItem)));
                     }
                 }
             }
-        }
-
-        private async Task Export(IDatabaseSet<LibraryItem> set, Stream stream)
-        {
-            Serializer.Save(stream, set.Select(libraryItem => this.Export(libraryItem)));
+#if NET40
+            return TaskEx.FromResult(false);
+#else
+            return Task.CompletedTask;
+#endif
         }
 
         protected virtual LibraryItem Export(LibraryItem libraryItem)

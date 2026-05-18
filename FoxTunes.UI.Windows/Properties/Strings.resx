@@ -117,9 +117,6 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Artist.Name" xml:space="preserve">
-    <value>Artist</value>
-  </data>
   <data name="Artwork.Name" xml:space="preserve">
     <value>Artwork</value>
   </data>
@@ -752,5 +749,11 @@
   </data>
   <data name="LibrarySettingsDialog.Export" xml:space="preserve">
     <value>Export</value>
+  </data>
+  <data name="Artist.Name" xml:space="preserve">
+    <value>Artist</value>
+  </data>
+  <data name="LibrarySettingsDialog.Import" xml:space="preserve">
+    <value>Import</value>
   </data>
 </root>

@@ -305,6 +305,56 @@ namespace FoxTunes.ViewModel
             }
         }
 
+        public ICommand ImportCommand
+        {
+            get
+            {
+                return CommandFactory.Instance.CreateCommand(this.Import);
+            }
+        }
+
+        public Task Import()
+        {
+            var options = new BrowseOptions(
+                "Import",
+                string.Empty,
+                new[]
+                {
+                    new BrowseFilter("FoxTunes", new[] { ".fox" })
+                },
+                BrowseFlags.File
+            );
+            var result = this.FileSystemBrowser.Browse(options);
+            if (!result.Success)
+            {
+#if NET40
+                return TaskEx.FromResult(false);
+#else
+                return Task.CompletedTask;
+#endif
+            }
+            var fileName = result.Paths.FirstOrDefault();
+            if (string.IsNullOrEmpty(fileName))
+            {
+#if NET40
+                return TaskEx.FromResult(false);
+#else
+                return Task.CompletedTask;
+#endif
+            }
+            return this.Import(fileName);
+        }
+
+        protected virtual async Task Import(string fileName)
+        {
+            using (var task = new ImportLibraryTask(fileName))
+            {
+                task.InitializeComponent(this.Core);
+                await this.BackgroundTaskEmitter.Send(task).ConfigureAwait(false);
+                await task.Run().ConfigureAwait(false);
+            }
+        }
+
         protected override void InitializeComponent(ICore core)
         {
             global::FoxTunes.BackgroundTask.ActiveChanged += this.OnActiveChanged;

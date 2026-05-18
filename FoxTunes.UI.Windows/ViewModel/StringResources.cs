@@ -230,6 +230,14 @@
             }
         }
 
+        public static string LibrarySettingsDialog_Import
+        {
+            get
+            {
+                return Strings.LibrarySettingsDialog_Import;
+            }
+        }
+
         public static string LibrarySettingsDialog_Export
         {
             get
