@@ -28,6 +28,14 @@ namespace FoxTunes
             }
         }
 
+        public override bool Cancellable
+        {
+            get
+            {
+                return true;
+            }
+        }
+
         public string FileName { get; private set; }
 
         public IDatabaseFactory DatabaseFactory { get; private set; }
@@ -49,7 +57,14 @@ namespace FoxTunes
                     this.Count = set.Count;
                     using (var stream = File.Create(this.FileName))
                     {
-                        Serializer.Save(stream, set.Select(libraryItem => this.Export(libraryItem)));
+                        try
+                        {
+                            Serializer.Save(stream, set.Select(libraryItem => this.Export(libraryItem)));
+                        }
+                        catch (OperationCanceledException)
+                        {
+                            //Cancelled.
+                        }
                     }
                 }
             }
@@ -62,6 +77,10 @@ namespace FoxTunes
 
         protected virtual LibraryItem Export(LibraryItem libraryItem)
         {
+            if (this.IsCancellationRequested)
+            {
+                throw new OperationCanceledException();
+            }
             Logger.Write(this, LogLevel.Debug, "Exporting: {0}", libraryItem.FileName);
             this.Name = Path.GetFileName(libraryItem.FileName);
             foreach (var metaDataItem in libraryItem.MetaDatas)
@@ -93,9 +112,12 @@ namespace FoxTunes
         {
             public static void Save(Stream stream, IEnumerable<LibraryItem> libraryItems)
             {
-                using (var writer = new XmlTextWriter(stream, Encoding.Default))
+                using (var writer = XmlWriter.Create(stream, new XmlWriterSettings()
                 {
-                    writer.Formatting = Formatting.Indented;
+                    Encoding = new UTF8Encoding(false),
+                    Indent = false,
+                }))
+                {
                     writer.WriteStartDocument();
                     writer.WriteStartElement(Publication.Product);
                     foreach (var libraryItem in libraryItems)
@@ -118,12 +140,12 @@ namespace FoxTunes
                 }
             }
 
-            private static void Save(XmlTextWriter writer, MetaDataItem metaDataItem)
+            private static void Save(XmlWriter writer, MetaDataItem metaDataItem)
             {
                 writer.WriteStartElement(nameof(MetaDataItem));
                 writer.WriteAttributeString(nameof(MetaDataItem.Name), metaDataItem.Name);
                 writer.WriteAttributeString(nameof(MetaDataItem.Type), Convert.ToString(metaDataItem.Type));
-                writer.WriteAttributeString(nameof(MetaDataItem.Value), metaDataItem.Value);
+                writer.WriteCData(metaDataItem.Value);
                 writer.WriteEndElement();
             }
         }

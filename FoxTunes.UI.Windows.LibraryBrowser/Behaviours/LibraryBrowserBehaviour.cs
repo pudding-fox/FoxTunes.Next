@@ -15,16 +15,16 @@ namespace FoxTunes
 
         public SemaphoreSlim Semaphore { get; private set; }
 
-        public ILibraryHierarchyBrowser LibraryHierarchyBrowser { get; private set; }
+        public ICore Core { get; private set; }
 
-        public IOnDemandMetaDataProvider OnDemandMetaDataProvider { get; private set; }
+        public IBackgroundTaskEmitter BackgroundTaskEmitter { get; private set; }
 
         public ISignalEmitter SignalEmitter { get; private set; }
 
         public override void InitializeComponent(ICore core)
         {
-            this.LibraryHierarchyBrowser = core.Components.LibraryHierarchyBrowser;
-            this.OnDemandMetaDataProvider = core.Components.OnDemandMetaDataProvider;
+            this.Core = core;
+            this.BackgroundTaskEmitter = core.Components.BackgroundTaskEmitter;
             this.SignalEmitter = core.Components.SignalEmitter;
             this.SignalEmitter.Signal += this.OnSignal;
             base.InitializeComponent(core);
@@ -52,47 +52,11 @@ namespace FoxTunes
             }
             try
             {
-                foreach (var libraryHierarchy in this.LibraryHierarchyBrowser.GetHierarchies())
+                using (var task = new DiscogsFetchArtistTask())
                 {
-                    var libraryHierarchyNodes = this.LibraryHierarchyBrowser.GetNodes(libraryHierarchy);
-                    foreach (var libraryHierarchyNode in libraryHierarchyNodes)
-                    {
-                        if (this.IsDisposed)
-                        {
-                            return;
-                        }
-                        if (!libraryHierarchyNode.LibraryHierarchyLevelId.HasValue)
-                        {
-                            continue;
-                        }
-                        var libraryHierarchyLevel = this.LibraryHierarchyBrowser.GetLevel(libraryHierarchyNode.LibraryHierarchyLevelId.Value);
-                        if (libraryHierarchyLevel != null)
-                        {
-                            switch (libraryHierarchyLevel.Hints)
-                            {
-                                case LibraryHierarchyLevelHints.Artist:
-                                    var skip = new[]
-                                    {
-                                        "No Artist",
-                                        "Various Artists"
-                                    };
-                                    if (!skip.Any(_skip => string.Equals(libraryHierarchyNode.Value, _skip, StringComparison.OrdinalIgnoreCase)))
-                                    {
-                                        var libraryItems = this.LibraryHierarchyBrowser.GetItems(libraryHierarchyNode);
-                                        await this.OnDemandMetaDataProvider.GetMetaData(
-                                            libraryItems,
-                                            new OnDemandMetaDataRequest(
-                                                CommonImageTypes.Artist,
-                                                MetaDataItemType.Image,
-                                                MetaDataUpdateType.System
-                                            )
-                                        ).ConfigureAwait(false);
-                                    }
-                                    await Task.Delay(100).ConfigureAwait(false);
-                                    break;
-                            }
-                        }
-                    }
+                    task.InitializeComponent(this.Core);
+                    await this.BackgroundTaskEmitter.Send(task).ConfigureAwait(false);
+                    await task.Run().ConfigureAwait(false);
                 }
             }
             finally

@@ -48,7 +48,7 @@ namespace FoxTunes
                     .WithValue(false)
                     .DependsOn(SECTION, ENABLED))
                 .WithElement(new BooleanConfigurationElement(WRITE_TAGS, Strings.DiscogsBehaviourConfiguration_WriteTags)
-                    .WithValue(true)
+                    .WithValue(false)
                     .DependsOn(SECTION, ENABLED));
         }
     }

@@ -24,13 +24,24 @@ namespace FoxTunes
             }
         }
 
+        public override bool Cancellable
+        {
+            get
+            {
+                return true;
+            }
+        }
+
         public string FileName { get; private set; }
 
         public IDatabaseFactory DatabaseFactory { get; private set; }
 
+        public ISignalEmitter SignalEmitter { get; private set; }
+
         public override void InitializeComponent(ICore core)
         {
             this.DatabaseFactory = core.Factories.Database;
+            this.SignalEmitter = core.Components.SignalEmitter;
             base.InitializeComponent(core);
         }
 
@@ -49,6 +60,10 @@ namespace FoxTunes
                             {
                                 foreach (var libraryItem in Serializer.Load(stream))
                                 {
+                                    if (this.IsCancellationRequested)
+                                    {
+                                        break;
+                                    }
                                     await this.Import(libraryWriter, metaDataWriter, libraryItem).ConfigureAwait(false);
                                 }
                             }
@@ -107,13 +122,18 @@ namespace FoxTunes
             }
         }
 
+        protected override async Task OnCompleted()
+        {
+            await this.SignalEmitter.Send(new Signal(this, CommonSignals.LibraryUpdated)).ConfigureAwait(false);
+            await base.OnCompleted().ConfigureAwait(false);
+        }
+
         public class Serializer
         {
             public static IEnumerable<LibraryItem> Load(Stream stream)
             {
                 using (var reader = new XmlTextReader(stream))
                 {
-                    reader.WhitespaceHandling = WhitespaceHandling.Significant;
                     if (reader.IsStartElement(Publication.Product))
                     {
                         reader.ReadStartElement(Publication.Product);
@@ -149,13 +169,8 @@ namespace FoxTunes
                     var metaDataItem = new MetaDataItem();
                     metaDataItem.Name = reader.GetAttribute(nameof(MetaDataItem.Name));
                     metaDataItem.Type = (MetaDataItemType)Enum.Parse(typeof(MetaDataItemType), reader.GetAttribute(nameof(MetaDataItem.Type)));
-                    metaDataItem.Value = reader.GetAttribute(nameof(MetaDataItem.Value));
+                    metaDataItem.Value = reader.ReadElementContentAsString();
                     libraryItem.MetaDatas.Add(metaDataItem);
-                    reader.ReadStartElement(nameof(MetaDataItem));
-                    if (reader.NodeType == XmlNodeType.EndElement && string.Equals(reader.Name, nameof(MetaDataItem)))
-                    {
-                        reader.ReadEndElement();
-                    }
                 }
                 return libraryItem;
             }
