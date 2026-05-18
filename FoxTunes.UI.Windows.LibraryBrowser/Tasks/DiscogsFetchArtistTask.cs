@@ -1,5 +1,6 @@
 ﻿using FoxTunes.Interfaces;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -9,9 +10,12 @@ namespace FoxTunes
     {
         public const string ID = "B9C1E218-4485-429D-9F6D-559E5106E660";
 
-        public DiscogsFetchArtistTask() : base(ID)
+        public DiscogsFetchArtistTask(IEnumerable<LibraryHierarchyNode> libraryHierarchyNodes) : base(ID)
         {
+            this.LibraryHierarchyNodes = libraryHierarchyNodes;
         }
+
+        public IEnumerable<LibraryHierarchyNode> LibraryHierarchyNodes { get; private set; }
 
         public override bool Visible
         {
@@ -43,48 +47,46 @@ namespace FoxTunes
         protected override async Task OnRun()
         {
             this.Name = "Fetching artist images..";
-            foreach (var libraryHierarchy in this.LibraryHierarchyBrowser.GetHierarchies())
+            this.Count = this.LibraryHierarchyNodes.Count();
+            foreach (var libraryHierarchyNode in this.LibraryHierarchyNodes)
             {
-                var libraryHierarchyNodes = this.LibraryHierarchyBrowser.GetNodes(libraryHierarchy);
-                foreach (var libraryHierarchyNode in libraryHierarchyNodes)
+                if (this.IsCancellationRequested)
                 {
-                    if (this.IsCancellationRequested)
+                    return;
+                }
+                if (!libraryHierarchyNode.LibraryHierarchyLevelId.HasValue)
+                {
+                    continue;
+                }
+                this.Description = libraryHierarchyNode.Value;
+                var libraryHierarchyLevel = this.LibraryHierarchyBrowser.GetLevel(libraryHierarchyNode.LibraryHierarchyLevelId.Value);
+                if (libraryHierarchyLevel != null)
+                {
+                    switch (libraryHierarchyLevel.Hints)
                     {
-                        return;
-                    }
-                    if (!libraryHierarchyNode.LibraryHierarchyLevelId.HasValue)
-                    {
-                        continue;
-                    }
-                    this.Description = libraryHierarchyNode.Value;
-                    var libraryHierarchyLevel = this.LibraryHierarchyBrowser.GetLevel(libraryHierarchyNode.LibraryHierarchyLevelId.Value);
-                    if (libraryHierarchyLevel != null)
-                    {
-                        switch (libraryHierarchyLevel.Hints)
-                        {
-                            case LibraryHierarchyLevelHints.Artist:
-                                var skip = new[]
-                                {
-                                    "No Artist",
-                                    "Various Artists"
-                                };
-                                if (!skip.Any(_skip => string.Equals(libraryHierarchyNode.Value, _skip, StringComparison.OrdinalIgnoreCase)))
-                                {
-                                    var libraryItems = this.LibraryHierarchyBrowser.GetItems(libraryHierarchyNode);
-                                    await this.OnDemandMetaDataProvider.GetMetaData(
-                                        libraryItems,
-                                        new OnDemandMetaDataRequest(
-                                            CommonImageTypes.Artist,
-                                            MetaDataItemType.Image,
-                                            MetaDataUpdateType.System
-                                        )
-                                    ).ConfigureAwait(false);
-                                }
-                                await Task.Delay(100).ConfigureAwait(false);
-                                break;
-                        }
+                        case LibraryHierarchyLevelHints.Artist:
+                            var skip = new[]
+                            {
+                                "No Artist",
+                                "Various Artists"
+                            };
+                            if (!skip.Any(_skip => string.Equals(libraryHierarchyNode.Value, _skip, StringComparison.OrdinalIgnoreCase)))
+                            {
+                                var libraryItems = this.LibraryHierarchyBrowser.GetItems(libraryHierarchyNode);
+                                await this.OnDemandMetaDataProvider.GetMetaData(
+                                    libraryItems,
+                                    new OnDemandMetaDataRequest(
+                                        CommonImageTypes.Artist,
+                                        MetaDataItemType.Image,
+                                        MetaDataUpdateType.System
+                                    )
+                                ).ConfigureAwait(false);
+                            }
+                            await Task.Delay(100).ConfigureAwait(false);
+                            break;
                     }
                 }
+                this.Position++;
             }
         }
     }

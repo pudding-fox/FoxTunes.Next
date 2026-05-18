@@ -1,5 +1,6 @@
 ﻿using FoxTunes.Interfaces;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -35,7 +36,8 @@ namespace FoxTunes
             switch (signal.Name)
             {
                 case CommonSignals.HierarchiesUpdated:
-                    return this.Refresh();
+                    this.OnHierarchiesUpdated(signal.State as HierarchiesUpdatedSignalState);
+                    break;
             }
 #if NET40
             return TaskEx.FromResult(false);
@@ -44,7 +46,16 @@ namespace FoxTunes
 #endif
         }
 
-        protected virtual async Task Refresh()
+        protected virtual void OnHierarchiesUpdated(HierarchiesUpdatedSignalState state)
+        {
+            const int LIMIT = 1024;
+            if (state != null && state.LibraryHierarchyNodes != null && state.LibraryHierarchyNodes.Any() && state.LibraryHierarchyNodes.Count() < LIMIT)
+            {
+                var task = this.Refresh(state.LibraryHierarchyNodes);
+            }
+        }
+
+        protected virtual async Task Refresh(IEnumerable<LibraryHierarchyNode> libraryHierarchyNodes)
         {
             if (!await this.Semaphore.WaitAsync(0).ConfigureAwait(false))
             {
@@ -52,7 +63,7 @@ namespace FoxTunes
             }
             try
             {
-                using (var task = new DiscogsFetchArtistTask())
+                using (var task = new DiscogsFetchArtistTask(libraryHierarchyNodes))
                 {
                     task.InitializeComponent(this.Core);
                     await this.BackgroundTaskEmitter.Send(task).ConfigureAwait(false);

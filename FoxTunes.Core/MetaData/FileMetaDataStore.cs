@@ -81,16 +81,23 @@ namespace FoxTunes
             var fileName = GetFileName(prefix, id);
             LogManager.Logger.Write(typeof(FileMetaDataStore), LogLevel.Trace, "Writing data: {0} => {1}", id, fileName);
             Directory.CreateDirectory(Path.GetDirectoryName(fileName));
-            using (var file = File.OpenWrite(fileName))
+            try
             {
-                try
+                using (var file = File.OpenWrite(fileName))
                 {
-                    stream.CopyTo(file);
+                    try
+                    {
+                        stream.CopyTo(file);
+                    }
+                    catch (Exception e)
+                    {
+                        LogManager.Logger.Write(typeof(FileMetaDataStore), LogLevel.Error, "Failed to write data: {0} => {1} => {2}", id, fileName, e.Message);
+                    }
                 }
-                catch (Exception e)
-                {
-                    LogManager.Logger.Write(typeof(FileMetaDataStore), LogLevel.Error, "Failed to write data: {0} => {1} => {2}", id, fileName, e.Message);
-                }
+            }
+            catch (Exception e)
+            {
+                LogManager.Logger.Write(typeof(FileMetaDataStore), LogLevel.Error, "Failed to write data: {0} => {1} => {2}", id, fileName, e.Message);
             }
             return fileName;
         }
