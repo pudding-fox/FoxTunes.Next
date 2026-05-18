@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
 using System.Threading.Tasks;
 using System.Xml;
 
@@ -56,15 +57,18 @@ namespace FoxTunes
                     {
                         using (var metaDataWriter = new MetaDataWriter(database, database.Queries.AddLibraryMetaDataItem, transaction))
                         {
-                            using (var stream = File.OpenRead(this.FileName))
+                            using (var fileStream = File.OpenRead(this.FileName))
                             {
-                                foreach (var libraryItem in Serializer.Load(stream))
+                                using (var zipStream = new GZipStream(fileStream, CompressionMode.Decompress))
                                 {
-                                    if (this.IsCancellationRequested)
+                                    foreach (var libraryItem in Serializer.Load(zipStream))
                                     {
-                                        break;
+                                        if (this.IsCancellationRequested)
+                                        {
+                                            break;
+                                        }
+                                        await this.Import(libraryWriter, metaDataWriter, libraryItem).ConfigureAwait(false);
                                     }
-                                    await this.Import(libraryWriter, metaDataWriter, libraryItem).ConfigureAwait(false);
                                 }
                             }
                         }

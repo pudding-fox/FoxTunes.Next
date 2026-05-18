@@ -4,6 +4,7 @@ using FoxTunes.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -55,15 +56,18 @@ namespace FoxTunes
                 {
                     var set = database.Set<LibraryItem>(transaction);
                     this.Count = set.Count;
-                    using (var stream = File.Create(this.FileName))
+                    using (var fileStream = File.Create(this.FileName))
                     {
-                        try
+                        using (var zipStream = new GZipStream(fileStream, CompressionMode.Compress))
                         {
-                            Serializer.Save(stream, set.Select(libraryItem => this.Export(libraryItem)));
-                        }
-                        catch (OperationCanceledException)
-                        {
-                            //Cancelled.
+                            try
+                            {
+                                Serializer.Save(zipStream, set.Select(libraryItem => this.Export(libraryItem)));
+                            }
+                            catch (OperationCanceledException)
+                            {
+                                //Cancelled.
+                            }
                         }
                     }
                 }
