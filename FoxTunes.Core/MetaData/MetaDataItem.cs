@@ -1,6 +1,7 @@
 ﻿using FoxTunes.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 
@@ -77,6 +78,8 @@ namespace FoxTunes
             }
         }
 
+        public static Regex IsFileRegex = new Regex(@"((?:[a-zA-Z]\:(\\|\/)|file\:\/\/|\\\\|\.(\/|\\))([^\\\/\:\*\?\<\>\""\|]+(\\|\/){0,1})+)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+
         public bool IsFile
         {
             get
@@ -85,14 +88,13 @@ namespace FoxTunes
                 {
                     return false;
                 }
-                var regex = new Regex(@"((?:[a-zA-Z]\:(\\|\/)|file\:\/\/|\\\\|\.(\/|\\))([^\\\/\:\*\?\<\>\""\|]+(\\|\/){0,1})+)");
-                var matches = regex.Matches(this.Value);
+                var matches = IsFileRegex.Matches(this.Value);
                 for (var a = 0; a < matches.Count; a++)
                 {
                     var match = matches[a];
                     if (match.Success)
                     {
-                        return true;
+                        return File.Exists(this.Value);
                     }
                 }
                 return false;

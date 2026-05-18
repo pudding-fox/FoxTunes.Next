@@ -750,4 +750,7 @@
   <data name="LibrarySettingsDialog.Hints" xml:space="preserve">
     <value>Hints</value>
   </data>
+  <data name="LibrarySettingsDialog.Export" xml:space="preserve">
+    <value>Export</value>
+  </data>
 </root>

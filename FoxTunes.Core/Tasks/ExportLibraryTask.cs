@@ -1,0 +1,131 @@
+﻿using FoxDb;
+using FoxDb.Interfaces;
+using FoxTunes.Interfaces;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Xml;
+
+namespace FoxTunes
+{
+    public class ExportLibraryTask : BackgroundTask
+    {
+        public const string ID = "D11C5ED3-A2C7-461B-88CC-2EE9D53D5CF8";
+
+        public ExportLibraryTask(string fileName) : base(ID)
+        {
+            this.FileName = fileName;
+        }
+
+        public override bool Visible
+        {
+            get
+            {
+                return true;
+            }
+        }
+
+        public string FileName { get; private set; }
+
+        public IDatabaseFactory DatabaseFactory { get; private set; }
+
+        public override void InitializeComponent(ICore core)
+        {
+            this.DatabaseFactory = core.Factories.Database;
+            base.InitializeComponent(core);
+        }
+
+        protected override async Task OnRun()
+        {
+            this.Name = "Exporting..";
+            using (var database = this.DatabaseFactory.Create())
+            {
+                using (var transaction = database.BeginTransaction(database.PreferredIsolationLevel))
+                {
+                    var set = database.Set<LibraryItem>(transaction);
+                    this.Count = set.Count;
+                    using (var stream = File.Create(this.FileName))
+                    {
+                        await this.Export(set, stream).ConfigureAwait(false);
+                    }
+                }
+            }
+        }
+
+        private async Task Export(IDatabaseSet<LibraryItem> set, Stream stream)
+        {
+            Serializer.Save(stream, set.Select(libraryItem => this.Export(libraryItem)));
+        }
+
+        protected virtual LibraryItem Export(LibraryItem libraryItem)
+        {
+            Logger.Write(this, LogLevel.Debug, "Exporting: {0}", libraryItem.FileName);
+            this.Name = Path.GetFileName(libraryItem.FileName);
+            foreach (var metaDataItem in libraryItem.MetaDatas)
+            {
+                if (metaDataItem.IsFile)
+                {
+                    metaDataItem.Value = this.Export(metaDataItem.Value);
+                }
+            }
+            this.Position++;
+            return libraryItem;
+        }
+
+        protected virtual string Export(string fileName)
+        {
+            Logger.Write(this, LogLevel.Debug, "Exporting: {0}", fileName);
+            try
+            {
+                return string.Concat("DATA{", fileName, "}=", Convert.ToBase64String(File.ReadAllBytes(fileName)));
+            }
+            catch (Exception e)
+            {
+                Logger.Write(this, LogLevel.Warn, "Failed to export \"{0}\": {1}", fileName, e.Message);
+                return string.Empty;
+            }
+        }
+
+        public class Serializer
+        {
+            public static void Save(Stream stream, IEnumerable<LibraryItem> libraryItems)
+            {
+                using (var writer = new XmlTextWriter(stream, Encoding.Default))
+                {
+                    writer.Formatting = Formatting.Indented;
+                    writer.WriteStartDocument();
+                    writer.WriteStartElement(Publication.Product);
+                    foreach (var libraryItem in libraryItems)
+                    {
+                        writer.WriteStartElement(nameof(LibraryItem));
+                        writer.WriteAttributeString(nameof(LibraryItem.Id), Convert.ToString(libraryItem.Id));
+                        writer.WriteAttributeString(nameof(LibraryItem.DirectoryName), libraryItem.DirectoryName);
+                        writer.WriteAttributeString(nameof(LibraryItem.FileName), libraryItem.FileName);
+                        writer.WriteAttributeString(nameof(LibraryItem.ImportDate), libraryItem.ImportDate);
+                        writer.WriteAttributeString(nameof(LibraryItem.Status), Convert.ToString(libraryItem.Status));
+                        writer.WriteAttributeString(nameof(LibraryItem.Flags), Convert.ToString(libraryItem.Flags));
+                        foreach (var metaDataItem in libraryItem.MetaDatas)
+                        {
+                            Save(writer, metaDataItem);
+                        }
+                        writer.WriteEndElement();
+                    }
+                    writer.WriteEndElement();
+                    writer.WriteEndDocument();
+                }
+            }
+
+            private static void Save(XmlTextWriter writer, MetaDataItem metaDataItem)
+            {
+                writer.WriteStartElement(nameof(MetaDataItem));
+                writer.WriteAttributeString(nameof(MetaDataItem.Name), metaDataItem.Name);
+                writer.WriteAttributeString(nameof(MetaDataItem.Type), Convert.ToString(metaDataItem.Type));
+                writer.WriteAttributeString(nameof(MetaDataItem.Value), metaDataItem.Value);
+                writer.WriteEndElement();
+            }
+        }
+    }
+}

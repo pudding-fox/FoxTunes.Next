@@ -230,6 +230,14 @@
             }
         }
 
+        public static string LibrarySettingsDialog_Export
+        {
+            get
+            {
+                return Strings.LibrarySettingsDialog_Export;
+            }
+        }
+
         public static string LibraryRootsDialog_GroupHeader
         {
             get

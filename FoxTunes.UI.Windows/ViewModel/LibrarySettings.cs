@@ -1,7 +1,6 @@
 ﻿using FoxDb;
 using FoxTunes.Interfaces;
 using System;
-using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -13,6 +12,8 @@ namespace FoxTunes.ViewModel
 {
     public class LibrarySettings : ViewModelBase
     {
+        public ICore Core { get; private set; }
+
         public ILibraryManager LibraryManager { get; private set; }
 
         public IHierarchyManager HierarchyManager { get; private set; }
@@ -22,6 +23,10 @@ namespace FoxTunes.ViewModel
         public ISignalEmitter SignalEmitter { get; private set; }
 
         public IErrorEmitter ErrorEmitter { get; private set; }
+
+        public IFileSystemBrowser FileSystemBrowser { get; private set; }
+
+        public IBackgroundTaskEmitter BackgroundTaskEmitter { get; private set; }
 
         private CollectionManager<LibraryHierarchy> _LibraryHierarchies { get; set; }
 
@@ -217,7 +222,7 @@ namespace FoxTunes.ViewModel
             {
                 using (var task = new SingletonReentrantTask(CancellationToken.None, ComponentSlots.Database, SingletonReentrantTask.PRIORITY_HIGH, cancellationToken =>
                 {
-                    Core.Instance.InitializeDatabase(database, DatabaseInitializeType.Library);
+                    this.Core.InitializeDatabase(database, DatabaseInitializeType.Library);
 #if NET40
                     return TaskEx.FromResult(false);
 #else
@@ -250,15 +255,68 @@ namespace FoxTunes.ViewModel
             Process.Start(fileName);
         }
 
+        public ICommand ExportCommand
+        {
+            get
+            {
+                return CommandFactory.Instance.CreateCommand(this.Export);
+            }
+        }
+
+        public Task Export()
+        {
+            var options = new BrowseOptions(
+                "Export",
+                string.Empty,
+                new[]
+                {
+                    new BrowseFilter("FoxTunes", new[] { ".fox" })
+                },
+                BrowseFlags.File | BrowseFlags.Save
+            );
+            var result = this.FileSystemBrowser.Browse(options);
+            if (!result.Success)
+            {
+#if NET40
+                return TaskEx.FromResult(false);
+#else
+                return Task.CompletedTask;
+#endif
+            }
+            var fileName = result.Paths.FirstOrDefault();
+            if (string.IsNullOrEmpty(fileName))
+            {
+#if NET40
+                return TaskEx.FromResult(false);
+#else
+                return Task.CompletedTask;
+#endif
+            }
+            return this.Export(fileName);
+        }
+
+        protected virtual async Task Export(string fileName)
+        {
+            using (var task = new ExportLibraryTask(fileName))
+            {
+                task.InitializeComponent(this.Core);
+                await this.BackgroundTaskEmitter.Send(task).ConfigureAwait(false);
+                await task.Run().ConfigureAwait(false);
+            }
+        }
+
         protected override void InitializeComponent(ICore core)
         {
             global::FoxTunes.BackgroundTask.ActiveChanged += this.OnActiveChanged;
+            this.Core = core;
             this.LibraryManager = core.Managers.Library;
             this.HierarchyManager = core.Managers.Hierarchy;
             this.DatabaseFactory = core.Factories.Database;
             this.SignalEmitter = core.Components.SignalEmitter;
             this.SignalEmitter.Signal += this.OnSignal;
             this.ErrorEmitter = core.Components.ErrorEmitter;
+            this.FileSystemBrowser = core.Components.FileSystemBrowser;
+            this.BackgroundTaskEmitter = core.Components.BackgroundTaskEmitter;
             this.LibraryHierarchyLevels = new CollectionManager<LibraryHierarchyLevel>()
             {
                 ItemFactory = () =>
