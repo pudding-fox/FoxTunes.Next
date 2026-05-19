@@ -4,6 +4,8 @@ namespace FoxTunes.Interfaces
 {
     public interface IDatabaseQueries : IBaseComponent
     {
+        IDatabaseQuery AddLibraryItem { get; }
+
         IDatabaseQuery AddLibraryHierarchyNode { get; }
 
         IDatabaseQuery AddLibraryHierarchyNodeToPlaylist(string filter, string sort);

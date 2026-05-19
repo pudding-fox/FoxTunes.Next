@@ -1,5 +1,4 @@
 ﻿using FoxDb;
-using FoxDb.Interfaces;
 using FoxTunes.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -62,7 +61,8 @@ namespace FoxTunes
                         {
                             try
                             {
-                                Serializer.Save(zipStream, set.Select(libraryItem => this.Export(libraryItem)));
+                                var fileNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+                                Serializer.Save(zipStream, set.Select(libraryItem => this.Export(fileNames, libraryItem)));
                             }
                             catch (OperationCanceledException)
                             {
@@ -79,7 +79,7 @@ namespace FoxTunes
 #endif
         }
 
-        protected virtual LibraryItem Export(LibraryItem libraryItem)
+        protected virtual LibraryItem Export(HashSet<string> fileNames, LibraryItem libraryItem)
         {
             if (this.IsCancellationRequested)
             {
@@ -91,25 +91,29 @@ namespace FoxTunes
             {
                 if (metaDataItem.IsFile)
                 {
-                    metaDataItem.Value = this.Export(metaDataItem.Value);
+                    metaDataItem.Value = this.Export(fileNames, metaDataItem.Value);
                 }
             }
             this.Position++;
             return libraryItem;
         }
 
-        protected virtual string Export(string fileName)
+        protected virtual string Export(HashSet<string> fileNames, string fileName)
         {
-            Logger.Write(this, LogLevel.Debug, "Exporting: {0}", fileName);
-            try
+            if (fileNames.Add(fileName))
             {
-                return string.Concat("DATA{", fileName, "}=", Convert.ToBase64String(File.ReadAllBytes(fileName)));
+                Logger.Write(this, LogLevel.Debug, "Exporting: {0}", fileName);
+                try
+                {
+                    return string.Concat("DATA{", fileName, "}=", Convert.ToBase64String(File.ReadAllBytes(fileName)));
+                }
+                catch (Exception e)
+                {
+                    Logger.Write(this, LogLevel.Warn, "Failed to export \"{0}\": {1}", fileName, e.Message);
+                }
             }
-            catch (Exception e)
-            {
-                Logger.Write(this, LogLevel.Warn, "Failed to export \"{0}\": {1}", fileName, e.Message);
-                return string.Empty;
-            }
+            Logger.Write(this, LogLevel.Debug, "Already exported: {0}", fileName);
+            return fileName;
         }
 
         public class Serializer
@@ -127,7 +131,6 @@ namespace FoxTunes
                     foreach (var libraryItem in libraryItems)
                     {
                         writer.WriteStartElement(nameof(LibraryItem));
-                        writer.WriteAttributeString(nameof(LibraryItem.Id), Convert.ToString(libraryItem.Id));
                         writer.WriteAttributeString(nameof(LibraryItem.DirectoryName), libraryItem.DirectoryName);
                         writer.WriteAttributeString(nameof(LibraryItem.FileName), libraryItem.FileName);
                         writer.WriteAttributeString(nameof(LibraryItem.ImportDate), libraryItem.ImportDate);

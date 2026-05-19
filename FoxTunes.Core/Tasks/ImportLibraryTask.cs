@@ -160,7 +160,6 @@ namespace FoxTunes
             private static LibraryItem LoadLibraryItem(XmlReader reader)
             {
                 var libraryItem = new LibraryItem();
-                libraryItem.Id = int.Parse(reader.GetAttribute(nameof(LibraryItem.Id)));
                 libraryItem.DirectoryName = reader.GetAttribute(nameof(LibraryItem.DirectoryName));
                 libraryItem.FileName = reader.GetAttribute(nameof(LibraryItem.FileName));
                 libraryItem.ImportDate = reader.GetAttribute(nameof(LibraryItem.ImportDate));

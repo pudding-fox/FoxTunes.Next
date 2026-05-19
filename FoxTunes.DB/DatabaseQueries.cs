@@ -29,6 +29,21 @@ namespace FoxTunes
             base.InitializeComponent(core);
         }
 
+        public IDatabaseQuery AddLibraryItem
+        {
+            get
+            {
+                return this.Database.QueryFactory.Create(
+                    Resources.AddLibraryItem,
+                    new DatabaseQueryParameter("directoryName", DbType.String, 0, 0, 0, ParameterDirection.Input, false, null, DatabaseQueryParameterFlags.None),
+                    new DatabaseQueryParameter("fileName", DbType.String, 0, 0, 0, ParameterDirection.Input, false, null, DatabaseQueryParameterFlags.None),
+                    new DatabaseQueryParameter("importDate", DbType.String, 0, 0, 0, ParameterDirection.Input, false, null, DatabaseQueryParameterFlags.None),
+                    new DatabaseQueryParameter("status", DbType.Byte, 0, 0, 0, ParameterDirection.Input, false, null, DatabaseQueryParameterFlags.None),
+                    new DatabaseQueryParameter("flags", DbType.Byte, 0, 0, 0, ParameterDirection.Input, false, null, DatabaseQueryParameterFlags.None)
+                );
+            }
+        }
+
         public IDatabaseQuery AddLibraryHierarchyNode
         {
             get

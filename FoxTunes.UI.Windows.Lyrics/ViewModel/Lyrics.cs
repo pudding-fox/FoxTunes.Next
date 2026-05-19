@@ -517,7 +517,7 @@ namespace FoxTunes.ViewModel
                         var match = SYNCED_LYRICS.Match(line);
                         if (match.Success)
                         {
-                            syncedData.Add(new SyncedLyrics(match.Groups[1].Value, match.Groups[2].Value));
+                            syncedData.Add(new SyncedLyrics(match.Groups[1].Value.Trim(), match.Groups[2].Value.Trim()));
                             continue;
                         }
                     }
