@@ -137,17 +137,28 @@ else
             #line hidden
             this.Write(") - 1, \"LibraryItems\".\"DirectoryName\", \"LibraryItems\".\"FileName\", @status, 0\r\nFRO" +
                     "M \"LibraryItems\"\r\n\tLEFT OUTER JOIN \"HorizontalMetaData\"\r\n\t\tON \"HorizontalMetaDat" +
-                    "a\".\"Id\" = \"LibraryItems\".\"Id\"\r\nWHERE\r\n");
+                    "a\".\"Id\" = \"LibraryItems\".\"Id\"\r\n");
             
-            #line 76 "C:\sourcecode\source\personal\FoxTunes.Next\FoxTunes.DB.SQLite\Templates\AddSearchToPlaylist.tt"
+            #line 75 "C:\sourcecode\source\personal\FoxTunes.Next\FoxTunes.DB.SQLite\Templates\AddSearchToPlaylist.tt"
+
+if (this.Filter != null)
+{
+
+            
+            #line default
+            #line hidden
+            this.Write("WHERE\r\n");
+            
+            #line 80 "C:\sourcecode\source\personal\FoxTunes.Next\FoxTunes.DB.SQLite\Templates\AddSearchToPlaylist.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(new LibraryFilterBuilder(this.Database, this.Filter).TransformText()));
             
             #line default
             #line hidden
             this.Write("\r\n");
             
-            #line 77 "C:\sourcecode\source\personal\FoxTunes.Next\FoxTunes.DB.SQLite\Templates\AddSearchToPlaylist.tt"
+            #line 81 "C:\sourcecode\source\personal\FoxTunes.Next\FoxTunes.DB.SQLite\Templates\AddSearchToPlaylist.tt"
 
+}
 if (this.Limit > 0)
 {
 
@@ -156,14 +167,14 @@ if (this.Limit > 0)
             #line hidden
             this.Write("LIMIT ");
             
-            #line 81 "C:\sourcecode\source\personal\FoxTunes.Next\FoxTunes.DB.SQLite\Templates\AddSearchToPlaylist.tt"
+            #line 86 "C:\sourcecode\source\personal\FoxTunes.Next\FoxTunes.DB.SQLite\Templates\AddSearchToPlaylist.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(this.Limit));
             
             #line default
             #line hidden
             this.Write("\r\n");
             
-            #line 82 "C:\sourcecode\source\personal\FoxTunes.Next\FoxTunes.DB.SQLite\Templates\AddSearchToPlaylist.tt"
+            #line 87 "C:\sourcecode\source\personal\FoxTunes.Next\FoxTunes.DB.SQLite\Templates\AddSearchToPlaylist.tt"
 
 }
 

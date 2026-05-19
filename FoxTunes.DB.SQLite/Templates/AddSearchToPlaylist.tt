@@ -72,9 +72,14 @@ else
 FROM "LibraryItems"
 	LEFT OUTER JOIN "HorizontalMetaData"
 		ON "HorizontalMetaData"."Id" = "LibraryItems"."Id"
+<#
+if (this.Filter != null)
+{
+#>
 WHERE
 <#= new LibraryFilterBuilder(this.Database, this.Filter).TransformText() #>
 <#
+}
 if (this.Limit > 0)
 {
 #>

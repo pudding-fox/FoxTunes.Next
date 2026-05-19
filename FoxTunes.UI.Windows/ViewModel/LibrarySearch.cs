@@ -93,8 +93,6 @@ namespace FoxTunes.ViewModel
 
         public ILibraryHierarchyBrowser LibraryHierarchyBrowser { get; private set; }
 
-        public ILibraryManager LibraryManager { get; private set; }
-
         public IPlaylistManager PlaylistManager { get; private set; }
 
         private IConfigurationBase Configuration { get; set; }
@@ -103,7 +101,6 @@ namespace FoxTunes.ViewModel
         {
             this.LibraryHierarchyBrowser = core.Components.LibraryHierarchyBrowser;
             this.LibraryHierarchyBrowser.FilterChanged += this.OnFilterChanged;
-            this.LibraryManager = core.Managers.Library;
             this.PlaylistManager = core.Managers.Playlist;
             this.Configuration = core.Components.Configuration;
             this.Configuration.GetElement<IntegerConfigurationElement>(
@@ -132,15 +129,6 @@ namespace FoxTunes.ViewModel
 
         public Task SearchCommit()
         {
-            var libraryHierarchy = this.LibraryManager.SelectedHierarchy;
-            if (libraryHierarchy == null || LibraryHierarchy.Empty.Equals(libraryHierarchy))
-            {
-#if NET40
-                return TaskEx.FromResult(false);
-#else
-                return Task.CompletedTask;
-#endif
-            }
             var clear = default(bool);
             switch (this.SearchCommitBehaviour)
             {
@@ -153,7 +141,6 @@ namespace FoxTunes.ViewModel
             }
             return this.PlaylistManager.Add(
                 this.PlaylistManager.SelectedPlaylist,
-                this.LibraryManager.SelectedHierarchy,
                 clear
             );
         }

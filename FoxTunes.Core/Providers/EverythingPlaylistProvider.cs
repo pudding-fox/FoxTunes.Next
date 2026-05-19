@@ -17,14 +17,11 @@ namespace FoxTunes
 
         public ICore Core { get; private set; }
 
-        public ILibraryManager LibraryManager { get; private set; }
-
         public ILibraryHierarchyBrowser LibraryHierarchyBrowser { get; private set; }
 
         public override void InitializeComponent(ICore core)
         {
             this.Core = core;
-            this.LibraryManager = core.Managers.Library;
             this.LibraryHierarchyBrowser = core.Components.LibraryHierarchyBrowser;
             this.LibraryHierarchyBrowser.FilterChanged += this.OnFilterChanged;
             base.InitializeComponent(core);
@@ -53,8 +50,7 @@ namespace FoxTunes
 
         public override async Task Refresh(Playlist playlist, bool force)
         {
-            var libraryHierarchy = this.LibraryManager.SelectedHierarchy;
-            using (var task = new AddLibraryHierarchyNodesToPlaylistTask(playlist, 0, libraryHierarchy, this.LibraryHierarchyBrowser.Filter, true))
+            using (var task = new AddSearchToPlaylistTask(playlist, 0, this.LibraryHierarchyBrowser.Filter, true))
             {
                 task.InitializeComponent(this.Core);
                 await task.Run().ConfigureAwait(false);

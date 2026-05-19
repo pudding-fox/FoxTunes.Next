@@ -325,17 +325,17 @@ namespace FoxTunes
             }
         }
 
-        public Task Add(Playlist playlist, LibraryHierarchy libraryHierarchy, bool clear)
+        public Task Add(Playlist playlist, bool clear)
         {
             Logger.Write(this, LogLevel.Debug, "Adding library nodes to playlist.");
             var index = this.PlaylistBrowser.GetInsertIndex(this.SelectedPlaylist);
-            return this.Insert(playlist, index, libraryHierarchy, clear);
+            return this.Insert(playlist, index, clear);
         }
 
-        public async Task Insert(Playlist playlist, int index, LibraryHierarchy libraryHierarchy, bool clear)
+        public async Task Insert(Playlist playlist, int index, bool clear)
         {
-            Logger.Write(this, LogLevel.Debug, "Inserting library nodes into playlist at index: {0}", index);
-            using (var task = new AddLibraryHierarchyNodesToPlaylistTask(playlist, index, libraryHierarchy, this.LibraryHierarchyBrowser.Filter, clear))
+            Logger.Write(this, LogLevel.Debug, "Inserting search nodes into playlist at index: {0}", index);
+            using (var task = new AddSearchToPlaylistTask(playlist, index, this.LibraryHierarchyBrowser.Filter, clear))
             {
                 task.InitializeComponent(this.Core);
                 await this.BackgroundTaskEmitter.Send(task).ConfigureAwait(false);
