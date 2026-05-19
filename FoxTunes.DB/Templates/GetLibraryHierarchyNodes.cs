@@ -43,7 +43,7 @@ WHERE ""LibraryHierarchy_Id"" = @libraryHierarchyId
             
             #line default
             #line hidden
-            this.Write("\r\nORDER BY \"Value\"");
+            this.Write("\r\nORDER BY \"Value\" COLLATE NOCASE");
             return this.GenerationEnvironment.ToString();
         }
     }

@@ -12,7 +12,7 @@ foreach (var expression in this.Sort.Expressions)
 	switch (expression.Operator)
 	{
 		default:
-#><#= this.Database.QueryFactory.Dialect.Identifier("HorizontalMetaData", this.GetColumn(expression.Name)) #><#			
+#><#= this.Database.QueryFactory.Dialect.Identifier("HorizontalMetaData", this.GetColumn(expression.Name)) #> COLLATE NOCASE<#			
 			break;
 		case SortParserResultOperator.Numeric:
 #>CAST(<#= this.Database.QueryFactory.Dialect.Identifier("HorizontalMetaData", this.GetColumn(expression.Name)) #> AS int)<#
@@ -43,10 +43,10 @@ foreach (var expression in this.Sort.Expressions)
 #>
 
 	ELSE <#= this.Database.QueryFactory.Dialect.Identifier("HorizontalMetaData", this.GetColumn(child.Name)) #>
-END<#
+END COLLATE NOCASE<#
 			break;
 	}
 #>, <#
 }
 #>
-"HorizontalMetaData"."FileName"
+"HorizontalMetaData"."FileName" COLLATE NOCASE

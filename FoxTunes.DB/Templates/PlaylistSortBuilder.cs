@@ -20,7 +20,7 @@ namespace FoxTunes.Templates
     /// Class to produce the template output
     /// </summary>
     
-    #line 1 "C:\personal\FoxTunes\FoxTunes.DB\Templates\PlaylistSortBuilder.tt"
+    #line 1 "C:\sourcecode\source\personal\FoxTunes.Next\FoxTunes.DB\Templates\PlaylistSortBuilder.tt"
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.TextTemplating", "17.0.0.0")]
     public partial class PlaylistSortBuilder : PlaylistSortBuilderBase
     {
@@ -32,7 +32,7 @@ namespace FoxTunes.Templates
         {
             this.Write("\r\n");
             
-            #line 9 "C:\personal\FoxTunes\FoxTunes.DB\Templates\PlaylistSortBuilder.tt"
+            #line 9 "C:\sourcecode\source\personal\FoxTunes.Next\FoxTunes.DB\Templates\PlaylistSortBuilder.tt"
 
 foreach (var expression in this.Sort.Expressions)
 {
@@ -44,13 +44,14 @@ foreach (var expression in this.Sort.Expressions)
             #line default
             #line hidden
             
-            #line 15 "C:\personal\FoxTunes\FoxTunes.DB\Templates\PlaylistSortBuilder.tt"
+            #line 15 "C:\sourcecode\source\personal\FoxTunes.Next\FoxTunes.DB\Templates\PlaylistSortBuilder.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(this.Database.QueryFactory.Dialect.Identifier("HorizontalMetaData", this.GetColumn(expression.Name))));
             
             #line default
             #line hidden
+            this.Write(" COLLATE NOCASE");
             
-            #line 15 "C:\personal\FoxTunes\FoxTunes.DB\Templates\PlaylistSortBuilder.tt"
+            #line 15 "C:\sourcecode\source\personal\FoxTunes.Next\FoxTunes.DB\Templates\PlaylistSortBuilder.tt"
 			
 			break;
 		case SortParserResultOperator.Numeric:
@@ -60,14 +61,14 @@ foreach (var expression in this.Sort.Expressions)
             #line hidden
             this.Write("CAST(");
             
-            #line 18 "C:\personal\FoxTunes\FoxTunes.DB\Templates\PlaylistSortBuilder.tt"
+            #line 18 "C:\sourcecode\source\personal\FoxTunes.Next\FoxTunes.DB\Templates\PlaylistSortBuilder.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(this.Database.QueryFactory.Dialect.Identifier("HorizontalMetaData", this.GetColumn(expression.Name))));
             
             #line default
             #line hidden
             this.Write(" AS int)");
             
-            #line 18 "C:\personal\FoxTunes\FoxTunes.DB\Templates\PlaylistSortBuilder.tt"
+            #line 18 "C:\sourcecode\source\personal\FoxTunes.Next\FoxTunes.DB\Templates\PlaylistSortBuilder.tt"
 
 			break;
 		case SortParserResultOperator.NullCoalesce:
@@ -89,7 +90,7 @@ foreach (var expression in this.Sort.Expressions)
             #line hidden
             this.Write("CASE");
             
-            #line 33 "C:\personal\FoxTunes\FoxTunes.DB\Templates\PlaylistSortBuilder.tt"
+            #line 33 "C:\sourcecode\source\personal\FoxTunes.Next\FoxTunes.DB\Templates\PlaylistSortBuilder.tt"
 
 			while (queue.Count > 1)
 			{
@@ -100,20 +101,20 @@ foreach (var expression in this.Sort.Expressions)
             #line hidden
             this.Write("\r\n\tWHEN ");
             
-            #line 39 "C:\personal\FoxTunes\FoxTunes.DB\Templates\PlaylistSortBuilder.tt"
+            #line 39 "C:\sourcecode\source\personal\FoxTunes.Next\FoxTunes.DB\Templates\PlaylistSortBuilder.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(this.Database.QueryFactory.Dialect.Identifier("HorizontalMetaData", this.GetColumn(child.Name))));
             
             #line default
             #line hidden
             this.Write(" IS NOT NULL \r\n\t\tTHEN ");
             
-            #line 40 "C:\personal\FoxTunes\FoxTunes.DB\Templates\PlaylistSortBuilder.tt"
+            #line 40 "C:\sourcecode\source\personal\FoxTunes.Next\FoxTunes.DB\Templates\PlaylistSortBuilder.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(this.Database.QueryFactory.Dialect.Identifier("HorizontalMetaData", this.GetColumn(child.Name))));
             
             #line default
             #line hidden
             
-            #line 40 "C:\personal\FoxTunes\FoxTunes.DB\Templates\PlaylistSortBuilder.tt"
+            #line 40 "C:\sourcecode\source\personal\FoxTunes.Next\FoxTunes.DB\Templates\PlaylistSortBuilder.tt"
 
 			}
 			child = queue.Dequeue();
@@ -123,14 +124,14 @@ foreach (var expression in this.Sort.Expressions)
             #line hidden
             this.Write("\r\n\tELSE ");
             
-            #line 45 "C:\personal\FoxTunes\FoxTunes.DB\Templates\PlaylistSortBuilder.tt"
+            #line 45 "C:\sourcecode\source\personal\FoxTunes.Next\FoxTunes.DB\Templates\PlaylistSortBuilder.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(this.Database.QueryFactory.Dialect.Identifier("HorizontalMetaData", this.GetColumn(child.Name))));
             
             #line default
             #line hidden
-            this.Write("\r\nEND");
+            this.Write("\r\nEND COLLATE NOCASE");
             
-            #line 46 "C:\personal\FoxTunes\FoxTunes.DB\Templates\PlaylistSortBuilder.tt"
+            #line 46 "C:\sourcecode\source\personal\FoxTunes.Next\FoxTunes.DB\Templates\PlaylistSortBuilder.tt"
 
 			break;
 	}
@@ -140,14 +141,14 @@ foreach (var expression in this.Sort.Expressions)
             #line hidden
             this.Write(", ");
             
-            #line 49 "C:\personal\FoxTunes\FoxTunes.DB\Templates\PlaylistSortBuilder.tt"
+            #line 49 "C:\sourcecode\source\personal\FoxTunes.Next\FoxTunes.DB\Templates\PlaylistSortBuilder.tt"
 
 }
 
             
             #line default
             #line hidden
-            this.Write("\"HorizontalMetaData\".\"FileName\"");
+            this.Write("\"HorizontalMetaData\".\"FileName\" COLLATE NOCASE");
             return this.GenerationEnvironment.ToString();
         }
     }
@@ -173,7 +174,7 @@ foreach (var expression in this.Sort.Expressions)
         /// <summary>
         /// The string builder that generation-time code is using to assemble generated output
         /// </summary>
-        protected System.Text.StringBuilder GenerationEnvironment
+        public System.Text.StringBuilder GenerationEnvironment
         {
             get
             {
