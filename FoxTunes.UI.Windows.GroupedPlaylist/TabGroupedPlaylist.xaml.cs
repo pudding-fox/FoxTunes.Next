@@ -41,13 +41,6 @@ namespace FoxTunes
         public TabGroupedPlaylist()
         {
             this.InitializeComponent();
-#if NET40
-
-#else
-            VirtualizingPanel.SetIsVirtualizing(this.ListView, true);
-            VirtualizingPanel.SetVirtualizationMode(this.ListView, VirtualizationMode.Recycling);
-            VirtualizingPanel.SetIsVirtualizingWhenGrouping(this.ListView, true);
-#endif
         }
 
         public Playlist Playlist

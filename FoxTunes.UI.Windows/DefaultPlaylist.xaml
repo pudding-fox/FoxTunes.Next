@@ -41,6 +41,7 @@
                   Windows:ItemsControlExtensions.MaintainOffset="True"
                   VirtualizingStackPanel.IsVirtualizing="True"
                   VirtualizingStackPanel.VirtualizationMode="Recycling"
+                  Windows:ListViewExtensions.CleanUpVirtualizedItem="True"
                   GridViewColumnHeader.Click="OnHeaderClick"
                   Background="{DynamicResource ControlBackgroundBrush}">
             <ListView.Resources>

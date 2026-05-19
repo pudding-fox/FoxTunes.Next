@@ -41,6 +41,7 @@
                   Windows:ItemsControlExtensions.MaintainOffset="True"
                   VirtualizingStackPanel.IsVirtualizing="True"
                   VirtualizingStackPanel.VirtualizationMode="Recycling"
+                  Windows:ListViewExtensions.CleanUpVirtualizedItem="True"
                   GridViewColumnHeader.Click="OnHeaderClick">
             <ListView.Resources>
                 <Windows:Menu x:Key="ColumnHeaderMenu" Category="{Binding Source={x:Static Core:InvocationComponent.CATEGORY_PLAYLIST_HEADER}}"></Windows:Menu>
