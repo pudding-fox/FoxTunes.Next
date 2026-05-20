@@ -673,38 +673,31 @@ namespace FoxTunes
 
         protected static void Animate(ref int value, int target, int min, int max, int minChange, int maxChange)
         {
-            var difference = Math.Abs(value - target);
-            if (difference == 0)
+            if (value == target)
             {
-                //Nothing to do.
                 return;
             }
 
-            var distance = default(float);
-            if (difference < target)
+            var difference = target - value;
+            var distance = Math.Abs(difference);
+            var range = Math.Max(1, max - min);
+            var normalized = (float)distance / range;
+            var eased = 1f - (float)Math.Exp(-10.0 * normalized);
+            var oscillation = (float)(Math.Sin(normalized * Math.PI * 2.0) * Math.Pow(1f - normalized, 0.5));
+
+            eased += oscillation * 0.3f;
+
+            int increment = (int)(distance * eased * 0.35f);
+            increment = Math.Max(minChange, Math.Min(maxChange, increment));
+            increment = Math.Max(1, increment);
+            value += Math.Sign(difference) * increment;
+
+            if ((difference > 0 && value > target) || (difference < 0 && value < target))
             {
-                distance = (float)difference / target;
-            }
-            else
-            {
-                distance = (float)difference / (max - target);
+                value = target;
             }
 
-            var increment = (int)Math.Min(Math.Max((1 - Math.Pow(1 - distance, 4)) * difference, minChange), maxChange);
-            if (value < target)
-            {
-                value += increment;
-            }
-            else
-            {
-                value -= increment;
-            }
-#if DEBUG
-            if (value < min || value > max)
-            {
-                throw new InvalidOperationException();
-            }
-#endif
+            value = Math.Max(min, Math.Min(max, value));
         }
 
         protected static float NoiseReduction(float[] values, int count, int smoothing)
