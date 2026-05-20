@@ -20,7 +20,7 @@ namespace FoxTunes.Templates
     /// Class to produce the template output
     /// </summary>
     
-    #line 1 "C:\Users\misha\Source\repos\FoxTunes.Next\FoxTunes.DB\Templates\GetPlaylistItems.tt"
+    #line 1 "C:\sourcecode\source\personal\FoxTunes.Next\FoxTunes.DB\Templates\GetPlaylistItems.tt"
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.TextTemplating", "17.0.0.0")]
     public partial class GetPlaylistItems : GetPlaylistItemsBase
     {
@@ -34,13 +34,12 @@ namespace FoxTunes.Templates
                     "ems\".\"Sequence\"\r\n\tFROM  \"PlaylistItems\" \r\n\tWHERE \"PlaylistItems\".\"Playlist_Id\" =" +
                     " @playlistId AND\r\n\t(\r\n\t");
             
-            #line 16 "C:\Users\misha\Source\repos\FoxTunes.Next\FoxTunes.DB\Templates\GetPlaylistItems.tt"
+            #line 16 "C:\sourcecode\source\personal\FoxTunes.Next\FoxTunes.DB\Templates\GetPlaylistItems.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(new PlaylistFilterBuilder(this.Database, this.Filter).TransformText()));
             
             #line default
             #line hidden
-            this.Write("\r\n\t)\r\n\tGROUP BY \"PlaylistItems\".\"Id\", \"PlaylistItems\".\"Sequence\"\r\n) \"PlaylistItem" +
-                    "s\"\r\nORDER BY \"PlaylistItems\".\"Sequence\"");
+            this.Write("\r\n\t)\r\n) \"PlaylistItems\"\r\nORDER BY \"PlaylistItems\".\"Sequence\" ");
             return this.GenerationEnvironment.ToString();
         }
     }

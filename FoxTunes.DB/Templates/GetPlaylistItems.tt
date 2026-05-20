@@ -15,6 +15,5 @@ FROM
 	(
 	<#= new PlaylistFilterBuilder(this.Database, this.Filter).TransformText() #>
 	)
-	GROUP BY "PlaylistItems"."Id", "PlaylistItems"."Sequence"
 ) "PlaylistItems"
-ORDER BY "PlaylistItems"."Sequence"
+ORDER BY "PlaylistItems"."Sequence" 
