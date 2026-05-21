@@ -205,6 +205,7 @@ namespace FoxTunes
 
         protected virtual void OnLoaded(object sender, RoutedEventArgs e)
         {
+            this.Loaded -= this.OnLoaded;
             this.ContentControl.SetBinding(
                 ContentControl.ContentProperty,
                 new Binding()
@@ -214,7 +215,6 @@ namespace FoxTunes
                     Converter = this
                 }
             );
-            this.Loaded -= this.OnLoaded;
         }
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)

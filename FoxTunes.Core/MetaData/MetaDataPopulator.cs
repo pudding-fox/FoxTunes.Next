@@ -47,7 +47,7 @@ namespace FoxTunes
             {
                 return new ParallelOptions()
                 {
-                    MaxDegreeOfParallelism = this.Threads.Value
+                    MaxDegreeOfParallelism = Math.Max(this.Threads.Value, 1)
                 };
             }
         }

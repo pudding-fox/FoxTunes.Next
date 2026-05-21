@@ -2,29 +2,30 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace FoxTunes
 {
-    public class BassReplayGainScannerMonitor : PopulatorBase, IBassReplayGainScannerMonitor
+    public class MoodBarMonitor : PopulatorBase, IMoodBarMonitor
     {
         public static readonly TimeSpan INTERVAL = TimeSpan.FromSeconds(1);
 
-        public BassReplayGainScannerMonitor(IBassReplayGainScanner scanner, bool reportProgress, CancellationToken cancellationToken) : base(reportProgress)
+        public MoodBarMonitor(IMoodBar MoodBar, IEnumerable<MoodBarGenerator.MoodBarGeneratorData> generatorDatas, bool reportProgress, CancellationToken cancellationToken) : base(reportProgress)
         {
-            this.ScannerItems = new Dictionary<Guid, ScannerItem>();
-            this.Scanner = scanner;
+            this.MoodBar = MoodBar;
+            this.GeneratorDatas = generatorDatas;
             this.CancellationToken = cancellationToken;
         }
 
-        public Dictionary<Guid, ScannerItem> ScannerItems { get; private set; }
+        public IMoodBar MoodBar { get; private set; }
 
-        public IBassReplayGainScanner Scanner { get; private set; }
+        public IEnumerable<MoodBarGenerator.MoodBarGeneratorData> GeneratorDatas { get; private set; }
 
         public CancellationToken CancellationToken { get; private set; }
 
-        public Task Scan()
+        public Task Create()
         {
 #if NET40
             var task = TaskEx.Run(() =>
@@ -32,7 +33,7 @@ namespace FoxTunes
             var task = Task.Run(() =>
 #endif
             {
-                this.Scanner.Scan();
+                this.MoodBar.Create();
             });
 #if NET40
             return TaskEx.WhenAll(task, this.Monitor(task));
@@ -43,32 +44,40 @@ namespace FoxTunes
 
         protected virtual async Task Monitor(Task task)
         {
-            this.Name = "Scanning files";
+            this.Name = "Creating files";
             while (!task.IsCompleted)
             {
                 if (this.CancellationToken.IsCancellationRequested)
                 {
-                    Logger.Write(this, LogLevel.Debug, "Requesting cancellation from scanner.");
-                    this.Scanner.Cancel();
+                    Logger.Write(this, LogLevel.Debug, "Requesting cancellation from moodbar.");
+                    this.MoodBar.Cancel();
                     this.Name = "Cancelling";
                     break;
                 }
-                this.Scanner.Update();
+                this.MoodBar.Update();
                 var position = 0;
                 var count = 0;
                 var builder = new StringBuilder();
-                foreach (var scannerItem in this.Scanner.ScannerItems)
+                foreach (var moodBarItem in this.MoodBar.MoodBarItems)
                 {
-                    this.ScannerItems[scannerItem.Id] = scannerItem;
-                    position += scannerItem.Progress;
-                    count += ScannerItem.PROGRESS_COMPLETE;
-                    if (scannerItem.Status == ScannerItemStatus.Processing && scannerItem.Progress != ScannerItem.PROGRESS_COMPLETE)
+                    var generatorData = this.GeneratorDatas.FirstOrDefault(_generatorData => string.Equals(_generatorData.FileName, moodBarItem.FileName, StringComparison.OrdinalIgnoreCase));
+                    if (moodBarItem.Data != null && generatorData != null)
+                    {
+                        generatorData.Data = moodBarItem.Data.Data;
+                        generatorData.Position = moodBarItem.Data.Position;
+                        generatorData.Capacity = moodBarItem.Data.Capacity;
+                        generatorData.Peak = moodBarItem.Data.Peak;
+                        generatorData.Update();
+                    }
+                    position += moodBarItem.Progress;
+                    count += MoodBarItem.PROGRESS_COMPLETE;
+                    if (moodBarItem.Status == MoodBarItemStatus.Processing && moodBarItem.Progress != MoodBarItem.PROGRESS_COMPLETE)
                     {
                         if (builder.Length > 0)
                         {
                             builder.Append(", ");
                         }
-                        builder.Append(Path.GetFileName(scannerItem.FileName));
+                        builder.Append(Path.GetFileName(moodBarItem.FileName));
                     }
                 }
                 if (builder.Length > 0)
@@ -77,7 +86,7 @@ namespace FoxTunes
                 }
                 else
                 {
-                    this.Description = "Waiting for scanner";
+                    this.Description = "Waiting for moodbar";
                 }
                 this.Position = position;
                 this.Count = count;
@@ -89,8 +98,8 @@ namespace FoxTunes
             }
             while (!task.IsCompleted)
             {
-                Logger.Write(this, LogLevel.Debug, "Waiting for scanner to complete.");
-                this.Scanner.Update();
+                Logger.Write(this, LogLevel.Debug, "Waiting for moodbar to complete.");
+                this.MoodBar.Update();
 #if NET40
                 await TaskEx.Delay(INTERVAL).ConfigureAwait(false);
 #else

@@ -177,7 +177,7 @@ namespace FoxTunes
             Logger.Write(this, LogLevel.Debug, "Creating task factory for {0} threads.", threads);
             this.Factory = new TaskFactory(new TaskScheduler(new ParallelOptions()
             {
-                MaxDegreeOfParallelism = threads
+                MaxDegreeOfParallelism = Math.Max(threads, 1)
             }));
         }
 

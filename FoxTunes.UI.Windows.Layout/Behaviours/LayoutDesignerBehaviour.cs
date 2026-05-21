@@ -63,6 +63,7 @@ namespace FoxTunes
             else
             {
                 this.HideDesignerOverlay();
+                this.Configuration.Save();
             }
             if (this.IsDesigningChanged != null)
             {
@@ -77,6 +78,8 @@ namespace FoxTunes
 
         public IBackgroundTaskEmitter BackgroundTaskEmitter { get; private set; }
 
+        public IConfiguration Configuration { get; private set; }
+
         public override void InitializeComponent(ICore core)
         {
             Windows.ShuttingDown += this.OnShuttingDown;
@@ -84,6 +87,7 @@ namespace FoxTunes
             Windows.Registrations.AddIsVisibleChanged(LayoutTreeWindow.ID, this.OnWindowIsVisibleChanged);
             this.Core = core;
             this.BackgroundTaskEmitter = core.Components.BackgroundTaskEmitter;
+            this.Configuration = core.Components.Configuration;
             base.InitializeComponent(core);
         }
 

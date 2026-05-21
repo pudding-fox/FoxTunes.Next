@@ -341,7 +341,6 @@ namespace FoxTunes
             {
                 this.WriteTags();
                 return base.OnCompleted();
-
             }
 
             protected virtual void WriteTags()

@@ -1,31 +1,46 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <Import Project="..\Common.Net.props" />
+	<Import Project="..\Common.Net.props" />
 
-  <PropertyGroup>
-    <TargetFrameworks>net48</TargetFrameworks>
-    <AssemblyName>FoxTunes.UI.Windows.MoodBar</AssemblyName>
-    <OutputPath>..\distribution\</OutputPath>
-    <SkipEnsureBindingRedirects>true</SkipEnsureBindingRedirects>
-    <SkipValidatePackageReferences>true</SkipValidatePackageReferences>
-    <Platforms>AnyCPU</Platforms>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFrameworks>net48</TargetFrameworks>
+		<RuntimeIdentifiers>win7-x86;win7-x64</RuntimeIdentifiers>
+		<AssemblyName>FoxTunes.UI.Windows.MoodBar</AssemblyName>
+		<OutputPath>..\distribution\</OutputPath>
+		<OutputType>WinExe</OutputType>
+		<StartupObject />
+		<SkipEnsureBindingRedirects>true</SkipEnsureBindingRedirects>
+		<SkipValidatePackageReferences>true</SkipValidatePackageReferences>
+		<Platforms>AnyCPU</Platforms>
+	</PropertyGroup>
 
-  <PropertyGroup>
-    <LanguageTargets>$(MSBuildToolsPath)\Microsoft.CSharp.targets</LanguageTargets>
-  </PropertyGroup>
+	<PropertyGroup>
+		<LanguageTargets>$(MSBuildToolsPath)\Microsoft.CSharp.targets</LanguageTargets>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <Reference Include="PresentationCore" />
-    <Reference Include="PresentationFramework" />
-    <Reference Include="System.Xaml" />
-    <Reference Include="WindowsBase" />
-  </ItemGroup>
+	<ItemGroup>
+		<Reference Include="ManagedBass" Condition="'$(TargetFramework)' == 'net40'">
+			<HintPath>..\lib\net40\ManagedBass.dll</HintPath>
+		</Reference>
+	</ItemGroup>
 
-  <ItemGroup>
-    <Page Include="**\*.xaml" SubType="Designer" Generator="MSBuild:Compile" />
-    <Compile Update="**\*.xaml.cs" SubType="Code" DependentUpon="%(Filename)" />
-    <UpToDateCheckInput Include="**\*.xaml" />
-  </ItemGroup>
+	<ItemGroup>
+		<Reference Include="ManagedBass" Condition="'$(TargetFramework)' == 'net462' or '$(TargetFramework)' == 'net48'">
+			<HintPath>..\lib\net462\ManagedBass.dll</HintPath>
+		</Reference>
+	</ItemGroup>
+	
+	<ItemGroup>
+		<Reference Include="PresentationCore" />
+		<Reference Include="PresentationFramework" />
+		<Reference Include="System.Xaml" />
+		<Reference Include="WindowsBase" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Page Include="**\*.xaml" SubType="Designer" Generator="MSBuild:Compile" />
+		<Compile Update="**\*.xaml.cs" SubType="Code" DependentUpon="%(Filename)" />
+		<UpToDateCheckInput Include="**\*.xaml" />
+	</ItemGroup>
 
 	<ItemGroup>
 		<EmbeddedResource Update="Properties\Strings.resx">
@@ -40,22 +55,30 @@
 		</Compile>
 	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\FoxTunes.Core\FoxTunes.Core.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\FoxTunes.Core\FoxTunes.Core.csproj" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\FoxTunes.UI.Windows\FoxTunes.UI.Windows.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\FoxTunes.Output\FoxTunes.Output.csproj" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.Bcl.Async" Version="1.0.168" Condition="'$(TargetFramework)' == 'net40'" />
-    <PackageReference Include="Microsoft.Bcl.Build" Version="1.0.21" Condition="'$(TargetFramework)' == 'net40'" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\FoxTunes.Output.Bass\FoxTunes.Output.Bass.csproj" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Expression.Blend.Sdk" Version="1.0.2" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\FoxTunes.UI.Windows\FoxTunes.UI.Windows.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.Bcl.Async" Version="1.0.168" Condition="'$(TargetFramework)' == 'net40'" />
+		<PackageReference Include="Microsoft.Bcl.Build" Version="1.0.21" Condition="'$(TargetFramework)' == 'net40'" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Expression.Blend.Sdk" Version="1.0.2" />
+	</ItemGroup>
 
 
 

@@ -84,17 +84,20 @@ namespace FoxTunes
             get
             {
                 var position = this.Stream.Position;
-                this.Manager.WithPipeline(pipeline =>
+                if (this.Manager != null)
                 {
-                    if (pipeline != null)
+                    this.Manager.WithPipeline(pipeline =>
                     {
-                        var bufferLength = (float)pipeline.BufferLength / 1000;
-                        if (bufferLength > 0)
+                        if (pipeline != null)
                         {
-                            position -= Bass.ChannelSeconds2Bytes(this.ChannelHandle, bufferLength);
+                            var bufferLength = (float)pipeline.BufferLength / 1000;
+                            if (bufferLength > 0)
+                            {
+                                position -= Bass.ChannelSeconds2Bytes(this.ChannelHandle, bufferLength);
+                            }
                         }
-                    }
-                });
+                    });
+                }
                 return Math.Max(position, 0);
             }
         }

@@ -763,7 +763,7 @@ namespace FoxTunes
                     "moodbar",
                     new PackageElement[]
                     {
-                        "FoxTunes.UI.Windows.MoodBar.dll"
+                        "FoxTunes.UI.Windows.MoodBar.exe"
                     },
                     PackageFlags.Default
                 ),

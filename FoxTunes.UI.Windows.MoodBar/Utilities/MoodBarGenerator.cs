@@ -1,23 +1,23 @@
 ﻿using FoxTunes.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace FoxTunes
 {
-    [WindowsUserInterfaceDependency]
     public class MoodBarGenerator : StandardComponent, IConfigurableComponent
     {
-        const int BASS_ERROR_UNKNOWN = -1;
+        const int _ERROR_UNKNOWN = -1;
 
-        const int BASS_STREAMPROC_END = -2147483648;
+        const int _STREAMPROC_END = -2147483648;
 
-        const int FFT_SIZE = 512;
+        const int FFT_SIZE = 2048;
 
         static readonly int[] BANDS = new[]
         {
-            300,
-            4000,
-            20000
+            150,
+            1200,
+            6000
         };
 
         const int LOW = 0;
@@ -25,10 +25,6 @@ namespace FoxTunes
         const int MID = 1;
 
         const int HIGH = 2;
-
-        public MoodBarCache Cache { get; private set; }
-
-        public IOutput Output { get; private set; }
 
         public IOutputStreamDataSourceFactory DataSourceFactory { get; private set; }
 
@@ -40,8 +36,6 @@ namespace FoxTunes
 
         public override void InitializeComponent(ICore core)
         {
-            this.Cache = ComponentRegistry.Instance.GetComponent<MoodBarCache>();
-            this.Output = core.Components.Output;
             this.DataSourceFactory = core.Factories.OutputStreamDataSource;
             this.DataTransformerFactory = core.Factories.FFTDataTransformer;
             this.Configuration = core.Components.Configuration;
@@ -52,23 +46,17 @@ namespace FoxTunes
             base.InitializeComponent(core);
         }
 
-        public MoodBarGeneratorData Generate(IOutputStream stream)
+        public MoodBarGeneratorData Generate(IOutputStream stream, out Task task)
         {
-            return this.Cache.GetOrCreate(
-                stream,
-                this.Resolution.Value,
-                () =>
-                {
-                    var data = new MoodBarGeneratorData()
-                    {
-                        Resolution = this.Resolution.Value,
-                        CancellationToken = new CancellationToken(),
-                    };
-                    this.Allocate(stream, data);
-                    this.Dispatch(() => this.Populate(stream, data));
-                    return data;
-                }
-            );
+            var data = new MoodBarGeneratorData()
+            {
+                FileName = stream.FileName,
+                Resolution = this.Resolution.Value,
+                CancellationToken = new CancellationToken(),
+            };
+            this.Allocate(stream, data);
+            task = this.Populate(stream, data);
+            return data;
         }
 
         protected virtual void Allocate(IOutputStream stream, MoodBarGeneratorData data)
@@ -89,47 +77,28 @@ namespace FoxTunes
             data.Capacity = length;
         }
 
-        protected virtual void Populate(IOutputStream stream, MoodBarGeneratorData data)
+        protected virtual async Task Populate(IOutputStream stream, MoodBarGeneratorData data)
         {
-            using (var duplicated = this.Output.Duplicate(stream))
+            var dataSource = this.DataSourceFactory.Create(stream);
+            var dataTransformer = this.DataTransformerFactory.Create(BANDS);
+
+            await Task.Run(() => Populate(dataSource, dataTransformer, data)).ConfigureAwait(false);
+
+            if (data.Position < data.Capacity)
             {
-                if (duplicated == null)
-                {
-                    Logger.Write(this, LogLevel.Warn, "Failed to duplicate stream for file \"{0}\", cannot generate.", stream.FileName);
-                    return;
-                }
-                var dataSource = this.DataSourceFactory.Create(duplicated);
-                var dataTransformer = this.DataTransformerFactory.Create(BANDS);
-
-                Populate(dataSource, dataTransformer, data);
-
-                if (data.Position < data.Capacity)
-                {
-                    Logger.Write(this, LogLevel.Debug, "Wave form generation for file \"{0}\" failed to complete.", stream.FileName);
-                    this.Cache.Remove(stream, data.Resolution);
-                    return;
-                }
+                Logger.Write(this, LogLevel.Debug, "Moodbar generation for file \"{0}\" failed to complete.", stream.FileName);
+                return;
             }
 
             if (data.CancellationToken.IsCancellationRequested)
             {
-                Logger.Write(this, LogLevel.Debug, "Wave form generation for file \"{0}\" was cancelled.", stream.FileName);
-                this.Cache.Remove(stream, data.Resolution);
+                Logger.Write(this, LogLevel.Debug, "Moodbar generation for file \"{0}\" was cancelled.", stream.FileName);
                 return;
             }
 
             data.Update();
 
-            Logger.Write(this, LogLevel.Debug, "Wave form generated for file \"{0}\" with {1} elements: Peak = {2:0.00}", stream.FileName, data.Capacity, data.Peak);
-
-            try
-            {
-                this.Cache.Save(stream, data);
-            }
-            catch (Exception e)
-            {
-                Logger.Write(this, LogLevel.Warn, "Failed to save mood bar data for file \"{0}\": {1}", stream.FileName, e.Message);
-            }
+            Logger.Write(this, LogLevel.Debug, "Moodbar generated for file \"{0}\" with {1} elements: Peak = {2:0.00}", stream.FileName, data.Capacity, data.Peak);
         }
 
         private static void Populate(IOutputStreamDataSource dataSource, IFFTDataTransformer dataTransformer, MoodBarGeneratorData data)
@@ -149,17 +118,13 @@ namespace FoxTunes
 
             do
             {
+                var samples = default(int);
                 for (var a = 0; a < samplesPerValue; a++)
                 {
-                    if (length == 0)
-                    {
-                        continue;
-                    }
-
                     switch (length)
                     {
-                        case BASS_STREAMPROC_END:
-                        case BASS_ERROR_UNKNOWN:
+                        case _STREAMPROC_END:
+                        case _ERROR_UNKNOWN:
                             return;
                     }
 
@@ -174,9 +139,9 @@ namespace FoxTunes
                     }
                     dataTransformer.Transform(visualizationData, values, null, null);
 
-                    data.Data[data.Position].Low = Math.Max(data.Data[data.Position].Low, values[LOW]);
-                    data.Data[data.Position].Mid = Math.Max(data.Data[data.Position].Mid, values[MID]);
-                    data.Data[data.Position].High = Math.Max(data.Data[data.Position].High, values[HIGH]);
+                    data.Data[data.Position].Low = (float)Math.Log10(1 + values[LOW] * 10);
+                    data.Data[data.Position].Mid = (float)Math.Log10(1 + values[MID] * 10);
+                    data.Data[data.Position].High = (float)Math.Log10(1 + values[HIGH] * 10);
 
                     data.Peak = Math.Max(
                         data.Peak,
@@ -190,6 +155,14 @@ namespace FoxTunes
                     );
 
                     length = dataSource.GetData(visualizationData.Samples, FFT_SIZE);
+                    samples++;
+                }
+
+                if (samples > 0)
+                {
+                    data.Data[data.Position].Low /= samples;
+                    data.Data[data.Position].Mid /= samples;
+                    data.Data[data.Position].High /= samples;
                 }
 
                 data.Position++;
@@ -210,6 +183,8 @@ namespace FoxTunes
         [Serializable]
         public class MoodBarGeneratorData
         {
+            public string FileName;
+
             public int Resolution;
 
             public MoodBarDataElement[] Data;

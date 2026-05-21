@@ -159,7 +159,7 @@ namespace FoxTunes
             Logger.Write(this, LogLevel.Debug, "Creating task scheduler for {0} threads.", threads);
             this.Scheduler = new TaskScheduler(new ParallelOptions()
             {
-                MaxDegreeOfParallelism = threads
+                MaxDegreeOfParallelism = Math.Max(threads, 1)
             });
         }
 

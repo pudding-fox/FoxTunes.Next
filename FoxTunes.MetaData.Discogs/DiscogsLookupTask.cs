@@ -87,6 +87,8 @@ namespace FoxTunes
                     Logger.Write(this, LogLevel.Warn, "Cannot fetch releases, search requires at least artist/album or title tags.");
                     releaseLookup.AddError(Strings.DiscogsLookupTask_InsufficiantData);
                     releaseLookup.Status = Discogs.ReleaseLookupStatus.Failed;
+                    //Save the DiscogsRelease tag (either the actual release id or none).
+                    this.SaveMetaData(releaseLookup);
                     continue;
                 }
                 try

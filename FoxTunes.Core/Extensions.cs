@@ -661,6 +661,10 @@ namespace FoxTunes
 
         public static int GetDeterministicHashCode(this string value)
         {
+            if (string.IsNullOrEmpty(value))
+            {
+                return 0;
+            }
             unchecked
             {
                 var hash1 = (5381 << 16) + 5381;

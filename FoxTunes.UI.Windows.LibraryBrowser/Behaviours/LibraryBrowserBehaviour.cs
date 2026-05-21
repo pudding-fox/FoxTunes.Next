@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace FoxTunes
 {
+    [ComponentDependency(Slot = ComponentSlots.Database)]
     public class LibraryBrowserBehaviour : StandardBehaviour, IDisposable
     {
         public LibraryBrowserBehaviour()

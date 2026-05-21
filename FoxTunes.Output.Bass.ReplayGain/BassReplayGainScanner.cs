@@ -50,7 +50,7 @@ namespace FoxTunes
         {
             var parallelOptions = new ParallelOptions()
             {
-                MaxDegreeOfParallelism = this.Threads
+                MaxDegreeOfParallelism = Math.Max(this.Threads, 1)
             };
             Parallel.ForEach(scannerItems, parallelOptions, scannerItem =>
             {
@@ -152,7 +152,7 @@ namespace FoxTunes
         {
             var parallelOptions = new ParallelOptions()
             {
-                MaxDegreeOfParallelism = this.Threads
+                MaxDegreeOfParallelism = Math.Max(this.Threads, 1)
             };
             Parallel.ForEach(groups, parallelOptions, group =>
             {
