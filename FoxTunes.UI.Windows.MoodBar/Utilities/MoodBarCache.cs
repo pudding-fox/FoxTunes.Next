@@ -8,9 +8,9 @@ namespace FoxTunes
     {
         private static readonly string PREFIX = typeof(MoodBarCache).Name;
 
-        public MoodBarGenerator.MoodBarGeneratorData Get(IOutputStream stream, int resolution)
+        public MoodBarGenerator.MoodBarGeneratorData Get(IFileData fileData, int resolution)
         {
-            var id = this.GetDataId(stream, resolution);
+            var id = this.GetDataId(fileData, resolution);
             var fileName = default(string);
             if (FileMetaDataStore.Exists(PREFIX, id, out fileName))
             {
@@ -23,9 +23,9 @@ namespace FoxTunes
             return null;
         }
 
-        public MoodBarGenerator.MoodBarGeneratorData GetOrCreate(IOutputStream stream, int resolution, Func<MoodBarGenerator.MoodBarGeneratorData> factory)
+        public MoodBarGenerator.MoodBarGeneratorData GetOrCreate(IFileData fileData, int resolution, Func<MoodBarGenerator.MoodBarGeneratorData> factory)
         {
-            var id = this.GetDataId(stream, resolution);
+            var id = this.GetDataId(fileData, resolution);
             var fileName = default(string);
             if (FileMetaDataStore.Exists(PREFIX, id, out fileName))
             {
@@ -56,9 +56,9 @@ namespace FoxTunes
             return false;
         }
 
-        public void Save(IOutputStream stream, MoodBarGenerator.MoodBarGeneratorData data)
+        public void Save(IFileData fileData, MoodBarGenerator.MoodBarGeneratorData data)
         {
-            var id = this.GetDataId(stream, data.Resolution);
+            var id = this.GetDataId(fileData, data.Resolution);
             this.Save(id, data);
         }
 
@@ -80,13 +80,12 @@ namespace FoxTunes
             }
         }
 
-        private string GetDataId(IOutputStream stream, int resolution)
+        private string GetDataId(IFileData fileData, int resolution)
         {
             var hashCode = default(int);
             unchecked
             {
-                hashCode = (hashCode * 29) + stream.FileName.GetDeterministicHashCode();
-                hashCode = (hashCode * 29) + stream.Length.GetHashCode();
+                hashCode = (hashCode * 29) + fileData.FileName.GetDeterministicHashCode();
                 hashCode = (hashCode * 29) + resolution.GetHashCode();
             }
             return Math.Abs(hashCode).ToString();
