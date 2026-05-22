@@ -9,9 +9,10 @@ namespace FoxTunes
 
         public override void InitializeComponent(ICore core)
         {
+            base.InitializeComponent(core);
             this.PlaybackManager = core.Managers.Playback;
             this.PlaybackManager.CurrentStreamChanged += this.OnCurrentStreamChanged;
-            base.InitializeComponent(core);
+            this.OnCurrentStreamChanged(this, EventArgs.Empty);
         }
 
         protected virtual void OnCurrentStreamChanged(object sender, EventArgs e)

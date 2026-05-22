@@ -16,7 +16,10 @@ namespace FoxTunes
 
         static MoodBarRendererBase()
         {
-            Scheduler = new TaskScheduler(new ParallelOptions() { MaxDegreeOfParallelism = 1 });
+            Scheduler = new TaskScheduler(new ParallelOptions()
+            {
+                MaxDegreeOfParallelism = Math.Max(Environment.ProcessorCount / 2, 1)
+            });
         }
 
         public static readonly DependencyProperty FileDataProperty = DependencyProperty.Register(
@@ -599,11 +602,9 @@ namespace FoxTunes
 
         private class CreateTask : BackgroundTask
         {
-            public const string ID = "E42334F5-1BE8-421D-A679-060072868AC2";
-
             public static readonly IMoodBarFactory MoodBarFactory = ComponentRegistry.Instance.GetComponent<IMoodBarFactory>();
 
-            private CreateTask() : base(ID)
+            private CreateTask() : base(Guid.NewGuid().ToString("d")/*Allow concurrency, it is controlled by the scheduler.*/)
             {
             }
 
