@@ -102,6 +102,7 @@ namespace FoxTunes.ViewModel
         {
             this.OnRatingsChanged();
             this.OnLikesChanged();
+            this.OnMoodBarChanged();
         }
 
         public bool Ratings
@@ -193,6 +194,51 @@ namespace FoxTunes.ViewModel
         }
 
         public event EventHandler LikesChanged;
+
+        public bool MoodBar
+        {
+            get
+            {
+                var playlistColumns = this.PlaylistSettings.PlaylistColumns.ItemsSource;
+                if (playlistColumns == null)
+                {
+                    return false;
+                }
+                var moodBar = playlistColumns.FirstOrDefault(column => string.Equals(column.Name, "Mood Bar", StringComparison.OrdinalIgnoreCase));
+                if (moodBar == null)
+                {
+                    return false;
+                }
+                return moodBar.Enabled;
+            }
+            set
+            {
+                var playlistColumns = this.PlaylistSettings.PlaylistColumns.ItemsSource;
+                if (playlistColumns == null)
+                {
+                    return;
+                }
+                var moodBar = playlistColumns.FirstOrDefault(column => string.Equals(column.Name, "Mood Bar", StringComparison.OrdinalIgnoreCase));
+                if (moodBar == null)
+                {
+                    return;
+                }
+                moodBar.Enabled = value;
+                var task = this.PlaylistSettings.Save();
+                this.OnMoodBarChanged();
+            }
+        }
+
+        protected virtual void OnMoodBarChanged()
+        {
+            if (this.MoodBarChanged != null)
+            {
+                this.MoodBarChanged(this, EventArgs.Empty);
+            }
+            this.OnPropertyChanged("MoodBar");
+        }
+
+        public event EventHandler MoodBarChanged;
 
         public bool Discogs
         {

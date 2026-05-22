@@ -94,11 +94,14 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"></RowDefinition>
                     <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="Auto"></RowDefinition>
                 </Grid.RowDefinitions>
                 <TextBlock Grid.Column="0" Grid.Row="0" Foreground="{DynamicResource TextBrush}" Text="Ratings" VerticalAlignment="Center" Margin="0,0,4,0"></TextBlock>
                 <CheckBox Grid.Column="1" Grid.Row="0" Margin="0,0,0,4" IsChecked="{Binding Ratings, Source={StaticResource ViewModel}}"></CheckBox>
                 <TextBlock Grid.Column="0" Grid.Row="1" Foreground="{DynamicResource TextBrush}" Text="Likes" VerticalAlignment="Center" Margin="0,0,4,0"></TextBlock>
                 <CheckBox Grid.Column="1" Grid.Row="1" Margin="0,0,0,4" IsChecked="{Binding Likes, Source={StaticResource ViewModel}}"></CheckBox>
+                <TextBlock Grid.Column="0" Grid.Row="2" Foreground="{DynamicResource TextBrush}" Text="Mood Bar" VerticalAlignment="Center" Margin="0,0,4,0"></TextBlock>
+                <CheckBox Grid.Column="1" Grid.Row="2" Margin="0,0,0,4" IsChecked="{Binding MoodBar, Source={StaticResource ViewModel}}"></CheckBox>
             </Grid>
         </GroupBox>
         <GroupBox Grid.Row="2" Header="Services">
