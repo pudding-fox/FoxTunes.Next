@@ -8,10 +8,9 @@ namespace FoxTunes
     {
         private static readonly string PREFIX = typeof(MoodBarCache).Name;
 
-        public MoodBarGenerator.MoodBarGeneratorData Get(IFileData fileData, int resolution)
+        public MoodBarGenerator.MoodBarGeneratorData Get(string fileName, int resolution)
         {
-            var id = this.GetDataId(fileData, resolution);
-            var fileName = default(string);
+            var id = this.GetDataId(fileName, resolution);
             if (FileMetaDataStore.Exists(PREFIX, id, out fileName))
             {
                 var data = default(MoodBarGenerator.MoodBarGeneratorData);
@@ -23,10 +22,9 @@ namespace FoxTunes
             return null;
         }
 
-        public MoodBarGenerator.MoodBarGeneratorData GetOrCreate(IFileData fileData, int resolution, Func<MoodBarGenerator.MoodBarGeneratorData> factory)
+        public MoodBarGenerator.MoodBarGeneratorData GetOrCreate(string fileName, int resolution, Func<MoodBarGenerator.MoodBarGeneratorData> factory)
         {
-            var id = this.GetDataId(fileData, resolution);
-            var fileName = default(string);
+            var id = this.GetDataId(fileName, resolution);
             if (FileMetaDataStore.Exists(PREFIX, id, out fileName))
             {
                 var data = default(MoodBarGenerator.MoodBarGeneratorData);
@@ -56,14 +54,9 @@ namespace FoxTunes
             return false;
         }
 
-        public void Save(IFileData fileData, MoodBarGenerator.MoodBarGeneratorData data)
+        public void Save(string fileNane, MoodBarGenerator.MoodBarGeneratorData data)
         {
-            var id = this.GetDataId(fileData, data.Resolution);
-            this.Save(id, data);
-        }
-
-        protected virtual void Save(string id, MoodBarGenerator.MoodBarGeneratorData data)
-        {
+            var id = this.GetDataId(fileNane, data.Resolution);
             try
             {
                 using (var stream = new MemoryStream())
@@ -80,12 +73,12 @@ namespace FoxTunes
             }
         }
 
-        private string GetDataId(IFileData fileData, int resolution)
+        private string GetDataId(string fileName, int resolution)
         {
             var hashCode = default(int);
             unchecked
             {
-                hashCode = (hashCode * 29) + fileData.FileName.GetDeterministicHashCode();
+                hashCode = (hashCode * 29) + fileName.GetDeterministicHashCode();
                 hashCode = (hashCode * 29) + resolution.GetHashCode();
             }
             return Math.Abs(hashCode).ToString();

@@ -12,10 +12,17 @@ namespace FoxTunes
 {
     public class MoodBarRendererBase : RendererBase
     {
+        const int CACHE_SIZE = 32;
+
+        const int TIMEOUT = 1000;
+
+        public static Debouncer<IFileData, MoodBarGenerator.MoodBarGeneratorData> Debouncer { get; private set; }
+
         public static TaskScheduler Scheduler { get; private set; }
 
         static MoodBarRendererBase()
         {
+            Debouncer = new Debouncer<IFileData, MoodBarGenerator.MoodBarGeneratorData>(TIMEOUT);
             Scheduler = new TaskScheduler(new ParallelOptions()
             {
                 MaxDegreeOfParallelism = Math.Max(Environment.ProcessorCount / 2, 1)
@@ -51,8 +58,10 @@ namespace FoxTunes
 
         public MoodBarRendererBase()
         {
-
+            this.Store = new CappedDictionary<Tuple<string, int>, MoodBarGenerator.MoodBarGeneratorData>(CACHE_SIZE);
         }
+
+        public CappedDictionary<Tuple<string, int>, MoodBarGenerator.MoodBarGeneratorData> Store { get; private set; }
 
         public IFileData FileData
         {
@@ -131,7 +140,7 @@ namespace FoxTunes
             }
             if (fileData != null)
             {
-                var generatorData = this.Cache.Get(fileData, this.Resolution.Value);
+                var generatorData = this.Cache.Get(fileData.FileName, this.Resolution.Value);
                 if (generatorData != null)
                 {
                     this.GeneratorData = generatorData;
@@ -139,29 +148,31 @@ namespace FoxTunes
                 }
                 else
                 {
-                    generatorData = new MoodBarGenerator.MoodBarGeneratorData()
+                    generatorData = this.Store.GetOrAdd(new Tuple<string, int>(fileData.FileName, this.Resolution.Value), () => new MoodBarGenerator.MoodBarGeneratorData()
                     {
                         FileName = fileData.FileName,
                         Resolution = this.Resolution.Value,
-                        CancellationToken = new CancellationToken(),
-                    };
+                        CancellationToken = CancellationToken.None
+                    });
                     this.GeneratorData = generatorData;
                     this.GeneratorData.Updated += this.OnUpdated;
                     await this.RefreshRendererTarget().ConfigureAwait(false);
-                    this.UpdateTask = Scheduler.StartNew(async () =>
+                    Debouncer.Exec((arg1, arg2) =>
                     {
-                        using (var task = new CreateTask(this, new[] { fileData }, new[] { this.GeneratorData }))
+                        this.UpdateTask = Scheduler.StartNew(async () =>
                         {
-                            task.InitializeComponent(this.Core);
-                            await this.BackgroundTaskEmitter.Send(task).ConfigureAwait(false);
-                            await task.Run().ConfigureAwait(false);
-                            if (task.IsFaulted)
+                            using (var task = new CreateTask(arg1, arg2))
                             {
-                                return;
+                                task.InitializeComponent(this.Core);
+                                await this.BackgroundTaskEmitter.Send(task).ConfigureAwait(false);
+                                await task.Run().ConfigureAwait(false);
+                                if (task.IsFaulted)
+                                {
+                                    return;
+                                }
                             }
-                        }
-                        this.Cache.Save(fileData, generatorData);
-                    });
+                        });
+                    }, new[] { fileData }, new[] { this.GeneratorData });
                 }
             }
             else
@@ -608,18 +619,15 @@ namespace FoxTunes
             {
             }
 
-            public CreateTask(MoodBarRendererBase renderer, IFileData[] fileDatas, IEnumerable<MoodBarGenerator.MoodBarGeneratorData> generatorDatas) : this()
+            public CreateTask(IEnumerable<IFileData> fileDatas, IEnumerable<MoodBarGenerator.MoodBarGeneratorData> generatorDatas) : this()
             {
-                this.Renderer = renderer;
-                this.FileDatas = fileDatas;
+                this.FileDatas = fileDatas.ToArray();
                 this.MoodBarItems = fileDatas
                     .OrderBy(fileData => fileData.FileName)
                     .Select(fileData => MoodBarItem.FromFileData(fileData))
                     .ToArray();
                 this.GeneratorDatas = generatorDatas.ToArray();
             }
-
-            public MoodBarRendererBase Renderer { get; private set; }
 
             public IFileData[] FileDatas { get; private set; }
 
@@ -640,18 +648,26 @@ namespace FoxTunes
 
             protected override async Task OnRun()
             {
-                Logger.Write(this, LogLevel.Debug, "Creating.");
-                using (var moodBar = MoodBarFactory.CreateMoodBar(this.MoodBarItems))
+                if (this.FileDatas.Any() && this.GeneratorDatas.Any())
                 {
-                    Logger.Write(this, LogLevel.Debug, "Starting.");
-                    using (var monitor = new MoodBarMonitor(moodBar, this.GeneratorDatas, this.Visible, this.CancellationToken))
+                    Logger.Write(this, LogLevel.Debug, "Creating.");
+                    using (var moodBar = MoodBarFactory.CreateMoodBar(this.MoodBarItems))
                     {
-                        await this.WithSubTask(monitor,
-                            () => monitor.Create()
-                        ).ConfigureAwait(false);
+                        Logger.Write(this, LogLevel.Debug, "Starting.");
+                        using (var monitor = new MoodBarMonitor(moodBar, this.GeneratorDatas, this.Visible, this.CancellationToken))
+                        {
+                            monitor.InitializeComponent(this.Core);
+                            await this.WithSubTask(monitor,
+                                () => monitor.Create()
+                            ).ConfigureAwait(false);
+                        }
                     }
+                    Logger.Write(this, LogLevel.Debug, "Completed successfully.");
                 }
-                Logger.Write(this, LogLevel.Debug, "Completed successfully.");
+                else
+                {
+                    Logger.Write(this, LogLevel.Debug, "Nothing to do.");
+                }
             }
         }
     }

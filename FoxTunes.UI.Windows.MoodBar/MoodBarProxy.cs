@@ -208,6 +208,8 @@ namespace FoxTunes
                 destination.Data.Update();
             }
             destination.Errors = source.Errors;
+            destination.Progress = source.Progress;
+            destination.Status = source.Status;
         }
 
         protected virtual void OnUpdated()

@@ -107,6 +107,7 @@ namespace FoxTunes
                 {
                     monitor.Start();
                     await this.Create(moodBarItem, outputStream).ConfigureAwait(false);
+                    success = true;
                 }
             }
             if (this.CancellationToken.IsCancellationRequested)

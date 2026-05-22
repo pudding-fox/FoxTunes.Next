@@ -25,6 +25,14 @@ namespace FoxTunes
 
         public CancellationToken CancellationToken { get; private set; }
 
+        public MoodBarCache Cache { get; private set; }
+
+        public override void InitializeComponent(ICore core)
+        {
+            this.Cache = ComponentRegistry.Instance.GetComponent<MoodBarCache>();
+            base.InitializeComponent(core);
+        }
+
         public Task Create()
         {
 #if NET40
@@ -45,6 +53,7 @@ namespace FoxTunes
         protected virtual async Task Monitor(Task task)
         {
             this.Name = "Creating files";
+            var persisted = new HashSet<MoodBarItem>();
             while (!task.IsCompleted)
             {
                 if (this.CancellationToken.IsCancellationRequested)
@@ -68,6 +77,13 @@ namespace FoxTunes
                         generatorData.Capacity = moodBarItem.Data.Capacity;
                         generatorData.Peak = moodBarItem.Data.Peak;
                         generatorData.Update();
+                    }
+                    if (moodBarItem.Status == MoodBarItemStatus.Complete)
+                    {
+                        if (persisted.Add(moodBarItem))
+                        {
+                            this.Cache.Save(moodBarItem.FileName, generatorData);
+                        }
                     }
                     position += moodBarItem.Progress;
                     count += MoodBarItem.PROGRESS_COMPLETE;

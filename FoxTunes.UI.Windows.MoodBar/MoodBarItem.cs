@@ -5,7 +5,7 @@ using System.Collections.Generic;
 namespace FoxTunes
 {
     [Serializable]
-    public class MoodBarItem
+    public class MoodBarItem : IEquatable<MoodBarItem>
     {
         const int ERROR_CAPACITY = 10;
 
@@ -50,6 +50,51 @@ namespace FoxTunes
             {
                 this._Errors.RemoveAt(0);
             }
+        }
+
+        public bool Equals(MoodBarItem other)
+        {
+            if (other == null)
+            {
+                return false;
+            }
+            if (object.ReferenceEquals(this, other))
+            {
+                return true;
+            }
+            return this.Id.Equals(other.Id);
+        }
+
+        public override bool Equals(object obj)
+        {
+            return this.Equals(obj as MoodBarItem);
+        }
+
+        public override int GetHashCode()
+        {
+            return this.Id.GetHashCode();
+        }
+
+        public static bool operator ==(MoodBarItem a, MoodBarItem b)
+        {
+            if ((object)a == null && (object)b == null)
+            {
+                return true;
+            }
+            if ((object)a == null || (object)b == null)
+            {
+                return false;
+            }
+            if (object.ReferenceEquals((object)a, (object)b))
+            {
+                return true;
+            }
+            return a.Equals(b);
+        }
+
+        public static bool operator !=(MoodBarItem a, MoodBarItem b)
+        {
+            return !(a == b);
         }
 
         public static MoodBarItem FromFileData(IFileData fileData)
