@@ -88,7 +88,7 @@ namespace FoxTunes
                 {
                     Name = Strings.MoodBarStreamPosition_Name,
                     Type = PlaylistColumnType.Plugin,
-                    Sequence = 100,
+                    Sequence = 200,
                     Plugin = ID,
                     Enabled = false
                 });

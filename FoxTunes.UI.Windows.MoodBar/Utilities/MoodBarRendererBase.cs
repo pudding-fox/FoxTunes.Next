@@ -448,23 +448,43 @@ namespace FoxTunes
                     {
                         value = data.View.Data[a, b];
                     }
-                    value /= (float)Math.Pow(averages[b], 0.35);
+                    value /= (float)Math.Pow(averages[b], 0.12);
                     if (value > 1.5f)
                     {
                         value = 1.5f;
                     }
                     values[b] = value;
                 }
-                var color = MoodBarColorProvider.GetColor(values);
-                var palette = BitmapHelper.CreatePalette(new[] { new Int32Color(color) }, 1, 0);
-                try
                 {
-                    var render = BitmapHelper.CreateRenderInfo(info.Background, palette);
-                    BitmapHelper.DrawRectangle(ref render, a, 0, 1, data.Height);
+                    var color = MoodBarColorProvider.GetColor(values);
+                    var palette = BitmapHelper.CreatePalette(new[] { new Int32Color(color) }, 1, 0);
+                    try
+                    {
+                        var render = BitmapHelper.CreateRenderInfo(info.Background, palette);
+                        BitmapHelper.DrawRectangle(ref render, a, 0, 1, data.Height);
+                    }
+                    finally
+                    {
+                        BitmapHelper.DestroyPalette(ref palette);
+                    }
                 }
-                finally
                 {
-                    BitmapHelper.DestroyPalette(ref palette);
+                    const byte SHADE = 50;
+                    var contrast = Color.FromRgb(SHADE, SHADE, SHADE);
+                    var color = MoodBarColorProvider.GetColor(values).Shade(contrast);
+                    var palette = BitmapHelper.CreatePalette(new[] { new Int32Color(color) }, 1, 0);
+                    try
+                    {
+                        var value = values.Max() / data.View.Peak;
+                        var y = Convert.ToInt32((data.Height / 2) - (value * (data.Height / 2)));
+                        var height = Math.Max(Convert.ToInt32(((data.Height / 2) - y) + (value * (data.Height / 2))), 1);
+                        var render = BitmapHelper.CreateRenderInfo(info.Background, palette);
+                        BitmapHelper.DrawRectangle(ref render, a, y, 1, height);
+                    }
+                    finally
+                    {
+                        BitmapHelper.DestroyPalette(ref palette);
+                    }
                 }
             }
         }
