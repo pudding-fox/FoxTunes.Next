@@ -4,5 +4,5 @@
     xmlns:Core="clr-namespace:FoxTunes;assembly=FoxTunes.Core"
     xmlns:LocalWindows="clr-namespace:FoxTunes;assembly=FoxTunes.UI.Windows.MoodBar"
     DataType="{x:Type Core:PlaylistItem}">
-    <LocalWindows:MoodBarRenderer Width="150" Height="15" HorizontalAlignment="Stretch" FileData="{Binding}"></LocalWindows:MoodBarRenderer>
+    <LocalWindows:MoodBarRendererBase Width="150" Height="15" HorizontalAlignment="Stretch" FileData="{Binding}"></LocalWindows:MoodBarRendererBase>
 </DataTemplate>

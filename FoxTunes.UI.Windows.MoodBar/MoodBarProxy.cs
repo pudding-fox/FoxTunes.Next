@@ -195,7 +195,13 @@ namespace FoxTunes
             }
             else
             {
-                source.Data.Data.CopyTo(destination.Data.Data, 0);
+                for (var a = 0; a < source.Data.Position; a++)
+                {
+                    for (var b = 0; b < MoodBarGenerator.BANDS.Length; b++)
+                    {
+                        destination.Data.Data[a, b] = source.Data.Data[a, b];
+                    }
+                }
                 destination.Data.Position = source.Data.Position;
                 destination.Data.Capacity = source.Data.Capacity;
                 destination.Data.Peak = source.Data.Peak;

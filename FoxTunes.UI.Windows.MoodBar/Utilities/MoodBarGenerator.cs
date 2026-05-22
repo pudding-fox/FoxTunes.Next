@@ -13,18 +13,18 @@ namespace FoxTunes
 
         const int FFT_SIZE = 2048;
 
-        static readonly int[] BANDS = new[]
+        public static readonly int[] BANDS = new[]
         {
-            150,
-            1200,
-            6000
+            60,
+            120,
+            250,
+            500,
+            1000,
+            2000,
+            4000,
+            8000,
+            12000
         };
-
-        const int LOW = 0;
-
-        const int MID = 1;
-
-        const int HIGH = 2;
 
         public IOutputStreamDataSourceFactory DataSourceFactory { get; private set; }
 
@@ -73,7 +73,7 @@ namespace FoxTunes
             {
                 length /= 2;
             }
-            data.Data = new MoodBarDataElement[length];
+            data.Data = new float[length, BANDS.Length];
             data.Capacity = length;
         }
 
@@ -139,20 +139,14 @@ namespace FoxTunes
                     }
                     dataTransformer.Transform(visualizationData, values, null, null);
 
-                    data.Data[data.Position].Low = (float)Math.Log10(1 + values[LOW] * 10);
-                    data.Data[data.Position].Mid = (float)Math.Log10(1 + values[MID] * 10);
-                    data.Data[data.Position].High = (float)Math.Log10(1 + values[HIGH] * 10);
+                    var peak = default(float);
+                    for (var b = 0; b < BANDS.Length; b++)
+                    {
+                        var value = (float)Math.Log10(1 + (values[b] * 10));
+                        data.Data[data.Position, b] += value;
+                    }
 
-                    data.Peak = Math.Max(
-                        data.Peak,
-                        Math.Max(
-                            values[LOW],
-                            Math.Max(
-                                values[MID],
-                                values[HIGH]
-                            )
-                        )
-                    );
+                    data.Peak = Math.Max(peak, data.Peak);
 
                     length = dataSource.GetData(visualizationData.Samples, FFT_SIZE);
                     samples++;
@@ -160,9 +154,11 @@ namespace FoxTunes
 
                 if (samples > 0)
                 {
-                    data.Data[data.Position].Low /= samples;
-                    data.Data[data.Position].Mid /= samples;
-                    data.Data[data.Position].High /= samples;
+                    for (var a = 0; a < BANDS.Length; a++)
+                    {
+                        data.Data[data.Position, a] /= samples;
+                        data.Peak = Math.Max(data.Peak, data.Data[data.Position, a]);
+                    }
                 }
 
                 data.Position++;
@@ -187,7 +183,7 @@ namespace FoxTunes
 
             public int Resolution;
 
-            public MoodBarDataElement[] Data;
+            public float[,] Data;
 
             public int Position;
 
@@ -211,16 +207,6 @@ namespace FoxTunes
             public CancellationToken CancellationToken;
 
             public static readonly MoodBarGeneratorData Empty = new MoodBarGeneratorData();
-        }
-
-        [Serializable]
-        public struct MoodBarDataElement
-        {
-            public float Low;
-
-            public float Mid;
-
-            public float High;
         }
     }
 }
