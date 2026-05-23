@@ -54,6 +54,25 @@ namespace FoxTunes
             })).Value;
         }
 
+        public TValue GetOrAdd(TKey key, Func<TValue> factory, out bool created)
+        {
+            var _created = default(bool);
+            try
+            {
+                return this.Store.GetOrAdd(key, new Lazy<TValue>(() =>
+                {
+                    var value = factory();
+                    _created = true;
+                    this.OnAdd(key, value);
+                    return value;
+                })).Value;
+            }
+            finally
+            {
+                created = _created;
+            }
+        }
+
         public bool TryGetValue(TKey key, out TValue value)
         {
             var lazy = default(Lazy<TValue>);

@@ -106,7 +106,11 @@ namespace FoxTunes
                 using (var monitor = new ChannelMonitor(moodBarItem, stream))
                 {
                     monitor.Start();
-                    await this.Create(moodBarItem, outputStream).ConfigureAwait(false);
+                    var task = this.Create(moodBarItem, outputStream);
+                    if (task != null)
+                    {
+                        await task.ConfigureAwait(false);
+                    }
                     success = true;
                 }
             }

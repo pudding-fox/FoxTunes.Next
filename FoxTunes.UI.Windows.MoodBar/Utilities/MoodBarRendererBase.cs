@@ -12,13 +12,15 @@ namespace FoxTunes
 {
     public class MoodBarRendererBase : RendererBase
     {
-        const int CACHE_SIZE = 32;
+        const int CACHE_SIZE = 1024;
 
         const int TIMEOUT = 1000;
 
         public static Debouncer<IFileData, MoodBarGenerator.MoodBarGeneratorData> Debouncer { get; private set; }
 
         public static TaskScheduler Scheduler { get; private set; }
+
+        public static CappedDictionary<Tuple<string, int>, MoodBarGenerator.MoodBarGeneratorData> Store { get; private set; }
 
         static MoodBarRendererBase()
         {
@@ -27,6 +29,7 @@ namespace FoxTunes
             {
                 MaxDegreeOfParallelism = Math.Max(Environment.ProcessorCount / 2, 1)
             });
+            Store = new CappedDictionary<Tuple<string, int>, MoodBarGenerator.MoodBarGeneratorData>(CACHE_SIZE);
         }
 
         public static readonly DependencyProperty FileDataProperty = DependencyProperty.Register(
@@ -55,13 +58,6 @@ namespace FoxTunes
             }
             renderer.OnFileDataChanged();
         }
-
-        public MoodBarRendererBase()
-        {
-            this.Store = new CappedDictionary<Tuple<string, int>, MoodBarGenerator.MoodBarGeneratorData>(CACHE_SIZE);
-        }
-
-        public CappedDictionary<Tuple<string, int>, MoodBarGenerator.MoodBarGeneratorData> Store { get; private set; }
 
         public IFileData FileData
         {
@@ -155,31 +151,35 @@ namespace FoxTunes
                 }
                 else
                 {
-                    generatorData = this.Store.GetOrAdd(new Tuple<string, int>(fileData.FileName, this.Resolution.Value), () => new MoodBarGenerator.MoodBarGeneratorData()
+                    var created = default(bool);
+                    generatorData = Store.GetOrAdd(new Tuple<string, int>(fileData.FileName, this.Resolution.Value), () => new MoodBarGenerator.MoodBarGeneratorData()
                     {
                         FileName = fileData.FileName,
                         Resolution = this.Resolution.Value,
                         CancellationToken = CancellationToken.None
-                    });
+                    }, out created);
                     this.GeneratorData = generatorData;
                     this.GeneratorData.Updated += this.OnUpdated;
                     await this.RefreshRendererTarget().ConfigureAwait(false);
-                    Debouncer.Exec((arg1, arg2) =>
+                    if (created)
                     {
-                        this.UpdateTask = Scheduler.StartNew(async () =>
+                        Debouncer.Exec((arg1, arg2) =>
                         {
-                            using (var task = new CreateTask(arg1, arg2))
+                            this.UpdateTask = Scheduler.StartNew(async () =>
                             {
-                                task.InitializeComponent(this.Core);
-                                await this.BackgroundTaskEmitter.Send(task).ConfigureAwait(false);
-                                await task.Run().ConfigureAwait(false);
-                                if (task.IsFaulted)
+                                using (var task = new CreateTask(arg1, arg2))
                                 {
-                                    return;
+                                    task.InitializeComponent(this.Core);
+                                    await this.BackgroundTaskEmitter.Send(task).ConfigureAwait(false);
+                                    await task.Run().ConfigureAwait(false);
+                                    if (task.IsFaulted)
+                                    {
+                                        return;
+                                    }
                                 }
-                            }
-                        });
-                    }, new[] { fileData }, new[] { this.GeneratorData });
+                            });
+                        }, new[] { fileData }, new[] { this.GeneratorData });
+                    }
                 }
             }
             else

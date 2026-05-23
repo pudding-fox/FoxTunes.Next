@@ -26,6 +26,8 @@ namespace FoxTunes
             12000
         };
 
+        public MoodBarCache Cache { get; private set; }
+
         public IOutputStreamDataSourceFactory DataSourceFactory { get; private set; }
 
         public IFFTDataTransformerFactory DataTransformerFactory { get; private set; }
@@ -36,6 +38,7 @@ namespace FoxTunes
 
         public override void InitializeComponent(ICore core)
         {
+            this.Cache = ComponentRegistry.Instance.GetComponent<MoodBarCache>();
             this.DataSourceFactory = core.Factories.OutputStreamDataSource;
             this.DataTransformerFactory = core.Factories.FFTDataTransformer;
             this.Configuration = core.Components.Configuration;
@@ -48,15 +51,21 @@ namespace FoxTunes
 
         public MoodBarGeneratorData Generate(IOutputStream stream, out Task task)
         {
-            var data = new MoodBarGeneratorData()
+            var _task = default(Task);
+            var result = this.Cache.GetOrCreate(stream.FileName, this.Resolution.Value, () =>
             {
-                FileName = stream.FileName,
-                Resolution = this.Resolution.Value,
-                CancellationToken = new CancellationToken(),
-            };
-            this.Allocate(stream, data);
-            task = this.Populate(stream, data);
-            return data;
+                var data = new MoodBarGeneratorData()
+                {
+                    FileName = stream.FileName,
+                    Resolution = this.Resolution.Value,
+                    CancellationToken = new CancellationToken(),
+                };
+                this.Allocate(stream, data);
+                _task = this.Populate(stream, data);
+                return data;
+            });
+            task = _task;
+            return result;
         }
 
         protected virtual void Allocate(IOutputStream stream, MoodBarGeneratorData data)
