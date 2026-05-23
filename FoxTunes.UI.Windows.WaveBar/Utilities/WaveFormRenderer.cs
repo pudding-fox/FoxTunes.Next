@@ -216,6 +216,7 @@ namespace FoxTunes
         {
             if (!target.TryLock())
             {
+                this.Dispatch(() => this.ClearRendererTarget(target));
                 return;
             }
             try
@@ -253,6 +254,7 @@ namespace FoxTunes
 
                 if (!target.TryLock())
                 {
+                    var task = this.Render(data);
                     return;
                 }
                 var info = GetRenderInfo(target, data);
