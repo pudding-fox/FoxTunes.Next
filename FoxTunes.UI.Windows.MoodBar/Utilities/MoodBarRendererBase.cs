@@ -642,6 +642,22 @@ namespace FoxTunes
                 this.GeneratorDatas = generatorDatas.ToArray();
             }
 
+            public override bool Visible
+            {
+                get
+                {
+                    return true;
+                }
+            }
+
+            public override bool Cancellable
+            {
+                get
+                {
+                    return true;
+                }
+            }
+
             public IFileData[] FileDatas { get; private set; }
 
             public MoodBarItem[] MoodBarItems { get; private set; }
@@ -651,6 +667,8 @@ namespace FoxTunes
             public ICore Core { get; private set; }
 
             public ISignalEmitter SignalEmitter { get; private set; }
+
+            public IMoodBar MoodBar { get; private set; }
 
             public override void InitializeComponent(ICore core)
             {
@@ -664,10 +682,10 @@ namespace FoxTunes
                 if (this.FileDatas.Any() && this.GeneratorDatas.Any())
                 {
                     Logger.Write(this, LogLevel.Debug, "Creating.");
-                    using (var moodBar = MoodBarFactory.CreateMoodBar(this.MoodBarItems))
+                    using (this.MoodBar = MoodBarFactory.CreateMoodBar(this.MoodBarItems))
                     {
                         Logger.Write(this, LogLevel.Debug, "Starting.");
-                        using (var monitor = new MoodBarMonitor(moodBar, this.GeneratorDatas, this.Visible, this.CancellationToken))
+                        using (var monitor = new MoodBarMonitor(this.MoodBar, this.GeneratorDatas, this.Visible, this.CancellationToken))
                         {
                             monitor.InitializeComponent(this.Core);
                             await this.WithSubTask(monitor,
@@ -681,6 +699,15 @@ namespace FoxTunes
                 {
                     Logger.Write(this, LogLevel.Debug, "Nothing to do.");
                 }
+            }
+
+            public override void Cancel()
+            {
+                if (this.MoodBar != null)
+                {
+                    this.MoodBar.Cancel();
+                }
+                base.Cancel();
             }
         }
     }

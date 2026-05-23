@@ -52,7 +52,7 @@ namespace FoxTunes
 
         protected virtual async Task Monitor(Task task)
         {
-            this.Name = "Creating files";
+            this.Name = "Generating moodbars";
             var persisted = new HashSet<MoodBarItem>();
             while (!task.IsCompleted)
             {
