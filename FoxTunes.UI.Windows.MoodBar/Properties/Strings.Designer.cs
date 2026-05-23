@@ -97,6 +97,15 @@ namespace FoxTunes {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Tint.
+        /// </summary>
+        internal static string MoodBarGeneratorConfiguration_Tint {
+            get {
+                return ResourceManager.GetString("MoodBarGeneratorConfiguration.Tint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Mood Bar.
         /// </summary>
         internal static string MoodBarStreamPosition_Name {

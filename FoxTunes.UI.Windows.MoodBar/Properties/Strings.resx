@@ -129,6 +129,9 @@
   <data name="MoodBarGeneratorConfiguration.Resolution" xml:space="preserve">
     <value>Resolution</value>
   </data>
+  <data name="MoodBarGeneratorConfiguration.Tint" xml:space="preserve">
+    <value>Tint</value>
+  </data>
   <data name="MoodBarStreamPosition.Name" xml:space="preserve">
     <value>Mood Bar</value>
   </data>

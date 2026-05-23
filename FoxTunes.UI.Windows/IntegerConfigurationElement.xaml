@@ -19,15 +19,14 @@
         </Grid.ColumnDefinitions>
         <Slider
             Name="Slider"  
-            Value="{Binding Value, UpdateSourceTrigger=Explicit}" 
+            Value="{Binding Value}" 
             Minimum="{Binding MinValue, Mode=OneWay, Source={StaticResource ViewModel}}" 
             Maximum="{Binding MaxValue, Mode=OneWay, Source={StaticResource ViewModel}}"
+            IsMoveToPointEnabled="True" 
             IsSnapToTickEnabled="True" 
             SmallChange="{Binding Step, Mode=OneWay, Source={StaticResource ViewModel}}"
             LargeChange="{Binding Step, Mode=OneWay, Source={StaticResource ViewModel}}"
             TickFrequency="{Binding Step, Mode=OneWay, Source={StaticResource ViewModel}}"
-            KeyUp="OnKeyUp"
-            Thumb.DragCompleted="OnDragCompleted"
             VerticalAlignment="Center"/>
         <TextBox 
             Grid.Column="1"

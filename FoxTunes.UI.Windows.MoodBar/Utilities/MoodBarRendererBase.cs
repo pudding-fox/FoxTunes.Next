@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
@@ -102,6 +103,8 @@ namespace FoxTunes
 
         public IntegerConfigurationElement Resolution { get; private set; }
 
+        public IntegerConfigurationElement Tint { get; private set; }
+
         public override void InitializeComponent(ICore core)
         {
             this.Core = core;
@@ -113,7 +116,12 @@ namespace FoxTunes
                 MoodBarGeneratorConfiguration.SECTION,
                 MoodBarGeneratorConfiguration.RESOLUTION
             );
+            this.Tint = this.Configuration.GetElement<IntegerConfigurationElement>(
+                MoodBarGeneratorConfiguration.SECTION,
+                MoodBarGeneratorConfiguration.TINT
+            );
             this.Resolution.ValueChanged += this.OnValueChanged;
+            this.Tint.ValueChanged += this.OnValueChanged;
             base.InitializeComponent(core);
         }
 
@@ -283,7 +291,7 @@ namespace FoxTunes
                 {
                     return;
                 }
-                var info = GetRenderInfo(target, data);
+                var info = GetRenderInfo(target, data, this.Tint.Value);
                 Monitor.Enter(this.SyncRoot);
                 try
                 {
@@ -363,6 +371,10 @@ namespace FoxTunes
             {
                 this.Resolution.ValueChanged -= this.OnValueChanged;
             }
+            if (this.Tint != null)
+            {
+                this.Tint.ValueChanged -= this.OnValueChanged;
+            }
             base.OnDisposing();
         }
 
@@ -406,10 +418,11 @@ namespace FoxTunes
             }
         }
 
-        private static MoodBarRenderInfo GetRenderInfo(RendererTarget target, MoodBarRendererData data)
+        private static MoodBarRenderInfo GetRenderInfo(RendererTarget target, MoodBarRendererData data, int tint)
         {
             var info = new MoodBarRenderInfo()
             {
+                Tint = tint,
                 Background = BitmapHelper.CreateRenderInfo(target, data.Colors[MoodBarStreamPositionConfiguration.COLOR_PALETTE_BACKGROUND])
             };
             return info;
@@ -470,7 +483,7 @@ namespace FoxTunes
                     values[b] = value;
                 }
                 {
-                    var color = MoodBarColorProvider.GetColor(values);
+                    var color = MoodBarColorProvider.GetColor(values, info.Tint);
                     var palette = BitmapHelper.CreatePalette(new[] { new Int32Color(color) }, 1, 0);
                     try
                     {
@@ -485,7 +498,7 @@ namespace FoxTunes
                 {
                     const byte SHADE = 50;
                     var contrast = Color.FromRgb(SHADE, SHADE, SHADE);
-                    var color = MoodBarColorProvider.GetColor(values).Shade(contrast);
+                    var color = MoodBarColorProvider.GetColor(values, info.Tint).Shade(contrast);
                     var palette = BitmapHelper.CreatePalette(new[] { new Int32Color(color) }, 1, 0);
                     try
                     {
@@ -675,6 +688,8 @@ namespace FoxTunes
     [StructLayout(LayoutKind.Sequential)]
     public struct MoodBarRenderInfo
     {
+        public int Tint;
+
         public BitmapHelper.RenderInfo Background;
     }
 
