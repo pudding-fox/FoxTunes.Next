@@ -410,8 +410,6 @@ namespace FoxTunes
                     values[a] /= valuesPerElement;
                 }
 
-                rendererData.View.Peak = Math.Max(values.Max(), rendererData.View.Peak);
-
                 for (var a = 0; a < values.Length; a++)
                 {
                     rendererData.View.Data[rendererData.View.Position, a] = values[a];
@@ -503,7 +501,7 @@ namespace FoxTunes
                     var palette = BitmapHelper.CreatePalette(new[] { new Int32Color(color) }, 1, 0);
                     try
                     {
-                        var value = values.Max() / data.View.Peak;
+                        var value = values.Max();
                         var y = Convert.ToInt32((data.Height / 2) - (value * (data.Height / 2)));
                         var height = Math.Max(Convert.ToInt32(((data.Height / 2) - y) + (value * (data.Height / 2))), 1);
                         var render = BitmapHelper.CreateRenderInfo(info.Background, palette);
@@ -586,8 +584,6 @@ namespace FoxTunes
         public class MoodBarGeneratorDataView
         {
             public float[,] Data;
-
-            public float Peak;
 
             public int Position;
         }

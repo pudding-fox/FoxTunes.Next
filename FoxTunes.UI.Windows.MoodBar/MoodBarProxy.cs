@@ -204,7 +204,6 @@ namespace FoxTunes
                 }
                 destination.Data.Position = source.Data.Position;
                 destination.Data.Capacity = source.Data.Capacity;
-                destination.Data.Peak = source.Data.Peak;
                 destination.Data.Update();
             }
             destination.Errors = source.Errors;

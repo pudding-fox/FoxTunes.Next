@@ -107,7 +107,7 @@ namespace FoxTunes
 
             data.Update();
 
-            Logger.Write(this, LogLevel.Debug, "Moodbar generated for file \"{0}\" with {1} elements: Peak = {2:0.00}", stream.FileName, data.Capacity, data.Peak);
+            Logger.Write(this, LogLevel.Debug, "Moodbar generated for file \"{0}\" with {1} elements.", stream.FileName, data.Capacity);
         }
 
         private static void Populate(IOutputStreamDataSource dataSource, IFFTDataTransformer dataTransformer, MoodBarGeneratorData data)
@@ -116,7 +116,6 @@ namespace FoxTunes
             visualizationData.FFTSize = FFT_SIZE;
             visualizationData.Samples = dataSource.GetBuffer(FFT_SIZE);
             visualizationData.Data = new float[1, visualizationData.Samples.Length];
-            visualizationData.Peak = new float[1];
 
             var length = dataSource.GetData(visualizationData.Samples, FFT_SIZE);
             var interval = Math.Max(data.Capacity / 100, 1);
@@ -148,14 +147,11 @@ namespace FoxTunes
                     }
                     dataTransformer.Transform(visualizationData, values, null, null);
 
-                    var peak = default(float);
                     for (var b = 0; b < BANDS.Length; b++)
                     {
                         var value = (float)Math.Log10(1 + (values[b] * 10));
                         data.Data[data.Position, b] += value;
                     }
-
-                    data.Peak = Math.Max(peak, data.Peak);
 
                     length = dataSource.GetData(visualizationData.Samples, FFT_SIZE);
                     samples++;
@@ -166,7 +162,6 @@ namespace FoxTunes
                     for (var a = 0; a < BANDS.Length; a++)
                     {
                         data.Data[data.Position, a] /= samples;
-                        data.Peak = Math.Max(data.Peak, data.Data[data.Position, a]);
                     }
                 }
 
@@ -197,8 +192,6 @@ namespace FoxTunes
             public int Position;
 
             public int Capacity;
-
-            public float Peak;
 
             public void Update()
             {

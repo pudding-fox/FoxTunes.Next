@@ -75,7 +75,6 @@ namespace FoxTunes
                         generatorData.Data = moodBarItem.Data.Data;
                         generatorData.Position = moodBarItem.Data.Position;
                         generatorData.Capacity = moodBarItem.Data.Capacity;
-                        generatorData.Peak = moodBarItem.Data.Peak;
                         generatorData.Update();
                     }
                     if (moodBarItem.Status == MoodBarItemStatus.Complete)
