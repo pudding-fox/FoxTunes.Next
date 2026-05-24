@@ -277,7 +277,7 @@ namespace FoxTunes
             this.Dispatch(this.Update);
         }
 
-        public Task Render(MoodBarRendererData data)
+        public Task Render(MoodBarGenerator.MoodBarGeneratorData generatorData, MoodBarRendererData rendererData)
         {
             return Windows.Invoke(() =>
             {
@@ -289,14 +289,14 @@ namespace FoxTunes
 
                 if (!target.TryLock())
                 {
-                    var task = this.Render(data);
+                    var task = this.Render(generatorData, rendererData);
                     return;
                 }
-                var info = GetRenderInfo(target, data, this.Tint.Value);
+                var info = GetRenderInfo(target, rendererData, this.Tint.Value);
                 Monitor.Enter(this.SyncRoot);
                 try
                 {
-                    Render(ref info, data);
+                    Render(ref info, generatorData, rendererData);
                 }
                 catch (Exception e)
                 {
@@ -313,51 +313,28 @@ namespace FoxTunes
 
         public void Update()
         {
-            Monitor.Enter(this.SyncRoot);
-            try
+            var generatorData = this.GeneratorData;
+            var rendererData = this.RendererData;
+            if (generatorData != null && rendererData != null)
             {
-                var generatorData = this.GeneratorData;
-                var rendererData = this.RendererData;
-                if (generatorData != null && rendererData != null)
-                {
-                    try
-                    {
-                        Update(
-                            generatorData,
-                            rendererData
-                        );
-                    }
-                    catch (Exception e)
-                    {
-                        Logger.Write(this.GetType(), LogLevel.Warn, "Failed to update mood bar data: {0}", e.Message);
-                        return;
-                    }
-                    var task = this.Render(rendererData);
-                }
-            }
-            finally
-            {
-                Monitor.Exit(this.SyncRoot);
+                var task = this.Render(generatorData, rendererData);
             }
         }
 
         protected override int GetPixelWidth(double width)
         {
             var data = this.GeneratorData;
-            if (data != null)
+            if (data != null && data.Data != null)
             {
-                if (data.Capacity > 0)
-                {
-                    var valuesPerElement = Convert.ToInt32(
-                        Math.Ceiling(
-                            Math.Max(
-                                (float)data.Capacity / width,
-                                1
-                            )
+                var valuesPerElement = Convert.ToInt32(
+                    Math.Ceiling(
+                        Math.Max(
+                            (float)data.Data.GetLength(0) / width,
+                            1
                         )
-                    );
-                    width = data.Capacity / valuesPerElement;
-                }
+                    )
+                );
+                width = data.Data.GetLength(0) / valuesPerElement;
             }
             return base.GetPixelWidth(width);
         }
@@ -379,44 +356,6 @@ namespace FoxTunes
             base.OnDisposing();
         }
 
-        private static void Update(MoodBarGenerator.MoodBarGeneratorData generatorData, MoodBarRendererData rendererData)
-        {
-            UpdateView(generatorData, rendererData);
-        }
-
-        private static void UpdateView(MoodBarGenerator.MoodBarGeneratorData generatorData, MoodBarRendererData rendererData)
-        {
-            var valuesPerElement = rendererData.ValuesPerElement;
-
-            for (; rendererData.View.Position < rendererData.Width; rendererData.View.Position++)
-            {
-                var valuePosition = rendererData.View.Position * rendererData.ValuesPerElement;
-                if ((valuePosition + rendererData.ValuesPerElement) > generatorData.Position)
-                {
-                    break;
-                }
-
-                var values = new float[MoodBarGenerator.BANDS.Length];
-                for (var a = 0; a < valuesPerElement; a++)
-                {
-                    for (var b = 0; b < values.Length; b++)
-                    {
-                        values[b] += generatorData.Data[valuePosition + a, b];
-                    }
-                }
-
-                for (var a = 0; a < values.Length; a++)
-                {
-                    values[a] /= valuesPerElement;
-                }
-
-                for (var a = 0; a < values.Length; a++)
-                {
-                    rendererData.View.Data[rendererData.View.Position, a] = values[a];
-                }
-            }
-        }
-
         private static MoodBarRenderInfo GetRenderInfo(RendererTarget target, MoodBarRendererData data, int tint)
         {
             var info = new MoodBarRenderInfo()
@@ -427,9 +366,9 @@ namespace FoxTunes
             return info;
         }
 
-        public static void Render(ref MoodBarRenderInfo info, MoodBarRendererData data)
+        public static void Render(ref MoodBarRenderInfo info, MoodBarGenerator.MoodBarGeneratorData generatorData, MoodBarRendererData rendererData)
         {
-            if (info.Background.Width != data.Width || info.Background.Height != data.Height)
+            if (info.Background.Width != rendererData.Width || info.Background.Height != rendererData.Height || generatorData.Data == null)
             {
                 return;
             }
@@ -437,42 +376,38 @@ namespace FoxTunes
                 ref info.Background,
                 0,
                 0,
-                data.Width,
-                data.Height
+                rendererData.Width,
+                rendererData.Height
             );
-            if (data.View.Position == 0)
-            {
-                return;
-            }
-            var values = new float[MoodBarGenerator.BANDS.Length];
-            var averages = new float[MoodBarGenerator.BANDS.Length];
-            for (var a = 0; a < data.View.Position; a++)
+            var values = new float[generatorData.Data.GetLength(1)];
+            var averages = new float[generatorData.Data.GetLength(1)];
+            for (var a = 0; a < generatorData.Data.GetLength(0); a++)
             {
                 for (var b = 0; b < averages.Length; b++)
                 {
-                    averages[b] += data.View.Data[a, b];
+                    averages[b] += generatorData.Data[a, b];
                 }
             }
             for (var a = 0; a < averages.Length; a++)
             {
-                averages[a] /= data.View.Position;
+                averages[a] /= generatorData.Data.GetLength(0);
                 if (averages[a] <= 0)
                 {
                     averages[a] = 1;
                 }
             }
-            for (var a = 0; a < data.View.Position; a++)
+            for (var a = 0; a < generatorData.Data.GetLength(0); a++)
             {
                 for (var b = 0; b < values.Length; b++)
                 {
                     var value = default(float);
-                    if (a > 0 && a < data.View.Position - 1)
+                    if (a > 0 && a < generatorData.Data.GetLength(0) - 1)
                     {
-                        value = (data.View.Data[a - 1, b] * 0.25f) + (data.View.Data[a, b] * 0.50f) + (data.View.Data[a + 1, b] * 0.25f);
+                        value = (generatorData.Data[a - 1, b] * 0.25f) + (generatorData.Data[a, b] * 0.50f) + (generatorData.Data[a + 1, b] * 0.25f);
                     }
                     else
                     {
-                        value = data.View.Data[a, b];
+                        value = generatorData.Data[a, b];
                     }
                     value /= (float)Math.Pow(averages[b], 0.12);
                     if (value > 1.5f)
@@ -487,7 +422,7 @@ namespace FoxTunes
                     try
                     {
                         var render = BitmapHelper.CreateRenderInfo(info.Background, palette);
-                        BitmapHelper.DrawRectangle(ref render, a, 0, 1, data.Height);
+                        BitmapHelper.DrawRectangle(ref render, a, 0, 1, rendererData.Height);
                     }
                     finally
                     {
@@ -502,8 +437,8 @@ namespace FoxTunes
                     try
                     {
                         var value = values.Max();
-                        var y = Convert.ToInt32((data.Height / 2) - (value * (data.Height / 2)));
-                        var height = Math.Max(Convert.ToInt32(((data.Height / 2) - y) + (value * (data.Height / 2))), 1);
+                        var y = Convert.ToInt32((rendererData.Height / 2) - (value * (rendererData.Height / 2)));
+                        var height = Math.Max(Convert.ToInt32(((rendererData.Height / 2) - y) + (value * (rendererData.Height / 2))), 1);
                         var render = BitmapHelper.CreateRenderInfo(info.Background, palette);
                         BitmapHelper.DrawRectangle(ref render, a, y, 1, height);
                     }
@@ -517,21 +452,11 @@ namespace FoxTunes
 
         public static MoodBarRendererData Create(MoodBarGenerator.MoodBarGeneratorData generatorData, int width, int height, IDictionary<string, IntPtr> colors)
         {
-            var valuesPerElement = generatorData.Capacity / width;
-            if (valuesPerElement == 0)
-            {
-                valuesPerElement = 1;
-            }
             var data = new MoodBarRendererData()
             {
                 Width = width,
                 Height = height,
-                ValuesPerElement = valuesPerElement,
-                Colors = colors,
-                View = new MoodBarGeneratorDataView()
-                {
-                    Data = new float[width, MoodBarGenerator.BANDS.Length]
-                }
+                Colors = colors
             };
             return data;
         }
@@ -581,24 +506,13 @@ namespace FoxTunes
             );
         }
 
-        public class MoodBarGeneratorDataView
-        {
-            public float[,] Data;
-
-            public int Position;
-        }
-
         public class MoodBarRendererData
         {
             public int Width;
 
             public int Height;
 
-            public int ValuesPerElement;
-
             public IDictionary<string, IntPtr> Colors;
-
-            public MoodBarGeneratorDataView View;
 
             ~MoodBarRendererData()
             {

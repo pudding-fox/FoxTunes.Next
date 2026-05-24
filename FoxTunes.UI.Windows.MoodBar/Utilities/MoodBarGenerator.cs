@@ -83,7 +83,6 @@ namespace FoxTunes
                 length /= 2;
             }
             data.Data = new float[length, BANDS.Length];
-            data.Capacity = length;
         }
 
         protected virtual async Task Populate(IOutputStream stream, MoodBarGeneratorData data)
@@ -93,12 +92,6 @@ namespace FoxTunes
 
             await Task.Run(() => Populate(dataSource, dataTransformer, data)).ConfigureAwait(false);
 
-            if (data.Position < data.Capacity)
-            {
-                Logger.Write(this, LogLevel.Debug, "Moodbar generation for file \"{0}\" failed to complete.", stream.FileName);
-                return;
-            }
-
             if (data.CancellationToken.IsCancellationRequested)
             {
                 Logger.Write(this, LogLevel.Debug, "Moodbar generation for file \"{0}\" was cancelled.", stream.FileName);
@@ -107,7 +100,7 @@ namespace FoxTunes
 
             data.Update();
 
-            Logger.Write(this, LogLevel.Debug, "Moodbar generated for file \"{0}\" with {1} elements.", stream.FileName, data.Capacity);
+            Logger.Write(this, LogLevel.Debug, "Moodbar generated for file \"{0}\".", stream.FileName);
         }
 
         private static void Populate(IOutputStreamDataSource dataSource, IFFTDataTransformer dataTransformer, MoodBarGeneratorData data)
@@ -118,9 +111,9 @@ namespace FoxTunes
             visualizationData.Data = new float[1, visualizationData.Samples.Length];
 
             var length = dataSource.GetData(visualizationData.Samples, FFT_SIZE);
-            var interval = Math.Max(data.Capacity / 100, 1);
             var values = new float[BANDS.Length];
-            var samplesPerValue = (dataSource.Stream.Length / length) / data.Capacity;
+            var samplesPerValue = (dataSource.Stream.Length / length) / data.Data.GetLength(0);
+            var position = default(int);
 
             dataSource.GetFormat(out visualizationData.Rate, out visualizationData.Channels, out visualizationData.Format);
 
@@ -136,11 +129,6 @@ namespace FoxTunes
                             return;
                     }
 
-                    if (data.Position >= data.Capacity)
-                    {
-                        return;
-                    }
-
                     for (var b = 0; b < visualizationData.Samples.Length; b++)
                     {
                         visualizationData.Data[0, b] = visualizationData.Samples[b];
@@ -150,7 +138,7 @@ namespace FoxTunes
                     for (var b = 0; b < BANDS.Length; b++)
                     {
                         var value = (float)Math.Log10(1 + (values[b] * 10));
-                        data.Data[data.Position, b] += value;
+                        data.Data[position, b] += value;
                     }
 
                     length = dataSource.GetData(visualizationData.Samples, FFT_SIZE);
@@ -161,17 +149,11 @@ namespace FoxTunes
                 {
                     for (var a = 0; a < BANDS.Length; a++)
                     {
-                        data.Data[data.Position, a] /= samples;
+                        data.Data[position, a] /= samples;
                     }
                 }
 
-                data.Position++;
-
-                if (data.Position % interval == 0)
-                {
-                    data.Update();
-                }
-
+                position++;
             } while (!data.CancellationToken.IsCancellationRequested);
         }
 
@@ -188,10 +170,6 @@ namespace FoxTunes
             public int Resolution;
 
             public float[,] Data;
-
-            public int Position;
-
-            public int Capacity;
 
             public void Update()
             {

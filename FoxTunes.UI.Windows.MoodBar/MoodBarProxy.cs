@@ -195,15 +195,13 @@ namespace FoxTunes
             }
             else
             {
-                for (var a = 0; a < source.Data.Position; a++)
+                for (var a = 0; a < source.Data.Data.GetLength(0); a++)
                 {
-                    for (var b = 0; b < MoodBarGenerator.BANDS.Length; b++)
+                    for (var b = 0; b < source.Data.Data.GetLength(1); b++)
                     {
                         destination.Data.Data[a, b] = source.Data.Data[a, b];
                     }
                 }
-                destination.Data.Position = source.Data.Position;
-                destination.Data.Capacity = source.Data.Capacity;
                 destination.Data.Update();
             }
             destination.Errors = source.Errors;
