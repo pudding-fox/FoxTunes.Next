@@ -2,20 +2,27 @@
 using ManagedBass;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace FoxTunes
 {
     public class MoodBar : BassTool, IMoodBar
     {
-        const string GROUP_NONE = "None";
-
         public MoodBar(IEnumerable<MoodBarItem> MoodBarItems)
         {
-            this.MoodBarItems = MoodBarItems;
+            this.MoodBarItems = MoodBarItems.ToList();
         }
 
-        public IEnumerable<MoodBarItem> MoodBarItems { get; private set; }
+        public IList<MoodBarItem> MoodBarItems { get; private set; }
+
+        IEnumerable<MoodBarItem> IMoodBar.MoodBarItems
+        {
+            get
+            {
+                return this.MoodBarItems;
+            }
+        }
 
         public ICore Core { get; private set; }
 
@@ -39,7 +46,7 @@ namespace FoxTunes
             {
                 MaxDegreeOfParallelism = Math.Max(this.Threads, 1)
             };
-            await AsyncParallel.ForEach(this.MoodBarItems, async moodBarItem =>
+            await AsyncParallel.ForEach(this.MoodBarItems.ToArray(), async moodBarItem =>
             {
                 try
                 {
@@ -138,6 +145,17 @@ namespace FoxTunes
             var task = default(Task);
             moodBarItem.Data = generator.Generate(stream, out task);
             return task;
+        }
+
+        public void Prune()
+        {
+            for (var a = this.MoodBarItems.Count - 1; a >= 0; a--)
+            {
+                if (this.MoodBarItems[a].Status == MoodBarItemStatus.Complete)
+                {
+                    this.MoodBarItems.RemoveAt(a);
+                }
+            }
         }
 
         protected virtual void OnUpdated()

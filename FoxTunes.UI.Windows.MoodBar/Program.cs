@@ -17,6 +17,7 @@ namespace FoxTunes
         [STAThread]
         public static int Main(string[] args)
         {
+            global::System.Diagnostics.Debugger.Launch();
             AppDomain.CurrentDomain.AssemblyResolve += OnAssemblyResolve;
             try
             {

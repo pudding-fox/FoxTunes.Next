@@ -129,6 +129,11 @@ namespace FoxTunes
                             return;
                     }
 
+                    if (position >= data.Data.GetLength(0))
+                    {
+                        return;
+                    }
+
                     for (var b = 0; b < visualizationData.Samples.Length; b++)
                     {
                         visualizationData.Data[0, b] = visualizationData.Samples[b];

@@ -171,7 +171,7 @@ namespace FoxTunes
             await Task.WhenAll(task1, task2, task3).ConfigureAwait(false);
         }
 
-        private static void ProcessInput(IMoodBar MoodBar, Stream input, Stream output, out bool exit)
+        private static void ProcessInput(IMoodBar moodBar, Stream input, Stream output, out bool exit)
         {
             Logger.Write(typeof(MoodBarHost), LogLevel.Debug, "Begin reading command.");
             var command = ReadInput<MoodBarCommand>(input);
@@ -180,7 +180,7 @@ namespace FoxTunes
             {
                 case MoodBarCommandType.Cancel:
                     Logger.Write(typeof(MoodBarHost), LogLevel.Debug, "Sending cancellation signal to MoodBar.");
-                    MoodBar.Cancel();
+                    moodBar.Cancel();
                     Logger.Write(typeof(MoodBarHost), LogLevel.Debug, "Closing stdin.");
                     input.Close();
                     exit = true;
@@ -197,9 +197,10 @@ namespace FoxTunes
             }
         }
 
-        private static void ProcessOutput(IMoodBar MoodBar, Stream output)
+        private static void ProcessOutput(IMoodBar moodBar, Stream output)
         {
-            WriteOutput(output, MoodBar.MoodBarItems);
+            WriteOutput(output, moodBar.MoodBarItems);
+            moodBar.Prune();
         }
 
         private static T ReadInput<T>(Stream stream)
