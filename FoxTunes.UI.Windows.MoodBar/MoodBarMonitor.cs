@@ -53,7 +53,6 @@ namespace FoxTunes
         protected virtual async Task Monitor(Task task)
         {
             this.Name = "Generating moodbars";
-            var persisted = new HashSet<MoodBarItem>();
             while (!task.IsCompleted)
             {
                 if (this.CancellationToken.IsCancellationRequested)
@@ -75,16 +74,9 @@ namespace FoxTunes
                         generatorData.Data = moodBarItem.Data.Data;
                         generatorData.Update();
                     }
-                    if (moodBarItem.Status == MoodBarItemStatus.Complete)
-                    {
-                        if (persisted.Add(moodBarItem))
-                        {
-                            this.Cache.Save(moodBarItem.FileName, generatorData);
-                        }
-                    }
                     position += moodBarItem.Progress;
                     count += MoodBarItem.PROGRESS_COMPLETE;
-                    if (moodBarItem.Status == MoodBarItemStatus.Processing && moodBarItem.Progress != MoodBarItem.PROGRESS_COMPLETE)
+                    if (moodBarItem.Status == MoodBarItemStatus.Processing)
                     {
                         if (builder.Length > 0)
                         {
