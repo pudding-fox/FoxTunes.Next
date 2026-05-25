@@ -76,11 +76,18 @@ namespace FoxTunes
 
         static BassLoader()
         {
-            Loader.Load("bass.dll");
-            Loader.Load("bass_fx.dll");
-            Loader.Load("bassmix.dll");
-            FxVersion = BassFx.Version;
-            MixVersion = BassMix.Version;
+            try
+            {
+                Loader.Load("bass.dll");
+                Loader.Load("bass_fx.dll");
+                Loader.Load("bassmix.dll");
+                FxVersion = BassFx.Version;
+                MixVersion = BassMix.Version;
+            }
+            catch (Exception)
+            {
+                Logger.Write(typeof(BassLoader), LogLevel.Error, "Failed to load bass.dll, bass_fx.dll or bass_mix.dll.");
+            }
         }
 
         public BassLoader()
