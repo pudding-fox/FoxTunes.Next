@@ -18,8 +18,6 @@ namespace FoxTunes
 
         void Cancel();
 
-        void Prune();
-
         event EventHandler Updated;
     }
 }

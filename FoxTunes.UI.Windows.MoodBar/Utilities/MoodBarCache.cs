@@ -54,9 +54,9 @@ namespace FoxTunes
             return false;
         }
 
-        public void Save(string fileNane, MoodBarGenerator.MoodBarGeneratorData data)
+        public void Save(MoodBarGenerator.MoodBarGeneratorData data)
         {
-            var id = this.GetDataId(fileNane, data.Resolution);
+            var id = this.GetDataId(data.FileName, data.Resolution);
             try
             {
                 using (var stream = new MemoryStream())

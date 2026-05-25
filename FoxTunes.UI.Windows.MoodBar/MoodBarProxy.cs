@@ -209,11 +209,6 @@ namespace FoxTunes
             destination.Status = source.Status;
         }
 
-        public void Prune()
-        {
-            throw new NotImplementedException();
-        }
-
         protected virtual void OnUpdated()
         {
             if (this.Updated == null)

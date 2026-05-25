@@ -51,21 +51,23 @@ namespace FoxTunes
 
         public MoodBarGeneratorData Generate(IOutputStream stream, out Task task)
         {
-            var _task = default(Task);
-            var result = this.Cache.GetOrCreate(stream.FileName, this.Resolution.Value, () =>
+            var data = this.Cache.Get(stream.FileName, this.Resolution.Value);
+            if (data != null)
             {
-                var data = new MoodBarGeneratorData()
+                task = null;
+                return data;
+            }
+            else
+            {
+                data = new MoodBarGeneratorData()
                 {
                     FileName = stream.FileName,
-                    Resolution = this.Resolution.Value,
-                    CancellationToken = new CancellationToken(),
+                    Resolution = this.Resolution.Value
                 };
                 this.Allocate(stream, data);
-                _task = this.Populate(stream, data);
+                task = this.Populate(stream, data);
                 return data;
-            });
-            task = _task;
-            return result;
+            }
         }
 
         protected virtual void Allocate(IOutputStream stream, MoodBarGeneratorData data)
@@ -92,13 +94,7 @@ namespace FoxTunes
 
             await Task.Run(() => Populate(dataSource, dataTransformer, data)).ConfigureAwait(false);
 
-            if (data.CancellationToken.IsCancellationRequested)
-            {
-                Logger.Write(this, LogLevel.Debug, "Moodbar generation for file \"{0}\" was cancelled.", stream.FileName);
-                return;
-            }
-
-            data.Update();
+            this.Cache.Save(data);
 
             Logger.Write(this, LogLevel.Debug, "Moodbar generated for file \"{0}\".", stream.FileName);
         }
@@ -159,7 +155,7 @@ namespace FoxTunes
                 }
 
                 position++;
-            } while (!data.CancellationToken.IsCancellationRequested);
+            } while (true);
         }
 
         public IEnumerable<ConfigurationSection> GetConfigurationSections()
@@ -187,9 +183,6 @@ namespace FoxTunes
 
             [field: NonSerialized]
             public event EventHandler Updated;
-
-            [field: NonSerialized]
-            public CancellationToken CancellationToken;
 
             public static readonly MoodBarGeneratorData Empty = new MoodBarGeneratorData();
         }

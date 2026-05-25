@@ -26,12 +26,9 @@ namespace FoxTunes
 
         public ICore Core { get; private set; }
 
-        public MoodBarCache Cache { get; private set; }
-
         public override void InitializeComponent(ICore core)
         {
             this.Core = core;
-            this.Cache = ComponentRegistry.Instance.GetComponent<MoodBarCache>();
             base.InitializeComponent(core);
         }
 
@@ -120,10 +117,6 @@ namespace FoxTunes
                     if (task != null)
                     {
                         await task.ConfigureAwait(false);
-                        if (moodBarItem.Status == MoodBarItemStatus.Complete)
-                        {
-                            this.Cache.Save(moodBarItem.FileName, moodBarItem.Data);
-                        }
                     }
                     success = true;
                 }
@@ -152,17 +145,6 @@ namespace FoxTunes
             var task = default(Task);
             moodBarItem.Data = generator.Generate(stream, out task);
             return task;
-        }
-
-        public void Prune()
-        {
-            for (var a = this.MoodBarItems.Count - 1; a >= 0; a--)
-            {
-                if (this.MoodBarItems[a].Status == MoodBarItemStatus.Complete)
-                {
-                    this.MoodBarItems.RemoveAt(a);
-                }
-            }
         }
 
         protected virtual void OnUpdated()

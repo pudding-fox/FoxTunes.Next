@@ -200,7 +200,6 @@ namespace FoxTunes
         private static void ProcessOutput(IMoodBar moodBar, Stream output)
         {
             WriteOutput(output, moodBar.MoodBarItems);
-            moodBar.Prune();
         }
 
         private static T ReadInput<T>(Stream stream)

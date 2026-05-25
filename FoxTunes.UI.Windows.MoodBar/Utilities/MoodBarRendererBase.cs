@@ -132,10 +132,6 @@ namespace FoxTunes
             if (this.GeneratorData != null)
             {
                 this.GeneratorData.Updated -= this.OnUpdated;
-                if (this.GeneratorData.CancellationToken != null)
-                {
-                    this.GeneratorData.CancellationToken.Cancel();
-                }
             }
             if (this.UpdateTask != null)
             {
@@ -155,8 +151,7 @@ namespace FoxTunes
                     generatorData = Store.GetOrAdd(new Tuple<string, int>(fileData.FileName, this.Resolution.Value), () => new MoodBarGenerator.MoodBarGeneratorData()
                     {
                         FileName = fileData.FileName,
-                        Resolution = this.Resolution.Value,
-                        CancellationToken = CancellationToken.None
+                        Resolution = this.Resolution.Value
                     }, out created);
                     this.GeneratorData = generatorData;
                     this.GeneratorData.Updated += this.OnUpdated;

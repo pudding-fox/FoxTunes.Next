@@ -23,6 +23,7 @@ namespace FoxTunes
 
         public string FileName { get; private set; }
 
+        [field: NonSerialized]
         public MoodBarGenerator.MoodBarGeneratorData Data { get; set; }
 
         private IList<string> _Errors { get; set; }

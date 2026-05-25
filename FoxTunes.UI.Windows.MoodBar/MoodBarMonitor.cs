@@ -68,12 +68,6 @@ namespace FoxTunes
                 var builder = new StringBuilder();
                 foreach (var moodBarItem in this.MoodBar.MoodBarItems)
                 {
-                    var generatorData = this.GeneratorDatas.FirstOrDefault(_generatorData => string.Equals(_generatorData.FileName, moodBarItem.FileName, StringComparison.OrdinalIgnoreCase));
-                    if (moodBarItem.Data != null && generatorData != null)
-                    {
-                        generatorData.Data = moodBarItem.Data.Data;
-                        generatorData.Update();
-                    }
                     position += moodBarItem.Progress;
                     count += MoodBarItem.PROGRESS_COMPLETE;
                     if (moodBarItem.Status == MoodBarItemStatus.Processing)
@@ -83,6 +77,19 @@ namespace FoxTunes
                             builder.Append(", ");
                         }
                         builder.Append(Path.GetFileName(moodBarItem.FileName));
+                    }
+                    else if (moodBarItem.Status == MoodBarItemStatus.Complete)
+                    {
+                        var generatorData = this.GeneratorDatas.FirstOrDefault(_generatorData => string.Equals(_generatorData.FileName, moodBarItem.FileName, StringComparison.OrdinalIgnoreCase));
+                        if (generatorData != null)
+                        {
+                            var cached = this.Cache.Get(generatorData.FileName, generatorData.Resolution);
+                            if (cached != null)
+                            {
+                                generatorData.Data = cached.Data;
+                                generatorData.Update();
+                            }
+                        }
                     }
                 }
                 if (builder.Length > 0)
