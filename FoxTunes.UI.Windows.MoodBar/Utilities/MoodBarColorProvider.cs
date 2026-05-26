@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Windows.Controls;
 using System.Windows.Media;
 
 namespace FoxTunes
@@ -7,8 +8,9 @@ namespace FoxTunes
     {
         public static Color GetColor(float[] bands, int tint)
         {
-            const float saturation = 1.35f;
-            const float exposure = 1.08f;
+            const float saturation = 1.05f;
+            const float exposure = 0.95f;
+
             var b0 = bands[0];
             var b1 = bands[1];
             var b2 = bands[2];
@@ -18,54 +20,57 @@ namespace FoxTunes
             var b6 = bands[6];
             var b7 = bands[7];
             var b8 = bands[8];
+
             float r =
                 (b0 * 1.25f) +
                 (b1 * 1.00f) +
                 (b2 * 0.35f);
+
             float g =
                 (b2 * 0.15f) +
                 (b3 * 0.60f) +
                 (b4 * 1.00f) +
                 (b5 * 0.85f);
+
             float b =
                 (b5 * 0.45f) +
                 (b6 * 0.90f) +
                 (b7 * 1.25f) +
                 (b8 * 1.15f);
-            var max = Math.Max(r, Math.Max(g, b));
-            if (max > 1f)
-            {
-                r /= max;
-                g /= max;
-                b /= max;
-            }
-            r = (float)Math.Pow(r, 0.65);
-            g = (float)Math.Pow(g, 0.65);
-            b = (float)Math.Pow(b, 0.65);
-            r *= 1.08f;
-            g *= 1.02f;
-            b *= 1.15f;
-            var grey = (r + g + b) / 3f;
-            r = grey + ((r - grey) * saturation);
-            g = grey + ((g - grey) * saturation);
-            b = grey + ((b - grey) * saturation);
+
             r *= exposure;
             g *= exposure;
             b *= exposure;
+
+            r = r / (r + 1f);
+            g = g / (g + 1f);
+            b = b / (b + 1f);
+
+            r = (float)Math.Pow(r, 0.9);
+            g = (float)Math.Pow(g, 0.9);
+            b = (float)Math.Pow(b, 0.9);
+
+            var luma = (0.2126f * r) + (0.7152f * g) + (0.0722f * b);
+
+            r = luma + ((r - luma) * saturation);
+            g = luma + ((g - luma) * saturation);
+            b = luma + ((b - luma) * saturation);
+
             r = Clamp(r);
             g = Clamp(g);
             b = Clamp(b);
-            RgbToHsv(r, g, b, out var h, out var s, out var v);
-            h += tint;
-            while (h >= 360f)
-            {
-                h -= 360f;
-            }
-            while (h < 0f)
-            {
-                h += 360f;
-            }
+
+            var h = default(float);
+            var s = default(float);
+            var v = default(float);
+            RgbToHsv(r, g, b, out h, out s, out v);
+
+            h += tint * 0.6f;
+            while (h >= 360f) h -= 360f;
+            while (h < 0f) h += 360f;
+
             HsvToRgb(h, s, v, out r, out g, out b);
+
             return Color.FromRgb(
                 (byte)(r * 255f),
                 (byte)(g * 255f),
