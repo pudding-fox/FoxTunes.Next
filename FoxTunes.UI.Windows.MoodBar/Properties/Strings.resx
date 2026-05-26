@@ -126,9 +126,6 @@
   <data name="MoodBarCacheConfiguration.Cleanup" xml:space="preserve">
     <value>Cleanup</value>
   </data>
-  <data name="MoodBarGeneratorConfiguration.Resolution" xml:space="preserve">
-    <value>Resolution</value>
-  </data>
   <data name="MoodBarGeneratorConfiguration.Tint" xml:space="preserve">
     <value>Tint</value>
   </data>

@@ -88,15 +88,6 @@ namespace FoxTunes {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Resolution.
-        /// </summary>
-        internal static string MoodBarGeneratorConfiguration_Resolution {
-            get {
-                return ResourceManager.GetString("MoodBarGeneratorConfiguration.Resolution", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Tint.
         /// </summary>
         internal static string MoodBarGeneratorConfiguration_Tint {

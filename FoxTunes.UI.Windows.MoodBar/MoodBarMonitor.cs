@@ -83,7 +83,7 @@ namespace FoxTunes
                         var generatorData = this.GeneratorDatas.FirstOrDefault(_generatorData => string.Equals(_generatorData.FileName, moodBarItem.FileName, StringComparison.OrdinalIgnoreCase));
                         if (generatorData != null)
                         {
-                            var cached = this.Cache.Get(generatorData.FileName, generatorData.Resolution);
+                            var cached = this.Cache.Get(generatorData.FileName);
                             if (cached != null)
                             {
                                 generatorData.Data = cached.Data;

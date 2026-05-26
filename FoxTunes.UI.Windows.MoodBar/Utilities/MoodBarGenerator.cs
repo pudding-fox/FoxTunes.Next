@@ -32,26 +32,17 @@ namespace FoxTunes
 
         public IFFTDataTransformerFactory DataTransformerFactory { get; private set; }
 
-        public IConfigurationBase Configuration { get; private set; }
-
-        public IntegerConfigurationElement Resolution { get; private set; }
-
         public override void InitializeComponent(ICore core)
         {
             this.Cache = ComponentRegistry.Instance.GetComponent<MoodBarCache>();
             this.DataSourceFactory = core.Factories.OutputStreamDataSource;
             this.DataTransformerFactory = core.Factories.FFTDataTransformer;
-            this.Configuration = core.Components.Configuration;
-            this.Resolution = this.Configuration.GetElement<IntegerConfigurationElement>(
-                MoodBarGeneratorConfiguration.SECTION,
-                MoodBarGeneratorConfiguration.RESOLUTION
-            );
             base.InitializeComponent(core);
         }
 
         public MoodBarGeneratorData Generate(IOutputStream stream, out Task task)
         {
-            var data = this.Cache.Get(stream.FileName, this.Resolution.Value);
+            var data = this.Cache.Get(stream.FileName);
             if (data != null)
             {
                 task = null;
@@ -61,8 +52,7 @@ namespace FoxTunes
             {
                 data = new MoodBarGeneratorData()
                 {
-                    FileName = stream.FileName,
-                    Resolution = this.Resolution.Value
+                    FileName = stream.FileName
                 };
                 this.Allocate(stream, data);
                 task = this.Populate(stream, data);
@@ -74,7 +64,7 @@ namespace FoxTunes
         {
             var max = Convert.ToInt32(
                 Math.Ceiling(
-                    stream.GetDuration(stream.Length).TotalMilliseconds / this.Resolution.Value
+                    stream.GetDuration(stream.Length).TotalMilliseconds / 10
                 )
             ).ToNearestPower();
             var length = Convert.ToInt32(
@@ -167,8 +157,6 @@ namespace FoxTunes
         public class MoodBarGeneratorData
         {
             public string FileName;
-
-            public int Resolution;
 
             public float[,] Data;
 

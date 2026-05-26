@@ -20,7 +20,7 @@ namespace FoxTunes
 
         public static TaskScheduler Scheduler { get; private set; }
 
-        public static CappedDictionary<Tuple<string, int>, MoodBarGenerator.MoodBarGeneratorData> Store { get; private set; }
+        public static CappedDictionary<string, MoodBarGenerator.MoodBarGeneratorData> Store { get; private set; }
 
         static MoodBarRendererBase()
         {
@@ -29,7 +29,7 @@ namespace FoxTunes
             {
                 MaxDegreeOfParallelism = Math.Max(Environment.ProcessorCount / 2, 1)
             });
-            Store = new CappedDictionary<Tuple<string, int>, MoodBarGenerator.MoodBarGeneratorData>(CACHE_SIZE);
+            Store = new CappedDictionary<string, MoodBarGenerator.MoodBarGeneratorData>(CACHE_SIZE);
         }
 
         public static readonly DependencyProperty FileDataProperty = DependencyProperty.Register(
@@ -96,8 +96,6 @@ namespace FoxTunes
 
         public IBackgroundTaskEmitter BackgroundTaskEmitter { get; private set; }
 
-        public IntegerConfigurationElement Resolution { get; private set; }
-
         public IntegerConfigurationElement Tint { get; private set; }
 
         public override void InitializeComponent(ICore core)
@@ -107,15 +105,10 @@ namespace FoxTunes
             this.Cache = ComponentRegistry.Instance.GetComponent<MoodBarCache>();
             this.BackgroundTaskEmitter = core.Components.BackgroundTaskEmitter;
             this.Configuration = core.Components.Configuration;
-            this.Resolution = this.Configuration.GetElement<IntegerConfigurationElement>(
-                MoodBarGeneratorConfiguration.SECTION,
-                MoodBarGeneratorConfiguration.RESOLUTION
-            );
             this.Tint = this.Configuration.GetElement<IntegerConfigurationElement>(
                 MoodBarGeneratorConfiguration.SECTION,
                 MoodBarGeneratorConfiguration.TINT
             );
-            this.Resolution.ValueChanged += this.OnValueChanged;
             this.Tint.ValueChanged += this.OnValueChanged;
             base.InitializeComponent(core);
         }
@@ -139,7 +132,7 @@ namespace FoxTunes
             }
             if (fileData != null)
             {
-                var generatorData = this.Cache.Get(fileData.FileName, this.Resolution.Value);
+                var generatorData = this.Cache.Get(fileData.FileName);
                 if (generatorData != null)
                 {
                     this.GeneratorData = generatorData;
@@ -148,10 +141,9 @@ namespace FoxTunes
                 else
                 {
                     var created = default(bool);
-                    generatorData = Store.GetOrAdd(new Tuple<string, int>(fileData.FileName, this.Resolution.Value), () => new MoodBarGenerator.MoodBarGeneratorData()
+                    generatorData = Store.GetOrAdd(fileData.FileName, () => new MoodBarGenerator.MoodBarGeneratorData()
                     {
                         FileName = fileData.FileName,
-                        Resolution = this.Resolution.Value
                     }, out created);
                     this.GeneratorData = generatorData;
                     this.GeneratorData.Updated += this.OnUpdated;
@@ -339,10 +331,6 @@ namespace FoxTunes
             if (this.GeneratorData != null)
             {
                 this.GeneratorData.Updated -= this.OnUpdated;
-            }
-            if (this.Resolution != null)
-            {
-                this.Resolution.ValueChanged -= this.OnValueChanged;
             }
             if (this.Tint != null)
             {

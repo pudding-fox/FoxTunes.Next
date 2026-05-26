@@ -8,9 +8,9 @@ namespace FoxTunes
     {
         private static readonly string PREFIX = typeof(MoodBarCache).Name;
 
-        public MoodBarGenerator.MoodBarGeneratorData Get(string fileName, int resolution)
+        public MoodBarGenerator.MoodBarGeneratorData Get(string fileName)
         {
-            var id = this.GetDataId(fileName, resolution);
+            var id = this.GetDataId(fileName);
             if (FileMetaDataStore.Exists(PREFIX, id, out fileName))
             {
                 var data = default(MoodBarGenerator.MoodBarGeneratorData);
@@ -22,9 +22,9 @@ namespace FoxTunes
             return null;
         }
 
-        public MoodBarGenerator.MoodBarGeneratorData GetOrCreate(string fileName, int resolution, Func<MoodBarGenerator.MoodBarGeneratorData> factory)
+        public MoodBarGenerator.MoodBarGeneratorData GetOrCreate(string fileName, Func<MoodBarGenerator.MoodBarGeneratorData> factory)
         {
-            var id = this.GetDataId(fileName, resolution);
+            var id = this.GetDataId(fileName);
             if (FileMetaDataStore.Exists(PREFIX, id, out fileName))
             {
                 var data = default(MoodBarGenerator.MoodBarGeneratorData);
@@ -56,7 +56,7 @@ namespace FoxTunes
 
         public void Save(MoodBarGenerator.MoodBarGeneratorData data)
         {
-            var id = this.GetDataId(data.FileName, data.Resolution);
+            var id = this.GetDataId(data.FileName);
             try
             {
                 using (var stream = new MemoryStream())
@@ -73,13 +73,12 @@ namespace FoxTunes
             }
         }
 
-        private string GetDataId(string fileName, int resolution)
+        private string GetDataId(string fileName)
         {
             var hashCode = default(int);
             unchecked
             {
                 hashCode = (hashCode * 29) + fileName.GetDeterministicHashCode();
-                hashCode = (hashCode * 29) + resolution.GetHashCode();
             }
             return Math.Abs(hashCode).ToString();
         }
