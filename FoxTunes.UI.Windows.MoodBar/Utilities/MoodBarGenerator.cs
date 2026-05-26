@@ -91,61 +91,55 @@ namespace FoxTunes
 
         private static void Populate(IOutputStreamDataSource dataSource, IFFTDataTransformer dataTransformer, MoodBarGeneratorData data)
         {
-            var visualizationData = new FFTVisualizationData();
-            visualizationData.FFTSize = FFT_SIZE;
-            visualizationData.Samples = dataSource.GetBuffer(FFT_SIZE);
+            var visualizationData = new FFTVisualizationData()
+            {
+                FFTSize = FFT_SIZE,
+                Samples = dataSource.GetBuffer(FFT_SIZE)
+            };
             visualizationData.Data = new float[1, visualizationData.Samples.Length];
+            dataSource.GetFormat(
+                out visualizationData.Rate,
+                out visualizationData.Channels,
+                out visualizationData.Format
+            );
 
-            var length = dataSource.GetData(visualizationData.Samples, FFT_SIZE);
             var values = new float[BANDS.Length];
-            var samplesPerValue = (dataSource.Stream.Length / length) / data.Data.GetLength(0);
+            var totalPositions = data.Data.GetLength(0);
+            var totalSamples = dataSource.Stream.Length;
+            var samplesPerValue = Math.Max(totalSamples / totalPositions, 1);
+            var processedSamples = default(long);
             var position = default(int);
 
-            dataSource.GetFormat(out visualizationData.Rate, out visualizationData.Channels, out visualizationData.Format);
-
-            do
+            while (true)
             {
-                var samples = default(int);
-                for (var a = 0; a < samplesPerValue; a++)
+                var length = dataSource.GetData(
+                    visualizationData.Samples,
+                    FFT_SIZE
+                );
+                switch (length)
                 {
-                    switch (length)
-                    {
-                        case _STREAMPROC_END:
-                        case _ERROR_UNKNOWN:
-                            return;
-                    }
-
-                    if (position >= data.Data.GetLength(0))
-                    {
+                    case _STREAMPROC_END:
+                    case _ERROR_UNKNOWN:
                         return;
-                    }
-
-                    for (var b = 0; b < visualizationData.Samples.Length; b++)
-                    {
-                        visualizationData.Data[0, b] = visualizationData.Samples[b];
-                    }
-                    dataTransformer.Transform(visualizationData, values, null, null);
-
-                    for (var b = 0; b < BANDS.Length; b++)
-                    {
-                        var value = (float)Math.Log10(1 + (values[b] * 10));
-                        data.Data[position, b] += value;
-                    }
-
-                    length = dataSource.GetData(visualizationData.Samples, FFT_SIZE);
-                    samples++;
                 }
-
-                if (samples > 0)
+                for (var a = 0; a < visualizationData.Samples.Length; a++)
                 {
-                    for (var a = 0; a < BANDS.Length; a++)
-                    {
-                        data.Data[position, a] /= samples;
-                    }
+                    visualizationData.Data[0, a] = visualizationData.Samples[a];
                 }
-
-                position++;
-            } while (true);
+                dataTransformer.Transform(visualizationData, values, null, null);
+                position = (int)(processedSamples / samplesPerValue);
+                if (position >= totalPositions)
+                {
+                    position = totalPositions - 1;
+                }
+                for (var a = 0; a < BANDS.Length; a++)
+                {
+                    var value = (float)Math.Log10(1 + (values[a] * 10));
+                    value = Math.Max(value, 0.025f);
+                    data.Data[position, a] += value;
+                }
+                processedSamples += length;
+            }
         }
 
         public IEnumerable<ConfigurationSection> GetConfigurationSections()
