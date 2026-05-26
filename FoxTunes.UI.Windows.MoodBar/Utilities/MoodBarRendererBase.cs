@@ -364,6 +364,7 @@ namespace FoxTunes
             );
             var values = new float[generatorData.Data.GetLength(1)];
             var averages = new float[generatorData.Data.GetLength(1)];
+            var peak = default(float);
             for (var a = 0; a < generatorData.Data.GetLength(0); a++)
             {
                 for (var b = 0; b < averages.Length; b++)
@@ -374,6 +375,7 @@ namespace FoxTunes
             for (var a = 0; a < averages.Length; a++)
             {
                 averages[a] /= generatorData.Data.GetLength(0);
+                peak = Math.Max(averages[a], peak);
                 if (averages[a] <= 0)
                 {
                     averages[a] = 1;
@@ -398,6 +400,7 @@ namespace FoxTunes
                         value = 1.5f;
                     }
                     values[b] = value;
+                    values[b] /= peak;
                 }
                 {
                     var color = MoodBarColorProvider.GetColor(values, info.Tint);
