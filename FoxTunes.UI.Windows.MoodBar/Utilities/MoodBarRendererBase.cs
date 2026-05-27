@@ -355,52 +355,65 @@ namespace FoxTunes
             {
                 return;
             }
+
             BitmapHelper.DrawRectangle(
-                ref info.Background,
-                0,
-                0,
-                rendererData.Width,
+                ref info.Background, 
+                0, 
+                0, 
+                rendererData.Width, 
                 rendererData.Height
             );
+
             var values = new float[generatorData.Data.GetLength(1)];
             var averages = new float[generatorData.Data.GetLength(1)];
-            var peak = default(float);
             for (var a = 0; a < generatorData.Data.GetLength(0); a++)
             {
-                for (var b = 0; b < averages.Length; b++)
+                for (var b = 0; b < generatorData.Data.GetLength(1); b++)
                 {
                     averages[b] += generatorData.Data[a, b];
                 }
             }
-            for (var a = 0; a < averages.Length; a++)
+
+            for (var a = 0; a < generatorData.Data.GetLength(1); a++)
             {
                 averages[a] /= generatorData.Data.GetLength(0);
-                peak = Math.Max(averages[a], peak);
                 if (averages[a] <= 0)
                 {
                     averages[a] = 1;
                 }
             }
+
             for (var a = 0; a < generatorData.Data.GetLength(0); a++)
             {
-                for (var b = 0; b < values.Length; b++)
+                var b = (int)((a / (float)generatorData.Data.GetLength(0)) * rendererData.Width);
+                var c = (int)(((a + 1) / (float)generatorData.Data.GetLength(0)) * rendererData.Width);
+                var width = Math.Max(c - b, 1);
+                if (b >= rendererData.Width)
+                {
+                    continue;
+                }
+                if (b + width > rendererData.Width)
+                {
+                    width = rendererData.Width - b;
+                }
+                for (var d = 0; d < generatorData.Data.GetLength(1); d++)
                 {
                     var value = default(float);
+
                     if (a > 0 && a < generatorData.Data.GetLength(0) - 1)
                     {
-                        value = (generatorData.Data[a - 1, b] * 0.25f) + (generatorData.Data[a, b] * 0.50f) + (generatorData.Data[a + 1, b] * 0.25f);
+                        value = (generatorData.Data[a - 1, d] * 0.25f) + (generatorData.Data[a, d] * 0.50f) + (generatorData.Data[a + 1, d] * 0.25f);
                     }
                     else
                     {
-                        value = generatorData.Data[a, b];
+                        value = generatorData.Data[a, d];
                     }
-                    value /= (float)Math.Pow(averages[b], 0.12);
+                    value /= (float)Math.Pow(averages[d], 0.12);
                     if (value > 1.5f)
                     {
                         value = 1.5f;
                     }
-                    values[b] = value;
-                    values[b] /= peak;
+                    values[d] = value;
                 }
                 {
                     var color = MoodBarColorProvider.GetColor(values, info.Tint);
@@ -408,7 +421,7 @@ namespace FoxTunes
                     try
                     {
                         var render = BitmapHelper.CreateRenderInfo(info.Background, palette);
-                        BitmapHelper.DrawRectangle(ref render, a, 0, 1, rendererData.Height);
+                        BitmapHelper.DrawRectangle(ref render, b, 0, width, rendererData.Height);
                     }
                     finally
                     {
@@ -424,9 +437,9 @@ namespace FoxTunes
                     {
                         var value = values.Max();
                         var y = Convert.ToInt32((rendererData.Height / 2) - (value * (rendererData.Height / 2)));
-                        var height = Math.Max(Convert.ToInt32(((rendererData.Height / 2) - y) + (value * (rendererData.Height / 2))), 1);
+                        var height = Math.Max(Convert.ToInt32((((rendererData.Height / 2) - y) + (value * (rendererData.Height / 2)))), 1);
                         var render = BitmapHelper.CreateRenderInfo(info.Background, palette);
-                        BitmapHelper.DrawRectangle(ref render, a, y, 1, height);
+                        BitmapHelper.DrawRectangle(ref render, b, y, width, height);
                     }
                     finally
                     {

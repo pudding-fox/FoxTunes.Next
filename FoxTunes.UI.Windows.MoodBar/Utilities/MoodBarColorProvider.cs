@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Windows.Controls;
 using System.Windows.Media;
 
 namespace FoxTunes
@@ -8,8 +7,9 @@ namespace FoxTunes
     {
         public static Color GetColor(float[] bands, int tint)
         {
-            const float saturation = 1.05f;
-            const float exposure = 0.95f;
+            // Aggressive tweaks for bright neon output
+            const float saturation = 1.6f;
+            const float exposure = 1.35f;
 
             var b0 = bands[0];
             var b1 = bands[1];
@@ -65,11 +65,20 @@ namespace FoxTunes
             var v = default(float);
             RgbToHsv(r, g, b, out h, out s, out v);
 
+            // Neon-specific boosts: push saturation and value towards 1
+            s = Math.Min(1f, s * 1.5f);
+            v = Math.Min(1f, v * 1.12f);
+
             h += tint * 0.6f;
             while (h >= 360f) h -= 360f;
             while (h < 0f) h += 360f;
 
             HsvToRgb(h, s, v, out r, out g, out b);
+
+            // Ensure final RGB are in [0,1]
+            r = Clamp(r);
+            g = Clamp(g);
+            b = Clamp(b);
 
             return Color.FromRgb(
                 (byte)(r * 255f),
