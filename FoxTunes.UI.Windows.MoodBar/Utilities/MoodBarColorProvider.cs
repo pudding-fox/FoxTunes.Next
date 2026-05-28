@@ -7,10 +7,6 @@ namespace FoxTunes
     {
         public static Color GetColor(float[] bands, int tint)
         {
-            // Aggressive tweaks for bright neon output
-            const float saturation = 1.6f;
-            const float exposure = 1.35f;
-
             var b0 = bands[0];
             var b1 = bands[1];
             var b2 = bands[2];
@@ -22,60 +18,78 @@ namespace FoxTunes
             var b8 = bands[8];
 
             float r =
-                (b0 * 1.25f) +
-                (b1 * 1.00f) +
-                (b2 * 0.35f);
+                (b0 * 1.65f) +
+                (b1 * 1.20f) +
+                (b2 * 0.20f);
 
             float g =
-                (b2 * 0.15f) +
-                (b3 * 0.60f) +
-                (b4 * 1.00f) +
-                (b5 * 0.85f);
+                (b2 * 0.08f) +
+                (b3 * 0.85f) +
+                (b4 * 1.35f) +
+                (b5 * 0.75f);
 
             float b =
-                (b5 * 0.45f) +
-                (b6 * 0.90f) +
-                (b7 * 1.25f) +
-                (b8 * 1.15f);
+                (b5 * 0.25f) +
+                (b6 * 1.10f) +
+                (b7 * 1.65f) +
+                (b8 * 1.55f);
+
+            const float exposure = 1.9f;
 
             r *= exposure;
             g *= exposure;
             b *= exposure;
 
-            r = r / (r + 1f);
-            g = g / (g + 1f);
-            b = b / (b + 1f);
+            r = 1f - (float)Math.Exp(-r);
+            g = 1f - (float)Math.Exp(-g);
+            b = 1f - (float)Math.Exp(-b);
 
-            r = (float)Math.Pow(r, 0.9);
-            g = (float)Math.Pow(g, 0.9);
-            b = (float)Math.Pow(b, 0.9);
+            r = (float)Math.Pow(r, 0.75f);
+            g = (float)Math.Pow(g, 0.75f);
+            b = (float)Math.Pow(b, 0.75f);
 
-            var luma = (0.2126f * r) + (0.7152f * g) + (0.0722f * b);
+            var maxChannel = Math.Max(r, Math.Max(g, b));
+            var minChannel = Math.Min(r, Math.Min(g, b));
+            var chroma = maxChannel - minChannel;
 
-            r = luma + ((r - luma) * saturation);
-            g = luma + ((g - luma) * saturation);
-            b = luma + ((b - luma) * saturation);
+            const float chromaBoost = 1.45f;
+            if (chroma > 0f)
+            {
+                r = minChannel + ((r - minChannel) * chromaBoost);
+                g = minChannel + ((g - minChannel) * chromaBoost);
+                b = minChannel + ((b - minChannel) * chromaBoost);
+            }
 
             r = Clamp(r);
             g = Clamp(g);
             b = Clamp(b);
 
-            var h = default(float);
-            var s = default(float);
-            var v = default(float);
+            float h, s, v;
             RgbToHsv(r, g, b, out h, out s, out v);
 
-            // Neon-specific boosts: push saturation and value towards 1
-            s = Math.Min(1f, s * 1.5f);
-            v = Math.Min(1f, v * 1.12f);
+            s = (float)Math.Pow(s, 0.65f);
+            s *= 1.75f;
 
-            h += tint * 0.6f;
-            while (h >= 360f) h -= 360f;
-            while (h < 0f) h += 360f;
+            v = (float)Math.Pow(v, 0.82f);
+            v *= 1.18f;
+
+            s = Clamp(s);
+            v = Clamp(v);
+
+            h += tint * 0.9f;
+
+            while (h >= 360f)
+            {
+                h -= 360f;
+            }
+
+            while (h < 0f)
+            {
+                h += 360f;
+            }
 
             HsvToRgb(h, s, v, out r, out g, out b);
 
-            // Ensure final RGB are in [0,1]
             r = Clamp(r);
             g = Clamp(g);
             b = Clamp(b);
@@ -92,7 +106,9 @@ namespace FoxTunes
             var max = Math.Max(r, Math.Max(g, b));
             var min = Math.Min(r, Math.Min(g, b));
             var delta = max - min;
+
             h = 0f;
+
             if (delta > 0f)
             {
                 if (max == r)
@@ -108,10 +124,12 @@ namespace FoxTunes
                     h = 60f * (((r - g) / delta) + 4f);
                 }
             }
+
             if (h < 0f)
             {
                 h += 360f;
             }
+
             s = max <= 0f ? 0f : delta / max;
             v = max;
         }
@@ -121,9 +139,11 @@ namespace FoxTunes
             var c = v * s;
             var x = c * (1f - Math.Abs(((h / 60f) % 2f) - 1f));
             var m = v - c;
+
             var rr = default(float);
             var gg = default(float);
             var bb = default(float);
+
             if (h < 60f)
             {
                 rr = c;
@@ -160,6 +180,7 @@ namespace FoxTunes
                 gg = 0f;
                 bb = x;
             }
+
             r = rr + m;
             g = gg + m;
             b = bb + m;
