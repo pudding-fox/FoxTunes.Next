@@ -104,12 +104,7 @@ namespace FoxTunes
 
         public static int GetMixerBufferLength()
         {
-            var bufferLength = Bass.GetConfig(Configuration.MixerBufferLength);
-            if (bufferLength <= 5)
-            {
-                bufferLength *= Bass.PlaybackBufferLength;
-            }
-            return bufferLength;
+            return 0;
         }
     }
 

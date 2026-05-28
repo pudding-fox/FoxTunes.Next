@@ -11,7 +11,7 @@ namespace FoxTunes
 
         public BassStreamPipeline()
         {
-            this.BufferLengthMetric = new Metric(1000);
+            this.BufferLengthMetric = new Metric(10);
             this.Components = Enumerable.Empty<IBassStreamComponent>();
         }
 
