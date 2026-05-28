@@ -431,7 +431,7 @@ namespace FoxTunes
                         var value = default(float);
                         if (a > 0 && a < rows - 1)
                         {
-                            value = (data[a - 1, d] * 0.25f) + (data[a, d] * 0.50f) + (data[a + 1, d] * 0.25f);
+                            value = Smooth(data, a, d, 16);
                         }
                         else
                         {
@@ -485,6 +485,31 @@ namespace FoxTunes
             }
 
             rendererData.Rendered = true;
+        }
+
+        private static float Smooth(float[,] data, int a, int d, int radius)
+        {
+            if (radius <= 0)
+                return data[a, d];
+
+            int width = data.GetLength(0);
+
+            float sum = 0f;
+            int count = 0;
+
+            for (int offset = -radius; offset <= radius; offset++)
+            {
+                int index = a + offset;
+
+                // bounds check
+                if (index < 0 || index >= width)
+                    continue;
+
+                sum += data[index, d];
+                count++;
+            }
+
+            return sum / count;
         }
 
         public static MoodBarRendererData Create(MoodBarGenerator.MoodBarGeneratorData generatorData, int width, int height, IDictionary<string, IntPtr> colors)
