@@ -284,6 +284,11 @@ namespace FoxTunes
                 try
                 {
                     Render(ref info, generatorData, rendererData);
+                    if (rendererData.Rendered)
+                    {
+                        Logger.Write(this.GetType(), LogLevel.Debug, "Mood bar rendered successfully.");
+                        generatorData.Updated -= this.OnUpdated;
+                    }
                 }
                 catch (Exception e)
                 {
@@ -357,96 +362,95 @@ namespace FoxTunes
             }
 
             BitmapHelper.DrawRectangle(
-                ref info.Background, 
-                0, 
-                0, 
-                rendererData.Width, 
+                ref info.Background,
+                0,
+                0,
+                rendererData.Width,
                 rendererData.Height
             );
 
             var values = new float[generatorData.Data.GetLength(1)];
             var averages = new float[generatorData.Data.GetLength(1)];
-            for (var a = 0; a < generatorData.Data.GetLength(0); a++)
+            var palettes = new Dictionary<Color, IntPtr>();
+            try
             {
-                for (var b = 0; b < generatorData.Data.GetLength(1); b++)
+                for (var a = 0; a < generatorData.Data.GetLength(0); a++)
                 {
-                    averages[b] += generatorData.Data[a, b];
-                }
-            }
-
-            for (var a = 0; a < generatorData.Data.GetLength(1); a++)
-            {
-                averages[a] /= generatorData.Data.GetLength(0);
-                if (averages[a] <= 0)
-                {
-                    averages[a] = 1;
-                }
-            }
-
-            for (var a = 0; a < generatorData.Data.GetLength(0); a++)
-            {
-                var b = (int)((a / (float)generatorData.Data.GetLength(0)) * rendererData.Width);
-                var c = (int)(((a + 1) / (float)generatorData.Data.GetLength(0)) * rendererData.Width);
-                var width = Math.Max(c - b, 1);
-                if (b >= rendererData.Width)
-                {
-                    continue;
-                }
-                if (b + width > rendererData.Width)
-                {
-                    width = rendererData.Width - b;
-                }
-                for (var d = 0; d < generatorData.Data.GetLength(1); d++)
-                {
-                    var value = default(float);
-
-                    if (a > 0 && a < generatorData.Data.GetLength(0) - 1)
+                    for (var b = 0; b < generatorData.Data.GetLength(1); b++)
                     {
-                        value = (generatorData.Data[a - 1, d] * 0.25f) + (generatorData.Data[a, d] * 0.50f) + (generatorData.Data[a + 1, d] * 0.25f);
+                        averages[b] += generatorData.Data[a, b];
                     }
-                    else
-                    {
-                        value = generatorData.Data[a, d];
-                    }
-                    value /= (float)Math.Pow(averages[d], 0.12);
-                    if (value > 1.5f)
-                    {
-                        value = 1.5f;
-                    }
-                    values[d] = value;
                 }
+
+                for (var a = 0; a < generatorData.Data.GetLength(1); a++)
                 {
-                    var color = MoodBarColorProvider.GetColor(values, info.Tint);
-                    var palette = BitmapHelper.CreatePalette(new[] { new Int32Color(color) }, 1, 0);
-                    try
+                    averages[a] /= generatorData.Data.GetLength(0);
+                    if (averages[a] <= 0)
                     {
+                        averages[a] = 1;
+                    }
+                }
+
+                for (var a = 0; a < generatorData.Data.GetLength(0); a++)
+                {
+                    var b = (int)((a / (float)generatorData.Data.GetLength(0)) * rendererData.Width);
+                    var c = (int)(((a + 1) / (float)generatorData.Data.GetLength(0)) * rendererData.Width);
+                    var width = Math.Max(c - b, 1);
+                    if (b >= rendererData.Width)
+                    {
+                        continue;
+                    }
+                    if (b + width > rendererData.Width)
+                    {
+                        width = rendererData.Width - b;
+                    }
+                    for (var d = 0; d < generatorData.Data.GetLength(1); d++)
+                    {
+                        var value = default(float);
+
+                        if (a > 0 && a < generatorData.Data.GetLength(0) - 1)
+                        {
+                            value = (generatorData.Data[a - 1, d] * 0.25f) + (generatorData.Data[a, d] * 0.50f) + (generatorData.Data[a + 1, d] * 0.25f);
+                        }
+                        else
+                        {
+                            value = generatorData.Data[a, d];
+                        }
+                        value /= (float)Math.Pow(averages[d], 0.12);
+                        if (value > 1.5f)
+                        {
+                            value = 1.5f;
+                        }
+                        values[d] = value;
+                    }
+                    {
+                        var color = MoodBarColorProvider.GetColor(values, info.Tint);
+                        var palette = palettes.GetOrAdd(color, () => BitmapHelper.CreatePalette(new[] { new Int32Color(color) }, 1, 0));
                         var render = BitmapHelper.CreateRenderInfo(info.Background, palette);
                         BitmapHelper.DrawRectangle(ref render, b, 0, width, rendererData.Height);
                     }
-                    finally
                     {
-                        BitmapHelper.DestroyPalette(ref palette);
-                    }
-                }
-                {
-                    const byte SHADE = 50;
-                    var contrast = Color.FromRgb(SHADE, SHADE, SHADE);
-                    var color = MoodBarColorProvider.GetColor(values, info.Tint).Shade(contrast);
-                    var palette = BitmapHelper.CreatePalette(new[] { new Int32Color(color) }, 1, 0);
-                    try
-                    {
+                        const byte SHADE = 50;
+                        var contrast = Color.FromRgb(SHADE, SHADE, SHADE);
+                        var color = MoodBarColorProvider.GetColor(values, info.Tint).Shade(contrast);
+                        var palette = palettes.GetOrAdd(color, () => BitmapHelper.CreatePalette(new[] { new Int32Color(color) }, 1, 0));
                         var value = values.Max();
                         var y = Convert.ToInt32((rendererData.Height / 2) - (value * (rendererData.Height / 2)));
                         var height = Math.Max(Convert.ToInt32((((rendererData.Height / 2) - y) + (value * (rendererData.Height / 2)))), 1);
                         var render = BitmapHelper.CreateRenderInfo(info.Background, palette);
                         BitmapHelper.DrawRectangle(ref render, b, y, width, height);
                     }
-                    finally
-                    {
-                        BitmapHelper.DestroyPalette(ref palette);
-                    }
                 }
             }
+            finally
+            {
+                foreach (var pair in palettes)
+                {
+                    var palette = pair.Value;
+                    BitmapHelper.DestroyPalette(ref palette);
+                }
+            }
+            rendererData.Rendered = true;
         }
 
         public static MoodBarRendererData Create(MoodBarGenerator.MoodBarGeneratorData generatorData, int width, int height, IDictionary<string, IntPtr> colors)
@@ -512,6 +516,8 @@ namespace FoxTunes
             public int Height;
 
             public IDictionary<string, IntPtr> Colors;
+
+            public bool Rendered;
 
             ~MoodBarRendererData()
             {
