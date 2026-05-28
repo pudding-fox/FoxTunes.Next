@@ -356,10 +356,15 @@ namespace FoxTunes
 
         public static void Render(ref MoodBarRenderInfo info, MoodBarGenerator.MoodBarGeneratorData generatorData, MoodBarRendererData rendererData)
         {
-            if (info.Background.Width != rendererData.Width || info.Background.Height != rendererData.Height || generatorData.Data == null)
+            var data = generatorData.Data;
+
+            if (info.Background.Width != rendererData.Width || info.Background.Height != rendererData.Height || data == null)
             {
                 return;
             }
+
+            var rows = data.GetLength(0);
+            var cols = data.GetLength(1);
 
             BitmapHelper.DrawRectangle(
                 ref info.Background,
@@ -369,74 +374,102 @@ namespace FoxTunes
                 rendererData.Height
             );
 
-            var values = new float[generatorData.Data.GetLength(1)];
-            var averages = new float[generatorData.Data.GetLength(1)];
+            var values = new float[cols];
+            var averages = new float[cols];
+            var normalization = new float[cols];
             var palettes = new Dictionary<Color, IntPtr>();
+
+            const byte SHADE = 50;
+            var contrast = Color.FromRgb(SHADE, SHADE, SHADE);
+
             try
             {
-                for (var a = 0; a < generatorData.Data.GetLength(0); a++)
+                for (var a = 0; a < rows; a++)
                 {
-                    for (var b = 0; b < generatorData.Data.GetLength(1); b++)
+                    for (var b = 0; b < cols; b++)
                     {
-                        averages[b] += generatorData.Data[a, b];
+                        averages[b] += data[a, b];
                     }
                 }
 
-                for (var a = 0; a < generatorData.Data.GetLength(1); a++)
+                for (var a = 0; a < cols; a++)
                 {
-                    averages[a] /= generatorData.Data.GetLength(0);
-                    if (averages[a] <= 0)
+                    averages[a] /= rows;
+
+                    if (averages[a] <= 0f)
                     {
-                        averages[a] = 1;
+                        averages[a] = 1f;
                     }
+
+                    normalization[a] = 1f / (float)Math.Pow(averages[a], 0.12f);
                 }
 
-                for (var a = 0; a < generatorData.Data.GetLength(0); a++)
+                for (var a = 0; a < rows; a++)
                 {
-                    var b = (int)((a / (float)generatorData.Data.GetLength(0)) * rendererData.Width);
-                    var c = (int)(((a + 1) / (float)generatorData.Data.GetLength(0)) * rendererData.Width);
-                    var width = Math.Max(c - b, 1);
+                    var b = (int)((a / (float)rows) * rendererData.Width);
+                    var c = (int)(((a + 1) / (float)rows) * rendererData.Width);
+                    var width = c - b;
+
+                    if (width < 1)
+                    {
+                        width = 1;
+                    }
+
                     if (b >= rendererData.Width)
                     {
                         continue;
                     }
+
                     if (b + width > rendererData.Width)
                     {
                         width = rendererData.Width - b;
                     }
-                    for (var d = 0; d < generatorData.Data.GetLength(1); d++)
+
+                    var max = 0f;
+                    for (var d = 0; d < cols; d++)
                     {
                         var value = default(float);
-
-                        if (a > 0 && a < generatorData.Data.GetLength(0) - 1)
+                        if (a > 0 && a < rows - 1)
                         {
-                            value = (generatorData.Data[a - 1, d] * 0.25f) + (generatorData.Data[a, d] * 0.50f) + (generatorData.Data[a + 1, d] * 0.25f);
+                            value = (data[a - 1, d] * 0.25f) + (data[a, d] * 0.50f) + (data[a + 1, d] * 0.25f);
                         }
                         else
                         {
-                            value = generatorData.Data[a, d];
+                            value = data[a, d];
                         }
-                        value /= (float)Math.Pow(averages[d], 0.12);
+
+                        value *= normalization[d];
+
                         if (value > 1.5f)
                         {
                             value = 1.5f;
                         }
+
                         values[d] = value;
+
+                        if (value > max)
+                        {
+                            max = value;
+                        }
                     }
+
+                    var color = MoodBarColorProvider.GetColor(values, info.Tint);
                     {
-                        var color = MoodBarColorProvider.GetColor(values, info.Tint);
                         var palette = palettes.GetOrAdd(color, () => BitmapHelper.CreatePalette(new[] { new Int32Color(color) }, 1, 0));
                         var render = BitmapHelper.CreateRenderInfo(info.Background, palette);
                         BitmapHelper.DrawRectangle(ref render, b, 0, width, rendererData.Height);
                     }
+
+                    var shaded = color.Shade(contrast);
+                    var y = (int)((rendererData.Height * 0.5f) - (max * (rendererData.Height * 0.5f)));
+                    var height = (int)(((rendererData.Height * 0.5f) - y) + (max * (rendererData.Height * 0.5f)));
+                    if (height < 1)
                     {
-                        const byte SHADE = 50;
-                        var contrast = Color.FromRgb(SHADE, SHADE, SHADE);
-                        var color = MoodBarColorProvider.GetColor(values, info.Tint).Shade(contrast);
-                        var palette = palettes.GetOrAdd(color, () => BitmapHelper.CreatePalette(new[] { new Int32Color(color) }, 1, 0));
-                        var value = values.Max();
-                        var y = Convert.ToInt32((rendererData.Height / 2) - (value * (rendererData.Height / 2)));
-                        var height = Math.Max(Convert.ToInt32((((rendererData.Height / 2) - y) + (value * (rendererData.Height / 2)))), 1);
+                        height = 1;
+                    }
+
+                    {
+                        var palette = palettes.GetOrAdd(shaded, () => BitmapHelper.CreatePalette(new[] { new Int32Color(shaded) }, 1, 0));
                         var render = BitmapHelper.CreateRenderInfo(info.Background, palette);
                         BitmapHelper.DrawRectangle(ref render, b, y, width, height);
                     }
@@ -450,6 +483,7 @@ namespace FoxTunes
                     BitmapHelper.DestroyPalette(ref palette);
                 }
             }
+
             rendererData.Rendered = true;
         }
 
