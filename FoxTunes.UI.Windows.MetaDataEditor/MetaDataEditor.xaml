@@ -118,7 +118,7 @@
             </GroupBox>
             <TextBlock Grid.Row="2" Text="{Binding StatusMessage, Mode=OneWay, Source={StaticResource ViewModel}}" HorizontalAlignment="Left" VerticalAlignment="Center" Foreground="{DynamicResource TextBrush}"></TextBlock>
             <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="7">
-                <Button Width="70" Height="30" Margin="7,0,0,0" Command="{Binding SaveCommand, Mode=OneWay, Source={StaticResource ViewModel}}">Save</Button>
+                <Button Width="70" Height="30" Margin="7,0,0,0" Windows:ButtonExtensions.Command="{Binding SaveCommand, Mode=OneWay, Source={StaticResource ViewModel}}" Windows:ButtonExtensions.CommandBehaviour="{x:Static Windows:ButtonExtensions.COMMAND_BEHAVIOUR_DISMISS}">Save</Button>
             </StackPanel>
         </Grid>
     </ScrollViewer>

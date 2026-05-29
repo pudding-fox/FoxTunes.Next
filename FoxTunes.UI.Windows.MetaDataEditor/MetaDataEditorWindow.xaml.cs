@@ -85,6 +85,18 @@ namespace FoxTunes
             this.Show();
         }
 
+        protected virtual void OnCommandExecuted(object sender, ButtonExtensions.CommandExecutedEventArgs e)
+        {
+            if (string.Equals(e.Behaviour, ButtonExtensions.COMMAND_BEHAVIOUR_DISMISS, StringComparison.OrdinalIgnoreCase))
+            {
+                this.Close();
+            }
+            else if (string.Equals(e.Behaviour, ButtonExtensions.COMMAND_BEHAVIOUR_ACCEPT, StringComparison.OrdinalIgnoreCase))
+            {
+                this.DialogResult = true;
+            }
+        }
+
         protected override void OnClosing(CancelEventArgs e)
         {
             global::FoxTunes.Properties.Settings.Default.MetaDataWindowBounds = this.RestoreBounds;
