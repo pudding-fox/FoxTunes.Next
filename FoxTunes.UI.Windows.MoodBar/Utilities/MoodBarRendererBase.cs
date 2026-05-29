@@ -124,10 +124,27 @@ namespace FoxTunes
 
         protected virtual void OnValueChanged(object sender, EventArgs e)
         {
+            var rendererData = this.RendererData;
+            if (rendererData != null)
+            {
+                rendererData.Rendered = false;
+                Logger.Write(this, LogLevel.Debug, "Resetting redered flag.");
+            }
             var task = this.Update(this.FileData);
         }
 
         public Task UpdateTask { get; private set; }
+
+        protected override void OnRenderSizeChanged(SizeChangedInfo sizeInfo)
+        {
+            base.OnRenderSizeChanged(sizeInfo);
+            var rendererData = this.RendererData;
+            if (rendererData != null)
+            {
+                rendererData.Rendered = false;
+                Logger.Write(this, LogLevel.Debug, "Resetting redered flag.");
+            }
+        }
 
         protected virtual async Task Update(IFileData fileData)
         {
@@ -318,6 +335,11 @@ namespace FoxTunes
             var rendererData = this.RendererData;
             if (generatorData != null && rendererData != null)
             {
+                if (rendererData.Rendered)
+                {
+                    Logger.Write(this, LogLevel.Debug, "Already rendered.");
+                    return;
+                }
                 var task = this.Render(generatorData, rendererData);
             }
         }
