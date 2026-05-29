@@ -7,6 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
+using System.Windows.Media.Effects;
 
 namespace FoxTunes
 {
@@ -57,6 +58,14 @@ namespace FoxTunes
                 return;
             }
             renderer.OnFileDataChanged();
+        }
+
+        public MoodBarRendererBase()
+        {
+            this.Effect = new BlurEffect()
+            {
+                Radius = 2
+            };
         }
 
         public IFileData FileData
@@ -379,7 +388,7 @@ namespace FoxTunes
             var normalization = new float[cols];
             var palettes = new Dictionary<Color, IntPtr>();
 
-            const byte SHADE = 50;
+            const byte SHADE = 100;
             var contrast = Color.FromRgb(SHADE, SHADE, SHADE);
 
             try
@@ -428,28 +437,25 @@ namespace FoxTunes
                     var max = 0f;
                     for (var d = 0; d < cols; d++)
                     {
-                        var value = default(float);
+                        var value1 = default(float);
+                        var value2 = default(float);
                         if (a > 0 && a < rows - 1)
                         {
-                            value = Smooth(data, a, d, 16);
+                            value1 = Smooth(data, a, d, 16);
+                            value2 = data[a, d];
                         }
                         else
                         {
-                            value = data[a, d];
+                            value1 = data[a, d];
+                            value2 = data[a, d];
                         }
 
-                        value *= normalization[d];
-
-                        if (value > 1.5f)
+                        value1 *= normalization[d];
+                        value2 *= normalization[d];
+                        values[d] = value1;
+                        if (value2 > max)
                         {
-                            value = 1.5f;
-                        }
-
-                        values[d] = value;
-
-                        if (value > max)
-                        {
-                            max = value;
+                            max = value2;
                         }
                     }
 
