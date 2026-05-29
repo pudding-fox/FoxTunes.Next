@@ -83,17 +83,28 @@ namespace FoxTunes
                     if (!string.IsNullOrEmpty(libraryHierarchyLevel.Script) && libraryHierarchyLevel.Script.Contains(name, true))
                     {
                         var libraryItems = fileDatas.OfType<LibraryItem>();
-                        if (libraryItems != null && libraryItems.Any())
-                        {
-                            using (var task = new BuildLibraryHierarchiesTask(libraryItems))
-                            {
-                                task.InitializeComponent(this.Core);
-                                await this.BackgroundTaskEmitter.Send(task).ConfigureAwait(false);
-                                await task.Run().ConfigureAwait(false);
-                            }
-                        }
+                        await this.BuildHirarchies(libraryItems).ConfigureAwait(false);
                         return;
                     }
+                }
+                if (new[] { CommonImageTypes.FrontCover, CommonImageTypes.Artist }.Contains(name, StringComparer.OrdinalIgnoreCase))
+                {
+                    var libraryItems = fileDatas.OfType<LibraryItem>();
+                    await this.BuildHirarchies(libraryItems).ConfigureAwait(false);
+                    return;
+                }
+            }
+        }
+
+        protected virtual async Task BuildHirarchies(IEnumerable<LibraryItem> libraryItems)
+        {
+            if (libraryItems != null && libraryItems.Any())
+            {
+                using (var task = new BuildLibraryHierarchiesTask(libraryItems))
+                {
+                    task.InitializeComponent(this.Core);
+                    await this.BackgroundTaskEmitter.Send(task).ConfigureAwait(false);
+                    await task.Run().ConfigureAwait(false);
                 }
             }
         }
@@ -109,14 +120,9 @@ namespace FoxTunes
             }
         }
 
-        protected virtual async Task OnLibraryUpdated(IEnumerable<LibraryItem> libraryItems)
+        protected virtual Task OnLibraryUpdated(IEnumerable<LibraryItem> libraryItems)
         {
-            using (var task = new BuildLibraryHierarchiesTask(libraryItems))
-            {
-                task.InitializeComponent(this.Core);
-                await this.BackgroundTaskEmitter.Send(task).ConfigureAwait(false);
-                await task.Run().ConfigureAwait(false);
-            }
+            return this.BuildHirarchies(libraryItems);
         }
 
         public bool IsDisposed { get; private set; }
