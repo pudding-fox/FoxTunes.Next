@@ -46,6 +46,8 @@ namespace FoxTunes
 
         public Lazy<LibraryHierarchy[]> Hierarchies { get; private set; }
 
+        public Lazy<LibraryHierarchyLevel[]> Levels { get; private set; }
+
         public ConcurrentDictionary<LibraryHierarchyCacheKey, Lazy<LibraryHierarchyNode[]>> Nodes { get; private set; }
 
         public ConcurrentDictionary<LibraryHierarchyCacheKey, Lazy<LibraryItem[]>> Items { get; private set; }
@@ -119,6 +121,15 @@ namespace FoxTunes
             return this.Hierarchies.Value;
         }
 
+        public LibraryHierarchyLevel[] GetLevels(Func<IEnumerable<LibraryHierarchyLevel>> factory)
+        {
+            if (this.Levels == null)
+            {
+                this.Levels = new Lazy<LibraryHierarchyLevel[]>(() => factory().ToArray());
+            }
+            return this.Levels.Value;
+        }
+
         public LibraryHierarchyNode[] GetNodes(LibraryHierarchyCacheKey key, Func<IEnumerable<LibraryHierarchyNode>> factory)
         {
             return this.Nodes.GetOrAdd(key, () => new Lazy<LibraryHierarchyNode[]>(() => factory().ToArray())).Value;
@@ -132,6 +143,7 @@ namespace FoxTunes
         public void Reset()
         {
             this.Hierarchies = null;
+            this.Levels = null;
             this.Nodes = new ConcurrentDictionary<LibraryHierarchyCacheKey, Lazy<LibraryHierarchyNode[]>>();
             this.Items = new ConcurrentDictionary<LibraryHierarchyCacheKey, Lazy<LibraryItem[]>>();
         }

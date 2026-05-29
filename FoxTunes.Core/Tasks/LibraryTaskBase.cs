@@ -265,6 +265,27 @@ namespace FoxTunes
             }
         }
 
+        protected virtual async Task RemoveHierarchies(IEnumerable<LibraryItem> libraryItems)
+        {
+            using (var transaction = this.Database.BeginTransaction(this.Database.PreferredIsolationLevel))
+            {
+                var query = this.Database.Queries.ClearLibraryHierarchies;
+                foreach (var libraryItem in libraryItems)
+                {
+                    await this.Database.ExecuteAsync(query, (parameters, phase) =>
+                    {
+                        switch (phase)
+                        {
+                            case DatabaseParameterPhase.Fetch:
+                                parameters["libraryItemId"] = libraryItem.Id;
+                                break;
+                        }
+                    }, transaction).ConfigureAwait(false);
+                }
+                transaction.Commit();
+            }
+        }
+
         public static Task RemoveHierarchies(IDatabaseComponent database, LibraryItemStatus? status, ITransactionSource transaction)
         {
             return RemoveHierarchies(database, null, status, transaction);

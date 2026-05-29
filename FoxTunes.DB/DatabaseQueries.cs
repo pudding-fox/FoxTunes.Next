@@ -100,6 +100,17 @@ namespace FoxTunes
             }
         }
 
+        public IDatabaseQuery ClearLibraryHierarchies
+        {
+            get
+            {
+                return this.Database.QueryFactory.Create(
+                    Resources.ClearLibraryHierarchies,
+                    new DatabaseQueryParameter("libraryItemId", DbType.Int32, 0, 0, 0, ParameterDirection.Input, false, null, DatabaseQueryParameterFlags.None)
+                );
+            }
+        }
+
         public IDatabaseQuery ClearPlaylistMetaDataItems
         {
             get

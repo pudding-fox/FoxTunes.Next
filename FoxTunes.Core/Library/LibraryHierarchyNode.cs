@@ -119,31 +119,9 @@ namespace FoxTunes
             );
         }
 
-        public void Refresh(IEnumerable<string> names)
+        public virtual void Refresh()
         {
-            if (names != null && !names.Contains(CommonImageTypes.FrontCover, StringComparer.OrdinalIgnoreCase))
-            {
-                //Only refresh if the artwork has changed.
-                return;
-            }
-            this.Refresh(HierarchyDirection.Both);
-        }
-
-        protected virtual void Refresh(HierarchyDirection direction)
-        {
-            if (direction.HasFlag(HierarchyDirection.Up) && this.Parent != null)
-            {
-                this.Parent.Refresh(HierarchyDirection.Up);
-            }
-            //TODO: What we really want to do is refresh all {Bindings} against this instance but there isn't always a Path, sometimes it's a Converter for the entire object.
             this.OnPropertyChanged(string.Empty);
-            if (direction.HasFlag(HierarchyDirection.Down) && this._Children.IsValueCreated)
-            {
-                foreach (var libraryHierarchyNode in this._Children.Value)
-                {
-                    libraryHierarchyNode.Refresh(HierarchyDirection.Down);
-                }
-            }
         }
 
         public override int GetHashCode()
@@ -159,14 +137,5 @@ namespace FoxTunes
         }
 
         public static readonly LibraryHierarchyNode Empty = new LibraryHierarchyNode();
-
-        [Flags]
-        public enum HierarchyDirection : byte
-        {
-            None = 0,
-            Up = 1,
-            Down = 2,
-            Both = Up | Down
-        }
     }
 }

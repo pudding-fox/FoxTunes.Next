@@ -73,7 +73,7 @@ namespace FoxTunes
             {
                 if (listBoxItem.Content is LibraryHierarchyNode libraryHierarchyNode)
                 {
-                    libraryHierarchyNode.Refresh(names);
+                    libraryHierarchyNode.Refresh();
                 }
             }
         }

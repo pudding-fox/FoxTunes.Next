@@ -168,6 +168,32 @@ namespace FoxTunes
             }
         }
 
+        public LibraryHierarchyLevel[] GetLevels()
+        {
+            return this.LibraryHierarchyCache.GetLevels(this.GetLevelsCore);
+        }
+
+        protected virtual IEnumerable<LibraryHierarchyLevel> GetLevelsCore()
+        {
+            using (var database = this.DatabaseFactory.Create())
+            {
+                using (var transaction = database.BeginTransaction(database.PreferredIsolationLevel))
+                {
+                    foreach(var libraryHierarchy in this.GetHierarchies())
+                    {
+                        var set = database.Set<LibraryHierarchyLevel>(transaction);
+                        set.Fetch.Filter.AddColumn(
+                            set.Table.GetColumn(ColumnConfig.By("LibraryHierarchy_Id", ColumnFlags.None))
+                        ).With(filter => filter.Right = filter.CreateConstant(libraryHierarchy.Id));
+                        foreach (var element in set)
+                        {
+                            yield return element;
+                        }
+                    }
+                }
+            }
+        }
+
         public LibraryHierarchyLevel GetLevel(int libraryHierarchyLevelId)
         {
             foreach (var libraryHierarchy in this.GetHierarchies())

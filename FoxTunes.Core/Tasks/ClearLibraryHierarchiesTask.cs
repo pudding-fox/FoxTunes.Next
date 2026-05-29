@@ -26,7 +26,7 @@ namespace FoxTunes
 
         protected override Task OnRun()
         {
-            return this.RemoveHierarchies(null);
+            return this.RemoveHierarchies(default(LibraryItemStatus));
         }
 
         protected override async Task OnCompleted()

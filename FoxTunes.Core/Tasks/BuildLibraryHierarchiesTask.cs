@@ -56,7 +56,7 @@ namespace FoxTunes
         {
             if (this.LibraryItems == null)
             {
-                await this.RemoveHierarchies(null).ConfigureAwait(false);
+                await this.RemoveHierarchies(default(LibraryItemStatus)).ConfigureAwait(false);
                 var libraryItems = default(IEnumerable<LibraryItem>);
                 using (var transaction = this.Database.BeginTransaction(this.Database.PreferredIsolationLevel))
                 {
@@ -67,6 +67,7 @@ namespace FoxTunes
             }
             else
             {
+                await this.RemoveHierarchies(this.LibraryItems).ConfigureAwait(false);  
                 await this.BuildHierarchies(this.LibraryItems).ConfigureAwait(false);
             }
         }

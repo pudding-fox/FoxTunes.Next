@@ -11,6 +11,8 @@ namespace FoxTunes.Interfaces
 
         LibraryHierarchy[] GetHierarchies(Func<IEnumerable<LibraryHierarchy>> factory);
 
+        LibraryHierarchyLevel[] GetLevels(Func<IEnumerable<LibraryHierarchyLevel>> factory);
+
         LibraryHierarchyNode[] GetNodes(LibraryHierarchyCacheKey key, Func<IEnumerable<LibraryHierarchyNode>> factory);
 
         LibraryItem[] GetItems(LibraryHierarchyCacheKey key, Func<IEnumerable<LibraryItem>> factory);

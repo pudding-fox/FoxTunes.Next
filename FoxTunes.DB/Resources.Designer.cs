@@ -132,6 +132,23 @@ namespace FoxTunes {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to DELETE FROM [LibraryHierarchyItem_LibraryItem] 
+        ///WHERE [LibraryItem_Id] = @libraryItemId;
+        ///DELETE FROM [LibraryHierarchyItems]
+        ///WHERE NOT [Id] IN
+        ///(
+        ///	SELECT [LibraryHierarchyItem_Id]
+        ///	FROM [LibraryHierarchyItem_LibraryItem]
+        ///	WHERE [LibraryHierarchyItem_Id] = [LibraryHierarchyItems].[Id]
+        ///);.
+        /// </summary>
+        internal static string ClearLibraryHierarchies {
+            get {
+                return ResourceManager.GetString("ClearLibraryHierarchies", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to DELETE FROM &quot;LibraryItem_MetaDataItem&quot;
         ///WHERE &quot;Id&quot; IN
         ///(

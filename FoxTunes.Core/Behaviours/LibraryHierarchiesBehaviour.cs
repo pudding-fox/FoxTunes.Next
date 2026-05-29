@@ -11,6 +11,8 @@ namespace FoxTunes
     {
         public ICore Core { get; private set; }
 
+        public ILibraryHierarchyBrowser LibraryHierarchyBrowser { get; private set; }
+
         public IDatabaseFactory DatabaseFactory { get; private set; }
 
         public ISignalEmitter SignalEmitter { get; private set; }
@@ -20,6 +22,7 @@ namespace FoxTunes
         public override void InitializeComponent(ICore core)
         {
             this.Core = core;
+            this.LibraryHierarchyBrowser = core.Components.LibraryHierarchyBrowser;
             this.DatabaseFactory = core.Factories.Database;
             this.SignalEmitter = core.Components.SignalEmitter;
             this.SignalEmitter.Signal += this.OnSignal;
@@ -32,13 +35,26 @@ namespace FoxTunes
             switch (signal.Name)
             {
                 case CommonSignals.LibraryUpdated:
-                    if (signal.State is LibraryUpdatedSignalState state && state.LibraryItems != null && state.LibraryItems.Any())
                     {
-                        return this.OnLibraryUpdated(state.LibraryItems);
+                        if (signal.State is LibraryUpdatedSignalState state && state.LibraryItems != null && state.LibraryItems.Any())
+                        {
+                            return this.OnLibraryUpdated(state.LibraryItems);
+                        }
+                        else
+                        {
+                            return this.OnLibraryUpdated();
+                        }
                     }
-                    else
+                case CommonSignals.MetaDataUpdated:
                     {
-                        return this.OnLibraryUpdated();
+                        if (signal.State is MetaDataUpdatedSignalState state && state.FileDatas != null && state.FileDatas.Any() && state.Names != null && state.Names.Any())
+                        {
+                            return this.OnMetaDataUpdated(state.FileDatas, state.Names);
+                        }
+                        else
+                        {
+                            return this.OnMetaDataUpdated();
+                        }
                     }
             }
 #if NET40
@@ -47,6 +63,41 @@ namespace FoxTunes
             return Task.CompletedTask;
 #endif
         }
+
+        protected virtual async Task OnMetaDataUpdated()
+        {
+            using (var task = new BuildLibraryHierarchiesTask())
+            {
+                task.InitializeComponent(this.Core);
+                await this.BackgroundTaskEmitter.Send(task).ConfigureAwait(false);
+                await task.Run().ConfigureAwait(false);
+            }
+        }
+
+        protected virtual async Task OnMetaDataUpdated(IEnumerable<IFileData> fileDatas, IEnumerable<string> names)
+        {
+            foreach (var name in names)
+            {
+                foreach (var libraryHierarchyLevel in this.LibraryHierarchyBrowser.GetLevels())
+                {
+                    if (!string.IsNullOrEmpty(libraryHierarchyLevel.Script) && libraryHierarchyLevel.Script.Contains(name, true))
+                    {
+                        var libraryItems = fileDatas.OfType<LibraryItem>();
+                        if (libraryItems != null && libraryItems.Any())
+                        {
+                            using (var task = new BuildLibraryHierarchiesTask(libraryItems))
+                            {
+                                task.InitializeComponent(this.Core);
+                                await this.BackgroundTaskEmitter.Send(task).ConfigureAwait(false);
+                                await task.Run().ConfigureAwait(false);
+                            }
+                        }
+                        return;
+                    }
+                }
+            }
+        }
+
 
         protected virtual async Task OnLibraryUpdated()
         {
