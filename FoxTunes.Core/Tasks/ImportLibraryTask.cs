@@ -35,12 +35,15 @@ namespace FoxTunes
 
         public string FileName { get; private set; }
 
+        public ICore Core { get; private set; }
+
         public IDatabaseFactory DatabaseFactory { get; private set; }
 
         public ISignalEmitter SignalEmitter { get; private set; }
 
         public override void InitializeComponent(ICore core)
         {
+            this.Core = core;
             this.DatabaseFactory = core.Factories.Database;
             this.SignalEmitter = core.Components.SignalEmitter;
             base.InitializeComponent(core);
@@ -49,6 +52,7 @@ namespace FoxTunes
         protected override async Task OnRun()
         {
             this.Name = "Importing..";
+            var directoryNames = new HashSet<string>();
             using (var database = this.DatabaseFactory.Create())
             {
                 using (var transaction = database.BeginTransaction(database.PreferredIsolationLevel))
@@ -68,6 +72,7 @@ namespace FoxTunes
                                             break;
                                         }
                                         await this.Import(libraryWriter, metaDataWriter, libraryItem).ConfigureAwait(false);
+                                        directoryNames.Add(libraryItem.DirectoryName);
                                     }
                                 }
                             }
@@ -75,6 +80,12 @@ namespace FoxTunes
                     }
                     transaction.Commit();
                 }
+            }
+            var roots = FileSystemRootHelper.GetRoots(directoryNames);
+            using (var task = new AddLibraryRootsTask(roots))
+            {
+                task.InitializeComponent(this.Core);
+                await task.Run().ConfigureAwait(false);
             }
         }
 
