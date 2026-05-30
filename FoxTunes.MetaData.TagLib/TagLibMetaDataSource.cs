@@ -509,6 +509,13 @@ namespace FoxTunes
                     this.Try(() => PopularimeterManager.Write(this, metaDataItem, file), this.ErrorHandler);
                 }
             }
+            else if (string.Equals(metaDataItem.Name, CommonStatistics.Like, StringComparison.OrdinalIgnoreCase))
+            {
+                if (this.Popularimeter.Value)
+                {
+                    this.Try(() => PopularimeterManager.Write(this, metaDataItem, file), this.ErrorHandler);
+                }
+            }
             else if (string.Equals(metaDataItem.Name, CommonMetaData.ReplayGainAlbumGain, StringComparison.OrdinalIgnoreCase) || string.Equals(metaDataItem.Name, CommonMetaData.ReplayGainAlbumPeak, StringComparison.OrdinalIgnoreCase) || string.Equals(metaDataItem.Name, CommonMetaData.ReplayGainTrackGain, StringComparison.OrdinalIgnoreCase) || string.Equals(metaDataItem.Name, CommonMetaData.ReplayGainTrackPeak, StringComparison.OrdinalIgnoreCase))
             {
                 if (this.ReplayGain.Value)

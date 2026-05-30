@@ -63,6 +63,17 @@ namespace FoxTunes
                     result.Add(CommonStatistics.LastPlayed, DateTimeHelper.NEVER);
                 }
             }
+            {
+                var like = TagManager.ReadCustomTag(CommonStatistics.Like, file);
+                if (!string.IsNullOrEmpty(like))
+                {
+                    result.Add(CommonStatistics.Like, like);
+                }
+                else
+                {
+                    result.Add(CommonStatistics.Like, string.Empty);
+                }
+            }
             //Copy our informations back to the meta data collection.
             foreach (var key in result.Keys)
             {
