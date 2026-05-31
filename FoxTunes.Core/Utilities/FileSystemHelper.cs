@@ -35,7 +35,10 @@ namespace FoxTunes
             //TODO: Coupling to some other random component?
             "encoders",
             //TODO: Coupling to some other random component?
-            "Sox"
+            "Sox",
+            //TODO: Coupling to some other random component?
+            "Presets",
+            "Textures"
         };
 
         static FileSystemHelper()
