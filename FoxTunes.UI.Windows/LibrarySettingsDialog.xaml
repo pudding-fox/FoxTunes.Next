@@ -125,6 +125,7 @@
                 <Button Width="70" Height="30" Margin="7,7,0,0" Command="{Binding HelpCommand, Mode=OneWay, Source={StaticResource ViewModel}}" Content="{x:Static ViewModel:StringResources.LibrarySettingsDialog_Help}"></Button>
                 <Button Width="70" Height="30" Margin="7,7,0,0" Command="{Binding ImportCommand, Mode=OneWay, Source={StaticResource ViewModel}}" Content="{x:Static ViewModel:StringResources.LibrarySettingsDialog_Import}"></Button>
                 <Button Width="70" Height="30" Margin="7,7,0,0" Command="{Binding ExportCommand, Mode=OneWay, Source={StaticResource ViewModel}}" Content="{x:Static ViewModel:StringResources.LibrarySettingsDialog_Export}"></Button>
+                <Button Width="70" Height="30" Margin="7,7,0,0" Command="{Binding OrganizeCommmand, Mode=OneWay, Source={StaticResource ViewModel}}" Content="{x:Static ViewModel:StringResources.LibrarySettingsDialog_Organize}"></Button>
             </StackPanel>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                 <Button Width="70" Height="30" Margin="7,7,0,0" Command="{Binding ClearCommand, Mode=OneWay, Source={StaticResource ViewModel}}" Content="{x:Static ViewModel:StringResources.LibrarySettingsDialog_Clear}"></Button>

@@ -28,6 +28,8 @@ namespace FoxTunes.ViewModel
 
         public IBackgroundTaskEmitter BackgroundTaskEmitter { get; private set; }
 
+        public IUserInterface UserInterface { get; private set; }
+
         private CollectionManager<LibraryHierarchy> _LibraryHierarchies { get; set; }
 
         public CollectionManager<LibraryHierarchy> LibraryHierarchies
@@ -367,6 +369,7 @@ namespace FoxTunes.ViewModel
             this.ErrorEmitter = core.Components.ErrorEmitter;
             this.FileSystemBrowser = core.Components.FileSystemBrowser;
             this.BackgroundTaskEmitter = core.Components.BackgroundTaskEmitter;
+            this.UserInterface = core.Components.UserInterface;
             this.LibraryHierarchyLevels = new CollectionManager<LibraryHierarchyLevel>()
             {
                 ItemFactory = () =>
@@ -476,6 +479,53 @@ namespace FoxTunes.ViewModel
                     }
                 }
             });
+        }
+
+        public ICommand OrganizeCommmand
+        {
+            get
+            {
+                return CommandFactory.Instance.CreateCommand(this.Organize, () => this.CanOrganize);
+            }
+        }
+
+        public bool CanOrganize
+        {
+            get
+            {
+                return this.LibraryHierarchies != null && this.LibraryHierarchies.SelectedValue != null;
+            }
+        }
+
+        private async Task Organize()
+        {
+            var root = default(string);
+            {
+                var result = this.UserInterface.Confirm(Strings.LibrarySettings_OrganiseWarning);
+                if (!result)
+                {
+                    return;
+                }
+            }
+            {
+                var result = this.FileSystemBrowser.Browse(new BrowseOptions(
+                    Strings.LibrarySettingsDialog_Organize,
+                    string.Empty,
+                    Enumerable.Empty<BrowseFilter>(),
+                    BrowseFlags.Folder
+                ));
+                if (!result.Success)
+                {
+                    return;
+                }
+                root = result.Paths.FirstOrDefault();
+            }
+            using (var task = new OrganizeLibraryTask(this.LibraryHierarchies.SelectedValue, root))
+            {
+                task.InitializeComponent(this.Core);
+                await this.BackgroundTaskEmitter.Send(task).ConfigureAwait(false);
+                await task.Run().ConfigureAwait(false);
+            }
         }
 
         protected override void OnDisposing()

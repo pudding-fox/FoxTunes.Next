@@ -756,4 +756,10 @@
   <data name="LibrarySettingsDialog.Import" xml:space="preserve">
     <value>Import</value>
   </data>
+  <data name="LibrarySettings.OrganiseWarning" xml:space="preserve">
+    <value>Are you sure you want to relocate files to match the selected hiearchy? This cannot be undone.</value>
+  </data>
+  <data name="LibrarySettingsDialog.Organize" xml:space="preserve">
+    <value>Organize</value>
+  </data>
 </root>

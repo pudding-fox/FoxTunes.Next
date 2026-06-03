@@ -294,6 +294,14 @@
             }
         }
 
+        public static string LibrarySettingsDialog_Organize
+        {
+            get
+            {
+                return Strings.LibrarySettingsDialog_Organize;
+            }
+        }
+
         public static string MetaDataProvidersSettingsDialog_GroupHeader
         {
             get
