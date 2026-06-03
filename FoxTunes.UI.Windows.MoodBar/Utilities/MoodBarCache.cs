@@ -8,6 +8,25 @@ namespace FoxTunes
     {
         private static readonly string PREFIX = typeof(MoodBarCache).Name;
 
+        public IConfiguration Configuration { get; private set; }
+
+        public BooleanConfigurationElement Save { get; private set; }
+
+        public override void InitializeComponent(ICore core)
+        {
+            this.Configuration = core.Components.Configuration;
+            this.Save = this.Configuration.GetElement<BooleanConfigurationElement>(
+                MoodBarGeneratorConfiguration.SECTION,
+                MoodBarGeneratorConfiguration.SAVE
+            );
+            base.InitializeComponent(core);
+        }
+
+        public string GetFileName(string fileName)
+        {
+            return Path.Combine(Path.GetDirectoryName(fileName), Path.GetFileNameWithoutExtension(fileName) + ".mood");
+        }
+
         public MoodBarGenerator.MoodBarGeneratorData Get(string fileName)
         {
             var id = this.GetDataId(fileName);
@@ -17,6 +36,18 @@ namespace FoxTunes
                 if (this.TryLoad(fileName, out data))
                 {
                     return data;
+                }
+            }
+            if (this.Save.Value)
+            {
+                var moodFileName = this.GetFileName(fileName);
+                if (File.Exists(moodFileName))
+                {
+                    var data = default(MoodBarGenerator.MoodBarGeneratorData);
+                    if (this.TryLoad(moodFileName, out data))
+                    {
+                        return data;
+                    }
                 }
             }
             return null;
@@ -31,6 +62,18 @@ namespace FoxTunes
                 if (this.TryLoad(fileName, out data))
                 {
                     return data;
+                }
+            }
+            if (this.Save.Value)
+            {
+                var moodFileName = this.GetFileName(fileName);
+                if (File.Exists(moodFileName))
+                {
+                    var data = default(MoodBarGenerator.MoodBarGeneratorData);
+                    if (this.TryLoad(moodFileName, out data))
+                    {
+                        return data;
+                    }
                 }
             }
             return factory();
@@ -54,7 +97,7 @@ namespace FoxTunes
             return false;
         }
 
-        public void Save(MoodBarGenerator.MoodBarGeneratorData data)
+        public void Write(MoodBarGenerator.MoodBarGeneratorData data)
         {
             var id = this.GetDataId(data.FileName);
             try
@@ -65,6 +108,12 @@ namespace FoxTunes
                     stream.Seek(0, SeekOrigin.Begin);
                     FileMetaDataStore.Write(PREFIX, id, stream);
                     stream.Seek(0, SeekOrigin.Begin);
+                    if (this.Save.Value)
+                    {
+                        var moodFileName = this.GetFileName(data.FileName);
+                        File.WriteAllBytes(moodFileName, stream.ToArray());
+                        File.SetAttributes(moodFileName, File.GetAttributes(moodFileName) | FileAttributes.Hidden);
+                    }
                 }
             }
             catch (Exception e)

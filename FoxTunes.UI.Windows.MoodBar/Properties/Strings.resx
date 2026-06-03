@@ -126,6 +126,9 @@
   <data name="MoodBarCacheConfiguration.Cleanup" xml:space="preserve">
     <value>Cleanup</value>
   </data>
+  <data name="MoodBarGeneratorConfiguration.Save" xml:space="preserve">
+    <value>Save .mood with track</value>
+  </data>
   <data name="MoodBarGeneratorConfiguration.Tint" xml:space="preserve">
     <value>Tint</value>
   </data>

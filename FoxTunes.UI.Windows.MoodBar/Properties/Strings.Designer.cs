@@ -88,6 +88,15 @@ namespace FoxTunes {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Save .mood with track.
+        /// </summary>
+        internal static string MoodBarGeneratorConfiguration_Save {
+            get {
+                return ResourceManager.GetString("MoodBarGeneratorConfiguration.Save", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Tint.
         /// </summary>
         internal static string MoodBarGeneratorConfiguration_Tint {

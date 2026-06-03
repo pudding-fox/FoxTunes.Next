@@ -93,7 +93,7 @@ namespace FoxTunes
                 () => Populate(dataSource, dataTransformer, data)
             ).ConfigureAwait(false);
 
-            this.Cache.Save(data);
+            this.Cache.Write(data);
 
             Logger.Write(
                 this,
