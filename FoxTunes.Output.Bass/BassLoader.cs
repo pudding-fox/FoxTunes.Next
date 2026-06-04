@@ -37,6 +37,7 @@ namespace FoxTunes
 
         public static readonly HashSet<string> BLACKLIST = new HashSet<string>(new[]
         {
+            "bin",
             "txt",
             "nfo"
         }, StringComparer.OrdinalIgnoreCase);

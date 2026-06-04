@@ -197,6 +197,15 @@ namespace FoxTunes {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Save artist images.
+        /// </summary>
+        internal static string ArtistImagePersistenceBehaviourConfiguration_Enabled {
+            get {
+                return ResourceManager.GetString("ArtistImagePersistenceBehaviourConfiguration.Enabled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Queue Size.
         /// </summary>
         internal static string EnqueueNextItemBehaviourConfiguration_Count {

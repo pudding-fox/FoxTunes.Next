@@ -388,4 +388,7 @@ Requirements:
   <data name="AIBehaviourConfiguration.Report" xml:space="preserve">
     <value>Report</value>
   </data>
+  <data name="ArtistImagePersistenceBehaviourConfiguration.Enabled" xml:space="preserve">
+    <value>Save artist images</value>
+  </data>
 </root>

@@ -110,7 +110,7 @@ namespace FoxTunes
 
         protected virtual string GetFileName(IScriptingContext scriptingContext, LibraryItem libraryItem)
         {
-            var invalidFileNameChars = Path.GetInvalidFileNameChars();
+            var invalidFileNameChars = Path.GetInvalidFileNameChars().Concat(new[] { '.' /*Dots are technically valid in a path but seem to cause many problems and there's no way to "escape" them. Just replace them for now.*/ });
             var builder = new StringBuilder();
             builder.Append(this.Root);
             foreach (var libraryHierarchyLevel in this.LibraryHierarchy.Levels)

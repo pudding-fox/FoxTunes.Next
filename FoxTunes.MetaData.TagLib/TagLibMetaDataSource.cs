@@ -157,7 +157,6 @@ namespace FoxTunes
                 return metaData;
             }
             var collect = default(bool);
-            Logger.Write(this, LogLevel.Trace, "Reading meta data for file: {0}", fileName);
             try
             {
                 using (var file = factory())

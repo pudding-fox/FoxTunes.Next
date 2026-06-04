@@ -37,6 +37,10 @@ namespace FoxTunes.ViewModel
 
         public SelectionConfigurationElement Output { get; private set; }
 
+        public BooleanConfigurationElement Resampler { get; private set; }
+
+        public BooleanConfigurationElement Memory { get; private set; }
+
         protected virtual void OnLayoutProviderChanged()
         {
             if (this.LayoutProviderChanged != null)
@@ -89,6 +93,14 @@ namespace FoxTunes.ViewModel
             this.Output = this.Configuration.GetElement<SelectionConfigurationElement>(
                 "8399D051-81BC-41A6-940D-36E6764213D2",
                 "NNNN6B39-2F8A-4667-9C03-9742FF2D1EA7"
+            );
+            this.Resampler = this.Configuration.GetElement<BooleanConfigurationElement>(
+                "8399D051-81BC-41A6-940D-36E6764213D2",
+                "AAAA5C85-178C-470D-A977-C54350875AB3"
+            );
+            this.Memory = this.Configuration.GetElement<BooleanConfigurationElement>(
+                "8399D051-81BC-41A6-940D-36E6764213D2",
+                "OOOOBED1-7965-47A3-9798-E46124386A8D"
             );
             base.InitializeComponent(core);
         }

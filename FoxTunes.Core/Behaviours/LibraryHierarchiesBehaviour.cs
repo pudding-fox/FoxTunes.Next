@@ -87,12 +87,6 @@ namespace FoxTunes
                         return;
                     }
                 }
-                if (new[] { CommonImageTypes.FrontCover, CommonImageTypes.Artist }.Contains(name, StringComparer.OrdinalIgnoreCase))
-                {
-                    var libraryItems = fileDatas.OfType<LibraryItem>();
-                    await this.BuildHirarchies(libraryItems).ConfigureAwait(false);
-                    return;
-                }
             }
         }
 

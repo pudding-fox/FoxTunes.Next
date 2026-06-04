@@ -43,6 +43,7 @@ namespace FoxTunes
             builder.JournalMode = SQLiteJournalModeEnum.Wal;
             builder["cache"] = "shared";
             builder["mode"] = "rwc";
+            builder.BusyTimeout = 10000;
             return new SQLiteProvider(builder);
         }
     }

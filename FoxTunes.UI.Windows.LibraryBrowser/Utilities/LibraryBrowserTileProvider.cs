@@ -24,7 +24,7 @@ namespace FoxTunes
 
         public ILibraryHierarchyBrowser LibraryHierarchyBrowser { get; private set; }
 
-        public IOnDemandMetaDataProvider OnDemandMetaDataProvider { get; private set; }
+        public IArtworkProvider ArtworkProvider { get; private set; }
 
         public ISignalEmitter SignalEmitter { get; private set; }
 
@@ -32,7 +32,7 @@ namespace FoxTunes
         {
             this.ImageLoader = ComponentRegistry.Instance.GetComponent<ImageLoader>();
             this.LibraryHierarchyBrowser = core.Components.LibraryHierarchyBrowser;
-            this.OnDemandMetaDataProvider = core.Components.OnDemandMetaDataProvider;
+            this.ArtworkProvider = core.Components.ArtworkProvider;
             this.SignalEmitter = core.Components.SignalEmitter;
             this.SignalEmitter.Signal += this.OnSignal;
             base.InitializeComponent(core);
@@ -230,17 +230,13 @@ namespace FoxTunes
                             if (!skip.Any(_skip => string.Equals(libraryHierarchyNode.Value, _skip, StringComparison.OrdinalIgnoreCase)))
                             {
                                 var libraryItems = this.LibraryHierarchyBrowser.GetItems(libraryHierarchyNode);
-                                var newFileNames = await this.OnDemandMetaDataProvider.GetMetaData(
-                                    libraryItems,
-                                    new OnDemandMetaDataRequest(
-                                        CommonImageTypes.Artist,
-                                        MetaDataItemType.Image,
-                                        MetaDataUpdateType.System
-                                    )
-                                ).ConfigureAwait(false);
-                                if (newFileNames.Any() && !string.IsNullOrEmpty(newFileNames.First()))
+                                foreach (var libraryItem in libraryItems)
                                 {
-                                    return this.CreateImageSource0(libraryHierarchyNode, newFileNames.First(), width, height, mode, cache);
+                                    var fileName = await this.ArtworkProvider.Find(libraryItem, CommonImageTypes.Artist, ArtworkType.Artist).ConfigureAwait(false);
+                                    if (!string.IsNullOrEmpty(fileName))
+                                    {
+                                        return this.CreateImageSource0(libraryHierarchyNode, fileName, width, height, mode, cache);
+                                    }
                                 }
                             }
                             //Fall back to first image.

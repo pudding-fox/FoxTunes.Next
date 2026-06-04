@@ -141,7 +141,14 @@ namespace FoxTunes
             switch (signal.Name)
             {
                 case CommonSignals.HierarchiesUpdated:
-                    this.Refresh();
+                    if (signal.State is HierarchiesUpdatedSignalState state && state.LibraryHierarchyNodes != null && state.LibraryHierarchyNodes.Any())
+                    {
+                        this.Refresh(state.LibraryHierarchyNodes);
+                    }
+                    else
+                    {
+                        this.Refresh();
+                    }
                     break;
             }
 #if NET40
@@ -151,10 +158,16 @@ namespace FoxTunes
 #endif
         }
 
+
         public void Refresh()
         {
             this.RefreshSelectedHierarchy();
             this.RefreshSelectedItem();
+        }
+
+        public void Refresh(IEnumerable<LibraryHierarchyNode> libraryHierarchyNodes)
+        {
+            //Nothing to do.
         }
 
         protected virtual void RefreshSelectedHierarchy()

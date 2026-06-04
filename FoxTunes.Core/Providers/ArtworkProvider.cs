@@ -234,19 +234,28 @@ namespace FoxTunes
 
         public async Task<string> Find(IFileData fileData, string name, ArtworkType type)
         {
-            var fileName = await this.OnDemandMetaDataProvider.GetMetaData(
-                fileData,
-                new OnDemandMetaDataRequest(
-                    name,
-                    MetaDataItemType.Image,
-                    MetaDataUpdateType.System
-                )
-            ).ConfigureAwait(false);
-            if (!string.IsNullOrEmpty(fileName) && File.Exists(fileName))
             {
-                return fileName;
+                var fileName = this.Find(fileData.FileName, type);
+                if (!string.IsNullOrEmpty(fileName))
+                {
+                    return fileName;
+                }
             }
-            return this.Find(fileData.FileName, type);
+            {
+                var fileName = await this.OnDemandMetaDataProvider.GetMetaData(
+                    fileData,
+                    new OnDemandMetaDataRequest(
+                        name,
+                        MetaDataItemType.Image,
+                        MetaDataUpdateType.System
+                    )
+                ).ConfigureAwait(false);
+                if (!string.IsNullOrEmpty(fileName) && File.Exists(fileName))
+                {
+                    return fileName;
+                }
+            }
+            return null;
         }
 
         public void Reset(string path, ArtworkType type)

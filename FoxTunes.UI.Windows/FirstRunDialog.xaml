@@ -129,11 +129,17 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"></RowDefinition>
                     <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="Auto"></RowDefinition>
                 </Grid.RowDefinitions>
                 <TextBlock Grid.Column="0" Grid.Row="0" Foreground="{DynamicResource TextBrush}" Text="{Binding Input.Name, Source={StaticResource ViewModel}}" VerticalAlignment="Center" Margin="0,0,4,0"></TextBlock>
                 <ComboBox Grid.Column="1" Grid.Row="0" Margin="0,0,0,4" ItemsSource="{Binding Input.Options, Source={StaticResource ViewModel}}" SelectedValue="{Binding Input.Value, Source={StaticResource ViewModel}}" DisplayMemberPath="Name"></ComboBox>
                 <TextBlock Grid.Column="0" Grid.Row="1" Foreground="{DynamicResource TextBrush}" Text="{Binding Output.Name, Source={StaticResource ViewModel}}" VerticalAlignment="Center" Margin="0,0,4,0"></TextBlock>
                 <ComboBox Grid.Column="1" Grid.Row="1" Margin="0,0,0,4" ItemsSource="{Binding Output.Options, Source={StaticResource ViewModel}}" SelectedValue="{Binding Output.Value, Source={StaticResource ViewModel}}" DisplayMemberPath="Name"></ComboBox>
+                <TextBlock Grid.Column="0" Grid.Row="2" Foreground="{DynamicResource TextBrush}" Text="High Quality Resampler" VerticalAlignment="Center" Margin="0,0,4,0"></TextBlock>
+                <CheckBox Grid.Column="1" Grid.Row="2" Margin="0,0,0,4" IsChecked="{Binding Resampler.Value, Source={StaticResource ViewModel}}"></CheckBox>
+                <TextBlock Grid.Column="0" Grid.Row="3" Foreground="{DynamicResource TextBrush}" Text="{Binding Memory.Name, Source={StaticResource ViewModel}}" VerticalAlignment="Center" Margin="0,0,4,0"></TextBlock>
+                <CheckBox Grid.Column="1" Grid.Row="3" Margin="0,0,0,4" IsChecked="{Binding Memory.Value, Source={StaticResource ViewModel}}"></CheckBox>
             </Grid>
         </GroupBox>
         <Button Grid.Row="4" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="70" Height="30" Click="OnClose">Save</Button>
