@@ -350,6 +350,24 @@ namespace FoxTunes {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Live Updates.
+        /// </summary>
+        internal static string LibraryBehaviourConfiguration_LiveUpdates {
+            get {
+                return ResourceManager.GetString("LibraryBehaviourConfiguration.LiveUpdates", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Library.
+        /// </summary>
+        internal static string LibraryBehaviourConfiguration_Section {
+            get {
+                return ResourceManager.GetString("LibraryBehaviourConfiguration.Section", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Plugin.
         /// </summary>
         internal static string LibraryHierarchyPopulator_Plugin {

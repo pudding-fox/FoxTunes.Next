@@ -39,6 +39,8 @@ namespace FoxTunes
 
         public BooleanConfigurationElement DetectCompilations { get; private set; }
 
+        public BooleanConfigurationElement LiveUpdates { get; private set; }
+
         public override void InitializeComponent(ICore core)
         {
             this.Core = core;
@@ -50,6 +52,10 @@ namespace FoxTunes
             this.DetectCompilations = this.Configuration.GetElement<BooleanConfigurationElement>(
                 MetaDataBehaviourConfiguration.SECTION,
                 MetaDataBehaviourConfiguration.DETECT_COMPILATIONS
+            );
+            this.LiveUpdates = this.Configuration.GetElement<BooleanConfigurationElement>(
+                LibraryBehaviourConfiguration.SECTION,
+                LibraryBehaviourConfiguration.LIVE_UPDATES
             );
             base.InitializeComponent(core);
         }
@@ -146,6 +152,11 @@ namespace FoxTunes
                     .Where(libraryItem => libraryItem.Status == LibraryItemStatus.Import && !libraryItem.MetaDatas.Any())
                     .Count();
             }
+            var @finally = default(Func<Task>);
+            if(this.LiveUpdates.Value)
+            {
+                @finally = ()=> this.SignalEmitter.Send(new Signal(this, CommonSignals.LibraryUpdated, new LibraryUpdatedSignalState(libraryItems, DataSignalType.Updated)));
+            }
             using (var task = new SingletonReentrantTask(this, ComponentSlots.Database, SingletonReentrantTask.PRIORITY_LOW, async cancellationToken =>
             {
                 libraryItems = await this.AddOrUpdateMetaData(offset, count, cancellationToken).ConfigureAwait(false);
@@ -155,8 +166,7 @@ namespace FoxTunes
                     this.Name = "Waiting..";
                     this.Description = string.Empty;
                 }
-            },
-            () => this.SignalEmitter.Send(new Signal(this, CommonSignals.LibraryUpdated, new LibraryUpdatedSignalState(libraryItems, DataSignalType.Updated)))))
+            }, @finally))
             {
                 await task.Run().ConfigureAwait(false);
             }

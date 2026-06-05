@@ -35,12 +35,12 @@ namespace FoxTunes
 
         public ILibraryHierarchyBrowser LibraryHierarchyBrowser { get; private set; }
 
-        public IOnDemandMetaDataProvider OnDemandMetaDataProvider { get; private set; }
+        public IArtworkProvider ArtworkProvider { get; private set; }
 
         public override void InitializeComponent(ICore core)
         {
             this.LibraryHierarchyBrowser = core.Components.LibraryHierarchyBrowser;
-            this.OnDemandMetaDataProvider = core.Components.OnDemandMetaDataProvider;
+            this.ArtworkProvider = core.Components.ArtworkProvider;
             base.InitializeComponent(core);
         }
 
@@ -73,18 +73,11 @@ namespace FoxTunes
                             if (!skip.Any(_skip => string.Equals(libraryHierarchyNode.Value, _skip, StringComparison.OrdinalIgnoreCase)))
                             {
                                 var libraryItems = this.LibraryHierarchyBrowser.GetItems(libraryHierarchyNode);
-                                if (!libraryItems.Any())
+                                foreach (var libraryItem in libraryItems)
                                 {
-                                    continue;
+                                    var fileName = await this.ArtworkProvider.Find(libraryItem, CommonImageTypes.Artist, ArtworkType.Artist).ConfigureAwait(false);
+                                    Logger.Write(this, LogLevel.Debug, "Fetched artist image for {0}: {1}", libraryHierarchyNode.Value, fileName);
                                 }
-                                await this.OnDemandMetaDataProvider.GetMetaData(
-                                    libraryItems,
-                                    new OnDemandMetaDataRequest(
-                                        CommonImageTypes.Artist,
-                                        MetaDataItemType.Image,
-                                        MetaDataUpdateType.System
-                                    )
-                                ).ConfigureAwait(false);
                             }
                             await Task.Delay(100).ConfigureAwait(false);
                             break;

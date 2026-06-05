@@ -120,7 +120,7 @@ namespace FoxTunes
             var samplesPerValue = Math.Max(totalSamples / totalPositions, 1);
             var processedSamples = default(long);
             var position = default(int);
-            var globalMax = default(float);
+            var peak = default(float);
 
             while (true)
             {
@@ -133,13 +133,13 @@ namespace FoxTunes
                 {
                     case _STREAMPROC_END:
                     case _ERROR_UNKNOWN:
-                        if (globalMax > 0f)
+                        if (peak > 0f)
                         {
                             for (var y = 0; y < data.Data.GetLength(0); y++)
                             {
                                 for (var x = 0; x < data.Data.GetLength(1); x++)
                                 {
-                                    data.Data[y, x] /= globalMax;
+                                    data.Data[y, x] /= peak;
                                 }
                             }
                         }
@@ -173,9 +173,9 @@ namespace FoxTunes
                     value = Math.Max(value, 0.0001f);
                     data.Data[position, a] += value;
 
-                    if (data.Data[position, a] > globalMax)
+                    if (data.Data[position, a] > peak)
                     {
-                        globalMax = data.Data[position, a];
+                        peak = data.Data[position, a];
                     }
                 }
 

@@ -391,4 +391,10 @@ Requirements:
   <data name="ArtistImagePersistenceBehaviourConfiguration.Enabled" xml:space="preserve">
     <value>Save artist images</value>
   </data>
+  <data name="LibraryBehaviourConfiguration.LiveUpdates" xml:space="preserve">
+    <value>Live Updates</value>
+  </data>
+  <data name="LibraryBehaviourConfiguration.Section" xml:space="preserve">
+    <value>Library</value>
+  </data>
 </root>
