@@ -5,7 +5,22 @@
       <UIComponentConfiguration Component="3E899F79-380C-4EF7-8570-4B4E3B3467CB">
         <UIComponentConfiguration Component="18E98420-F039-4504-A116-3D0F26BEAAD5">
           <UIComponentConfiguration Component="A6820FDA-E415-40C6-AEFB-A73B6FBE4C93">
-            <UIComponentConfiguration Component="881ADB02-ABD0-4B36-8487-6F64544DB684" />
+            <UIComponentConfiguration Component="67A0F63C-DC86-4B4E-91E1-290B71822853">
+              <UIComponentConfiguration Component="881ADB02-ABD0-4B36-8487-6F64544DB684">
+                <MetaDataEntry Name="Header" Value="Playlists" />
+              </UIComponentConfiguration>
+              <UIComponentConfiguration Component="3E899F79-380C-4EF7-8570-4B4E3B3467CB">
+                <UIComponentConfiguration Component="3E899F79-380C-4EF7-8570-4B4E3B3467CB">
+                  <UIComponentConfiguration Component="86276AD4-3962-4659-A00F-95065CD92117" />
+                  <UIComponentConfiguration Component="3ACC518E-9A7C-4ACD-8299-318C8BBB2D47" />
+                  <MetaDataEntry Name="Collapse" Value="True" />
+                  <MetaDataEntry Name="DockLocation" Value="Top" />
+                </UIComponentConfiguration>
+                <UIComponentConfiguration Component="F5B28CA5-163F-491B-83B6-9D08DAB11B3F" />
+                <MetaDataEntry Name="DockLocation" Value="Bottom" />
+                <MetaDataEntry Name="Header" Value="Library" />
+              </UIComponentConfiguration>
+            </UIComponentConfiguration>
             <UIComponentConfiguration Component="67A0F63C-DC86-4B4E-91E1-290B71822853">
               <UIComponentConfiguration Component="1155473E-FA29-4D31-8A28-4E4F5582261A">
                 <MetaDataEntry Name="Header" Value="Selection Properties" />
@@ -69,8 +84,8 @@
       <MetaDataEntry Name="DockLocation" Value="Top" />
     </UIComponentConfiguration>
     <UIComponentConfiguration Component="EDC787A6-7B1E-4161-B2E1-843C58806D81">
-      <MetaDataEntry Name="HorizontalAlignment" Value="Right" />
       <MetaDataEntry Name="VerticalAlignment" Value="Bottom" />
+      <MetaDataEntry Name="HorizontalAlignment" Value="Right" />
     </UIComponentConfiguration>
     <MetaDataEntry Name="DockLocation" Value="Top" />
   </UIComponentConfiguration>
