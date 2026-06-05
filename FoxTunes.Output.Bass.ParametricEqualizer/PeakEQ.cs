@@ -27,6 +27,7 @@ namespace FoxTunes
             this.Effect.Channel = -1;
             this.Effect.Bandwidth = bandwidth;
             this.Effect.Gain = gain;
+            this.Effect.Q = 1.4f;
             this.Effect.Activate();
         }
 

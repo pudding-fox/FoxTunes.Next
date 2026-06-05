@@ -38,7 +38,7 @@ namespace FoxTunes
                         .WithValue(false))
                 .WithElement(
                     new DoubleConfigurationElement(BANDWIDTH, Strings.BassParametricEqualizerStreamComponentConfiguration_Bandwidth, path: Strings.BassParametricEqualizerStreamComponentConfiguration_Path)
-                        .WithValue(2.5)
+                        .WithValue(1)
                         .DependsOn(BassOutputConfiguration.SECTION, ENABLED)
                         .WithValidationRule(
                             new DoubleValidationRule(
