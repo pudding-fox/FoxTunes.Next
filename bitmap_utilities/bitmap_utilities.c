@@ -27,6 +27,10 @@ BOOL WINAPI destroy_palette(ColorPalette** palette) {
 	if (!palette || !*palette) {
 		return FALSE;
 	}
+	if ((*palette)->Colors) {
+		free((*palette)->Colors);
+		(*palette)->Colors = NULL;
+	}
 	free(*palette);
 	*palette = NULL;
 	return TRUE;
