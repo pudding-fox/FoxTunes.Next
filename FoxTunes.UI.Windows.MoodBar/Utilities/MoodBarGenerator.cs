@@ -65,22 +65,7 @@ namespace FoxTunes
 
         protected virtual void Allocate(IOutputStream stream, MoodBarGeneratorData data)
         {
-            var max = Convert.ToInt32(
-                Math.Ceiling(
-                    stream.GetDuration(stream.Length).TotalMilliseconds / 10
-                )
-            ).ToNearestPower();
-
-            var length = Convert.ToInt32(
-                stream.Length / ((FFT_SIZE * 4) * stream.Channels)
-            );
-
-            while (length > max)
-            {
-                length /= 2;
-            }
-
-            data.Data = new float[length, BANDS.Length];
+            data.Data = new float[1024, BANDS.Length];
         }
 
         protected virtual async Task Populate(IOutputStream stream, MoodBarGeneratorData data)

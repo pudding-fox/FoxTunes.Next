@@ -467,25 +467,21 @@ namespace FoxTunes
                     var max = 0f;
                     for (var d = 0; d < cols; d++)
                     {
-                        var value1 = default(float);
-                        var value2 = default(float);
+                        var value = default(float);
                         if (a > 0 && a < rows - 1)
                         {
-                            value1 = Smooth(data, a, d, 16);
-                            value2 = data[a, d];
+                            value = data[a, d];
                         }
                         else
                         {
-                            value1 = data[a, d];
-                            value2 = data[a, d];
+                            value = data[a, d];
                         }
 
-                        value1 *= normalization[d];
-                        value2 *= normalization[d];
-                        values[d] = value1;
-                        if (value2 > max)
+                        value *= normalization[d];
+                        values[d] = value;
+                        if (value > max)
                         {
-                            max = value2;
+                            max = value;
                         }
                     }
 
