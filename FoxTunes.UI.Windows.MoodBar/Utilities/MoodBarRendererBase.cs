@@ -17,7 +17,7 @@ namespace FoxTunes
 
         const int TIMEOUT = 1000;
 
-        public static Debouncer<IFileData, MoodBarGenerator.MoodBarGeneratorData> Debouncer { get; private set; }
+        public static Debouncer<IFileData, MoodBarGenerator.MoodBarGeneratorData> Debouncer1 { get; private set; }
 
         public static TaskScheduler Scheduler { get; private set; }
 
@@ -25,7 +25,7 @@ namespace FoxTunes
 
         static MoodBarRendererBase()
         {
-            Debouncer = new Debouncer<IFileData, MoodBarGenerator.MoodBarGeneratorData>(TIMEOUT);
+            Debouncer1 = new Debouncer<IFileData, MoodBarGenerator.MoodBarGeneratorData>(TIMEOUT);
             Scheduler = new TaskScheduler(new ParallelOptions()
             {
                 MaxDegreeOfParallelism = Math.Max(Environment.ProcessorCount / 2, 1)
@@ -62,6 +62,7 @@ namespace FoxTunes
 
         public MoodBarRendererBase()
         {
+            Debouncer2 = new Debouncer(TIMEOUT);
             this.Effect = new BlurEffect()
             {
                 Radius = 2
@@ -90,6 +91,8 @@ namespace FoxTunes
         }
 
         public event EventHandler FileDataChanged;
+
+        public Debouncer Debouncer2 { get; private set; }
 
         public object SyncRoot = new object();
 
@@ -124,13 +127,18 @@ namespace FoxTunes
 
         protected virtual void OnValueChanged(object sender, EventArgs e)
         {
-            var rendererData = this.RendererData;
-            if (rendererData != null)
+            this.Debouncer2.Exec(async () =>
             {
-                rendererData.Rendered = false;
-                Logger.Write(this, LogLevel.Debug, "Resetting redered flag.");
-            }
-            var task = this.Update(this.FileData);
+                var rendererData = this.RendererData;
+                if (rendererData != null)
+                {
+                    rendererData.Rendered = false;
+                    Logger.Write(this, LogLevel.Debug, "Resetting redered flag.");
+                }
+                var fileData = default(IFileData);
+                await Windows.Invoke(() => fileData = this.FileData).ConfigureAwait(false);
+                var task = this.Update(fileData);
+            });
         }
 
         public Task UpdateTask { get; private set; }
@@ -176,7 +184,7 @@ namespace FoxTunes
                     await this.RefreshRendererTarget().ConfigureAwait(false);
                     if (created)
                     {
-                        Debouncer.Exec((arg1, arg2) =>
+                        Debouncer1.Exec((arg1, arg2) =>
                         {
                             this.UpdateTask = Scheduler.StartNew(async () =>
                             {
