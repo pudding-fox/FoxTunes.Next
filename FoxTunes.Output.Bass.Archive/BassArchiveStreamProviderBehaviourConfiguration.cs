@@ -23,7 +23,7 @@ namespace FoxTunes
         {
             yield return new ConfigurationSection(SECTION, Strings.BassArchiveStreamProviderBehaviourConfiguration_Section)
                 .WithElement(new BooleanConfigurationElement(ENABLED, Strings.BassArchiveStreamProviderBehaviourConfiguration_Enabled)
-                    .WithValue(false))
+                    .WithValue(true))
                 .WithElement(new BooleanConfigurationElement(METADATA, Strings.BassArchiveStreamProviderBehaviourConfiguration_MetaData)
                     .WithValue(true)
                     .DependsOn(SECTION, ENABLED))

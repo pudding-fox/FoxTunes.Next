@@ -11,7 +11,7 @@ namespace FoxTunes
         public static IEnumerable<ConfigurationSection> GetConfigurationSections()
         {
             yield return new ConfigurationSection(SECTION, Strings.BassCueStreamAdvisorBehaviourConfiguration_Section)
-                .WithElement(new BooleanConfigurationElement(ENABLED, Strings.BassCueStreamAdvisorBehaviourConfiguration_Enabled).WithValue(false));
+                .WithElement(new BooleanConfigurationElement(ENABLED, Strings.BassCueStreamAdvisorBehaviourConfiguration_Enabled).WithValue(true));
         }
     }
 }
