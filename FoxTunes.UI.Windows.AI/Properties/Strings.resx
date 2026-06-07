@@ -139,7 +139,7 @@
     <value>AI Track Information</value>
   </data>
   <data name="AITrackConfiguration.DefaultPromptTemplate" xml:space="preserve">
-    <value>Provide detailed information of the music track "{0}" by the musical artist "{1}". Do not include images. Return the results in HTML format.</value>
+    <value>Provide detailed information of the music track "{0}" by the musical artist "{1}" from the album "{2}". Do not include images. Return the results in HTML format.</value>
   </data>
   <data name="AITrackConfiguration.PromptTemplate" xml:space="preserve">
     <value>Prompt Template</value>

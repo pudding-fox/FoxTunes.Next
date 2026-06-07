@@ -10,47 +10,47 @@ namespace FoxTunes.ViewModel
 {
     public class AITrack : ConfigurableViewModelBase
     {
-        private Tuple<string, string> _ArtistAndTitle { get; set; }
+        private Tuple<string, string, string> _ArtistAlbumTitle { get; set; }
 
-        public Tuple<string, string> ArtistAndTitle
+        public Tuple<string, string, string> ArtistAlbumTitle
         {
             get
             {
-                return this._ArtistAndTitle;
+                return this._ArtistAlbumTitle;
             }
             set
             {
-                if (this._ArtistAndTitle == null && value == null)
+                if (this._ArtistAlbumTitle == null && value == null)
                 {
                     return;
                 }
-                else if (this._ArtistAndTitle != null || value != null)
+                else if (this._ArtistAlbumTitle != null || value != null)
                 {
                     //Nothing to do.
                 }
-                else if (this._ArtistAndTitle.Equals(value))
+                else if (this._ArtistAlbumTitle.Equals(value))
                 {
                     return;
                 }
-                this._ArtistAndTitle = value;
-                this.OnArtistAndTitleChanged();
+                this._ArtistAlbumTitle = value;
+                this.OnArtistAlbumTitleChanged();
             }
         }
 
-        protected virtual void OnArtistAndTitleChanged()
+        protected virtual void OnArtistAlbumTitleChanged()
         {
-            if (this.ArtistAndTitle != null && !string.IsNullOrEmpty(this.ArtistAndTitle.Item1) && !string.IsNullOrEmpty(this.ArtistAndTitle.Item2))
+            if (this.ArtistAlbumTitle != null && !string.IsNullOrEmpty(this.ArtistAlbumTitle.Item1) && !string.IsNullOrEmpty(this.ArtistAlbumTitle.Item2))
             {
-                this.Dispatch(() => this.Refresh(this.ArtistAndTitle.Item1, this.ArtistAndTitle.Item2));
+                this.Dispatch(() => this.Refresh(this.ArtistAlbumTitle.Item1, this.ArtistAlbumTitle.Item2, this.ArtistAlbumTitle.Item3));
             }
-            if (this.ArtistAndTitleChanged != null)
+            if (this.ArtistAlbumTitleChanged != null)
             {
-                this.ArtistAndTitleChanged(this, EventArgs.Empty);
+                this.ArtistAlbumTitleChanged(this, EventArgs.Empty);
             }
-            this.OnPropertyChanged("ArtistAndTitle");
+            this.OnPropertyChanged("ArtistAlbumTitle");
         }
 
-        public event EventHandler ArtistAndTitleChanged;
+        public event EventHandler ArtistAlbumTitleChanged;
 
         private string _Content { get; set; }
 
@@ -191,6 +191,7 @@ namespace FoxTunes.ViewModel
             lock (fileData.MetaDatas)
             {
                 var artist = default(string);
+                var album = default(string);
                 var title = default(string);
                 {
                     var metaDataItem = fileData.MetaDatas.FirstOrDefault(_metaDataItem => string.Equals(_metaDataItem.Name, CommonMetaData.Artist) && _metaDataItem.Type == MetaDataItemType.Tag);
@@ -200,17 +201,24 @@ namespace FoxTunes.ViewModel
                     }
                 }
                 {
+                    var metaDataItem = fileData.MetaDatas.FirstOrDefault(_metaDataItem => string.Equals(_metaDataItem.Name, CommonMetaData.Album) && _metaDataItem.Type == MetaDataItemType.Tag);
+                    if (metaDataItem != null)
+                    {
+                        album = metaDataItem.Value;
+                    }
+                }
+                {
                     var metaDataItem = fileData.MetaDatas.FirstOrDefault(_metaDataItem => string.Equals(_metaDataItem.Name, CommonMetaData.Title) && _metaDataItem.Type == MetaDataItemType.Tag);
                     if (metaDataItem != null)
                     {
                         title = metaDataItem.Value;
                     }
                 }
-                this.ArtistAndTitle = new Tuple<string, string>(artist, title);
+                this.ArtistAlbumTitle = new Tuple<string, string, string>(artist, album, title);
             }
         }
 
-        protected virtual async Task Refresh(string artist, string title)
+        protected virtual async Task Refresh(string artist, string album, string title)
         {
             Logger.Write(this, LogLevel.Debug, "Cleating AI context.");
             await Windows.Invoke(() => this.StatusMessage = Strings.AITrack_Loading).ConfigureAwait(false);
@@ -221,7 +229,7 @@ namespace FoxTunes.ViewModel
                 {
                     var store = context.CreateResponseStore();
                     var attempt = 0;
-                    var prompt = string.Format(this.PromptTemplate.Value, title, artist);
+                    var prompt = string.Format(this.PromptTemplate.Value, title, artist, album);
                 retry:
                     Logger.Write(this, LogLevel.Debug, "Sending request to AI: {0}", prompt);
                     var result = default(string);

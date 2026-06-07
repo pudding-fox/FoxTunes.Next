@@ -21,4 +21,3 @@ AS (
 
 SELECT *
 FROM "MetaData"
-ORDER BY RANDOM()
