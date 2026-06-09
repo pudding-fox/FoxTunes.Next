@@ -17,9 +17,23 @@
             <RowDefinition Height="Auto"></RowDefinition>
             <RowDefinition Height="Auto"></RowDefinition>
             <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
             <RowDefinition></RowDefinition>
         </Grid.RowDefinitions>
-        <GroupBox Grid.Row="0" Header="{x:Static ViewModel:StringResources.WindowsUserInterfaceConfiguration_Section}">
+        <GroupBox Grid.Row="0" Header="Features">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition SharedSizeGroup="Name" Width="Auto"></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Column="0" Grid.Row="0" Foreground="{DynamicResource TextBrush}" Text="Radio" VerticalAlignment="Center" Margin="0,0,4,0"></TextBlock>
+                <CheckBox Grid.Column="1" Grid.Row="0" Margin="0,0,0,4" IsChecked="{Binding Radio.Value, Source={StaticResource ViewModel}}"></CheckBox>
+            </Grid>
+        </GroupBox>
+        <GroupBox Grid.Row="1" Header="{x:Static ViewModel:StringResources.WindowsUserInterfaceConfiguration_Section}">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition SharedSizeGroup="Name" Width="Auto"></ColumnDefinition>
@@ -85,7 +99,7 @@
                 </ComboBox>
             </Grid>
         </GroupBox>
-        <GroupBox Grid.Row="1" Header="Playlist">
+        <GroupBox Grid.Row="2" Header="Playlist">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition SharedSizeGroup="Name" Width="Auto"></ColumnDefinition>
@@ -104,7 +118,7 @@
                 <CheckBox Grid.Column="1" Grid.Row="2" Margin="0,0,0,4" IsChecked="{Binding MoodBar, Source={StaticResource ViewModel}}"></CheckBox>
             </Grid>
         </GroupBox>
-        <GroupBox Grid.Row="2" Header="Services">
+        <GroupBox Grid.Row="3" Header="Services">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition SharedSizeGroup="Name" Width="Auto"></ColumnDefinition>
@@ -120,7 +134,7 @@
                 <CheckBox Grid.Column="1" Grid.Row="1" Margin="0,0,0,4" IsChecked="{Binding Lyrics, Source={StaticResource ViewModel}}"></CheckBox>
             </Grid>
         </GroupBox>
-        <GroupBox Grid.Row="3" Header="Audio">
+        <GroupBox Grid.Row="4" Header="Audio">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition SharedSizeGroup="Name" Width="Auto"></ColumnDefinition>
@@ -142,6 +156,6 @@
                 <CheckBox Grid.Column="1" Grid.Row="3" Margin="0,0,0,4" IsChecked="{Binding Memory.Value, Source={StaticResource ViewModel}}"></CheckBox>
             </Grid>
         </GroupBox>
-        <Button Grid.Row="4" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="70" Height="30" Click="OnClose">Save</Button>
+        <Button Grid.Row="5" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="70" Height="30" Click="OnClose">Save</Button>
     </Grid>
 </UserControl>

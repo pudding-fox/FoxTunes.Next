@@ -11,6 +11,8 @@ namespace FoxTunes.ViewModel
 
         public IConfigurationBase Configuration { get; private set; }
 
+        public BooleanConfigurationElement Radio { get; private set; }
+
         public SelectionConfigurationElement Theme { get; private set; }
 
         public SelectionConfigurationElement Layout { get; private set; }
@@ -58,6 +60,10 @@ namespace FoxTunes.ViewModel
             this.PlaylistSettings = new PlaylistSettings();
             this.PlaylistSettings.PlaylistColumns.ItemsSourceChanged += this.OnItemsSourceChanged;
             this.Configuration = core.Components.Configuration;
+            this.Radio = this.Configuration.GetElement<BooleanConfigurationElement>(
+                "1D61F93D-EAA1-4D24-8418-BDB3FCE433C4",
+                "AAAA4FF2-843E-4606-92B8-985611B2CC0A"
+            );
             this.Theme = this.Configuration.GetElement<SelectionConfigurationElement>(
                 WindowsUserInterfaceConfiguration.SECTION,
                 WindowsUserInterfaceConfiguration.THEME
