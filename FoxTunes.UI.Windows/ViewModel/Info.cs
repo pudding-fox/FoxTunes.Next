@@ -591,7 +591,7 @@ namespace FoxTunes.ViewModel
                     return;
                 }
             }
-            var filter = string.Format("{0}:{1}", key, value);
+            var filter = string.Format("{0}:\"{1}\"", key, value);
             this.LibraryHierarchyBrowser.Filter = filter;
         }
 
