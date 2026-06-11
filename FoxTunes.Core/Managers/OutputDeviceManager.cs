@@ -3,6 +3,7 @@ using FoxTunes.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace FoxTunes
@@ -157,47 +158,61 @@ namespace FoxTunes
 
         protected virtual async Task OnRestart()
         {
-            var position = default(long);
-            var paused = default(bool);
-            var playlistItem = default(PlaylistItem);
-            var outputStream = this.PlaybackManager.CurrentStream;
-            if (outputStream != null)
+            const int ATTEMPTS = 10;
+            const int DELAY = 1000;
+            var exception = default(Exception);
+            for (var a = 0; a < ATTEMPTS; a++)
             {
-                position = outputStream.ActualPosition;
-                paused = outputStream.IsPaused;
-                playlistItem = outputStream.PlaylistItem;
-            }
-            try
-            {
-                await this.Output.Shutdown().ConfigureAwait(false);
-                await this.Output.Start().ConfigureAwait(false);
-            }
-            catch (Exception e)
-            {
-                await this.ErrorEmitter.Send(this, e).ConfigureAwait(false);
-                return;
-            }
-            if (playlistItem != null)
-            {
+                var position = default(long);
+                var paused = default(bool);
+                var playlistItem = default(PlaylistItem);
+                var outputStream = this.PlaybackManager.CurrentStream;
+                if (outputStream != null)
+                {
+                    position = outputStream.ActualPosition;
+                    paused = outputStream.IsPaused;
+                    playlistItem = outputStream.PlaylistItem;
+                }
                 try
                 {
-                    await this.PlaylistManager.Play(playlistItem).ConfigureAwait(false);
-                    if (this.PlaybackManager.CurrentStream != null)
-                    {
-                        if (position > 0)
-                        {
-                            await this.PlaybackManager.CurrentStream.Seek(position).ConfigureAwait(false);
-                        }
-                        if (paused)
-                        {
-                            await this.PlaybackManager.CurrentStream.Pause().ConfigureAwait(false);
-                        }
-                    }
+                    await this.Output.Shutdown().ConfigureAwait(false);
+                    await this.Output.Start().ConfigureAwait(false);
                 }
                 catch (Exception e)
                 {
-                    await this.ErrorEmitter.Send(this, e).ConfigureAwait(false);
+                    exception = e;
+                    Thread.Sleep(DELAY);
+                    continue;
                 }
+                if (playlistItem != null)
+                {
+                    try
+                    {
+                        await this.PlaylistManager.Play(playlistItem).ConfigureAwait(false);
+                        if (this.PlaybackManager.CurrentStream != null)
+                        {
+                            if (position > 0)
+                            {
+                                await this.PlaybackManager.CurrentStream.Seek(position).ConfigureAwait(false);
+                            }
+                            if (paused)
+                            {
+                                await this.PlaybackManager.CurrentStream.Pause().ConfigureAwait(false);
+                            }
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        exception = e;
+                        Thread.Sleep(DELAY);
+                        continue;
+                    }
+                }
+                break;
+            }
+            if (exception != null)
+            {
+                await this.ErrorEmitter.Send(this, exception).ConfigureAwait(false);
             }
         }
 
