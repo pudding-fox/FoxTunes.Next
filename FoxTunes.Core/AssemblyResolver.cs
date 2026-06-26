@@ -49,17 +49,17 @@ namespace FoxTunes
         {
             foreach (var fileName in FileSystemHelper.EnumerateFiles(directoryName, "*.dll", SEARCH_OPTIONS))
             {
-                var assemblyName = AssemblyRegistry.Instance.GetAssemblyName(fileName);
-                if (assemblyName == null)
+                if (this.TryResolve(name, fileName, out result))
                 {
-                    continue;
+                    return true;
                 }
-                if (!name.StartsWith(string.Concat(assemblyName.Name, ","), StringComparison.OrdinalIgnoreCase))
+            }
+            foreach (var fileName in FileSystemHelper.EnumerateFiles(directoryName, "*.exe", SEARCH_OPTIONS))
+            {
+                if (this.TryResolve(name, fileName, out result))
                 {
-                    continue;
+                    return true;
                 }
-                result = fileName;
-                return true;
             }
             if (tryLoad)
             {
@@ -81,6 +81,23 @@ namespace FoxTunes
             }
             result = default(string);
             return false;
+        }
+
+        protected virtual bool TryResolve(string name, string fileName, out string result)
+        {
+            var assemblyName = AssemblyRegistry.Instance.GetAssemblyName(fileName);
+            if (assemblyName == null)
+            {
+                result = default(string);
+                return false;
+            }
+            if (!name.StartsWith(string.Concat(assemblyName.Name, ","), StringComparison.OrdinalIgnoreCase))
+            {
+                result = default(string);
+                return false;
+            }
+            result = fileName;
+            return true;
         }
 
         public static readonly IAssemblyResolver Instance = new AssemblyResolver();
