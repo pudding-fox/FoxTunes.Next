@@ -248,6 +248,24 @@ namespace FoxTunes {
                 return ResourceManager.GetString("General.Advanced", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        internal static string MidnightTheme_Description {
+            get {
+                return ResourceManager.GetString("MidnightTheme.Description", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Midnight.
+        /// </summary>
+        internal static string MidnightTheme_Name {
+            get {
+                return ResourceManager.GetString("MidnightTheme.Name", resourceCulture);
+            }
+        }
         
         /// <summary>
         ///   Looks up a localized string similar to .

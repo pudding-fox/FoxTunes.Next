@@ -192,6 +192,12 @@
   <data name="FoxTheme.Description" xml:space="preserve">
     <value />
   </data>
+  <data name="MidnightTheme.Description" xml:space="preserve">
+    <value />
+  </data>
+  <data name="MidnightTheme.Name" xml:space="preserve">
+    <value>Midnight</value>
+  </data>
   <data name="ColorPalette.Fox" xml:space="preserve">
     <value>Fox</value>
   </data>

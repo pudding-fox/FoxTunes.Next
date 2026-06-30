@@ -138,4 +138,10 @@
   <data name="General.Advanced" xml:space="preserve">
     <value>Avancé</value>
   </data>
+  <data name="MidnightTheme.Description" xml:space="preserve">
+    <value />
+  </data>
+  <data name="MidnightTheme.Name" xml:space="preserve">
+    <value>Midnight</value>
+  </data>
 </root>
